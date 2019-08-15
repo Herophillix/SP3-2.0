@@ -51,6 +51,14 @@ void SceneMole::Init()
 	meshList[GEO_MOLETEST] = MeshBuilder::GenerateQuad("testmole", Color(1, 1, 1), 1.f);
 	meshList[GEO_TEXT] = MeshBuilder::GenerateText("text", 16, 16);
 	meshList[GEO_TEXT]->textureID = LoadTGA("Image//calibri.tga");
+
+	meshList[GEO_MOLESTATS] = MeshBuilder::GenerateQuad("ui", Color(0, 0, 0), 1.f);
+
+	meshList[GEO_MOLERESULTS] = MeshBuilder::GenerateQuad("results", Color(0, 0, 0), 1.f);
+
+	meshList[GEO_MOLEFONT] = MeshBuilder::GenerateText("teko", 9, 10);
+	meshList[GEO_MOLEFONT]->textureID = LoadTGA("Image//Teko.tga");
+
 	//  ******************************* SPRITE ANIMATIONS HERE  ******************************* //
 
 	//  ******************************* PARTICLES HERE  ******************************* //
@@ -296,18 +304,12 @@ void SceneMole::Render()
 	modelStack.LoadIdentity();
 
 	RenderMachine();
-
 	RenderGO(m_Hammer);
-
-	std::ostringstream ss;
-	ss << "Score: " << m_score;
-	RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(1, 1, 1), 2, 30, 6);
-
-	ss.clear();
-	ss.str("");
-	ss.precision(3);
-	ss << "Time Left: " << m_gameTimer;
-	RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(1, 1, 1), 2, 25, 2);
+	RenderUI();
+	if (m_gameOver)
+	{
+		RenderResults();
+	}
 
 }
 
@@ -471,6 +473,38 @@ void SceneMole::RenderMachine()
 	RenderMesh(meshList[GEO_FRONTPANEL], false);
 	modelStack.PopMatrix();
 
+}
+
+void SceneMole::RenderUI()
+{
+	modelStack.PushMatrix();
+	modelStack.Translate(m_halfWorldWidth, 10, 0);
+	modelStack.Scale(120, 20, 1);
+	RenderMesh(meshList[GEO_MOLESTATS], false);
+	modelStack.PopMatrix();
+
+	std::ostringstream ss;
+	ss << "Score: " << m_score;
+	RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(1, 1, 1), 2, 30, 6);
+
+	ss.clear();
+	ss.str("");
+	ss.precision(3);
+	ss << "Time Left: " << m_gameTimer;
+	RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(1, 1, 1), 2, 25, 2);
+}
+
+void SceneMole::RenderResults()
+{
+	modelStack.PushMatrix();
+	modelStack.Translate(m_halfWorldWidth, m_halfWorldHeight, 5);
+	modelStack.Scale(198, 108, 1);
+	RenderMesh(meshList[GEO_MOLERESULTS], false);
+	modelStack.PopMatrix();
+
+	std::ostringstream ss;
+	ss << "Score: " << m_score;
+	RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(1, 1, 1), 2, 30, 10);
 }
 
 bool SceneMole::HammerCollisionCheck()

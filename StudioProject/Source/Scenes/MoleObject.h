@@ -10,6 +10,8 @@ public:
 		GO_NONE,
 		GO_HAMMER,
 		GO_MOLE,
+		GO_STATS,
+		GO_RESULTS,
 		GO_TOTAL
 	};
 	MoleObject(MOLEOBJECT_TYPE typeValue = GO_NONE);

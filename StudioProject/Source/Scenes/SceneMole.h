@@ -27,6 +27,8 @@ public:
 	void UpdateHammerPos(); // update hammer variables
 	void UpdateMoles(double dt); // update mole variables
 	void RenderMachine(); // the machine and the moles
+	void RenderUI();
+	void RenderResults();
 
 	bool HammerCollisionCheck();
 
