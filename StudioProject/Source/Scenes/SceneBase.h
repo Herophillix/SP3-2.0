@@ -84,6 +84,11 @@ public:
 		GEO_WALKRIGHT,
 		GEO_WALKLEFT,
 		GEO_ARROW, 
+		// SCENE FROG
+		GEO_FROG,
+		GEO_ROCK,
+		GEO_HEARTS,
+
 
 		// SCENE MOLE
 		// Props
