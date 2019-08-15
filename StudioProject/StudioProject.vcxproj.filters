@@ -1,35 +1,38 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <ClCompile Include="Source\Scenes\GameObject.cpp">
-      <Filter>Scenes</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Scenes\SceneBase.cpp">
-      <Filter>Scenes</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Scenes\StudioProjectScene.cpp">
-      <Filter>Scenes</Filter>
-    </ClCompile>
     <ClCompile Include="Source\Application.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Source\main.cpp">
-      <Filter>Source Files</Filter>
+    <ClCompile Include="Source\Scenes\CharacterObject.cpp">
+      <Filter>Rendering\Scenes</Filter>
     </ClCompile>
-    <ClCompile Include="Source\SpriteAnimation.cpp">
-      <Filter>Source Files</Filter>
+    <ClCompile Include="Source\Scenes\MoleObject.cpp">
+      <Filter>Rendering\Scenes</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Utility.cpp">
-      <Filter>Source Files</Filter>
+    <ClCompile Include="Source\Scenes\PhysicsObject.cpp">
+      <Filter>Rendering\Scenes</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Scenes\SceneMole.cpp">
+      <Filter>Rendering\Scenes</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Scenes\SceneMaze.cpp">
+      <Filter>Rendering\Scenes</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Scenes\MazeObject.cpp">
+      <Filter>Rendering\Scenes</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Minigames\Maze\MazeGenerator.cpp">
+      <Filter>Minigames\Maze</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Scenes\StudioProjectScene.cpp">
+      <Filter>Rendering\Scenes</Filter>
     </ClCompile>
     <ClCompile Include="Source\Camera\Camera.cpp">
       <Filter>Camera</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Rendering\LoadOBJ.cpp">
-      <Filter>Rendering</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Rendering\LoadTGA.cpp">
-      <Filter>Rendering</Filter>
+    <ClCompile Include="Source\Scenes\SceneBase.cpp">
+      <Filter>Rendering\Scenes</Filter>
     </ClCompile>
     <ClCompile Include="Source\Rendering\Mesh.cpp">
       <Filter>Rendering</Filter>
@@ -43,87 +46,57 @@
     <ClCompile Include="Source\Rendering\shader.cpp">
       <Filter>Rendering</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Scenes\CharacterObject.cpp">
-      <Filter>Scenes</Filter>
+    <ClCompile Include="Source\SpriteAnimation.cpp">
+      <Filter>Rendering</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Scenes\MoleObject.cpp">
-      <Filter>Scenes</Filter>
+    <ClCompile Include="Source\Scenes\GameObject.cpp">
+      <Filter>Rendering\Scenes</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Scenes\PhysicsObject.cpp">
-      <Filter>Scenes</Filter>
+    <ClCompile Include="Source\main.cpp">
+      <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Scenes\SceneMole.cpp">
-      <Filter>Scenes</Filter>
+    <ClCompile Include="Source\Rendering\LoadTGA.cpp">
+      <Filter>Rendering</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Scenes\SceneMaze.cpp">
-      <Filter>Scenes</Filter>
+    <ClCompile Include="Source\Rendering\LoadOBJ.cpp">
+      <Filter>Rendering</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Scenes\MazeObject.cpp">
-      <Filter>Scenes</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Minigames\Maze\MazeGenerator.cpp">
-      <Filter>Minigames\Maze</Filter>
+    <ClCompile Include="Source\Utility.cpp">
+      <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Source\Camera\Camera.h">
-      <Filter>Camera</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Scenes\GameObject.h">
-      <Filter>Scenes\Header</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Scenes\Scene.h">
-      <Filter>Scenes\Header</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Scenes\SceneBase.h">
-      <Filter>Scenes\Header</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Scenes\StudioProjectScene.h">
-      <Filter>Scenes\Header</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Application.h">
-      <Filter>Source Files\Header</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Light.h">
-      <Filter>Source Files\Header</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Material.h">
-      <Filter>Source Files\Header</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Utility.h">
-      <Filter>Source Files\Header</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Vertex.h">
-      <Filter>Source Files\Header</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\SpriteAnimation.h">
-      <Filter>Source Files\Header</Filter>
-    </ClInclude>
     <ClInclude Include="Source\Scenes\CharacterObject.h">
-      <Filter>Scenes\Header</Filter>
+      <Filter>Rendering\Scenes\Header</Filter>
     </ClInclude>
     <ClInclude Include="Source\Scenes\MoleObject.h">
-      <Filter>Scenes\Header</Filter>
+      <Filter>Rendering\Scenes\Header</Filter>
     </ClInclude>
     <ClInclude Include="Source\Scenes\PhysicsObject.h">
-      <Filter>Scenes\Header</Filter>
+      <Filter>Rendering\Scenes\Header</Filter>
     </ClInclude>
     <ClInclude Include="Source\Scenes\SceneMole.h">
-      <Filter>Scenes\Header</Filter>
+      <Filter>Rendering\Scenes\Header</Filter>
     </ClInclude>
     <ClInclude Include="Source\Scenes\SceneMaze.h">
-      <Filter>Scenes\Header</Filter>
+      <Filter>Rendering\Scenes\Header</Filter>
     </ClInclude>
     <ClInclude Include="Source\Scenes\MazeObject.h">
-      <Filter>Scenes\Header</Filter>
+      <Filter>Rendering\Scenes\Header</Filter>
     </ClInclude>
     <ClInclude Include="Source\Minigames\Maze\MazeGenerator.h">
       <Filter>Minigames\Maze</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Rendering\LoadOBJ.h">
-      <Filter>Rendering\Header</Filter>
+    <ClInclude Include="Source\Camera\Camera.h">
+      <Filter>Camera</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Rendering\LoadTGA.h">
+    <ClInclude Include="Source\Scenes\Scene.h">
+      <Filter>Rendering\Scenes\Header</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Scenes\SceneBase.h">
+      <Filter>Rendering\Scenes\Header</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Material.h">
       <Filter>Rendering\Header</Filter>
     </ClInclude>
     <ClInclude Include="Source\Rendering\Mesh.h">
@@ -138,11 +111,35 @@
     <ClInclude Include="Source\Rendering\shader.hpp">
       <Filter>Rendering\Header</Filter>
     </ClInclude>
+    <ClInclude Include="Source\SpriteAnimation.h">
+      <Filter>Rendering\Header</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Scenes\StudioProjectScene.h">
+      <Filter>Rendering\Scenes\Header</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Scenes\GameObject.h">
+      <Filter>Rendering\Scenes\Header</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Light.h">
+      <Filter>Rendering\Header</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Rendering\LoadOBJ.h">
+      <Filter>Rendering\Header</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Rendering\LoadTGA.h">
+      <Filter>Rendering\Header</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Utility.h">
+      <Filter>Source Files\Header</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Vertex.h">
+      <Filter>Source Files\Header</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Application.h">
+      <Filter>Source Files\Header</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <Filter Include="Scenes">
-      <UniqueIdentifier>{d725e182-5198-4ada-8076-233c15e3689a}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Rendering">
       <UniqueIdentifier>{6070cf6d-b5ba-4718-92ce-43111384b1b4}</UniqueIdentifier>
     </Filter>
@@ -165,9 +162,6 @@
     <Filter Include="Source Files">
       <UniqueIdentifier>{27415ce5-b9bc-4b9b-b78c-7d9ff96a78f3}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Scenes\Header">
-      <UniqueIdentifier>{0f1b6d8c-06b4-4f9e-85b1-178e56b4e19c}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Source Files\Header">
       <UniqueIdentifier>{95c0ed7d-ce26-4661-b328-3a930b82e4e3}</UniqueIdentifier>
     </Filter>
@@ -182,6 +176,12 @@
     </Filter>
     <Filter Include="Rendering\Header">
       <UniqueIdentifier>{60919b68-9957-4998-8583-b2773ba70341}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Rendering\Scenes">
+      <UniqueIdentifier>{d725e182-5198-4ada-8076-233c15e3689a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Rendering\Scenes\Header">
+      <UniqueIdentifier>{0f1b6d8c-06b4-4f9e-85b1-178e56b4e19c}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>

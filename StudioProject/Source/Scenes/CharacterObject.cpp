@@ -63,7 +63,7 @@ void CharacterObject::Update(double dt)
 	}
 	if (workDone < 100)
 	{
-		workDone += 0.25f / experience * motivation / rest *  dt / m_Count;
+		workDone += 0.50f / experience * motivation / rest *  dt / m_Count;
 	}
 }
 

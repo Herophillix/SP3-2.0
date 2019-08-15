@@ -1,0 +1,7 @@
+﻿  StudioProjectScene.cpp
+c:\users\mikc\desktop\sp3\sp3-2.0\studioproject\source\scenes\studioprojectscene.cpp(114): warning C4305: 'argument': truncation from 'double' to 'float'
+c:\users\mikc\desktop\sp3\sp3-2.0\studioproject\source\scenes\studioprojectscene.cpp(408): warning C4244: '-=': conversion from 'double' to 'float', possible loss of data
+c:\users\mikc\desktop\sp3\sp3-2.0\studioproject\source\scenes\studioprojectscene.cpp(417): warning C4244: '-=': conversion from 'double' to 'float', possible loss of data
+c:\users\mikc\desktop\sp3\sp3-2.0\studioproject\source\scenes\studioprojectscene.cpp(465): warning C4244: '-=': conversion from 'double' to 'float', possible loss of data
+c:\users\mikc\desktop\sp3\sp3-2.0\studioproject\source\scenes\studioprojectscene.cpp(672): warning C4018: '<': signed/unsigned mismatch
+  StudioProject.vcxproj -> C:\Users\Mikc\Desktop\SP3\SP3-2.0\Debug\Studio Project.exe

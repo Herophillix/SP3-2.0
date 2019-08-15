@@ -18,13 +18,22 @@ public:
 	static bool IsKeyPressed(unsigned short key);
 	static bool IsMousePressed(unsigned short key);
 	static void GetCursorPos(double *xpos, double *ypos);
+	static void setScene(int i);
 	static int GetWindowWidth();
 	static int GetWindowHeight();
+
+	enum SceneType
+	{
+		SCENEMAIN,
+		SCENEMAZE,
+		SCENEMOLE,
+		TOTALSCENES,
+	};
 
 private:
 	Application();
 	~Application();
-
+	static int currentScene;
 	//Declare a window object
 	StopWatch m_timer;
 };

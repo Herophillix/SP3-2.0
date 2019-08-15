@@ -407,7 +407,11 @@ void StudioProjectScene::Update(double dt)
 		{
 		color -= dt;
 		}
-		m_eventTimer = 0;
+	}
+	if (m_eventTimer < -3)
+	{
+		Application::setScene(Math::RandIntMinMax(1, 2));
+		m_eventTimer = -3;
 	}
 	UpdateParticles(dt);
 	m_eventTimer -= dt;
