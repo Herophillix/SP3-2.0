@@ -4,6 +4,8 @@
 
 #include "GameObject.h"
 #include "MoleObject.h"
+#include "ResultObject.h"
+#include "Results.h"
 #include <vector>
 class SceneMole : public SceneBase
 {
@@ -28,7 +30,7 @@ public:
 	void UpdateMoles(double dt); // update mole variables
 	void RenderMachine(); // the machine and the moles
 	void RenderUI();
-	void RenderResults();
+	//void RenderResults();
 
 	bool HammerCollisionCheck();
 
@@ -72,6 +74,14 @@ private:
 	Vector3 m_frontScale;
 	Vector3 m_midScale;
 	Vector3 m_backScale;
+
+	// Result Screen Stuff
+	Vector3 r_quad01Pos;
+	Vector3 r_quad02Pos;
+	Vector3 r_quad03Pos;
+	Vector3 r_quad04Pos;
+
+	ResultObject* continueButton;
 };
 
 #endif 

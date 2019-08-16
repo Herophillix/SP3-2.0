@@ -176,6 +176,8 @@
     <ClCompile Include="Source\Scenes\MazeObject.cpp" />
     <ClCompile Include="Source\Scenes\MoleObject.cpp" />
     <ClCompile Include="Source\Scenes\PhysicsObject.cpp" />
+    <ClCompile Include="Source\Scenes\ResultObject.cpp" />
+    <ClCompile Include="Source\Scenes\Results.cpp" />
     <ClCompile Include="Source\Scenes\SceneBase.cpp" />
     <ClCompile Include="Source\Scenes\SceneMaze.cpp" />
     <ClCompile Include="Source\Scenes\SceneMole.cpp" />
@@ -189,6 +191,8 @@
     <ClInclude Include="Source\Scenes\MazeObject.h" />
     <ClInclude Include="Source\Scenes\MoleObject.h" />
     <ClInclude Include="Source\Scenes\PhysicsObject.h" />
+    <ClInclude Include="Source\Scenes\ResultObject.h" />
+    <ClInclude Include="Source\Scenes\Results.h" />
     <ClInclude Include="Source\Scenes\SceneBase.h" />
     <ClInclude Include="Source\Application.h" />
     <ClInclude Include="Source\Camera\Camera.h" />

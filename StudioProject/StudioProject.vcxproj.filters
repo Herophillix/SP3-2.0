@@ -64,6 +64,12 @@
     <ClCompile Include="Source\Scenes\StudioProjectScene.cpp">
       <Filter>Scenes</Filter>
     </ClCompile>
+    <ClCompile Include="Source\Scenes\ResultObject.cpp">
+      <Filter>Scenes</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Scenes\Results.cpp">
+      <Filter>Scenes</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\Scenes\CharacterObject.h">
@@ -136,6 +142,12 @@
       <Filter>Source Files\Header</Filter>
     </ClInclude>
     <ClInclude Include="Source\Scenes\StudioProjectScene.h">
+      <Filter>Scenes\Header</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Scenes\ResultObject.h">
+      <Filter>Scenes\Header</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Scenes\Results.h">
       <Filter>Scenes\Header</Filter>
     </ClInclude>
   </ItemGroup>

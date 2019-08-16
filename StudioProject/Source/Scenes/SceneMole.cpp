@@ -18,7 +18,7 @@ SceneMole::~SceneMole()
 void SceneMole::Init()
 {
 	SceneBase::Init();
-
+	Results::getInstance()->InitVars();
 	//Calculating aspect ratio
 	m_worldHeight = 100.f;
 	m_worldWidth = m_worldHeight * (float)Application::GetWindowWidth() / Application::GetWindowHeight();
@@ -56,8 +56,15 @@ void SceneMole::Init()
 
 	meshList[GEO_MOLERESULTS] = MeshBuilder::GenerateQuad("results", Color(0, 0, 0), 1.f);
 
-	meshList[GEO_MOLEFONT] = MeshBuilder::GenerateText("teko", 9, 10);
-	meshList[GEO_MOLEFONT]->textureID = LoadTGA("Image//Teko.tga");
+	meshList[GEO_C01_RESULT_QUAD] = MeshBuilder::GenerateQuad("c01result", Color(1, 1, 1), 1.f);
+	meshList[GEO_C01_RESULT_QUAD]->textureID = LoadTGA("Image//resultTest.tga");
+	meshList[GEO_C02_RESULT_QUAD] = MeshBuilder::GenerateQuad("c01result", Color(1, 1, 1), 1.f);
+	meshList[GEO_C03_RESULT_QUAD] = MeshBuilder::GenerateQuad("c01result", Color(1, 1, 1), 1.f);
+	meshList[GEO_C04_RESULT_QUAD] = MeshBuilder::GenerateQuad("c01result", Color(1, 1, 1), 1.f);
+
+
+	meshList[GEO_MOLEFONT] = MeshBuilder::GenerateText("teko", 16, 16);
+	meshList[GEO_MOLEFONT]->textureID = LoadTGA("Image//KidsZone.tga");
 
 	//  ******************************* SPRITE ANIMATIONS HERE  ******************************* //
 
@@ -66,7 +73,7 @@ void SceneMole::Init()
 	projection.SetToOrtho(0, m_worldWidth, 0, m_worldHeight, -10, 10);
 	projectionStack.LoadMatrix(projection);
 	
-	// ******************************* INIT THINGS HERE ******************************* //
+	// ******************************* INIT GAME THINGS HERE ******************************* //
 
 	// Top row of moles for rendering
 	for (unsigned int i = 0 ; i < 4 ; i++)
@@ -114,13 +121,22 @@ void SceneMole::Init()
 
 	m_popUpTimer = Math::RandFloatMinMax(0.5f, 1.5f);
 	m_score = 0;
-	m_gameTimer = 60.f;
+	m_gameTimer = 5.f;
 	m_gameOver = false;
+
+	// // ******************************* INIT RESULT THINGS HERE ******************************* //
+
+	r_quad01Pos.Set(m_quarterWorldWidth, m_sixthWorldHeight * 3, 6);
+	r_quad02Pos.Set(m_quarterWorldWidth * 3, m_sixthWorldHeight * 3, 6);
+	r_quad03Pos.Set(m_quarterWorldWidth, m_sixthWorldHeight, 6);
+	r_quad04Pos.Set(m_quarterWorldWidth * 3, m_sixthWorldHeight, 6);
+
 }
 
 void SceneMole::Update(double dt)
 {
 	SceneBase::Update(dt);
+	Results::getInstance()->UpdateVars(dt);
 	if (m_gameTimer <= 0)
 	{
 		m_gameTimer = 0.f;
@@ -284,9 +300,14 @@ void SceneMole::Render()
 	m_worldWidth = m_worldHeight * (float)Application::GetWindowWidth() / Application::GetWindowHeight();
 	m_halfWorldHeight = m_worldHeight / 2;
 	m_halfWorldWidth = m_worldWidth / 2;
-
+	
 	m_quarterWorldWidth = m_worldWidth / 4;
 	m_eightWorldWidth = m_worldWidth / 8;
+
+	r_quad01Pos.Set(m_quarterWorldWidth, m_sixthWorldHeight * 3, 6);
+	r_quad02Pos.Set(m_quarterWorldWidth * 3, m_sixthWorldHeight * 3, 6);
+	r_quad03Pos.Set(m_quarterWorldWidth, m_sixthWorldHeight, 6);
+	r_quad04Pos.Set(m_quarterWorldWidth * 3, m_sixthWorldHeight, 6);
 
 	// Projection matrix : Orthographic Projection
 	Mtx44 projection;
@@ -303,12 +324,16 @@ void SceneMole::Render()
 	// Model matrix : an identity matrix (model will be at the origin)
 	modelStack.LoadIdentity();
 
-	RenderMachine();
-	RenderGO(m_Hammer);
-	RenderUI();
+	if (!m_gameOver)
+	{
+		RenderMachine();
+		RenderGO(m_Hammer);
+		RenderUI();
+	}
 	if (m_gameOver)
 	{
-		RenderResults();
+		Results::getInstance()->RenderResults(m_score);
+		//RenderResults();
 	}
 
 }
@@ -485,27 +510,83 @@ void SceneMole::RenderUI()
 
 	std::ostringstream ss;
 	ss << "Score: " << m_score;
-	RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(1, 1, 1), 2, 30, 6);
+	RenderTextOnScreen(meshList[GEO_MOLEFONT], ss.str(), Color(1, 1, 1), 3, 30, 6);
 
 	ss.clear();
 	ss.str("");
 	ss.precision(3);
 	ss << "Time Left: " << m_gameTimer;
-	RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(1, 1, 1), 2, 25, 2);
+	RenderTextOnScreen(meshList[GEO_MOLEFONT], ss.str(), Color(1, 1, 1), 3, 18, 2);
 }
 
-void SceneMole::RenderResults()
-{
-	modelStack.PushMatrix();
-	modelStack.Translate(m_halfWorldWidth, m_halfWorldHeight, 5);
-	modelStack.Scale(198, 108, 1);
-	RenderMesh(meshList[GEO_MOLERESULTS], false);
-	modelStack.PopMatrix();
-
-	std::ostringstream ss;
-	ss << "Score: " << m_score;
-	RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(1, 1, 1), 2, 30, 10);
-}
+//void SceneMole::RenderResults()
+//{
+//	// the black bg the player sees
+//	modelStack.PushMatrix();
+//	modelStack.Translate(m_halfWorldWidth, m_halfWorldHeight, 5);
+//	modelStack.Scale(198, 108, 1);
+//	RenderMesh(meshList[GEO_MOLERESULTS], false);
+//	modelStack.PopMatrix();
+//
+//	std::ostringstream ss;
+//	ss << "MINIGAME OVER";
+//	RenderTextOnScreen(meshList[GEO_MOLEFONT], ss.str(), Color(1, 1, 1), 5, 10, 50);
+//
+//	ss.clear();
+//	ss.str("");
+//	ss << "Score: " << m_score;
+//	RenderTextOnScreen(meshList[GEO_MOLEFONT], ss.str(), Color(1, 1, 1), 2, 30, 45);
+//	// get instance of player stats
+//
+//	// Render Character Quad -> stats
+//	// C01 Quad
+//	modelStack.PushMatrix();
+//	modelStack.Translate(r_quad01Pos);
+//	modelStack.Scale(90, 30, 1);
+//	RenderMesh(meshList[GEO_C01_RESULT_QUAD], false);
+//	modelStack.PopMatrix();
+//
+//	// C01 Stats
+//
+//	// C02 Quad
+//	modelStack.PushMatrix();
+//	modelStack.Translate(r_quad02Pos);
+//	modelStack.Scale(90, 30, 1);
+//	RenderMesh(meshList[GEO_C02_RESULT_QUAD], false);
+//	modelStack.PopMatrix();
+//
+//	// C01 Stats
+//
+//	// C03 Quad
+//	modelStack.PushMatrix();
+//	modelStack.Translate(r_quad03Pos);
+//	modelStack.Scale(90, 30, 1);
+//	RenderMesh(meshList[GEO_C03_RESULT_QUAD], false);
+//	modelStack.PopMatrix();
+//
+//	// C01 Stats
+//
+//	// C04 Quad
+//	modelStack.PushMatrix();
+//	modelStack.Translate(r_quad04Pos);
+//	modelStack.Scale(90, 30, 1);
+//	RenderMesh(meshList[GEO_C04_RESULT_QUAD], false);
+//	modelStack.PopMatrix();
+//
+//	// C04 Stats
+//
+//
+//	// Collision check for mouse position and quad for rObjects
+//
+//
+//
+//	// Render Reset and Continue
+//	modelStack.PushMatrix();
+//	modelStack.PopMatrix();
+//
+//	modelStack.PushMatrix();
+//	modelStack.PopMatrix();
+//}
 
 bool SceneMole::HammerCollisionCheck()
 {
