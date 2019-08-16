@@ -85,6 +85,13 @@
       <Filter>Rendering\Scenes</Filter>
     </ClCompile>
     <ClCompile Include="SheepObject.cpp" />
+    <ClCompile Include="Source\Scenes\SceneFrog.cpp">
+      <Filter>Scenes</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Scenes\FrogObject.cpp">
+      <Filter>Scenes</Filter>
+    </ClCompile>
+
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\Scenes\CharacterObject.h">
@@ -166,6 +173,7 @@
     <ClInclude Include="Source\SpriteAnimation.h">
       <Filter>Rendering\Header</Filter>
     </ClInclude>
+
     <ClInclude Include="Source\Scenes\Scene.h">
       <Filter>Scenes\Header</Filter>
     </ClInclude>
@@ -194,6 +202,13 @@
       <Filter>Rendering\Scenes\Header</Filter>
     </ClInclude>
     <ClInclude Include="SheepObject.h" />
+
+    <ClInclude Include="Source\Scenes\SceneFrog.h">
+      <Filter>Scenes\Header</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Scenes\FrogObject.h">
+      <Filter>Scenes\Header</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Rendering">

@@ -84,6 +84,12 @@ public:
 		GEO_WALKRIGHT,
 		GEO_WALKLEFT,
 		GEO_ARROW, 
+		// SCENE FROG
+		GEO_FROG,
+		GEO_FROG_ROCK,
+		GEO_FROG_HEARTS,
+		GEO_FROG_MAP,
+		GEO_FROG_PLATFORM,
 
 		// SCENE MOLE
 		// Props
@@ -112,7 +118,7 @@ public:
 
 		// Animations
 		GEO_HAMMER_SPRITE,
-
+		
 		NUM_GEOMETRY,
 	};
 public:
