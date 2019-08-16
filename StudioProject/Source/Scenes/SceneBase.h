@@ -86,9 +86,10 @@ public:
 		GEO_ARROW, 
 		// SCENE FROG
 		GEO_FROG,
-		GEO_ROCK,
-		GEO_HEARTS,
-
+		GEO_FROG_ROCK,
+		GEO_FROG_HEARTS,
+		GEO_FROG_MAP,
+		GEO_FROG_PLATFORM,
 
 		// SCENE MOLE
 		// Props
@@ -100,7 +101,7 @@ public:
 		GEO_MOLETEST,
 		// Animations
 		GEO_HAMMER_SPRITE,
-
+		
 		NUM_GEOMETRY,
 	};
 public:

@@ -219,18 +219,26 @@ void StudioProjectScene::Update(double dt)
 
 	if (Application::IsKeyPressed(VK_F1))
 	{
+		prevChar = currentChar;
+		prevChar->setState(false);
 		currentChar = charOne;
 	}
 	if (Application::IsKeyPressed(VK_F2))
 	{
+		prevChar = currentChar;
+		prevChar->setState(false);
 		currentChar = charTwo;
 	}
 	if (Application::IsKeyPressed(VK_F3))
 	{
+		prevChar = currentChar;
+		prevChar->setState(false);
 		currentChar = charThree;
 	}
 	if (Application::IsKeyPressed(VK_F4))
 	{
+		prevChar = currentChar;
+		prevChar->setState(false);
 		currentChar = charFour;
 	}
 
