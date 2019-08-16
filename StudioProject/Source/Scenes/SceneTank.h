@@ -1,16 +1,16 @@
-#ifndef SCENEMAZE_H
-#define SCENEMAZE_H
+#ifndef SCENETANK_H
+#define SCENETANK_H
 
 #include "SceneBase.h"
 #include "PhysicsObject.h"
-#include "../Minigames/Maze/MazeGenerator.h"
+#include "TankObject.h"
 #include <vector>
 
-class SceneMaze : public SceneBase
+class SceneTank : public SceneBase
 {
 public:
-	SceneMaze();
-	~SceneMaze();
+	SceneTank();
+	~SceneTank();
 
 	virtual void Init();
 	virtual void Update(double dt);
@@ -35,7 +35,6 @@ private:
 	float m_speed;
 	float m_worldWidth;
 	float m_worldHeight;
-	MazeGenerator Maze;
 	// James 13/8/2019
 	//Mesh* meshList[NUM_GEOMETRY];
 	PhysicsObject* Ghost;
@@ -52,6 +51,12 @@ private:
 
 	bool endGame;
 	double elapsedTime;
+
+	// James 16/8/2019
+	TankObject* Tank[4];
+	TankObject* DummyTank;
+	Vector3 OldPos;
+	// End James 16/8/2019
 
 };
 

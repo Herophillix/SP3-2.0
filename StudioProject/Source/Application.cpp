@@ -14,6 +14,7 @@
 #include "../Source/Scenes/StudioProjectScene.h"
 #include "../Source/Scenes/SceneMole.h"
 #include "../Source/Scenes/SceneMaze.h"
+#include "../Source/Scenes/SceneTank.h"
 
 GLFWwindow* m_window;
 const unsigned char FPS = 60; // FPS of this game
@@ -125,14 +126,41 @@ void Application::Init()
 void Application::Run()
 {
 	//Main Loop
-	Scene *scene = new SceneMole;
-	scene->Init();
-
+	const int NumScene = 4;
+	Scene *scene[NumScene];
+	scene[0] = new StudioProjectScene;
+	scene[1] = new SceneMaze;
+	scene[2] = new SceneMole;
+	scene[3] = new SceneTank;
+	for (int i = 0; i < NumScene; ++i)
+	{
+		scene[i]->Init();
+	}
+	Scene* currentscene = scene[1];
 	m_timer.startTimer();    // Start timer to calculate how long it takes to render this frame
 	while (!glfwWindowShouldClose(m_window) && !IsKeyPressed(VK_ESCAPE))
 	{
-		scene->Update(m_timer.getElapsedTime());
-		scene->Render();
+		if (IsKeyPressed(VK_NUMPAD1))
+		{
+			currentscene = scene[0];
+		}
+		else if (IsKeyPressed(VK_NUMPAD2))
+		{
+			glViewport(0, 0, 1980, 1080);
+			currentscene = scene[1];
+		}
+		else if (IsKeyPressed(VK_NUMPAD3))
+		{
+			glViewport(0, 0, 1980, 1080);
+			currentscene = scene[2];
+		}
+		else if (IsKeyPressed(VK_NUMPAD4))
+		{
+			glViewport(0, 0, 1980, 1080);
+			currentscene = scene[3];
+		}
+		currentscene->Update(m_timer.getElapsedTime());
+		currentscene->Render();
 		//Swap buffers
 		glfwSwapBuffers(m_window);
 		//Get and organize events, like keyboard and mouse input, window resizing, etc...
@@ -140,8 +168,12 @@ void Application::Run()
         m_timer.waitUntil(frameTime);       // Frame rate limiter. Limits each frame to a specified time in ms.   
 
 	} //Check if the ESC key had been pressed or if the window had been closed
-	scene->Exit();
-	delete scene;
+	for (int i = 0; i < NumScene; ++i)
+	{
+		scene[i]->Exit();
+		delete scene[i];
+	}
+	//delete[] scene;
 }
 
 void Application::Exit()

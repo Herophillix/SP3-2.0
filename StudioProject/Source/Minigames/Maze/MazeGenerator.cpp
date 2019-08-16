@@ -2,7 +2,7 @@
 
 MazeGenerator::MazeGenerator()
 {
-
+	BiggestLength = 0.f;
 }
 
 MazeGenerator::~MazeGenerator()
@@ -10,7 +10,7 @@ MazeGenerator::~MazeGenerator()
 
 }
 
-void MazeGenerator::SetUp(string FileDirectory)
+void MazeGenerator::SetUp(string FileDirectory, vector<PhysicsObject*>* m_goList)
 {
 	fstream File;
 	File.open(FileDirectory);
@@ -70,6 +70,7 @@ void MazeGenerator::SetUp(string FileDirectory)
 		maze->normal.Set(cosf(maze->angle_normal), sinf(maze->angle_normal), 0);
 
 		maze->offset.Set(stof(info[2]), stof(info[3]), stof(info[4]));
+		BiggestLength = (BiggestLength >= maze->offset.Length() ? BiggestLength : maze->offset.Length());
 		maze->normal_position = maze->offset.Normalized();
 		maze->angle_offset = atan2(maze->normal_position.y, maze->normal_position.x);
 
@@ -83,69 +84,20 @@ void MazeGenerator::SetUp(string FileDirectory)
 
 		maze->active = true;
 		cout << "P: " << maze->pos << ", S: " << maze->scale << ", A: " << Math::RadianToDegree(maze->angle_normal) << ", O: " << Math::RadianToDegree(maze->angle_offset) << endl;
-		MazeList.push_back(maze);
+		m_goList->push_back(maze);
 	}
 }
 
-void MazeGenerator::Update(double dt)
-{
-	//Calculating aspect ratio
-	m_worldHeight = 200.f;
-	m_worldWidth = m_worldHeight * (float)Application::GetWindowWidth() / Application::GetWindowHeight();
-	for (int i = 0; i < (int)MazeList.size(); ++i)
-	{
-		float tempvel = Math::DegreeToRadian(30);
-		MazeObject* go = MazeList[i];
-		go->angle_normal_prev = go->angle_normal;
-		if ((go->level == MazeObject::G_ZERO || go->level == MazeObject::G_TWO))
-		{
-			if (Application::IsKeyPressed('X'))
-			{
-				go->angle_normal += tempvel * static_cast<float>(dt);
-				go->angle_offset += tempvel * static_cast<float>(dt);
-			}
-			else if (Application::IsKeyPressed(VK_OEM_PERIOD))
-			{
-				go->angle_normal -= tempvel * static_cast<float>(dt);
-				go->angle_offset -= tempvel * static_cast<float>(dt);
-			}
-			else
-			{
-				go->angle_normal += tempvel / 3.f * static_cast<float>(dt);
-				go->angle_offset += tempvel / 3.f * static_cast<float>(dt);
-			}
-		}
-		else
-		{
-			if (Application::IsKeyPressed('C'))
-			{
-				go->angle_normal += tempvel * static_cast<float>(dt);
-				go->angle_offset += tempvel * static_cast<float>(dt);
-			}
-			else if (Application::IsKeyPressed(VK_OEM_COMMA))
-			{
-				go->angle_normal -= tempvel * static_cast<float>(dt);
-				go->angle_offset -= tempvel * static_cast<float>(dt);
-			}
-			else
-			{
-				go->angle_normal -= tempvel / 3.f * static_cast<float>(dt);
-				go->angle_offset -= tempvel / 3.f * static_cast<float>(dt);
-			}
-		}
-		go->normal = Vector3(cosf(go->angle_normal), sinf(go->angle_normal), 0);
-		go->normal_position = Vector3(cosf(go->angle_offset), sinf(go->angle_offset), 0);
-		go->pos.x = m_worldWidth * 0.5f;
-		go->pos.y = m_worldHeight * 0.5f;
-		go->pos += go->offset.Length() * go->normal_position;
-	}
-}
+//void MazeGenerator::AddMazetoGOList(vector<PhysicsObject*>* m_goList)
+//{
+//	for (int i = 0; i < (int)MazeList.size(); ++i)
+//	{
+//		PhysicsObject* go = MazeList[i];
+//		m_goList->push_back(go);
+//	}
+//}
 
-void MazeGenerator::AddMazetoGOList(vector<PhysicsObject*>* m_goList)
+float MazeGenerator::getBiggestLength()
 {
-	for (int i = 0; i < (int)MazeList.size(); ++i)
-	{
-		PhysicsObject* go = MazeList[i];
-		m_goList->push_back(go);
-	}
+	return BiggestLength;
 }

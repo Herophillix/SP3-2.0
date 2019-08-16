@@ -2,6 +2,7 @@
 #define PHYSICS_OBJECT_H
 
 #include "GameObject.h"
+#include "../Application.h"
 
 class PhysicsObject : public GameObject
 {
@@ -26,6 +27,8 @@ public:
 	Vector3 normal;
 	// End James 13/8/2019
 	virtual void CollisionResponse(PhysicsObject* go, double dt);
+	virtual void Update(double dt, float m_worldWidth, float m_worldHeight);
+	void Constrain(float m_worldWidth, float m_worldHeight);
 };
 
 #endif

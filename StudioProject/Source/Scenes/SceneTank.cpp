@@ -1,20 +1,20 @@
-#include "SceneMaze.h"
+#include "SceneTank.h"
 #include "GL\glew.h"
 #include "../Application.h"
 #include <sstream>
 #include "../Rendering/LoadTGA.h"
 #include "../Rendering/MeshBuilder.h"
 
-SceneMaze::SceneMaze()
+SceneTank::SceneTank()
 {
 }
 
 
-SceneMaze::~SceneMaze()
+SceneTank::~SceneTank()
 {
 }
 
-void SceneMaze::Init()
+void SceneTank::Init()
 {
 	SceneBase::Init();
 
@@ -70,8 +70,6 @@ void SceneMaze::Init()
 	tempwall4->normal = Vector3(1, 0, 0);
 	tempwall4->scale.Set(5, m_worldHeight, 1);
 
-	Maze.SetUp("Source\\Minigames\\Maze\\Map\\Map1.txt",m_goList);
-
 	// End James 14/8/2019
 	// End James 13/8/2019
 
@@ -79,11 +77,45 @@ void SceneMaze::Init()
 	enableStencil = true;
 	// End James 15/8/2019
 
+	// James 16/8/2019
+	Tank[0] = new TankObject(PhysicsObject::GO_WALL);
+	Tank[0]->pos.Set(m_worldWidth* 0.5f, m_worldHeight * 0.5f, 0);
+	Tank[0]->scale.Set(4, 10, 1);
+	Tank[0]->normal.Set(0, 1, 0);
+	Tank[0]->active = true;
+	m_goList->push_back(Tank[0]);
+
+	Tank[1] = new TankObject(PhysicsObject::GO_WALL);
+	Tank[1]->pos.Set(m_worldWidth* 0.5f, m_worldHeight * 0.75f, 0);
+	Tank[1]->scale.Set(4, 10, 1);
+	Tank[1]->normal.Set(0, 1, 0);
+	Tank[1]->active = true;
+	m_goList->push_back(Tank[1]);
+
+	Tank[2] = new TankObject(PhysicsObject::GO_WALL);
+	Tank[2]->pos.Set(m_worldWidth* 0.75f, m_worldHeight * 0.5f, 0);
+	Tank[2]->scale.Set(4, 10, 1);
+	Tank[2]->normal.Set(0, 1, 0);
+	Tank[2]->active = true;
+	m_goList->push_back(Tank[2]);
+
+	Tank[3] = new TankObject(PhysicsObject::GO_WALL);
+	Tank[3]->pos.Set(m_worldWidth* 0.25f, m_worldHeight * 0.75f, 0);
+	Tank[3]->scale.Set(4, 10, 1);
+	Tank[3]->normal.Set(0, 1, 0);
+	Tank[3]->active = true;
+	m_goList->push_back(Tank[3]);
+
+	DummyTank = new TankObject(PhysicsObject::GO_WALL);
+	DummyTank->active = false;
+
+	TankObject::currentTank = Tank[0];
+
 	endGame = true;
 	elapsedTime = 0;
 }
 
-void SceneMaze::Update(double dt)
+void SceneTank::Update(double dt)
 {
 	SceneBase::Update(dt);
 	//Calculating aspect ratio
@@ -124,9 +156,13 @@ void SceneMaze::Update(double dt)
 		bLButtonState = true;
 		std::cout << "LBUTTON DOWN" << std::endl;
 
+		// James 16/8/2019
+		TankObject::currentTank = Tank[TankObject::TankIndex++ % (TankObject::TankCount - 1)];
+		// End James 16/8/2019
 		// James 13/8/2019
 		Ghost->active = true;
-		Ghost->pos = v_mousepos;
+		Ghost->pos = TankObject::currentTank->pos;
+		OldPos = v_mousepos;
 		// End James 13/8/2019
 	}
 	else if (bLButtonState && !Application::IsMousePressed(0))
@@ -138,12 +174,13 @@ void SceneMaze::Update(double dt)
 		PhysicsObject *temp = FetchGO();
 		temp->type = PhysicsObject::GO_BALL;
 		temp->pos = Ghost->pos;
-		temp->vel = Ghost->pos - v_mousepos;
+		temp->vel = OldPos - v_mousepos;
 		temp->scale.Set(2, 2, 1);
 		Ghost->active = false;
+		TankObject::currentTank = DummyTank;
 		// End James 13/8/2019
 		// James 15/8/2019
-		//Ball = temp;
+		//	Ball = temp;
 		// End James 15/8/2019
 	}
 	static bool bRButtonState = false;
@@ -194,11 +231,12 @@ void SceneMaze::Update(double dt)
 	{
 		Trace[i]->active = false;
 	}
-	if (Ghost->active && !Ghost->vel.IsZero())
+	if (Ghost->active && !(OldPos - v_mousepos).IsZero())
 	{
 		Vector3 m_gravity(0, -9.8f, 0);
 		PhysicsObject temp;
 		temp = *Ghost;
+		temp.vel = OldPos - v_mousepos;
 		temp.type = PhysicsObject::GO_TRACE;
 		float time = 0.f;
 		int index = 0;
@@ -257,13 +295,6 @@ void SceneMaze::Update(double dt)
 		if (go->active)
 		{
 			go->Update(dt, m_worldWidth, m_worldHeight);
-			if (go == Ball)
-			{
-				if ((go->pos - Vector3(m_worldWidth * 0.5f, m_worldHeight * 0.5f, 0)).Length() > Maze.getBiggestLength())
-				{
-					endGame = true;
-				}
-			}
 			for (int k = i + 1; k < (int)m_goList->size(); ++k)
 			{
 				PhysicsObject* go2 = (*m_goList)[k];
@@ -301,7 +332,7 @@ void SceneMaze::Update(double dt)
 }
 
 // James 13/8/2019
-bool SceneMaze::CheckCollision(PhysicsObject* go, PhysicsObject* go2)
+bool SceneTank::CheckCollision(PhysicsObject* go, PhysicsObject* go2)
 {
 	switch (go2->type)
 	{
@@ -353,7 +384,7 @@ bool SceneMaze::CheckCollision(PhysicsObject* go, PhysicsObject* go2)
 	return false;
 }
 
-float SceneMaze::CheckCollision2(PhysicsObject* go, PhysicsObject* go2)
+float SceneTank::CheckCollision2(PhysicsObject* go, PhysicsObject* go2)
 {
 	switch (go2->type)
 	{
@@ -419,7 +450,7 @@ float SceneMaze::CheckCollision2(PhysicsObject* go, PhysicsObject* go2)
 }
 // End James 13/8/2019
 
-void SceneMaze::Render()
+void SceneTank::Render()
 {
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
@@ -499,7 +530,7 @@ void SceneMaze::Render()
 	// End James 14/8/2019
 }
 
-void SceneMaze::Exit()
+void SceneTank::Exit()
 {
 	SceneBase::Exit();
 	//Cleanup PhysicsObjects
@@ -510,9 +541,10 @@ void SceneMaze::Exit()
 		m_goList->pop_back();
 	}
 	delete m_goList;
+	delete DummyTank;
 }
 
-void SceneMaze::RenderGO(PhysicsObject * go)
+void SceneTank::RenderGO(PhysicsObject * go)
 {
 	switch (go->type)
 	{
@@ -560,7 +592,7 @@ void SceneMaze::RenderGO(PhysicsObject * go)
 	}
 }
 
-PhysicsObject * SceneMaze::FetchGO()
+PhysicsObject * SceneTank::FetchGO()
 {
 	for (int i = 0; i < (int)m_goList->size(); i++)
 	{
@@ -581,7 +613,7 @@ PhysicsObject * SceneMaze::FetchGO()
 }
 
 // James 15/8/2019
-void SceneMaze::ActivateStencil()
+void SceneTank::ActivateStencil()
 {
 	// Enable stencil mode
 	glEnable(GL_STENCIL_TEST);
@@ -614,7 +646,7 @@ void SceneMaze::ActivateStencil()
 	glDepthMask(GL_TRUE); // Write to depth buffer
 }
 
-void SceneMaze::DeactivateStencil()
+void SceneTank::DeactivateStencil()
 {
 	// Switch off alpha test
 	glDisable(GL_ALPHA_TEST);
