@@ -18,6 +18,7 @@ public:
 	MazeObject();
 	~MazeObject();
 	void CollisionResponse(PhysicsObject* go, double dt);
+	void Update(double dt, float m_worldWidth, float m_worldHeight);
 
 	Vector3 offset;
 	Vector3 normal_position;

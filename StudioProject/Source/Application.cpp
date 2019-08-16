@@ -15,6 +15,7 @@
 #include "../Source/Scenes/SceneMole.h"
 #include "../Source/Scenes/SceneMaze.h"
 #include "../Source/Scenes/SceneFrog.h"
+#include "../Source/Scenes/SceneTank.h"
 
 GLFWwindow* m_window;
 const unsigned char FPS = 60; // FPS of this game
@@ -138,14 +139,13 @@ void Application::Run()
 			thisScene[i]->Init();
 		}
 	}
-
 	Scene* currentscene = thisScene[currentScene];
-
-
 	m_timer.startTimer();    // Start timer to calculate how long it takes to render this frame
 	while (!glfwWindowShouldClose(m_window) && !IsKeyPressed(VK_ESCAPE))
 	{
  		thisScene[currentScene]->Update(m_timer.getElapsedTime());
+		thisScene[currentScene]->Render();
+		thisScene[currentScene]->Update(m_timer.getElapsedTime());
 		thisScene[currentScene]->Render();
 		//Swap buffers
 		glfwSwapBuffers(m_window);
@@ -162,7 +162,7 @@ void Application::Run()
 		}
 		delete thisScene[i];
 	}
-	//delete thisScene[currentScene];
+	//delete[] scene;
 }
 void Application::setScene(int i)
 {

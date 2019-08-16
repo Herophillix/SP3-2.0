@@ -10,6 +10,53 @@ MazeObject::~MazeObject()
 
 }
 
+void MazeObject::Update(double dt, float m_worldWidth, float m_worldHeight)
+{
+	float tempvel = Math::DegreeToRadian(30);
+	angle_normal_prev = angle_normal;
+	if ((level == MazeObject::G_ZERO || level == MazeObject::G_TWO))
+	{
+		if (Application::IsKeyPressed('X'))
+		{
+			angle_normal += tempvel * static_cast<float>(dt);
+			angle_offset += tempvel * static_cast<float>(dt);
+		}
+		else if (Application::IsKeyPressed(VK_OEM_PERIOD))
+		{
+			angle_normal -= tempvel * static_cast<float>(dt);
+			angle_offset -= tempvel * static_cast<float>(dt);
+		}
+		else
+		{
+			angle_normal += tempvel / 3.f * static_cast<float>(dt);
+			angle_offset += tempvel / 3.f * static_cast<float>(dt);
+		}
+	}
+	else
+	{
+		if (Application::IsKeyPressed('C'))
+		{
+			angle_normal += tempvel * static_cast<float>(dt);
+			angle_offset += tempvel * static_cast<float>(dt);
+		}
+		else if (Application::IsKeyPressed(VK_OEM_COMMA))
+		{
+			angle_normal -= tempvel * static_cast<float>(dt);
+			angle_offset -= tempvel * static_cast<float>(dt);
+		}
+		else
+		{
+			angle_normal -= tempvel / 3.f * static_cast<float>(dt);
+			angle_offset -= tempvel / 3.f * static_cast<float>(dt);
+		}
+	}
+	normal = Vector3(cosf(angle_normal), sinf(angle_normal), 0);
+	normal_position = Vector3(cosf(angle_offset), sinf(angle_offset), 0);
+	pos.x = m_worldWidth * 0.5f;
+	pos.y = m_worldHeight * 0.5f;
+	pos += offset.Length() * normal_position;
+}
+
 void MazeObject::CollisionResponse(PhysicsObject* go, double dt)
 {
 	MazeObject* go2 = this;
@@ -60,7 +107,7 @@ void MazeObject::CollisionResponse(PhysicsObject* go, double dt)
 		//float projectionDepth = dis.Dot(-N) / dis.Length() * dis.Length();
 		//float depth = (go2->scale.x / 2 + radius) - projectionDepth;
 		//go->pos += depth * N;
-		go->vel = go->vel - 2 * go->vel.Dot(go2->normal) * go2->normal;
+		go->vel = go->vel - 1.98 * go->vel.Dot(go2->normal) * go2->normal;
 		//if (go2->member == GameObject::M_WALL_NORMAL)
 		//{
 		//	go->vel *= 0.90f;
@@ -93,7 +140,7 @@ void MazeObject::CollisionResponse(PhysicsObject* go, double dt)
 		go->vel += fabs(go2->angle_normal - go2->angle_normal_prev) * (1 / static_cast<float>(dt)) * -N * distance;
 		if (go->vel.Length() > 0)
 		{
-			go->vel = Math::Clamp(go->vel.Length(), 0.f, 100.f) * go->vel.Normalized();
+			go->vel = Math::Clamp(go->vel.Length(), 0.f, 75.f) * go->vel.Normalized();
 		}
 		//}
 		//// DAMPENS THE VELOCITY
