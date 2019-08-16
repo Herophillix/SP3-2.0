@@ -30,7 +30,7 @@ void SceneFrog::Init()
 
 
 	//Calculating aspect ratio
-	m_worldHeight = 100.f;
+	m_worldHeight = 200.f;
 	m_worldWidth = m_worldHeight * (float)Application::GetWindowWidth() / Application::GetWindowHeight();
 	m_halfWorldHeight = m_worldHeight / 2;
 	m_halfWorldWidth = m_worldWidth / 2;
@@ -42,7 +42,7 @@ void SceneFrog::Init()
 
 
 	meshList[GEO_FROG] = MeshBuilder::GenerateQuad("frog", Color(1, 1, 1), 1.f);
-	meshList[GEO_FROG]->textureID = LoadTGA("Image//balloon.tga");
+	//meshList[GEO_FROG]->textureID = LoadTGA("Image//balloon.tga");
 	meshList[GEO_FROG_MAP] = MeshBuilder::GenerateQuad("map", Color(1, 1, 1), 1.f);
 	meshList[GEO_FROG_MAP]->textureID = LoadTGA("Image//BGTest.tga");
 	//meshList[GEO_FROG_PLATFORM] = MeshBuilder::GenerateQuad("platform", Color(1, 1, 1), 1.f);
@@ -66,20 +66,20 @@ void SceneFrog::Init()
 	Frog = FetchGO();
 	Frog->active = true;
 	Frog->type = FrogObject::GO_FROG;
-	Frog->scale.Set(50, 50, 50);
-	Frog->Frog_pos.Set(100, 100, 1);
+	Frog->scale.Set(2, 2, 1);
+	Frog->Frog_pos.Set(100, 100, 0);
 	Frog->Frog_vel.Set(0, 0, 0);
 	Frog->Frog_jumpVel.Set(0, 20, 0);
 
 	rockSize = (Math::RandFloatMinMax(10, 20));
 
-	for (int i = 0; i < 10; i++)
+	/*for (int i = 0; i < 10; i++)
 	{
 		FrogObject* rock = new FrogObject(FrogObject::GO_ROCK);
 		rock->active = true;
 		rock->pos.Set(Math::RandFloatMinMax(50, m_worldWidth - 50), m_worldHeight + 10, 0);
 		rock->Frog_vel.Set(0, m_grav.y, 0);
-	}
+	}*/
 	
 }
 
@@ -123,13 +123,19 @@ bool CheckCollision(FrogObject* go, FrogObject* go2)
 void SceneFrog::Update(double dt)
 {
 	SceneBase::Update(dt);
+
+	double x, y;
+	Application::GetCursorPos(&x, &y);
+	int w = Application::GetWindowWidth();
+	int h = Application::GetWindowHeight();
+	v_mousepos = Vector3(static_cast<float>(x) / (w / m_worldWidth), (h - static_cast<float>(y)) / (h / m_worldHeight), 0.0f);
 	if (Application::IsKeyPressed('A'))
 	{
-		Frog->Frog_vel.x -= 1.f;
+		Frog->Frog_vel.x -= 10.f * dt;
 	}
 	if (Application::IsKeyPressed('D'))
 	{
-		Frog->Frog_vel.x += 1.f;
+		Frog->Frog_vel.x += 10.f * dt;
 	}
 	m_grav.Set(0, -10 * (1 / rockSize), 0);
 
@@ -145,6 +151,8 @@ void SceneFrog::Update(double dt)
 			{
 			case FrogObject::GO_FROG:
 			{
+
+				cout << Frog->Frog_pos << endl;
 				break;
 
 			}
@@ -282,6 +290,10 @@ void SceneFrog::Render()
 		}
 	}
 
+	std::ostringstream ss;
+	ss.precision(5);
+	ss << "M:" << v_mousepos;
+	RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(0, 1, 0), 3, 0, 0);
 	//RenderMap();
 }
 

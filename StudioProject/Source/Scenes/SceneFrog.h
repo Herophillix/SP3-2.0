@@ -41,7 +41,7 @@ private:
 
 	Vector3 m_grav;
 
-
+	Vector3 v_mousepos;
 };
 
 #endif
