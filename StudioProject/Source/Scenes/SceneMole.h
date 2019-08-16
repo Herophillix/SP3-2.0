@@ -1,7 +1,7 @@
 #ifndef SCENEMOLE_H
 #define SCENEMOLE_H
 #include "scenebase.h"
-
+#include "StudioProjectScene.h"
 #include "GameObject.h"
 #include "MoleObject.h"
 #include "ResultObject.h"
@@ -43,7 +43,6 @@ private:
 	float m_worldHeight;
 	float m_halfWorldWidth;
 	float m_halfWorldHeight;
-
 	float m_quarterWorldWidth;
 	float m_eightWorldWidth;
 
