@@ -132,6 +132,8 @@ void Application::Run()
 	thisScene[SCENEMAIN] = new StudioProjectScene;
 	thisScene[SCENEMAZE] = new SceneMaze;
 	thisScene[SCENEMOLE] = new SceneMole;
+	thisScene[SCENETANK] = new SceneTank;
+	thisScene[SCENEFROG] = new SceneFrog;
 	for (int i = 0; i < TOTALSCENES; ++i)
 	{
 		if (thisScene[i])
