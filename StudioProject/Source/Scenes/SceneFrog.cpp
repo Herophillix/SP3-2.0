@@ -42,13 +42,13 @@ void SceneFrog::Init()
 
 
 	meshList[GEO_FROG] = MeshBuilder::GenerateQuad("frog", Color(1, 1, 1), 1.f);
-	meshList[GEO_FROG]->textureID = LoadTGA("Image//Idle_anim2.tga");
+	meshList[GEO_FROG]->textureID = LoadTGA("Image//balloon.tga");
 	meshList[GEO_FROG_MAP] = MeshBuilder::GenerateQuad("map", Color(1, 1, 1), 1.f);
 	meshList[GEO_FROG_MAP]->textureID = LoadTGA("Image//BGTest.tga");
-	meshList[GEO_FROG_PLATFORM] = MeshBuilder::GenerateQuad("platform", Color(1, 1, 1), 1.f);
-	meshList[GEO_FROG_PLATFORM]->textureID = LoadTGA("Image//Frog_ground.tga");
-	meshList[GEO_FROG_ROCK] = MeshBuilder::GenerateCircle("rock", Color(1, 1, 1), 1.f);
-	meshList[GEO_FROG_ROCK]->textureID = LoadTGA("Image//Frog_rock.tga");
+	//meshList[GEO_FROG_PLATFORM] = MeshBuilder::GenerateQuad("platform", Color(1, 1, 1), 1.f);
+	//meshList[GEO_FROG_PLATFORM]->textureID = LoadTGA("Image//Frog_ground.tga");
+	//meshList[GEO_FROG_ROCK] = MeshBuilder::GenerateCircle("rock", Color(1, 1, 1), 1.f);
+	//meshList[GEO_FROG_ROCK]->textureID = LoadTGA("Image//Frog_rock.tga");
 	meshList[GEO_TEXT] = MeshBuilder::GenerateText("text", 16, 16);
 	meshList[GEO_TEXT]->textureID = LoadTGA("Image//calibri.tga");
 	//  ******************************* SPRITE ANIMATIONS HERE  ******************************* //
@@ -66,7 +66,8 @@ void SceneFrog::Init()
 	Frog = FetchGO();
 	Frog->active = true;
 	Frog->type = FrogObject::GO_FROG;
-	Frog->Frog_pos.Set(10, 10, 0);
+	Frog->scale.Set(50, 50, 50);
+	Frog->Frog_pos.Set(100, 100, 1);
 	Frog->Frog_vel.Set(0, 0, 0);
 	Frog->Frog_jumpVel.Set(0, 20, 0);
 
@@ -124,17 +125,20 @@ void SceneFrog::Update(double dt)
 	SceneBase::Update(dt);
 	if (Application::IsKeyPressed('A'))
 	{
-		Frog->Frog_vel.x -= 1;
+		Frog->Frog_vel.x -= 1.f;
 	}
 	if (Application::IsKeyPressed('D'))
 	{
-		Frog->Frog_vel.x += 1;
+		Frog->Frog_vel.x += 1.f;
 	}
 	m_grav.Set(0, -10 * (1 / rockSize), 0);
 
 	for (int i = 0; i < (int)m_goList->size(); ++i)
 	{
+
 		FrogObject *go = (*m_goList)[i];
+		go->Frog_pos += go->Frog_vel * (float)dt;
+
 		if (go->active)
 		{
 			switch (go->type)
@@ -142,6 +146,7 @@ void SceneFrog::Update(double dt)
 			case FrogObject::GO_FROG:
 			{
 				break;
+
 			}
 			case FrogObject::GO_ROCK:
 			{
@@ -152,7 +157,6 @@ void SceneFrog::Update(double dt)
 				}
 			}
 			}
-			go->pos += go->Frog_vel;
 			for (int k = i + 1; k < (int)m_goList->size(); ++k)
 			{
 				FrogObject* go2 = (*m_goList)[k];
@@ -278,7 +282,7 @@ void SceneFrog::Render()
 		}
 	}
 
-	RenderMap();
+	//RenderMap();
 }
 
 void SceneFrog::Exit()
