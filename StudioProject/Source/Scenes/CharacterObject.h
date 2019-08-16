@@ -11,6 +11,7 @@ public:
 		GO_CUBE,
 		GO_QUAD,
 		GO_SPRITE_TEST,
+		GO_TELEVISION,
 		GO_CHAR01,
 		GO_CHAR02,
 		GO_CHAR03,
@@ -25,6 +26,7 @@ public:
 	float motivation;
 	float rest;
 	float workDone;
+	bool resting;
 	bool giveUp;
 	bool m_dLeftRight;
 	bool isMoving;

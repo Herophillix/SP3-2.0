@@ -155,11 +155,11 @@ void SceneMole::Update(double dt)
 
 	UpdateMoles(dt);
 
-	/*for (std::vector<GameObject* >::iterator it = m_moleListTop.begin(); it != m_moleListTop.end(); ++it)
+	if (m_gameTimer < 0)
 	{
-
-	}*/
-
+		Application::setScene(0);
+		m_gameTimer = 60;
+	}
 
 	UpdateParticles(dt);
 }

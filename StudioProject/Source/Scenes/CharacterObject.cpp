@@ -9,7 +9,8 @@ CharacterObject::CharacterObject(CHARACTEROBJECT_TYPE typeValue)
 	rest(100),
 	frustration(0),
 	workDone(0),
-	m_dLeftRight(false)
+	m_dLeftRight(false),
+	isMoving(false)
 {
 	type = typeValue;
 	m_Count++;
@@ -41,27 +42,43 @@ void CharacterObject::setState(bool move)
 
 void CharacterObject::Update(double dt)
 {
-	if (frustration < 100)
+	if (frustration < 100 && resting == false)
 	{
-		frustration += 0.4f / experience * 1 / m_Count * dt;
+		frustration += 0.8f / experience * 1 / m_Count * dt;
 	}
-	if (rest > 0)
+	if(frustration > 0 && resting == true)
 	{
-		rest -= 1.5f  *  experience * dt / m_Count;
+		frustration -= 0.8f / experience * 1 / m_Count * dt;
 	}
-	else
+	if (frustration < 0.005f)
+	{
+		frustration = 0.005f;
+	}
+	if (rest > 0 && resting == false)
+	{
+		rest -= 0.5f  *  experience * dt / m_Count;
+	}
+	if (rest < 100 && resting == true)
+	{
+		rest += 0.5f  *  experience * dt / m_Count;
+	}
+	if(rest < 0.005f)
 	{
 		rest = 0.005f;
 	}
-	if (motivation > 0)
+	if (motivation > 0 && resting == false)
 	{
 		motivation -= 0.5f * experience * dt / m_Count;
 	}
-	else
+	if (motivation < 100 && resting == true)
+	{
+		motivation += 0.5f * experience * dt / m_Count;
+	}
+	if(rest < 0.00f)
 	{
 		rest = 0.005f;
 	}
-	if (workDone < 100)
+	if (workDone < 100 && resting == false)
 	{
 		workDone += 0.50f / experience * motivation / rest *  dt / m_Count;
 	}
@@ -72,15 +89,21 @@ void CharacterObject::UpdateMovement(double dt)
 	if (Application::IsKeyPressed('D') || Application::IsKeyPressed('A'))
 	{
 		isMoving = true;
-		if (Application::IsKeyPressed('D'))
+		if (pos.x < 165)
 		{
-			pos.x += 1;
-			m_dLeftRight = false;
+			if (Application::IsKeyPressed('D'))
+			{
+				pos.x += 1;
+				m_dLeftRight = false;
+			}
 		}
-		if (Application::IsKeyPressed('A'))
+		if (pos.x > 15)
 		{
-			pos.x -= 1;
-			m_dLeftRight = true;
+			if (Application::IsKeyPressed('A'))
+			{
+				pos.x -= 1;
+				m_dLeftRight = true;
+			}
 		}
 	}
 	else

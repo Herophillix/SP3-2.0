@@ -34,12 +34,6 @@
     <ClCompile Include="Source\Scenes\SceneBase.cpp">
       <Filter>Rendering\Scenes</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Rendering\Mesh.cpp">
-      <Filter>Rendering</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Rendering\MeshBuilder.cpp">
-      <Filter>Rendering</Filter>
-    </ClCompile>
     <ClCompile Include="Source\Rendering\Particles.cpp">
       <Filter>Rendering</Filter>
     </ClCompile>
@@ -55,15 +49,25 @@
     <ClCompile Include="Source\main.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Rendering\LoadTGA.cpp">
+    <ClCompile Include="Source\Utility.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Rendering\MeshBuilder.cpp">
+      <Filter>Rendering</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Rendering\Mesh.cpp">
       <Filter>Rendering</Filter>
     </ClCompile>
     <ClCompile Include="Source\Rendering\LoadOBJ.cpp">
       <Filter>Rendering</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Utility.cpp">
-      <Filter>Source Files</Filter>
+    <ClCompile Include="Source\Rendering\LoadTGA.cpp">
+      <Filter>Rendering</Filter>
     </ClCompile>
+    <ClCompile Include="SheepGame.cpp">
+      <Filter>Rendering\Scenes</Filter>
+    </ClCompile>
+    <ClCompile Include="SheepObject.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\Scenes\CharacterObject.h">
@@ -99,15 +103,6 @@
     <ClInclude Include="Source\Material.h">
       <Filter>Rendering\Header</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Rendering\Mesh.h">
-      <Filter>Rendering\Header</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Rendering\MeshBuilder.h">
-      <Filter>Rendering\Header</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Rendering\Particles.h">
-      <Filter>Rendering\Header</Filter>
-    </ClInclude>
     <ClInclude Include="Source\Rendering\shader.hpp">
       <Filter>Rendering\Header</Filter>
     </ClInclude>
@@ -120,15 +115,6 @@
     <ClInclude Include="Source\Scenes\GameObject.h">
       <Filter>Rendering\Scenes\Header</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Light.h">
-      <Filter>Rendering\Header</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Rendering\LoadOBJ.h">
-      <Filter>Rendering\Header</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Rendering\LoadTGA.h">
-      <Filter>Rendering\Header</Filter>
-    </ClInclude>
     <ClInclude Include="Source\Utility.h">
       <Filter>Source Files\Header</Filter>
     </ClInclude>
@@ -138,6 +124,28 @@
     <ClInclude Include="Source\Application.h">
       <Filter>Source Files\Header</Filter>
     </ClInclude>
+    <ClInclude Include="Source\Rendering\LoadOBJ.h">
+      <Filter>Rendering\Header</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Light.h">
+      <Filter>Rendering\Header</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Rendering\Particles.h">
+      <Filter>Rendering\Header</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Rendering\MeshBuilder.h">
+      <Filter>Rendering\Header</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Rendering\Mesh.h">
+      <Filter>Rendering\Header</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Rendering\LoadTGA.h">
+      <Filter>Rendering\Header</Filter>
+    </ClInclude>
+    <ClInclude Include="SheepGame.h">
+      <Filter>Rendering\Scenes\Header</Filter>
+    </ClInclude>
+    <ClInclude Include="SheepObject.h" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Rendering">

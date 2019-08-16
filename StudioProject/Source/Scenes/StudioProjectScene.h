@@ -13,24 +13,28 @@ class StudioProjectScene : public SceneBase
 		GEO_CUBE,
 		GEO_QUAD,
 		// GEOs for stats
-		GEO_FRUSTRATION,
 		GEO_CHARONEFRUST,
 		GEO_CHARONEMOTIVE,
 		GEO_CHARONEREST,
 		GEO_CHARONEWD,
+
 		GEO_CHARTWOFRUST,
 		GEO_CHARTWOMOTIVE,
 		GEO_CHARTWOREST,
 		GEO_CHARTWOWD,
+
 		GEO_CHARTHREEFRUST,
 		GEO_CHARTHREEMOTIVE,
 		GEO_CHARTHREEREST,
 		GEO_CHARTHREEWD,
+
 		GEO_CHARFOURFRUST,
 		GEO_CHARFOURMOTIVE,
 		GEO_CHARFOURREST,
 		GEO_CHARFOURWD,
-		GEO_MOTIVATION,
+		//Props
+		GEO_TELEVISION,
+		//end
 		GEO_PARTICLE_TEST,
 		GEO_SPRITE_ANIMATION,
 		GEO_SPRITE_TEST2,
@@ -56,7 +60,6 @@ public:
 	void RenderAnimation();
 	CharacterObject* FetchGO();
 
-
 	void RenderBG();
 	void RenderCharacter1();
 	void RenderCharacter2();
@@ -69,12 +72,10 @@ public:
 	void RenderArrow();
 
 
-
 	Vector3 vel;
 	Vector3 pos;
 
 private:
-
 	std::vector<CharacterObject *> m_goList;
 	std::vector<Particles* > m_particleList;
 	float m_speed;
@@ -90,6 +91,10 @@ private:
 	CharacterObject *charFour;
 	CharacterObject *prevChar;
 	CharacterObject *currentChar;
+	CharacterObject *Television;
+	CharacterObject *Television2;
+	CharacterObject *Television3;
+	CharacterObject *Television4;
 	//Particles Variable
 	int m_particleCount;
 	int MAX_PARTICLE;

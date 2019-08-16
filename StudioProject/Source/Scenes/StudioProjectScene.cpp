@@ -27,33 +27,9 @@ void StudioProjectScene::Init()
 	//Variables here
 	m_speed = 1.f;
 	Math::InitRNG();
-	m_eventTimer = Math::RandFloatMinMax(20.0f, 40.f);
+	m_eventTimer = 500000.f; //Math::RandFloatMinMax(20.0f, 40.f);
 	b_transitioning = false;
 
-	/*meshList[GEO_AXES] = MeshBuilder::GenerateAxes("reference", 1000, 1000, 1000);
-	meshList[GEO_TEXT] = MeshBuilder::GenerateText("text", 16, 16);
-	meshList[GEO_TEXT]->textureID = LoadTGA("Image//calibri.tga");
-	meshList[GEO_BACKGROUND] = MeshBuilder::GenerateQuad("testbg", Color(1, 1, 1), 1);
-	meshList[GEO_BACKGROUND]->textureID = LoadTGA("Image//BGTest.tga");
-	meshList[GEO_CUBE] = MeshBuilder::GenerateCube("cube", Color(1, 1, 1), 1.f);
-	meshList[GEO_QUAD] = MeshBuilder::GenerateQuad("test", Color(1, 1, 1), 1.f);
-
-	meshList[GEO_PARTICLE_TEST] = MeshBuilder::GenerateQuad("testParticle", Color(1, 1, 1), 1.f);
-	meshList[GEO_PARTICLE_TEST]->textureID = LoadTGA("Image//balloon.tga");
-	meshList[GEO_ARROW] = MeshBuilder::GenerateQuad("arrow", Color(1, 1, 1), 1.f);
-	meshList[GEO_ARROW]->textureID = LoadTGA("Image//Arrow.tga");
-	meshList[GEO_SPRITE_ANIMATION] = MeshBuilder::GenerateSpriteAnimation("test", 1, 4);
-	meshList[GEO_SPRITE_ANIMATION]->textureID = LoadTGA("Image//Idle_anim.tga");
-	meshList[GEO_WALKLEFT] = MeshBuilder::GenerateSpriteAnimation("char1walkleft", 1, 4);
-	meshList[GEO_WALKLEFT]->textureID = LoadTGA("Image//Walk_animLeft.tga");
-	meshList[GEO_WALKRIGHT] = MeshBuilder::GenerateSpriteAnimation("char1walkright", 1, 4);
-	meshList[GEO_WALKRIGHT]->textureID = LoadTGA("Image//Walk_animRight.tga");
-	meshList[GEO_SPRITE_TEST2] = MeshBuilder::GenerateSpriteAnimation("test2", 1, 6);
-	meshList[GEO_SPRITE_TEST2]->textureID = LoadTGA("Image//Idle_anim2.tga");
-	meshList[GEO_FROG_JUMP] = MeshBuilder::GenerateSpriteAnimation("frog_Jump", 1, 5);
-	meshList[GEO_FROG_JUMP]->textureID = LoadTGA("Image//Frog_Jump.tga");
-	*/
-
 	meshList[GEO_QUAD] = MeshBuilder::GenerateQuad("test", Color(1, 1, 1), 1.f);
 	meshList[GEO_BACKGROUND] = MeshBuilder::GenerateQuad("testbg", Color(1, 1, 1), 1);
 	meshList[GEO_BACKGROUND]->textureID = LoadTGA("Image//BGTest.tga");
@@ -69,44 +45,12 @@ void StudioProjectScene::Init()
 	meshList[GEO_WALKRIGHT]->textureID = LoadTGA("Image//Walk_animRight.tga");
 	meshList[GEO_SPRITE_TEST2] = MeshBuilder::GenerateSpriteAnimation("test2", 1, 6);
 	meshList[GEO_SPRITE_TEST2]->textureID = LoadTGA("Image//Idle_anim2.tga");
-	meshList[GEO_FROG_JUMP] = MeshBuilder::GenerateSpriteAnimation("frog_Jump", 1, 5);
-	meshList[GEO_FROG_JUMP]->textureID = LoadTGA("Image//Frog_Jump.tga");
-	meshList[GEO_FRUSTRATION] = MeshBuilder::GenerateQuad("frustration", Color(1, 0, 0), 1.f);
-
-	//meshList[GEO_FRUSTRATION] = MeshBuilder::GenerateQuad("frustration", Color(1, 0, 0), 1.f);
+	meshList[GEO_TELEVISION] = MeshBuilder::GenerateQuad("Television", Color(1, 1, 1), 1.f);
+	meshList[GEO_TELEVISION]->textureID = LoadTGA("Image//Television.tga");
 
 	Mtx44 projection;
 	projection.SetToOrtho(0, m_worldWidth, 0, m_worldHeight, -10, 10);
 	projectionStack.LoadMatrix(projection);
-
-
-
-	/*************************************************************Testing*************************************************************/
-	//TestCube1 = FetchGO();
-	//TestCube1->type = GameObject::GO_SPRITE_TEST;
-	//TestCube1->pos.Set(m_worldWidth / 4 - m_worldWidthDiv8, m_worldHeight / 2, 5);
-	//TestCube1->setDirection(false); // if facing left bool = true, if right bool = false
-	//TestCube1->scale = Vector3(30, 30, 30);
-	//TestCube1->active = true;
-
-	//TestCube2 = FetchGO();
-	//TestCube2->type = GameObject::GO_CUBE;
-	//TestCube2->pos.Set(m_worldWidth / 4 - m_worldWidthDiv8, m_worldHeight / 2, 5);
-	//TestCube2->scale = Vector3(30, 30, 30);
-	//TestCube2->active = true;
-
-	//TestCube3 = FetchGO();
-	//TestCube3->type = GameObject::GO_CUBE;
-	//TestCube3->pos.Set(m_worldWidth / 4 - m_worldWidthDiv8, m_worldHeight / 2, 5);
-	//TestCube3->scale = Vector3(30, 30, 30);
-	//TestCube3->active = true;
-
-	//TestCube4 = FetchGO();
-	//TestCube4->type = GameObject::GO_CUBE;
-	//TestCube4->pos.Set(m_worldWidth / 4 - m_worldWidthDiv8, m_worldHeight / 2, 5);
-	//TestCube4->scale = Vector3(30, 30, 30);
-	//TestCube4->active = true;
-
 
 	//Particles
 	m_particleCount = 0;
@@ -122,33 +66,57 @@ void StudioProjectScene::Init()
 	charOne = new CharacterObject(CharacterObject::GO_SPRITE_TEST);
 	charOne->giveUp = false;
 	charOne->experience = Math::RandFloatMinMax(1.f, 2.f);
-	charOne->pos.Set(m_worldWidth / 4 - m_worldWidthDiv8, m_worldHeight / 2, 5);
+	charOne->pos.Set(m_worldWidth / 4 - m_worldWidthDiv8, m_worldHeight / 2 - 30, 5);
 	charOne->scale = Vector3(30, 30, 30);
+	charOne->resting = false;
 	charOne->active = true;
 
-	charTwo = new CharacterObject(CharacterObject::GO_CUBE);
+	charTwo = new CharacterObject(CharacterObject::GO_SPRITE_TEST);
 	charTwo->giveUp = false;
 	charTwo->experience = Math::RandFloatMinMax(1.f, 2.f);
-	charTwo->pos.Set(m_worldWidth / 4 - m_worldWidthDiv8, m_worldHeight / 2, 5);
+	charTwo->pos.Set(m_worldWidth / 4 - m_worldWidthDiv8, m_worldHeight / 2 - 30, 5);
 	charTwo->scale = Vector3(30, 30, 30);
+	charTwo->resting = false;
 	charTwo->active = true;
 
-	charThree = new CharacterObject(CharacterObject::GO_CUBE);
+	charThree = new CharacterObject(CharacterObject::GO_SPRITE_TEST);
 	charThree->giveUp = false;
 	charThree->experience = Math::RandFloatMinMax(1.f, 1.5f);
-	charThree->pos.Set(m_worldWidth / 4 - m_worldWidthDiv8, m_worldHeight / 2, 5);
+	charThree->pos.Set(m_worldWidth / 4 - m_worldWidthDiv8, m_worldHeight / 2 - 30, 5);
 	charThree->scale = Vector3(30, 30, 30);
+	charThree->resting = false;
 	charThree->active = true;
 
-	charFour = new CharacterObject(CharacterObject::GO_CUBE);
+	charFour = new CharacterObject(CharacterObject::GO_SPRITE_TEST);
 	charFour->giveUp = false;
 	charFour->experience = Math::RandFloatMinMax(1.f, 1.5f);
-	charFour->pos.Set(m_worldWidth / 4 - m_worldWidthDiv8, m_worldHeight / 2, 5);
+	charFour->pos.Set(m_worldWidth / 4 - m_worldWidthDiv8, m_worldHeight / 2 - 30, 5);
 	charFour->scale = Vector3(30, 30, 30);
+	charFour->resting = false;
 	charFour->active = true;
 
-	currentChar = charOne;
+	currentChar = charFour;
 
+	Television = new CharacterObject(CharacterObject::GO_TELEVISION);
+	Television->pos.Set(m_worldWidth / 4 - m_worldWidthDiv8- 10, m_worldHeight / 2 - 30, 5);
+	Television->scale = Vector3(30, 25, 30);
+	Television->active = true;
+
+	Television2 = new CharacterObject(CharacterObject::GO_TELEVISION);
+	Television2->pos.Set(m_worldWidth / 4 - m_worldWidthDiv8 - 10, m_worldHeight / 2 - 30, 5);
+	Television2->scale = Vector3(30, 25, 30);
+	Television2->active = true;
+
+	Television3 = new CharacterObject(CharacterObject::GO_TELEVISION);
+	Television3->pos.Set(m_worldWidth / 4 - m_worldWidthDiv8 - 10, m_worldHeight / 2 - 30, 5);
+	Television3->scale = Vector3(30, 25, 30);
+	Television3->active = true;
+
+	Television4 = new CharacterObject(CharacterObject::GO_TELEVISION);
+	Television4->pos.Set(m_worldWidth / 4 - m_worldWidthDiv8 - 10, m_worldHeight / 2 - 30, 5);
+	Television4->scale = Vector3(30, 25, 30);
+	Television4->active = true;
+	
 	SpriteAnimation *sa = dynamic_cast<SpriteAnimation *>(meshList[GEO_SPRITE_ANIMATION]);
 	if (sa)
 	{
@@ -175,24 +143,12 @@ void StudioProjectScene::Init()
 		walkRight->m_anim->Set(0, 4, 0, 1.f, true);
 	}
 
-	SpriteAnimation *Frog_Jump = dynamic_cast<SpriteAnimation*>(meshList[GEO_FROG_JUMP]);
-	if (Frog_Jump)
-	{
-		Frog_Jump->m_anim = new Animation();
-		Frog_Jump->m_anim->Set(0, 5, 0, 1.f, true);
-	}
-
-
 	color = 1.0f;
 
 }
-
 void StudioProjectScene::Update(double dt)
 {
 	SceneBase::Update(dt);
-
-	/*vel.Set(0.1, 0, 0);
-	pos += vel;*/
 
 	static bool bLButtonState = false;
 	if (!bLButtonState && Application::IsMousePressed(0))
@@ -234,126 +190,132 @@ void StudioProjectScene::Update(double dt)
 		currentChar = charFour;
 	}
 
-	//CharOne
-	/*if (charOne->frustration < 100)
-	{
-		charOne->frustration += 0.4f / charOne->experience * 1 / m_Count * dt;
-	}
-	if (charOne->rest > 0)
-	{
-		charOne->rest -= 1.5f  *  charOne->experience * dt / m_Count;
-	}
-	else
-	{
-		charOne->rest = 0.005f;
-	}
-	if (charOne->motivation > 0)
-	{
-		charOne->motivation -= 0.5f * charOne->experience * dt / m_Count;
-	}
-	else
-	{
-		charOne->rest = 0.005f;
-	}
-	if (charOne->workDone < 100)
-	{
-		charOne->workDone += 0.25f/charOne->experience * charOne->motivation / charOne->rest *  dt / m_Count;
-	}*/
 	charOne->Update(dt);
-	meshList[GEO_CHARONEFRUST] = MeshBuilder::GenerateBar("charOneFrustration", Color(1, 0, 0), charOne->frustration / 3, 1.f);
-	meshList[GEO_CHARONEMOTIVE] = MeshBuilder::GenerateBar("CharOneMotivation", Color(1, 1, 0), charOne->motivation / 3, 1.f);
-	meshList[GEO_CHARONEREST] = MeshBuilder::GenerateBar("CharOneRest", Color(1, 0, 1), charOne->rest / 3, 1.f);
-	meshList[GEO_CHARONEWD] = MeshBuilder::GenerateBar("CharOneWorkDone", Color(0, 1, 1), charOne->workDone / 3, 1.f);
-	//CharTwo
-	/*if (charTwo->frustration < 100)
-	{
-		charTwo->frustration += 0.4f / charTwo->experience * 1 / m_Count * dt;
-	}
-	if (charTwo->rest > 0)
-	{
-		charTwo->rest -= 1.5f * charTwo->experience * dt / m_Count;
-	}
-	else
-	{
-		charTwo->rest = 0.005f;
-	}
-	if (charTwo->motivation > 0)
-	{
-		charTwo->motivation -= 0.15f / charTwo->experience * dt / m_Count;
+	meshList[GEO_CHARONEFRUST] = MeshBuilder::GenerateBar("charOneFrustration", Color(1, 0, 0), charOne->frustration / 2, 1.f);
+	meshList[GEO_CHARONEMOTIVE] = MeshBuilder::GenerateBar("CharOneMotivation", Color(1, 1, 0), charOne->motivation / 2, 1.f);
+	meshList[GEO_CHARONEREST] = MeshBuilder::GenerateBar("CharOneRest", Color(1, 0, 1), charOne->rest / 2, 1.f);
+	meshList[GEO_CHARONEWD] = MeshBuilder::GenerateBar("CharOneWorkDone", Color(0, 1, 1), charOne->workDone / 2, 1.f);
 
-	}
-	else
-	{
-		charTwo->motivation = 0.005f;
-	}
-	if (charTwo->workDone < 100)
-	{
-		charTwo->workDone += 0.25f / charTwo->experience * charTwo->motivation / charTwo->rest *  dt / m_Count;
-	}*/
-	meshList[GEO_CHARTWOFRUST] = MeshBuilder::GenerateBar("charTwoFrustration", Color(1, 0, 0), charTwo->frustration / 3, 1.f);
-	meshList[GEO_CHARTWOMOTIVE] = MeshBuilder::GenerateBar("CharTwoMotivation", Color(1, 1, 0), charTwo->motivation / 3, 1.f);
-	meshList[GEO_CHARTWOREST] = MeshBuilder::GenerateBar("CharTwoRest", Color(1, 0, 1), charTwo->rest / 3, 1.f);
-	meshList[GEO_CHARTWOWD] = MeshBuilder::GenerateBar("CharTwoWorkDone", Color(0, 1, 1), charTwo->workDone / 3, 1.f);
-	//CharThree
-	/*if (charThree->frustration < 100)
-	{
-		charThree->frustration += 0.4f / charThree->experience * 1 / m_Count * dt;
-	}
-	if (charThree->rest > 0)
-	{
-		charThree->rest -= 1.5f * charThree->experience * dt / m_Count;
-	}
-	else
-	{
-		charThree->rest = 0.005f;
-	}
-	if (charThree->motivation > 0)
-	{
-		charThree->motivation -= 0.15f / charThree->experience * dt / m_Count;
-	}
-	else
-	{
-		charThree->motivation = 0.005f;
-	}
-	if (charThree->workDone < 100)
-	{
-		charThree->workDone += 0.25f / charThree->experience * charThree->motivation / charThree->rest *  dt / m_Count;
-	}*/
-	meshList[GEO_CHARTHREEFRUST] = MeshBuilder::GenerateBar("charThreeFrustration", Color(1, 0, 0), charThree->frustration / 3, 1.f);
-	meshList[GEO_CHARTHREEMOTIVE] = MeshBuilder::GenerateBar("CharThreeMotivation", Color(1, 1, 0), charThree->motivation / 3, 1.f);
-	meshList[GEO_CHARTHREEREST] = MeshBuilder::GenerateBar("CharThreeRest", Color(1, 0, 1), charThree->rest / 3, 1.f);
-	meshList[GEO_CHARTHREEWD] = MeshBuilder::GenerateBar("CharThreeWorkDone", Color(0, 1, 1), charThree->workDone / 3, 1.f);
-	//CharFour
-	/*if (charFour->frustration < 100)
-	{
-		charFour->frustration += 0.4f / charFour->experience * 1 / m_Count * dt;
-	}
-	if (charFour->rest > 0)
-	{
-		charFour->rest -= 1.5f * charFour->experience * dt / m_Count;
-	}
-	else
-	{
-		charFour->rest = 0.005f;
-	}
-	if (charFour->motivation > 0)
-	{
-		charFour->motivation -= 0.15f / charFour->experience * dt / m_Count;
-	}
-	else
-	{
-		charFour->motivation = 0.005f;
-	}
-	if (charFour->workDone < 100)
-	{
-		charFour->workDone += 0.25f / charFour->experience * charFour->motivation / charFour->rest *  dt / m_Count;
-	}*/
-	meshList[GEO_CHARFOURFRUST] = MeshBuilder::GenerateBar("charThreeFrustration", Color(1, 0, 0), charFour->frustration / 3, 1.f);
-	meshList[GEO_CHARFOURMOTIVE] = MeshBuilder::GenerateBar("CharThreeMotivation", Color(1, 1, 0), charFour->motivation / 3, 1.f);
-	meshList[GEO_CHARFOURREST] = MeshBuilder::GenerateBar("CharThreeRest", Color(1, 0, 1), charFour->rest / 3, 1.f);
-	meshList[GEO_CHARFOURWD] = MeshBuilder::GenerateBar("CharFourWorkDone", Color(0, 1, 1), charFour->workDone / 3, 1.f);
+	charTwo->Update(dt);
+	meshList[GEO_CHARTWOFRUST] = MeshBuilder::GenerateBar("charTwoFrustration", Color(1, 0, 0), charTwo->frustration / 2, 1.f);
+	meshList[GEO_CHARTWOMOTIVE] = MeshBuilder::GenerateBar("CharTwoMotivation", Color(1, 1, 0), charTwo->motivation / 2, 1.f);
+	meshList[GEO_CHARTWOREST] = MeshBuilder::GenerateBar("CharTwoRest", Color(1, 0, 1), charTwo->rest / 2, 1.f);
+	meshList[GEO_CHARTWOWD] = MeshBuilder::GenerateBar("CharTwoWorkDone", Color(0, 1, 1), charTwo->workDone / 2, 1.f);
+
+	charThree->Update(dt);
+	meshList[GEO_CHARTHREEFRUST] = MeshBuilder::GenerateBar("charThreeFrustration", Color(1, 0, 0), charThree->frustration / 2, 1.f);
+	meshList[GEO_CHARTHREEMOTIVE] = MeshBuilder::GenerateBar("CharThreeMotivation", Color(1, 1, 0), charThree->motivation / 2, 1.f);
+	meshList[GEO_CHARTHREEREST] = MeshBuilder::GenerateBar("CharThreeRest", Color(1, 0, 1), charThree->rest / 2, 1.f);
+	meshList[GEO_CHARTHREEWD] = MeshBuilder::GenerateBar("CharThreeWorkDone", Color(0, 1, 1), charThree->workDone / 2, 1.f);
+
+
+	charFour->Update(dt);
+	meshList[GEO_CHARFOURFRUST] = MeshBuilder::GenerateBar("charThreeFrustration", Color(1, 0, 0), charFour->frustration / 2, 1.f);
+	meshList[GEO_CHARFOURMOTIVE] = MeshBuilder::GenerateBar("CharThreeMotivation", Color(1, 1, 0), charFour->motivation / 2, 1.f);
+	meshList[GEO_CHARFOURREST] = MeshBuilder::GenerateBar("CharThreeRest", Color(1, 0, 1), charFour->rest / 2, 1.f);
+	meshList[GEO_CHARFOURWD] = MeshBuilder::GenerateBar("CharFourWorkDone", Color(0, 1, 1), charFour->workDone / 2, 1.f);
 
 	currentChar->UpdateMovement(dt);
+		float dist = currentChar->pos.x - Television->pos.x;
+		if (dist <= currentChar->scale.x + Television->scale.x)
+		{
+			if (Application::IsKeyPressed(VK_SPACE))
+			{
+				charOne->resting = true;
+				cout << "resting 1" << endl;
+			}
+		}
+		if (dist > currentChar->scale.x + Television->scale.x)
+		{
+			cout << "unrest 1" << endl;
+			charOne->resting = false;
+		}
+		float dist2 = currentChar->pos.x - Television2->pos.x;
+		if (dist2 <= currentChar->scale.x + Television2->scale.x)
+		{
+			if (Application::IsKeyPressed(VK_SPACE))
+			{
+				charOne->resting = true;
+				cout << "resting 1" << endl;
+			}
+		}
+		if (dist2 > currentChar->scale.x + Television2->scale.x)
+		{
+			cout << "unrest 1" << endl;
+			charOne->resting = false;
+		}
+		float dist3 = currentChar->pos.x - Television3->pos.x;
+		if (dist3 <= currentChar->scale.x + Television3->scale.x)
+		{
+			if (Application::IsKeyPressed(VK_SPACE))
+			{
+				charOne->resting = true;
+				cout << "resting 1" << endl;
+			}
+		}
+		if (dist3 > currentChar->scale.x + Television3->scale.x)
+		{
+			cout << "unrest 1" << endl;
+			charOne->resting = false;
+		}		
+		float dist4 = currentChar->pos.x - Television4->pos.x;
+		if (dist4 <= currentChar->scale.x + Television4->scale.x)
+		{
+			if (Application::IsKeyPressed(VK_SPACE))
+			{
+				charOne->resting = true;
+				cout << "resting 1" << endl;
+			}
+		}
+		if (dist4  > currentChar->scale.x + Television4->scale.x)
+		{
+			cout << "unrest 1" << endl;
+			charOne->resting = false;
+		}
+
+		//float dist2 = charTwo->pos.x - Television2->pos.x;
+		//if (dist2 <= charTwo->scale.x + Television2->scale.x)
+		//{
+		//	if (Application::IsKeyPressed(VK_SPACE))
+		//	{
+		//		charTwo->resting = true;
+		//		cout << "resting 2" << endl;
+		//		//cout << "Frustration : " << charTwo->frustration << endl;
+		//	}
+		//}
+		//if (dist2 > charTwo->scale.x + Television2->scale.x)
+		//{
+		//	cout << charTwo->frustration << endl;
+		//	charTwo->resting = false;
+		//	//cout << "Frustration : " << charTwo->frustration << endl;
+		//}
+
+		//float dist3 = charThree->pos.x - Television3->pos.x;
+		//if (dist3 <= charThree->scale.x + Television3->scale.x)
+		//{
+		//	if(Application::IsKeyPressed(VK_SPACE))
+		//	{
+
+		//		charThree->resting = true;
+		//	}
+		//}
+		//if (dist3 > charThree->scale.x + Television3->scale.x)
+		//{
+		//	charThree->resting = false;
+		//}
+
+		//float dist4 = charFour->pos.x - Television4->pos.x;
+		//if (dist4 <= charFour->scale.x + Television4->scale.x)
+		//{
+		//	if (Application::IsKeyPressed(VK_SPACE))
+		//	{
+		//		charFour->resting = true;
+		//	}
+		//}
+		//if (dist4 > charFour->scale.x + Television4->scale.x)
+		//{
+		//	charFour->resting = false;
+		//}
 
 	SpriteAnimation *sa = dynamic_cast<SpriteAnimation*>(meshList[GEO_SPRITE_ANIMATION]);
 	if (sa)
@@ -401,23 +363,24 @@ void StudioProjectScene::Update(double dt)
 
 		}
 	}
+
+
 	if (m_eventTimer < 0)
 	{
 		if (color >= 0)
 		{
-		color -= dt;
+			color -= dt;
 		}
 	}
-	if (m_eventTimer < -3)
+	if (m_eventTimer < -2)
 	{
 		Application::setScene(Math::RandIntMinMax(1, 2));
-		m_eventTimer = -3;
+		m_eventTimer = Math::RandFloatMinMax(20.0f, 40.f);
 	}
 	UpdateParticles(dt);
 	m_eventTimer -= dt;
-	cout << "Event Timer : " << m_eventTimer << endl;
+	//cout << "Event Timer : " << m_eventTimer << endl;
 }
-
 Particles* StudioProjectScene::getParticle()
 {
 	for (std::vector<Particles *>::iterator it = m_particleList.begin(); it != m_particleList.end();++it)
@@ -517,15 +480,6 @@ void StudioProjectScene::RenderAnimation()
 
 	RenderMesh(meshList[GEO_SPRITE_TEST2], false);
 	modelStack.PopMatrix();
-	//modelStack.PushMatrix();
-	//modelStack.Translate(70, 50, 0);
-	//modelStack.Rotate(Math::RadianToDegree(atan2(camera.position.x - 0, camera.position.z - 0)), 0, 1, 0);
-
-	//modelStack.Scale(10, 10, 10);
-
-	//RenderMesh(meshList[GEO_FROG_JUMP], false);
-	//modelStack.PopMatrix();
-	//std::cout << "WOKRING" << std::endl;
 }
 
 void StudioProjectScene::RenderArrow()
@@ -616,6 +570,16 @@ void StudioProjectScene::Render()
 			);
 			// Model matrix : an identity matrix (model will be at the origin)
 			modelStack.LoadIdentity();
+
+			//Particles
+			for (std::vector<Particles *>::iterator it = m_particleList.begin(); it != m_particleList.end();++it)
+			{
+				Particles *particle = (Particles *)*it;
+				if (particle->active)
+				{
+					RenderParticles(particle);
+				}
+			}
 		}
 	//}
 
@@ -661,6 +625,13 @@ void StudioProjectScene::RenderGO(CharacterObject * go)
 			modelStack.PopMatrix();
 			break;
 		}
+	case CharacterObject::GO_TELEVISION:
+		modelStack.PushMatrix();
+		modelStack.Translate(go->pos.x, go->pos.y, go->pos.z);
+		modelStack.Scale(go->scale.x, go->scale.y, go->scale.z);
+		RenderMesh(meshList[GEO_TELEVISION], false);
+		modelStack.PopMatrix();
+		break;
 
 	default:
 		break;
@@ -738,26 +709,7 @@ void StudioProjectScene::RenderCharacter1()
 	// BackGround
 	RenderBG();
 
-	// Particles
-	for (std::vector<Particles *>::iterator it = m_particleList.begin(); it != m_particleList.end(); ++it)
-	{
-		Particles *particle = (Particles*)*it;
-		if (particle->active)
-		{
-			RenderParticles(particle);
-		}
-	}
-
 	// Props
-	//RenderAnimation();
-	modelStack.PushMatrix();
-	modelStack.Translate(70, 50, 0);
-	modelStack.Rotate(Math::RadianToDegree(atan2(camera.position.x - 0, camera.position.z - 0)), 0, 1, 0);
-
-	modelStack.Scale(10, 10, 10);
-
-	RenderMesh(meshList[GEO_FROG_JUMP], false);
-	modelStack.PopMatrix();
 
 
 	if (currentChar == charOne)
@@ -766,17 +718,12 @@ void StudioProjectScene::RenderCharacter1()
 	}
 
 
-	//Particles
-	for (std::vector<Particles *>::iterator it = m_particleList.begin(); it != m_particleList.end();++it)
-	{
-		Particles *particle = (Particles *)*it;
-		if (particle->active)
-		{
-			RenderParticles(particle);
-		}
-	}
 
 	//// Character
+	if (Television->active)
+	{
+		RenderGO(Television);
+	}
 	if (charOne->active)
 		RenderGO(charOne);
 }
@@ -811,7 +758,10 @@ void StudioProjectScene::RenderCharacter2()
 	{
 		RenderArrow();
 	}
-
+	if (Television2->active)
+	{
+		RenderGO(Television2);
+	}
 	// Character
 	if (charTwo->active)
 		RenderGO(charTwo);
@@ -847,7 +797,10 @@ void StudioProjectScene::RenderCharacter3()
 	{
 		RenderArrow();
 	}
-
+	if (Television3->active)
+	{
+		RenderGO(Television3);
+	}
 	// Character
 	if (charThree->active)
 	RenderGO(charThree);
@@ -883,7 +836,10 @@ void StudioProjectScene::RenderCharacter4()
 	{
 		RenderArrow();
 	}
-
+	if (Television4->active)
+	{
+		RenderGO(Television4);
+	}
 	// Character
 	if (charFour->active)
 	RenderGO(charFour);

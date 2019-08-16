@@ -161,6 +161,8 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="SheepGame.cpp" />
+    <ClCompile Include="SheepObject.cpp" />
     <ClCompile Include="Source\Application.cpp" />
     <ClCompile Include="Source\Camera\Camera.cpp" />
     <ClCompile Include="Source\main.cpp" />
@@ -184,6 +186,8 @@
     <ClCompile Include="Source\Utility.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="SheepGame.h" />
+    <ClInclude Include="SheepObject.h" />
     <ClInclude Include="Source\Minigames\Maze\MazeGenerator.h" />
     <ClInclude Include="Source\Scenes\CharacterObject.h" />
     <ClInclude Include="Source\Scenes\MazeObject.h" />
