@@ -10,7 +10,8 @@ struct CharacterStats
 {
 	float m_frustration;
 	float m_motivation;
-
+	float m_originFrustration;
+	float m_originMotivation;
 };
 
 
@@ -25,7 +26,7 @@ public:
 	CharacterStats GetChar04();
 
 
-	// These functions ADD ON TO the characters stats
+	// These functions ADD ON to the characters stats
 	void UpdateChar01M(float motivation);
 	void UpdateChar01F(float frustration);
 	void UpdateChar02M(float motivation);
@@ -34,6 +35,9 @@ public:
 	void UpdateChar03F(float frustration);
 	void UpdateChar04M(float motivation);
 	void UpdateChar04F(float frustration);
+
+	void SetCharsOriginalValues();
+	void ResetValues();
 
 private:
 	StatManager();

@@ -29,13 +29,14 @@ public:
 
 
 	void InitVars();
+	void InitButtons();
+	void InitStatsToDist(int stats);
 	void UpdateVars(double dt);
+	void RenderStats();
+	void RenderButtons();
 	void RenderResults(int score);
 	void RenderGO(ResultObject* go);
-	void InitButtons();
-	void RenderButtons();
 	bool ButtonMouseCollision();
-	void RenderStats();
 
 private:
 	static Results* r_instance;
@@ -71,7 +72,8 @@ private:
 	ResultObject* c01PlusF;
 	ResultObject* c01MinusF;
 
-	int m_buttonCounter;
+	int m_statsToDistribute;
+	int m_originStatsToDistribute;
 	vector<ResultObject*> ButtonList;
 };
 

@@ -130,6 +130,8 @@ void SceneMole::Init()
 	r_quad02Pos.Set(m_quarterWorldWidth * 3, m_sixthWorldHeight * 3, 6);
 	r_quad03Pos.Set(m_quarterWorldWidth, m_sixthWorldHeight, 6);
 	r_quad04Pos.Set(m_quarterWorldWidth * 3, m_sixthWorldHeight, 6);
+	m_setOriginValues = false;
+	m_setStatsToDist = false;
 
 }
 
@@ -140,14 +142,29 @@ void SceneMole::Update(double dt)
 	{
 		Results::getInstance()->UpdateVars(dt);
 	}
+	if (m_gameOver && !m_setStatsToDist)
+	{
+		Results::getInstance()->InitStatsToDist(10);
+		m_setStatsToDist = true;
+	}
 	if (m_gameTimer <= 0)
 	{
 		m_gameTimer = 0.f;
 		m_gameOver = true;
 	}
+	if (m_gameOver && !m_setOriginValues)
+	{
+		StatManager::GetInstance()->SetCharsOriginalValues();
+		m_setOriginValues = true;
+
+	}
 	if (!m_gameOver)
 		m_gameTimer -= dt;
 
+	if (m_gameTimer < 0)
+	{
+		m_gameOver = true;
+	} 
 	static bool bLButtonState = false;
 	if (!bLButtonState && Application::IsMousePressed(0))
 	{
@@ -191,10 +208,6 @@ void SceneMole::Update(double dt)
 
 	UpdateMoles(dt);
 
-	if (m_gameTimer < 0)
-	{
-		m_gameOver = true;
-	} 
 
 	UpdateParticles(dt);
 }

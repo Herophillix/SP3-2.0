@@ -55,7 +55,8 @@ void Results::InitVars()
 	r_quad03Pos.Set(m_quarterWorldWidth, m_sixthWorldHeight, 0.5f);
 	r_quad04Pos.Set(m_quarterWorldWidth * 3, m_sixthWorldHeight, 0.5f);
 
-	m_buttonCounter = 0;
+	m_statsToDistribute = 0;
+	m_originStatsToDistribute = 0;
 	InitButtons();
 
 	MousePos.SetZero();
@@ -95,6 +96,7 @@ void Results::UpdateVars(double dt)
 	MousePos.Set(posX, posY, 0);
 }
 
+// MAIN RENDERING FUNCTION
 void Results::RenderResults(int score)
 {
 	// Projection matrix : Orthographic Projection
@@ -129,7 +131,12 @@ void Results::RenderResults(int score)
 	ss.clear();
 	ss.str("");
 	ss << "Score: " << score;
-	RenderTextOnScreen(meshList[GEO_GAMEFONT], ss.str(), Color(1, 1, 1), 2, 30, 45);
+	RenderTextOnScreen(meshList[GEO_GAMEFONT], ss.str(), Color(1, 1, 1), 2, 5, 45);
+
+	ss.clear();
+	ss.str("");
+	ss << "Stats left: " << m_statsToDistribute;
+	RenderTextOnScreen(meshList[GEO_GAMEFONT], ss.str(), Color(1, 1, 1), 2, 50, 45);
 	// get instance of player stats
 
 	// Render Character Quad -> stats
@@ -167,8 +174,6 @@ void Results::RenderResults(int score)
 
 	// Stats
 	RenderStats();
-	
-
 
 	// Render Reset and Continue
 	modelStack.PushMatrix();
@@ -343,6 +348,12 @@ void Results::InitButtons()
 
 }
 
+void Results::InitStatsToDist(int stats)
+{
+	m_statsToDistribute = stats;
+	m_originStatsToDistribute = stats;
+}
+
 void Results::RenderButtons()
 {
 	//RenderGO(c01PlusM);
@@ -377,12 +388,33 @@ bool Results::ButtonMouseCollision()
 						if (ButtonList[i]->objType == ResultObject::GO_PLUS)
 						{
 							cout << "Plus button";
-							StatManager::GetInstance()->UpdateChar01M(1);
+							if ((StatManager::GetInstance()->GetChar01().m_motivation + 1) <= 100.f && m_statsToDistribute != 0)
+							{
+								StatManager::GetInstance()->UpdateChar01M(1);
+								m_statsToDistribute--;
+								return true;
+							}
+							else
+							{
+								cout << " ....Sike bitch you thought";
+								return false;
+								// REJECT SFX outside
+							}
 						}
 						else if (ButtonList[i]->objType == ResultObject::GO_MINUS)
 						{
 							cout << "Minus button";
-							StatManager::GetInstance()->UpdateChar01M(-1);
+							if ((StatManager::GetInstance()->GetChar01().m_motivation - 1) >= StatManager::GetInstance()->GetChar01().m_originMotivation)
+							{
+								StatManager::GetInstance()->UpdateChar01M(-1);
+								m_statsToDistribute++;
+								return true;
+							}
+							else
+							{
+								cout << " ....Sike bitch you thought";
+								return false;
+							}
 						}
 						break;
 					case ResultObject::WHICH_STAT::S_FRUSTRATION:
@@ -390,12 +422,32 @@ bool Results::ButtonMouseCollision()
 						if (ButtonList[i]->objType == ResultObject::GO_PLUS)
 						{
 							cout << "Plus button";
-							StatManager::GetInstance()->UpdateChar01F(1);
+							if ((StatManager::GetInstance()->GetChar01().m_frustration + 1) <= StatManager::GetInstance()->GetChar01().m_originFrustration)
+							{
+								StatManager::GetInstance()->UpdateChar01F(1);
+								m_statsToDistribute++;
+								return true;
+							}
+							else
+							{
+								cout << " ....Sike bitch you thought";
+								return false;
+							}
 						}
 						else if (ButtonList[i]->objType == ResultObject::GO_MINUS)
 						{
 							cout << "Minus button";
-							StatManager::GetInstance()->UpdateChar01F(-1);
+							if ((StatManager::GetInstance()->GetChar01().m_frustration - 1) >= 0.f && m_statsToDistribute != 0)
+							{
+								StatManager::GetInstance()->UpdateChar01F(-1);
+								m_statsToDistribute--;
+								return true;
+							}
+							else
+							{
+								cout << " ....Sike bitch you thought";
+								return false;
+							}
 						}
 						break;
 					default:
@@ -411,12 +463,31 @@ bool Results::ButtonMouseCollision()
 						if (ButtonList[i]->objType == ResultObject::GO_PLUS)
 						{
 							cout << "Plus button";
-							StatManager::GetInstance()->UpdateChar02M(1);
+							if ((StatManager::GetInstance()->GetChar02().m_motivation + 1) <= 100.f && m_statsToDistribute != 0)
+							{
+								StatManager::GetInstance()->UpdateChar02M(1);
+								m_statsToDistribute--;
+								return true;
+							}
+							else
+							{
+								cout << " ....Sike bitch you thought";
+								return false;
+							}
 						}
 						else if (ButtonList[i]->objType == ResultObject::GO_MINUS)
 						{
 							cout << "Minus button";
-							StatManager::GetInstance()->UpdateChar02M(-1);
+							if ((StatManager::GetInstance()->GetChar02().m_motivation - 1) >= StatManager::GetInstance()->GetChar02().m_originMotivation)
+							{
+								StatManager::GetInstance()->UpdateChar02M(-1);
+								m_statsToDistribute++;
+								return true;
+							}
+							else
+							{
+								return false;
+							}
 						}
 						break;
 					case ResultObject::WHICH_STAT::S_FRUSTRATION:
@@ -424,12 +495,30 @@ bool Results::ButtonMouseCollision()
 						if (ButtonList[i]->objType == ResultObject::GO_PLUS)
 						{
 							cout << "Plus button";
-							StatManager::GetInstance()->UpdateChar02F(1);
+							if ((StatManager::GetInstance()->GetChar02().m_frustration + 1) <= StatManager::GetInstance()->GetChar02().m_originFrustration)
+							{
+								StatManager::GetInstance()->UpdateChar02F(1);
+								m_statsToDistribute++;
+								return true;
+							}
+							else
+							{
+								return false;
+							}
 						}
 						else if (ButtonList[i]->objType == ResultObject::GO_MINUS)
 						{
 							cout << "Minus button";
-							StatManager::GetInstance()->UpdateChar02F(-1);
+							if ((StatManager::GetInstance()->GetChar02().m_frustration - 1) >= 0.f && m_statsToDistribute != 0)
+							{
+								StatManager::GetInstance()->UpdateChar02F(-1);
+								m_statsToDistribute--;
+								return true;
+							}
+							else
+							{
+								return false;
+							}
 						}
 						break;
 					default:
@@ -445,12 +534,30 @@ bool Results::ButtonMouseCollision()
 						if (ButtonList[i]->objType == ResultObject::GO_PLUS)
 						{
 							cout << "Plus button";
-							StatManager::GetInstance()->UpdateChar03M(1);
+							if ((StatManager::GetInstance()->GetChar03().m_motivation + 1) <= 100.f && m_statsToDistribute != 0)
+							{
+								StatManager::GetInstance()->UpdateChar03M(1);
+								m_statsToDistribute--;
+								return true;
+							}
+							else
+							{
+								return false;
+							}
 						}
 						else if (ButtonList[i]->objType == ResultObject::GO_MINUS)
 						{
 							cout << "Minus button";
-							StatManager::GetInstance()->UpdateChar03M(-1);
+							if ((StatManager::GetInstance()->GetChar03().m_motivation - 1) >= StatManager::GetInstance()->GetChar03().m_originMotivation)
+							{
+								StatManager::GetInstance()->UpdateChar03M(-1);
+								m_statsToDistribute++;
+								return true;
+							}
+							else
+							{
+								return false;
+							}
 						}
 						break;
 					case ResultObject::WHICH_STAT::S_FRUSTRATION:
@@ -458,12 +565,26 @@ bool Results::ButtonMouseCollision()
 						if (ButtonList[i]->objType == ResultObject::GO_PLUS)
 						{
 							cout << "Plus button";
-							StatManager::GetInstance()->UpdateChar03F(1);
+							if ((StatManager::GetInstance()->GetChar03().m_frustration + 1) <= StatManager::GetInstance()->GetChar03().m_originFrustration)
+							{
+								StatManager::GetInstance()->UpdateChar03F(1);
+								m_statsToDistribute++;
+								return true;
+							}
 						}
 						else if (ButtonList[i]->objType == ResultObject::GO_MINUS)
 						{
 							cout << "Minus button";
-							StatManager::GetInstance()->UpdateChar03F(-1);
+							if ((StatManager::GetInstance()->GetChar03().m_frustration - 1) >= 0.f && m_statsToDistribute != 0)
+							{
+								StatManager::GetInstance()->UpdateChar03F(-1);
+								m_statsToDistribute--;
+								return true;
+							}
+							else
+							{
+								return false;
+							}
 						}
 						break;
 					default:
@@ -479,12 +600,30 @@ bool Results::ButtonMouseCollision()
 						if (ButtonList[i]->objType == ResultObject::GO_PLUS)
 						{
 							cout << "Plus button";
-							StatManager::GetInstance()->UpdateChar04M(1);
+							if ((StatManager::GetInstance()->GetChar04().m_motivation + 1) <= 100.f && m_statsToDistribute != 0)
+							{
+								StatManager::GetInstance()->UpdateChar04M(1);
+								m_statsToDistribute--;
+								return true;
+							}
+							else
+							{
+								return false;
+							}
 						}
 						else if (ButtonList[i]->objType == ResultObject::GO_MINUS)
 						{
 							cout << "Minus button";
-							StatManager::GetInstance()->UpdateChar04M(-1);
+							if ((StatManager::GetInstance()->GetChar04().m_motivation - 1) >= StatManager::GetInstance()->GetChar04().m_originMotivation)
+							{
+								StatManager::GetInstance()->UpdateChar04M(-1);
+								m_statsToDistribute++;
+								return true;
+							}
+							else
+							{
+								return false;
+							}
 						}
 						break;
 					case ResultObject::WHICH_STAT::S_FRUSTRATION:
@@ -492,13 +631,49 @@ bool Results::ButtonMouseCollision()
 						if (ButtonList[i]->objType == ResultObject::GO_PLUS)
 						{
 							cout << "Plus button";
-							StatManager::GetInstance()->UpdateChar04F(1);
+							if ((StatManager::GetInstance()->GetChar04().m_frustration + 1) <= StatManager::GetInstance()->GetChar04().m_originFrustration)
+							{
+								StatManager::GetInstance()->UpdateChar04F(1);
+								m_statsToDistribute++;
+								return true;
+							}
+							else
+							{
+								return false;
+							}
 						}
 						else if (ButtonList[i]->objType == ResultObject::GO_MINUS)
 						{
 							cout << "Minus button ";
-							StatManager::GetInstance()->UpdateChar04F(-1);
+							if ((StatManager::GetInstance()->GetChar04().m_frustration - 1) >= 0.f && m_statsToDistribute != 0)
+							{
+								StatManager::GetInstance()->UpdateChar04F(-1);
+								m_statsToDistribute--;
+								return true;
+							}
+							else
+							{
+								return false;
+							}
 						}
+						break;
+					default:
+						break;
+					}
+					break;
+				case ResultObject::WHICH_CHARACTER::C_NONE:
+					switch (ButtonList[i]->objType)
+					{
+					case ResultObject::GO_CONTINUE:
+						if (m_statsToDistribute == 0)
+						{
+							//switch scene
+							return true;
+						}
+						break;
+					case ResultObject::GO_RESET:
+						StatManager::GetInstance()->ResetValues();
+						m_statsToDistribute = m_originStatsToDistribute;
 						break;
 					default:
 						break;
@@ -508,7 +683,6 @@ bool Results::ButtonMouseCollision()
 					break;
 				}
 				cout << endl;
-				return true;
 			}
 		}
 	}
