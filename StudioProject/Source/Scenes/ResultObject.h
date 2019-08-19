@@ -34,12 +34,20 @@ public:
 		C_04,
 		C_TOTAL
 	};
+	enum WHICH_STAT
+	{
+		S_NONE = 0,
+		S_MOTIVATION,
+		S_FRUSTRATION,
+		S_TOTAL,
+	};
 	ResultObject(RESULT_TYPE typeValue = GO_NONE);
 	~ResultObject();
 
 
 	RESULT_TYPE objType;
 	WHICH_CHARACTER belong;
+	WHICH_STAT stat;
 
 };
 

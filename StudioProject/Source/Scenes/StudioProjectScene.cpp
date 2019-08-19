@@ -27,7 +27,7 @@ void StudioProjectScene::Init()
 	//Variables here
 	m_speed = 1.f;
 	Math::InitRNG();
-	m_eventTimer = 500000.f; //Math::RandFloatMinMax(20.0f, 40.f);
+	m_eventTimer = 5; //Math::RandFloatMinMax(20.0f, 40.f);
 	b_transitioning = false;
 
 	meshList[GEO_QUAD] = MeshBuilder::GenerateQuad("test", Color(1, 1, 1), 1.f);
@@ -382,7 +382,7 @@ void StudioProjectScene::Update(double dt)
 	}
 	if (m_eventTimer < -2)
 	{
-		Application::setScene(Math::RandIntMinMax(1, 2));
+		Application::setScene(Math::RandIntMinMax(2, 2));
 		m_eventTimer = Math::RandFloatMinMax(20.0f, 40.f);
 	}
 	UpdateParticles(dt);

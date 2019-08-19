@@ -14,6 +14,7 @@
 #include "../Utility.h"
 #include "../Light.h"
 #include "MatrixStack.h"
+#include "StatManager.h"
 #include "SceneBase.h"
 #include "GL\glew.h"
 #include "Mtx44.h"
@@ -24,12 +25,16 @@ class Results : public SceneBase
 {
 public:
 	static Results* getInstance();
+	~Results();
 
 
 	void InitVars();
 	void UpdateVars(double dt);
 	void RenderResults(int score);
 	void RenderGO(ResultObject* go);
+	void InitButtons();
+	void RenderButtons();
+	bool ButtonMouseCollision();
 
 private:
 	static Results* r_instance;
@@ -42,21 +47,29 @@ private:
 
 	float m_quarterWorldWidth;
 	float m_eightWorldWidth;
+	float m_sixteenthWorldWidth;
+	float m_thirtytwothWorldWidth;
 
 	float m_sixthWorldHeight;
 	float m_quarterWorldHeight;
+	float m_twelfthWorldHeight;
 
 	Vector3 r_quad01Pos;
 	Vector3 r_quad02Pos;
 	Vector3 r_quad03Pos;
 	Vector3 r_quad04Pos;
 
+	Vector3 MousePos;
+
 	ResultObject* continueButton;
+	ResultObject* resetButton;
 
-	ResultObject* c01Plus;
-	ResultObject* c01Minus;
+	ResultObject* c01PlusM;
+	ResultObject* c01MinusM;
+	ResultObject* c01PlusF;
+	ResultObject* c01MinusF;
 
-
+	int m_buttonCounter;
 	vector<ResultObject*> ButtonList;
 };
 

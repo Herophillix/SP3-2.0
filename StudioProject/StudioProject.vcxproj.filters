@@ -31,6 +31,7 @@
     <ClCompile Include="Source\Scenes\TankObject.cpp" />
     <ClCompile Include="Source\SpriteAnimation.cpp" />
     <ClCompile Include="Source\Utility.cpp" />
+    <ClCompile Include="Source\Scenes\StatManager.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="SheepGame.h" />
@@ -66,6 +67,7 @@
     <ClInclude Include="Source\SpriteAnimation.h" />
     <ClInclude Include="Source\Utility.h" />
     <ClInclude Include="Source\Vertex.h" />
+    <ClInclude Include="Source\Scenes\StatManager.h" />
   </ItemGroup>
   <ItemGroup>
     <Text Include="Source\Minigames\Maze\Map\Map1.txt" />

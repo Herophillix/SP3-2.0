@@ -121,7 +121,7 @@ void SceneMole::Init()
 
 	m_popUpTimer = Math::RandFloatMinMax(0.5f, 1.5f);
 	m_score = 0;
-	m_gameTimer = 5.f;
+	m_gameTimer = 2.f;
 	m_gameOver = false;
 
 	// // ******************************* INIT RESULT THINGS HERE ******************************* //
@@ -156,6 +156,13 @@ void SceneMole::Update(double dt)
 			if (HammerCollisionCheck());
 
 		}
+		else
+		{
+			if (Results::getInstance()->ButtonMouseCollision())
+			{
+				cout << "hit" << endl;
+			}
+		}
 			//play sound effect/ particle effect idk
 	}
 	else if (bLButtonState && !Application::IsMousePressed(0))
@@ -181,9 +188,8 @@ void SceneMole::Update(double dt)
 
 	if (m_gameTimer < 0)
 	{
-		Application::setScene(0);
-		m_gameTimer = 60;
-	}
+		m_gameOver = true;
+	} 
 
 	UpdateParticles(dt);
 }

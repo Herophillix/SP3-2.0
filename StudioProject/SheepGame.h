@@ -15,9 +15,9 @@ public:
 	virtual void Render();
 	virtual void Exit();
 
-
 	void RenderGO(SheepObject *go);
 	SheepObject *FetchGO();
+	SheepGame();
 	~SheepGame();
 };
 
