@@ -136,7 +136,10 @@ void SceneMole::Init()
 void SceneMole::Update(double dt)
 {
 	SceneBase::Update(dt);
-	Results::getInstance()->UpdateVars(dt);
+	if (m_gameOver)
+	{
+		Results::getInstance()->UpdateVars(dt);
+	}
 	if (m_gameTimer <= 0)
 	{
 		m_gameTimer = 0.f;
@@ -153,7 +156,10 @@ void SceneMole::Update(double dt)
 		meshList[GEO_HAMMER]->textureID = t_hammerHit;
 		if (!m_gameOver)
 		{
-			if (HammerCollisionCheck());
+			if (HammerCollisionCheck())
+			{
+				// Play SFX
+			}
 
 		}
 		else
@@ -163,7 +169,6 @@ void SceneMole::Update(double dt)
 				cout << "hit" << endl;
 			}
 		}
-			//play sound effect/ particle effect idk
 	}
 	else if (bLButtonState && !Application::IsMousePressed(0))
 	{

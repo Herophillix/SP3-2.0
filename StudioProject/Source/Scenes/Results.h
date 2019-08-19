@@ -35,6 +35,7 @@ public:
 	void InitButtons();
 	void RenderButtons();
 	bool ButtonMouseCollision();
+	void RenderStats();
 
 private:
 	static Results* r_instance;
@@ -53,6 +54,7 @@ private:
 	float m_sixthWorldHeight;
 	float m_quarterWorldHeight;
 	float m_twelfthWorldHeight;
+	float m_twentyfourthWorldHeight;
 
 	Vector3 r_quad01Pos;
 	Vector3 r_quad02Pos;

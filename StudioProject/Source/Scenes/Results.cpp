@@ -22,10 +22,10 @@ void Results::InitVars()
 	// THE PROPS
 	meshList[GEO_RESULTSCREEN_QUAD] = MeshBuilder::GenerateQuad("results", Color(0, 0, 0), 1.f);
 	meshList[GEO_C01_RESULT_QUAD] = MeshBuilder::GenerateQuad("c01result", Color(1, 1, 1), 1.f);
-	meshList[GEO_C01_RESULT_QUAD]->textureID = LoadTGA("Image//resultTest.tga");
-	meshList[GEO_C02_RESULT_QUAD] = MeshBuilder::GenerateQuad("c01result", Color(1, 1, 1), 1.f);
-	meshList[GEO_C03_RESULT_QUAD] = MeshBuilder::GenerateQuad("c01result", Color(1, 1, 1), 1.f);
-	meshList[GEO_C04_RESULT_QUAD] = MeshBuilder::GenerateQuad("c01result", Color(1, 1, 1), 1.f);
+	//meshList[GEO_C01_RESULT_QUAD]->textureID = LoadTGA("Image//resultTest.tga");
+	meshList[GEO_C02_RESULT_QUAD] = MeshBuilder::GenerateQuad("c01result", Color(0.8, 0.8, 0.8), 1.f);
+	meshList[GEO_C03_RESULT_QUAD] = MeshBuilder::GenerateQuad("c01result", Color(0.6, 0.6, 0.6), 1.f);
+	meshList[GEO_C04_RESULT_QUAD] = MeshBuilder::GenerateQuad("c01result", Color(0.4, 0.4, 0.4), 1.f);
 
 	meshList[GEO_RESULT_PLUS] = MeshBuilder::GenerateQuad("plusButton", Color(0, 0, 1), 1.f);
 	meshList[GEO_RESULT_MINUS] = MeshBuilder::GenerateQuad("minusButton", Color(1, 0, 0), 1.f);
@@ -48,6 +48,7 @@ void Results::InitVars()
 	m_sixthWorldHeight = m_worldHeight / 6;
 	m_quarterWorldHeight = m_worldHeight / 4;
 	m_twelfthWorldHeight = m_worldHeight / 12;
+	m_twentyfourthWorldHeight = m_worldHeight / 24;
 
 	r_quad01Pos.Set(m_quarterWorldWidth, m_sixthWorldHeight * 3, 0.5f);
 	r_quad02Pos.Set(m_quarterWorldWidth * 3, m_sixthWorldHeight * 3, 0.5f);
@@ -76,6 +77,7 @@ void Results::UpdateVars(double dt)
 	m_sixthWorldHeight = m_worldHeight / 6;
 	m_quarterWorldHeight = m_worldHeight / 4;
 	m_twelfthWorldHeight = m_worldHeight / 12;
+	m_twentyfourthWorldHeight = m_worldHeight / 24;
 
 	r_quad01Pos.Set(m_quarterWorldWidth, m_sixthWorldHeight * 3, 0.5f);
 	r_quad02Pos.Set(m_quarterWorldWidth * 3, m_sixthWorldHeight * 3, 0.5f);
@@ -138,17 +140,12 @@ void Results::RenderResults(int score)
 	RenderMesh(meshList[GEO_C01_RESULT_QUAD], false);
 	modelStack.PopMatrix();
 
-	// C01 Stats
-
-
 	// C02 Quad
 	modelStack.PushMatrix();
 	modelStack.Translate(r_quad02Pos);
 	modelStack.Scale(96, 33.5f, 1);
 	RenderMesh(meshList[GEO_C02_RESULT_QUAD], false);
 	modelStack.PopMatrix();
-
-	// C01 Stats
 
 	// C03 Quad
 	modelStack.PushMatrix();
@@ -157,8 +154,6 @@ void Results::RenderResults(int score)
 	RenderMesh(meshList[GEO_C03_RESULT_QUAD], false);
 	modelStack.PopMatrix();
 
-	// C01 Stats
-
 	// C04 Quad
 	modelStack.PushMatrix();
 	modelStack.Translate(r_quad04Pos);	
@@ -166,14 +161,13 @@ void Results::RenderResults(int score)
 	RenderMesh(meshList[GEO_C04_RESULT_QUAD], false);
 	modelStack.PopMatrix();
 
-	// C04 Stats
-
 
 	// Buttons
 	RenderButtons();
 
-	// Collision check for mouse position and quad for rObjects
-
+	// Stats
+	RenderStats();
+	
 
 
 	// Render Reset and Continue
@@ -226,13 +220,13 @@ void Results::InitButtons()
 			temp->pos.Set((r_quad01Pos.x - 3 * m_thirtytwothWorldWidth), (r_quad01Pos.y + m_twelfthWorldHeight), 0.65f);
 			break;
 		case 1:
-			temp->pos.Set((r_quad02Pos.x - 3 * m_thirtytwothWorldWidth), (r_quad02Pos.y + m_twelfthWorldHeight), 0.65f);
+			temp->pos.Set((r_quad02Pos.x - m_thirtytwothWorldWidth), (r_quad02Pos.y + m_twelfthWorldHeight), 0.65f);
 			break;
 		case 2:
 			temp->pos.Set((r_quad03Pos.x - 3 * m_thirtytwothWorldWidth), (r_quad03Pos.y + m_twelfthWorldHeight), 0.65f);
 			break;
 		case 3:
-			temp->pos.Set((r_quad04Pos.x - 3 * m_thirtytwothWorldWidth), (r_quad04Pos.y + m_twelfthWorldHeight), 0.65f);
+			temp->pos.Set((r_quad04Pos.x - m_thirtytwothWorldWidth), (r_quad04Pos.y + m_twelfthWorldHeight), 0.65f);
 			break;
 		default:
 			break;
@@ -253,13 +247,13 @@ void Results::InitButtons()
 			temp->pos.Set((r_quad01Pos.x - m_thirtytwothWorldWidth), (r_quad01Pos.y + m_twelfthWorldHeight), 0.65f);
 			break;
 		case 1:
-			temp->pos.Set((r_quad02Pos.x - m_thirtytwothWorldWidth), (r_quad02Pos.y + m_twelfthWorldHeight), 0.65f);
+			temp->pos.Set((r_quad02Pos.x + m_thirtytwothWorldWidth), (r_quad02Pos.y + m_twelfthWorldHeight), 0.65f);
 			break;
 		case 2:
 			temp->pos.Set((r_quad03Pos.x - m_thirtytwothWorldWidth), (r_quad03Pos.y + m_twelfthWorldHeight), 0.65f);
 			break;
 		case 3:
-			temp->pos.Set((r_quad04Pos.x - m_thirtytwothWorldWidth), (r_quad04Pos.y + m_twelfthWorldHeight), 0.65f);
+			temp->pos.Set((r_quad04Pos.x + m_thirtytwothWorldWidth), (r_quad04Pos.y + m_twelfthWorldHeight), 0.65f);
 			break;
 		default:
 			break;
@@ -280,13 +274,13 @@ void Results::InitButtons()
 			temp->pos.Set((r_quad01Pos.x - 3 * m_thirtytwothWorldWidth), (r_quad01Pos.y - m_twelfthWorldHeight), 0.65f);
 			break;
 		case 1:
-			temp->pos.Set((r_quad02Pos.x - 3 * m_thirtytwothWorldWidth), (r_quad02Pos.y - m_twelfthWorldHeight), 0.65f);
+			temp->pos.Set((r_quad02Pos.x - m_thirtytwothWorldWidth), (r_quad02Pos.y - m_twelfthWorldHeight), 0.65f);
 			break;
 		case 2:
 			temp->pos.Set((r_quad03Pos.x - 3 * m_thirtytwothWorldWidth), (r_quad03Pos.y - m_twelfthWorldHeight), 0.65f);
 			break;
 		case 3:
-			temp->pos.Set((r_quad04Pos.x - 3 * m_thirtytwothWorldWidth), (r_quad04Pos.y - m_twelfthWorldHeight), 0.65f);
+			temp->pos.Set((r_quad04Pos.x - m_thirtytwothWorldWidth), (r_quad04Pos.y - m_twelfthWorldHeight), 0.65f);
 			break;
 		default:
 			break;
@@ -307,13 +301,13 @@ void Results::InitButtons()
 			temp->pos.Set((r_quad01Pos.x - m_thirtytwothWorldWidth), (r_quad01Pos.y - m_twelfthWorldHeight), 0.65f);
 			break;
 		case 1:
-			temp->pos.Set((r_quad02Pos.x - m_thirtytwothWorldWidth), (r_quad02Pos.y - m_twelfthWorldHeight), 0.65f);
+			temp->pos.Set((r_quad02Pos.x + m_thirtytwothWorldWidth), (r_quad02Pos.y - m_twelfthWorldHeight), 0.65f);
 			break;
 		case 2:
 			temp->pos.Set((r_quad03Pos.x - m_thirtytwothWorldWidth), (r_quad03Pos.y - m_twelfthWorldHeight), 0.65f);
 			break;
 		case 3:
-			temp->pos.Set((r_quad04Pos.x - m_thirtytwothWorldWidth), (r_quad04Pos.y - m_twelfthWorldHeight), 0.65f);
+			temp->pos.Set((r_quad04Pos.x + m_thirtytwothWorldWidth), (r_quad04Pos.y - m_twelfthWorldHeight), 0.65f);
 			break;
 		default:
 			break;
@@ -383,10 +377,12 @@ bool Results::ButtonMouseCollision()
 						if (ButtonList[i]->objType == ResultObject::GO_PLUS)
 						{
 							cout << "Plus button";
+							StatManager::GetInstance()->UpdateChar01M(1);
 						}
 						else if (ButtonList[i]->objType == ResultObject::GO_MINUS)
 						{
 							cout << "Minus button";
+							StatManager::GetInstance()->UpdateChar01M(-1);
 						}
 						break;
 					case ResultObject::WHICH_STAT::S_FRUSTRATION:
@@ -394,10 +390,12 @@ bool Results::ButtonMouseCollision()
 						if (ButtonList[i]->objType == ResultObject::GO_PLUS)
 						{
 							cout << "Plus button";
+							StatManager::GetInstance()->UpdateChar01F(1);
 						}
 						else if (ButtonList[i]->objType == ResultObject::GO_MINUS)
 						{
 							cout << "Minus button";
+							StatManager::GetInstance()->UpdateChar01F(-1);
 						}
 						break;
 					default:
@@ -413,10 +411,12 @@ bool Results::ButtonMouseCollision()
 						if (ButtonList[i]->objType == ResultObject::GO_PLUS)
 						{
 							cout << "Plus button";
+							StatManager::GetInstance()->UpdateChar02M(1);
 						}
 						else if (ButtonList[i]->objType == ResultObject::GO_MINUS)
 						{
 							cout << "Minus button";
+							StatManager::GetInstance()->UpdateChar02M(-1);
 						}
 						break;
 					case ResultObject::WHICH_STAT::S_FRUSTRATION:
@@ -424,10 +424,12 @@ bool Results::ButtonMouseCollision()
 						if (ButtonList[i]->objType == ResultObject::GO_PLUS)
 						{
 							cout << "Plus button";
+							StatManager::GetInstance()->UpdateChar02F(1);
 						}
 						else if (ButtonList[i]->objType == ResultObject::GO_MINUS)
 						{
 							cout << "Minus button";
+							StatManager::GetInstance()->UpdateChar02F(-1);
 						}
 						break;
 					default:
@@ -443,10 +445,12 @@ bool Results::ButtonMouseCollision()
 						if (ButtonList[i]->objType == ResultObject::GO_PLUS)
 						{
 							cout << "Plus button";
+							StatManager::GetInstance()->UpdateChar03M(1);
 						}
 						else if (ButtonList[i]->objType == ResultObject::GO_MINUS)
 						{
 							cout << "Minus button";
+							StatManager::GetInstance()->UpdateChar03M(-1);
 						}
 						break;
 					case ResultObject::WHICH_STAT::S_FRUSTRATION:
@@ -454,10 +458,12 @@ bool Results::ButtonMouseCollision()
 						if (ButtonList[i]->objType == ResultObject::GO_PLUS)
 						{
 							cout << "Plus button";
+							StatManager::GetInstance()->UpdateChar03F(1);
 						}
 						else if (ButtonList[i]->objType == ResultObject::GO_MINUS)
 						{
 							cout << "Minus button";
+							StatManager::GetInstance()->UpdateChar03F(-1);
 						}
 						break;
 					default:
@@ -473,10 +479,12 @@ bool Results::ButtonMouseCollision()
 						if (ButtonList[i]->objType == ResultObject::GO_PLUS)
 						{
 							cout << "Plus button";
+							StatManager::GetInstance()->UpdateChar04M(1);
 						}
 						else if (ButtonList[i]->objType == ResultObject::GO_MINUS)
 						{
 							cout << "Minus button";
+							StatManager::GetInstance()->UpdateChar04M(-1);
 						}
 						break;
 					case ResultObject::WHICH_STAT::S_FRUSTRATION:
@@ -484,11 +492,12 @@ bool Results::ButtonMouseCollision()
 						if (ButtonList[i]->objType == ResultObject::GO_PLUS)
 						{
 							cout << "Plus button";
+							StatManager::GetInstance()->UpdateChar04F(1);
 						}
 						else if (ButtonList[i]->objType == ResultObject::GO_MINUS)
 						{
-							cout << "Minus button";
-							StatManager::GetInstance()->GetChar01().m_frustration
+							cout << "Minus button ";
+							StatManager::GetInstance()->UpdateChar04F(-1);
 						}
 						break;
 					default:
@@ -504,4 +513,167 @@ bool Results::ButtonMouseCollision()
 		}
 	}
 	return false;
+}
+
+void Results::RenderStats()
+{
+
+	// CHAR 01
+	std::ostringstream s2;
+	s2 << "Motivation";
+	modelStack.PushMatrix();
+	modelStack.Translate((r_quad01Pos.x + m_thirtytwothWorldWidth), (r_quad01Pos.y + m_twelfthWorldHeight + m_twentyfourthWorldHeight), 0.65f);
+	modelStack.Scale(4.f, 4.f, 1);
+	RenderText(meshList[GEO_GAMEFONT], s2.str(), Color(0, 0, 1));
+	modelStack.PopMatrix();
+
+
+	s2.clear();
+	s2.str("");
+	s2 << "%" << StatManager::GetInstance()->GetChar01().m_motivation;
+
+	modelStack.PushMatrix();
+	modelStack.Translate((r_quad01Pos.x + 3 * m_thirtytwothWorldWidth), (r_quad01Pos.y + m_twentyfourthWorldHeight), 0.65f);
+	modelStack.Scale(8.5f, 8.5f, 1);
+	RenderText(meshList[GEO_GAMEFONT], s2.str(), Color(0, 0, 1));
+	modelStack.PopMatrix();
+
+	s2.clear();
+	s2.str("");
+	s2 << "Frustration";
+	modelStack.PushMatrix();
+	modelStack.Translate((r_quad01Pos.x + m_thirtytwothWorldWidth), (r_quad01Pos.y - m_twentyfourthWorldHeight), 0.65f);
+	modelStack.Scale(4.f, 4.f, 1);
+	RenderText(meshList[GEO_GAMEFONT], s2.str(), Color(0, 0, 1));
+	modelStack.PopMatrix();
+
+	s2.clear();
+	s2.str("");
+	s2 << "%" << StatManager::GetInstance()->GetChar01().m_frustration;
+
+	modelStack.PushMatrix();
+	modelStack.Translate((r_quad01Pos.x + 3 * m_thirtytwothWorldWidth), (r_quad01Pos.y - m_twelfthWorldHeight - m_twentyfourthWorldHeight), 0.65f);
+	modelStack.Scale(8.5f, 8.5f, 1);
+	RenderText(meshList[GEO_GAMEFONT], s2.str(), Color(0, 0, 1));
+	modelStack.PopMatrix();
+
+	// CHAR 02
+	s2.clear();
+	s2.str("");
+	s2 << "Motivation";
+
+	modelStack.PushMatrix();
+	modelStack.Translate((r_quad02Pos.x + m_thirtytwothWorldWidth), (r_quad02Pos.y + m_twelfthWorldHeight + m_twentyfourthWorldHeight), 0.65f);
+	modelStack.Scale(4.f, 4.f, 1);
+	RenderText(meshList[GEO_GAMEFONT], s2.str(), Color(0, 0, 1));
+	modelStack.PopMatrix();
+
+	s2.clear();
+	s2.str("");
+	s2 << "%" << StatManager::GetInstance()->GetChar02().m_motivation;
+
+	modelStack.PushMatrix();
+	modelStack.Translate((r_quad02Pos.x + 3 * m_thirtytwothWorldWidth), (r_quad02Pos.y + m_twentyfourthWorldHeight), 0.65f);
+	modelStack.Scale(8.5f, 8.5f, 1);
+	RenderText(meshList[GEO_GAMEFONT], s2.str(), Color(0, 0, 1));
+	modelStack.PopMatrix();
+
+	s2.clear();
+	s2.str("");
+	s2 << "Frustration";
+	modelStack.PushMatrix();
+	modelStack.Translate((r_quad02Pos.x + m_thirtytwothWorldWidth), (r_quad02Pos.y - m_twentyfourthWorldHeight), 0.65f);
+	modelStack.Scale(4.f, 4.f, 1);
+	RenderText(meshList[GEO_GAMEFONT], s2.str(), Color(0, 0, 1));
+	modelStack.PopMatrix();
+
+	s2.clear();
+	s2.str("");
+	s2 << "%" << StatManager::GetInstance()->GetChar02().m_frustration;
+
+	modelStack.PushMatrix();
+	modelStack.Translate((r_quad02Pos.x + 3 * m_thirtytwothWorldWidth), (r_quad02Pos.y - m_twelfthWorldHeight - m_twentyfourthWorldHeight), 0.65f);
+	modelStack.Scale(8.5f, 8.5f, 1);
+	RenderText(meshList[GEO_GAMEFONT], s2.str(), Color(0, 0, 1));
+	modelStack.PopMatrix();
+
+	// CHAR 03
+	s2.clear();
+	s2.str("");
+	s2 << "Motivation";
+
+	modelStack.PushMatrix();
+	modelStack.Translate((r_quad03Pos.x + m_thirtytwothWorldWidth), (r_quad03Pos.y + m_twelfthWorldHeight + m_twentyfourthWorldHeight), 0.65f);
+	modelStack.Scale(4.f, 4.f, 1);
+	RenderText(meshList[GEO_GAMEFONT], s2.str(), Color(0, 0, 1));
+	modelStack.PopMatrix();
+
+	s2.clear();
+	s2.str("");
+	s2 << "%" << StatManager::GetInstance()->GetChar03().m_motivation;
+
+	modelStack.PushMatrix();
+	modelStack.Translate((r_quad03Pos.x + 3 * m_thirtytwothWorldWidth), (r_quad03Pos.y + m_twentyfourthWorldHeight), 0.65f);
+	modelStack.Scale(8.5f, 8.5f, 1);
+	RenderText(meshList[GEO_GAMEFONT], s2.str(), Color(0, 0, 1));
+	modelStack.PopMatrix();
+
+	s2.clear();
+	s2.str("");
+	s2 << "Frustration";
+	modelStack.PushMatrix();
+	modelStack.Translate((r_quad03Pos.x + m_thirtytwothWorldWidth), (r_quad03Pos.y - m_twentyfourthWorldHeight), 0.65f);
+	modelStack.Scale(4.f, 4.f, 1);
+	RenderText(meshList[GEO_GAMEFONT], s2.str(), Color(0, 0, 1));
+	modelStack.PopMatrix();
+
+	s2.clear();
+	s2.str("");
+	s2 << "%" << StatManager::GetInstance()->GetChar03().m_frustration;
+
+	modelStack.PushMatrix();
+	modelStack.Translate((r_quad03Pos.x + 3 * m_thirtytwothWorldWidth), (r_quad03Pos.y - m_twelfthWorldHeight - m_twentyfourthWorldHeight), 0.65f);
+	modelStack.Scale(8.5f, 8.5f, 1);
+	RenderText(meshList[GEO_GAMEFONT], s2.str(), Color(0, 0, 1));
+	modelStack.PopMatrix();
+
+	// CHAR 04
+	s2.clear();
+	s2.str("");
+	s2 << "Motivation";
+
+	modelStack.PushMatrix();
+	modelStack.Translate((r_quad04Pos.x + m_thirtytwothWorldWidth), (r_quad04Pos.y + m_twelfthWorldHeight + m_twentyfourthWorldHeight), 0.65f);
+	modelStack.Scale(4.f, 4.f, 1);
+	RenderText(meshList[GEO_GAMEFONT], s2.str(), Color(0, 0, 1));
+	modelStack.PopMatrix();
+
+	s2.clear();
+	s2.str("");
+	s2 << "%" << StatManager::GetInstance()->GetChar04().m_motivation;
+
+	modelStack.PushMatrix();
+	modelStack.Translate((r_quad04Pos.x + 3 * m_thirtytwothWorldWidth), (r_quad04Pos.y + m_twentyfourthWorldHeight), 0.65f);
+	modelStack.Scale(8.5f, 8.5f, 1);
+	RenderText(meshList[GEO_GAMEFONT], s2.str(), Color(0, 0, 1));
+	modelStack.PopMatrix();
+
+	s2.clear();
+	s2.str("");
+	s2 << "Frustration";
+	modelStack.PushMatrix();
+	modelStack.Translate((r_quad04Pos.x + m_thirtytwothWorldWidth), (r_quad04Pos.y - m_twentyfourthWorldHeight), 0.65f);
+	modelStack.Scale(4.f, 4.f, 1);
+	RenderText(meshList[GEO_GAMEFONT], s2.str(), Color(0, 0, 1));
+	modelStack.PopMatrix();
+
+	s2.clear();
+	s2.str("");
+	s2 << "%" << StatManager::GetInstance()->GetChar04().m_frustration;
+
+	modelStack.PushMatrix();
+	modelStack.Translate((r_quad04Pos.x + 3 * m_thirtytwothWorldWidth), (r_quad04Pos.y - m_twelfthWorldHeight - m_twentyfourthWorldHeight), 0.65f);
+	modelStack.Scale(8.5f, 8.5f, 1);
+	RenderText(meshList[GEO_GAMEFONT], s2.str(), Color(0, 0, 1));
+	modelStack.PopMatrix();
 }
