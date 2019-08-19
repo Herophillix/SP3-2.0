@@ -78,9 +78,10 @@ void FrogObject::CollisionResponse(FrogObject* go, FrogObject* go2, double dt)
 	{
 	case FrogObject::GO_PLATFORM:
 	{
-		if (!isJump)
+		if (go->getJump())
 		{
 			go->Frog_vel.y = 0;
+			go->setJump(false);
 		}
 		break;
 	}

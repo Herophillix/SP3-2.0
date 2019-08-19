@@ -38,6 +38,7 @@ private:
 	float RockCount;
 	float rockSize;
 	FrogObject* Frog;
+	FrogObject* Platform;
 
 	Vector3 m_grav;
 

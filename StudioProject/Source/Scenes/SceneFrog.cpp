@@ -45,8 +45,8 @@ void SceneFrog::Init()
 	//meshList[GEO_FROG]->textureID = LoadTGA("Image//balloon.tga");
 	meshList[GEO_FROG_MAP] = MeshBuilder::GenerateQuad("map", Color(1, 1, 1), 1.f);
 	meshList[GEO_FROG_MAP]->textureID = LoadTGA("Image//BGTest.tga");
-	//meshList[GEO_FROG_PLATFORM] = MeshBuilder::GenerateQuad("platform", Color(1, 1, 1), 1.f);
-	//meshList[GEO_FROG_PLATFORM]->textureID = LoadTGA("Image//Frog_ground.tga");
+	meshList[GEO_FROG_PLATFORM] = MeshBuilder::GenerateQuad("platform", Color(1, 1, 1), 1.f);
+	meshList[GEO_FROG_PLATFORM]->textureID = LoadTGA("Image//BGTest.tga");
 	//meshList[GEO_FROG_ROCK] = MeshBuilder::GenerateCircle("rock", Color(1, 1, 1), 1.f);
 	//meshList[GEO_FROG_ROCK]->textureID = LoadTGA("Image//Frog_rock.tga");
 	meshList[GEO_TEXT] = MeshBuilder::GenerateText("text", 16, 16);
@@ -70,6 +70,13 @@ void SceneFrog::Init()
 	Frog->Frog_pos.Set(100, 100, 0);
 	Frog->Frog_vel.Set(0, 0, 0);
 	Frog->Frog_jumpVel.Set(0, 20, 0);
+
+	Platform = FetchGO();
+	Platform->active = true;
+	Platform->type = FrogObject::GO_PLATFORM;
+	Platform->scale.Set(10, 1, 1);
+	Platform->pos.Set(100,99, 0);
+	Platform->normal.Set(1, 1, 0);
 
 	rockSize = (Math::RandFloatMinMax(10, 20));
 
@@ -108,6 +115,7 @@ bool CheckCollision(FrogObject* go, FrogObject* go2)
 		if (dist.Dot(N) < (go->scale.x + go2->scale.x * 0.5f) &&
 			abs(dist.Dot(NP)) < (go->scale.y + go2->scale.y * 0.5f))
 		{
+			std::cout << "collided" << std::endl;
 			return true;
 		}
 		break;
@@ -137,13 +145,18 @@ void SceneFrog::Update(double dt)
 	{
 		Frog->Frog_vel.x += 10.f * dt;
 	}
-	m_grav.Set(0, -10 * (1 / rockSize), 0);
+	if (Application::IsKeyPressed(' ') && !Frog->getJump())
+	{
+		Frog->Frog_vel += Frog->Frog_jumpVel;
+		Frog->setJump(true);
+	}
+
+	m_grav.Set(0, -10, 0);
 
 	for (int i = 0; i < (int)m_goList->size(); ++i)
 	{
 
 		FrogObject *go = (*m_goList)[i];
-		go->Frog_pos += go->Frog_vel * (float)dt;
 
 		if (go->active)
 		{
@@ -151,7 +164,11 @@ void SceneFrog::Update(double dt)
 			{
 			case FrogObject::GO_FROG:
 			{
-
+				if (go->getJump())
+				{
+					go->Frog_vel += m_grav * (float)dt;
+				}
+				go->Frog_pos += go->Frog_vel * (float)dt;
 				cout << Frog->Frog_pos << endl;
 				break;
 
