@@ -1,11 +1,17 @@
 #include "PhysicsObject.h"
 
+Vector3 PhysicsObject::WindDirection;
+
 PhysicsObject::PhysicsObject(PHYSICSOBJECT_TYPE typeValue)
 	:
 	normal(0, 1, 0),
 	mass(1.f)
 {
 	type = typeValue;
+	UpBound = false;
+	DownBound = false;
+	LeftBound = false;
+	RightBound = false;
 }
 
 PhysicsObject::~PhysicsObject()
@@ -20,6 +26,7 @@ void PhysicsObject::Update(double dt, float m_worldWidth, float m_worldHeight)
 	{
 		Vector3 m_gravity(0, -9.8f, 0);
 		vel += m_gravity * (float)dt;
+		vel += WindDirection * (float)dt;
 		pos += vel * (float)dt;
 		break;
 	}

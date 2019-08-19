@@ -188,7 +188,7 @@
     <ClCompile Include="Source\Scenes\SceneTank.cpp" />
     <ClCompile Include="Source\Scenes\StatManager.cpp" />
     <ClCompile Include="Source\Scenes\StudioProjectScene.cpp" />
-    <ClCompile Include="Source\Scenes\TankChildObject.cpp" />
+    <ClCompile Include="Source\Scenes\SubTankObject.cpp" />
     <ClCompile Include="Source\Scenes\TankObject.cpp" />
     <ClCompile Include="Source\SpriteAnimation.cpp" />
     <ClCompile Include="Source\Utility.cpp" />
@@ -223,7 +223,7 @@
     <ClInclude Include="Source\Scenes\SceneTank.h" />
     <ClInclude Include="Source\Scenes\StatManager.h" />
     <ClInclude Include="Source\Scenes\StudioProjectScene.h" />
-    <ClInclude Include="Source\Scenes\TankChildObject.h" />
+    <ClInclude Include="Source\Scenes\SubTankObject.h" />
     <ClInclude Include="Source\Scenes\TankObject.h" />
     <ClInclude Include="Source\SpriteAnimation.h" />
     <ClInclude Include="Source\Utility.h" />

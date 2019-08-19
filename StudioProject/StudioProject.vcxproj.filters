@@ -4,6 +4,172 @@
     <ClCompile Include="SheepGame.cpp" />
     <ClCompile Include="SheepObject.cpp" />
     <ClCompile Include="Source\Application.cpp" />
+    <ClCompile Include="Source\Application.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Scenes\SceneMole.cpp">
+      <Filter>Scenes</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Scenes\SceneMaze.cpp">
+      <Filter>Scenes</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Minigames\Maze\MazeGenerator.cpp">
+      <Filter>Minigames\Maze</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Scenes\CharacterObject.cpp">
+      <Filter>Scenes\GameObject</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Scenes\MazeObject.cpp">
+      <Filter>Scenes\GameObject</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Scenes\MoleObject.cpp">
+      <Filter>Scenes\GameObject</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Scenes\PhysicsObject.cpp">
+      <Filter>Scenes\GameObject</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Scenes\SceneTank.cpp">
+      <Filter>Scenes</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Scenes\TankObject.cpp">
+      <Filter>Scenes\GameObject</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Camera\Camera.cpp">
+      <Filter>Camera</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Scenes\GameObject.cpp">
+      <Filter>Scenes\GameObject</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Scenes\StudioProjectScene.cpp">
+      <Filter>Scenes</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Scenes\SceneBase.cpp">
+      <Filter>Scenes</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Rendering\LoadOBJ.cpp">
+      <Filter>Rendering</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Rendering\LoadTGA.cpp">
+      <Filter>Rendering</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Rendering\MeshBuilder.cpp">
+      <Filter>Rendering</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Rendering\Mesh.cpp">
+      <Filter>Rendering</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Rendering\Particles.cpp">
+      <Filter>Rendering</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Rendering\shader.cpp">
+      <Filter>Rendering</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\main.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\SpriteAnimation.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Utility.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Scenes\SubTankObject.cpp">
+      <Filter>Scenes\GameObject</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Source\Scenes\SceneMole.h">
+      <Filter>Scenes\Header</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Scenes\SceneMaze.h">
+      <Filter>Scenes\Header</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Minigames\Maze\MazeGenerator.h">
+      <Filter>Minigames\Maze</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Scenes\CharacterObject.h">
+      <Filter>Scenes\GameObject\Header</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Scenes\MazeObject.h">
+      <Filter>Scenes\GameObject\Header</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Scenes\MoleObject.h">
+      <Filter>Scenes\GameObject\Header</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Scenes\PhysicsObject.h">
+      <Filter>Scenes\GameObject\Header</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Scenes\SceneTank.h">
+      <Filter>Scenes\Header</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Scenes\TankObject.h">
+      <Filter>Scenes\GameObject\Header</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Application.h">
+      <Filter>Source Files\Header</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Camera\Camera.h">
+      <Filter>Camera</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Scenes\GameObject.h">
+      <Filter>Scenes\GameObject\Header</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Scenes\SceneBase.h">
+      <Filter>Scenes\Header</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Scenes\StudioProjectScene.h">
+      <Filter>Scenes\Header</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Rendering\LoadOBJ.h">
+      <Filter>Rendering\Header</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Rendering\LoadTGA.h">
+      <Filter>Rendering\Header</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Rendering\Mesh.h">
+      <Filter>Rendering\Header</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Rendering\MeshBuilder.h">
+      <Filter>Rendering\Header</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Rendering\Particles.h">
+      <Filter>Rendering\Header</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Rendering\shader.hpp">
+      <Filter>Rendering\Header</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Light.h">
+      <Filter>Source Files\Header</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Material.h">
+      <Filter>Source Files\Header</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Scenes\Scene.h">
+      <Filter>Scenes\Header</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\SpriteAnimation.h">
+      <Filter>Source Files\Header</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Vertex.h">
+      <Filter>Source Files\Header</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Utility.h">
+      <Filter>Source Files\Header</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Scenes\SubTankObject.h">
+      <Filter>Scenes\GameObject\Header</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="Scenes">
+      <UniqueIdentifier>{d725e182-5198-4ada-8076-233c15e3689a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Rendering">
+      <UniqueIdentifier>{6070cf6d-b5ba-4718-92ce-43111384b1b4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Camera">
+      <UniqueIdentifier>{e6f11c4f-cbf0-4e5b-b0fb-78caf8f5dc74}</UniqueIdentifier>
+    </Filter>
     <ClCompile Include="Source\Camera\Camera.cpp" />
     <ClCompile Include="Source\main.cpp" />
     <ClCompile Include="Source\Minigames\Maze\MazeGenerator.cpp" />

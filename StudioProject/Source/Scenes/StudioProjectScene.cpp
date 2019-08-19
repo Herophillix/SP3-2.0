@@ -40,9 +40,9 @@ void StudioProjectScene::Init()
 	meshList[GEO_SPRITE_ANIMATION] = MeshBuilder::GenerateSpriteAnimation("test", 1, 4);
 	meshList[GEO_SPRITE_ANIMATION]->textureID = LoadTGA("Image//Idle_anim.tga");
 	meshList[GEO_WALKLEFT] = MeshBuilder::GenerateSpriteAnimation("char1walkleft", 1, 4);
-	meshList[GEO_WALKLEFT]->textureID = LoadTGA("Image//Walk_animLeft.tga");
+	meshList[GEO_WALKLEFT]->textureID = LoadTGA("Image//Walk_animLeft2.tga");
 	meshList[GEO_WALKRIGHT] = MeshBuilder::GenerateSpriteAnimation("char1walkright", 1, 4);
-	meshList[GEO_WALKRIGHT]->textureID = LoadTGA("Image//Walk_animRight.tga");
+	meshList[GEO_WALKRIGHT]->textureID = LoadTGA("Image//Walk_animRight2.tga");
 	meshList[GEO_SPRITE_TEST2] = MeshBuilder::GenerateSpriteAnimation("test2", 1, 6);
 	meshList[GEO_SPRITE_TEST2]->textureID = LoadTGA("Image//Idle_anim2.tga");
 	meshList[GEO_TELEVISION] = MeshBuilder::GenerateQuad("Television", Color(1, 1, 1), 1.f);
