@@ -23,6 +23,5 @@ public:
 	void RenderGO(SheepObject *go);
 	bool CollisionCheck(SheepObject *go, SheepObject *go2);
 	SheepObject *FetchGO();
-	SheepGame();
 	~SheepGame();
 };
