@@ -17,6 +17,7 @@
 #include "../Source/Scenes/SceneFrog.h"
 #include "../Source/Scenes/SceneTank.h"
 #include "../Source/Scenes/Results.h"
+#include "../SheepGame.h"
 GLFWwindow* m_window;
 const unsigned char FPS = 60; // FPS of this game
 const unsigned int frameTime = 1000 / FPS; // time for each frame
@@ -67,7 +68,7 @@ int Application::GetWindowHeight()
 
 Application::Application()
 {
-	currentScene = SCENEMAIN;
+	currentScene = SCENESHEEP;
 }
 
 Application::~Application()
@@ -134,6 +135,8 @@ void Application::Run()
 	thisScene[SCENEMOLE] = new SceneMole;
 	thisScene[SCENETANK] = new SceneTank;
 	thisScene[SCENEFROG] = new SceneFrog;
+	thisScene[SCENESHEEP] = new SheepGame;
+
 	for (int i = 0; i < TOTALSCENES; ++i)
 	{
 		if (thisScene[i])

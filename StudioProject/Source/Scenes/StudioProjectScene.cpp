@@ -95,7 +95,7 @@ void StudioProjectScene::Init()
 	charFour->resting = false;
 	charFour->active = true;
 
-	currentChar = charFour;
+	currentChar = charOne;
 
 	Television = new CharacterObject(CharacterObject::GO_TELEVISION);
 	Television->pos.Set(m_worldWidth / 4 - m_worldWidthDiv8- 10, m_worldHeight / 2 - 30, 5);
@@ -474,7 +474,6 @@ void StudioProjectScene::RenderAnimation()
 	modelStack.PushMatrix();
 	modelStack.Translate(pos.x, 50, 0);
 	modelStack.Rotate(Math::RadianToDegree(atan2(camera.position.x - 0, camera.position.z - 0)), 0, 1, 0);
-
 	modelStack.Scale(10, 10, 10);
 
 	RenderMesh(meshList[GEO_SPRITE_ANIMATION], false);
@@ -483,7 +482,6 @@ void StudioProjectScene::RenderAnimation()
 	modelStack.PushMatrix();
 	modelStack.Translate(100, 50, 0);
 	modelStack.Rotate(Math::RadianToDegree(atan2(camera.position.x - 0, camera.position.z - 0)), 0, 1, 0);
-
 	modelStack.Scale(10, 10, 10);
 
 	RenderMesh(meshList[GEO_SPRITE_TEST2], false);

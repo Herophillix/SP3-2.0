@@ -20,7 +20,7 @@ public:
 	static void GetCursorPos(double *xpos, double *ypos);
 	static void setScene(int i);
 	static int GetWindowWidth();
-	static int GetWindowHeight(); 
+	static int GetWindowHeight();
 
 	enum SceneType
 	{
@@ -29,6 +29,7 @@ public:
 		SCENEMOLE,
 		SCENETANK,
 		SCENEFROG,
+		SCENESHEEP,
 		TOTALSCENES,
 	};
 
