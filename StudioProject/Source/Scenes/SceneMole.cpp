@@ -121,7 +121,7 @@ void SceneMole::Init()
 
 	m_popUpTimer = Math::RandFloatMinMax(0.5f, 1.5f);
 	m_score = 0;
-	m_gameTimer = 5.f;
+	m_gameTimer = 2.f;
 	m_gameOver = false;
 
 	// // ******************************* INIT RESULT THINGS HERE ******************************* //
@@ -130,21 +130,41 @@ void SceneMole::Init()
 	r_quad02Pos.Set(m_quarterWorldWidth * 3, m_sixthWorldHeight * 3, 6);
 	r_quad03Pos.Set(m_quarterWorldWidth, m_sixthWorldHeight, 6);
 	r_quad04Pos.Set(m_quarterWorldWidth * 3, m_sixthWorldHeight, 6);
+	m_setOriginValues = false;
+	m_setStatsToDist = false;
 
 }
 
 void SceneMole::Update(double dt)
 {
 	SceneBase::Update(dt);
-	Results::getInstance()->UpdateVars(dt);
+	if (m_gameOver)
+	{
+		Results::getInstance()->UpdateVars(dt);
+	}
+	if (m_gameOver && !m_setStatsToDist)
+	{
+		Results::getInstance()->InitStatsToDist(10);
+		m_setStatsToDist = true;
+	}
 	if (m_gameTimer <= 0)
 	{
 		m_gameTimer = 0.f;
 		m_gameOver = true;
 	}
+	if (m_gameOver && !m_setOriginValues)
+	{
+		StatManager::GetInstance()->SetCharsOriginalValues();
+		m_setOriginValues = true;
+
+	}
 	if (!m_gameOver)
 		m_gameTimer -= dt;
 
+	if (m_gameTimer < 0)
+	{
+		m_gameOver = true;
+	} 
 	static bool bLButtonState = false;
 	if (!bLButtonState && Application::IsMousePressed(0))
 	{
@@ -153,10 +173,19 @@ void SceneMole::Update(double dt)
 		meshList[GEO_HAMMER]->textureID = t_hammerHit;
 		if (!m_gameOver)
 		{
-			if (HammerCollisionCheck());
+			if (HammerCollisionCheck())
+			{
+				// Play SFX
+			}
 
 		}
-			//play sound effect/ particle effect idk
+		else
+		{
+			if (Results::getInstance()->ButtonMouseCollision())
+			{
+				cout << "hit" << endl;
+			}
+		}
 	}
 	else if (bLButtonState && !Application::IsMousePressed(0))
 	{
@@ -179,11 +208,6 @@ void SceneMole::Update(double dt)
 
 	UpdateMoles(dt);
 
-	if (m_gameTimer < 0)
-	{
-		Application::setScene(0);
-		m_gameTimer = 60;
-	}
 
 	UpdateParticles(dt);
 }

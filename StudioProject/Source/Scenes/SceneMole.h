@@ -2,6 +2,7 @@
 #define SCENEMOLE_H
 #include "scenebase.h"
 #include "StudioProjectScene.h"
+#include "StatManager.h"
 #include "GameObject.h"
 #include "MoleObject.h"
 #include "ResultObject.h"
@@ -75,6 +76,9 @@ private:
 	Vector3 m_backScale;
 
 	// Result Screen Stuff
+	bool m_setOriginValues;
+	bool m_setStatsToDist;
+
 	Vector3 r_quad01Pos;
 	Vector3 r_quad02Pos;
 	Vector3 r_quad03Pos;
