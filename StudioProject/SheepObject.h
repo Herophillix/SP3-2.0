@@ -2,19 +2,29 @@
 #include "Source/Scenes/PhysicsObject.h"
 class SheepObject : public PhysicsObject
 {
-private:
-	int health;
-	float fireRate;
-	float spreadAngle;
-
 public:
+	bool isDown;
+	bool onCooldown;
+	float health;
+	float cooldown;
+	float spreadAngle;
 	enum sheepGameType
 	{
 		E_NONE,
 		E_SHEEP,
-		E_TURRET,
+		E_SHEEPFLIPPED,
+		E_PLAYER,
+		E_WALL,
+		E_FIREBALL,
 		E_TOTAL
 	};
+	bool m_dLeftRight;
+	bool isMoving;
+	bool getDirection();
+	void setDirection(bool leftTrue);
+	bool getState();
+	void setState(bool moving);
+	void UpdateMovement(double dt);
 	SheepObject(sheepGameType typeValue = E_NONE);
 	~SheepObject();
 };

@@ -14,6 +14,7 @@
 #include "../Source/Scenes/StudioProjectScene.h"
 #include "../Source/Scenes/SceneMole.h"
 #include "../Source/Scenes/SceneMaze.h"
+#include "../SheepGame.h"
 
 GLFWwindow* m_window;
 const unsigned char FPS = 60; // FPS of this game
@@ -65,7 +66,7 @@ int Application::GetWindowHeight()
 
 Application::Application()
 {
-	currentScene = SCENEMAIN;
+	currentScene = SCENESHEEP;
 }
 
 Application::~Application()
@@ -130,6 +131,7 @@ void Application::Run()
 	thisScene[SCENEMAIN] = new StudioProjectScene;
 	thisScene[SCENEMAZE] = new SceneMaze;
 	thisScene[SCENEMOLE] = new SceneMole;
+	thisScene[SCENESHEEP] = new SheepGame;
 	for (int i = 0; i < TOTALSCENES; ++i)
 	{
 		if (thisScene[i])

@@ -13,6 +13,8 @@ public:
 	//Vector3 vel;
 	Vector3 scale;
 	bool active;
+	int health;
+	bool isDown;
 	//double reload;
 	//int hp;
 	////Main Character Stats
