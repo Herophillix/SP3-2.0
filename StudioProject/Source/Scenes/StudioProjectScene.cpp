@@ -27,7 +27,7 @@ void StudioProjectScene::Init()
 	//Variables here
 	m_speed = 1.f;
 	Math::InitRNG();
-	m_eventTimer = 5; //Math::RandFloatMinMax(20.0f, 40.f);
+	m_eventTimer = 2.f;//Math::RandFloatMinMax(20.0f, 40.f);
 	b_transitioning = false;
 
 	meshList[GEO_QUAD] = MeshBuilder::GenerateQuad("test", Color(1, 1, 1), 1.f);
@@ -95,7 +95,7 @@ void StudioProjectScene::Init()
 	charFour->resting = false;
 	charFour->active = true;
 
-	currentChar = charFour;
+	currentChar = charOne;
 
 	Television = new CharacterObject(CharacterObject::GO_TELEVISION);
 	Television->pos.Set(m_worldWidth / 4 - m_worldWidthDiv8- 10, m_worldHeight / 2 - 30, 5);
@@ -382,7 +382,7 @@ void StudioProjectScene::Update(double dt)
 	}
 	if (m_eventTimer < -2)
 	{
-		Application::setScene(Math::RandIntMinMax(2, 2));
+		Application::setScene(Math::RandIntMinMax(1, 4));
 		m_eventTimer = Math::RandFloatMinMax(20.0f, 40.f);
 	}
 	UpdateParticles(dt);
@@ -474,7 +474,6 @@ void StudioProjectScene::RenderAnimation()
 	modelStack.PushMatrix();
 	modelStack.Translate(pos.x, 50, 0);
 	modelStack.Rotate(Math::RadianToDegree(atan2(camera.position.x - 0, camera.position.z - 0)), 0, 1, 0);
-
 	modelStack.Scale(10, 10, 10);
 
 	RenderMesh(meshList[GEO_SPRITE_ANIMATION], false);
@@ -483,7 +482,6 @@ void StudioProjectScene::RenderAnimation()
 	modelStack.PushMatrix();
 	modelStack.Translate(100, 50, 0);
 	modelStack.Rotate(Math::RadianToDegree(atan2(camera.position.x - 0, camera.position.z - 0)), 0, 1, 0);
-
 	modelStack.Scale(10, 10, 10);
 
 	RenderMesh(meshList[GEO_SPRITE_TEST2], false);

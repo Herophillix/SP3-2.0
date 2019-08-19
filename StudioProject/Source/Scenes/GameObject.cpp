@@ -4,7 +4,8 @@
 GameObject::GameObject()
 	: type(0),
 	scale(1, 1, 1),
-	active(false)
+	active(false),
+	isDown(false)
 {
 }
 
