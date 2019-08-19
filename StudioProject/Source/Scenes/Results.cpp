@@ -30,6 +30,8 @@ void Results::InitVars()
 	meshList[GEO_RESULT_PLUS] = MeshBuilder::GenerateQuad("plusButton", Color(0, 0, 1), 1.f);
 	meshList[GEO_RESULT_MINUS] = MeshBuilder::GenerateQuad("minusButton", Color(1, 0, 0), 1.f);
 	
+	meshList[GEO_RESULT_CONTINUE] = MeshBuilder::GenerateQuad("continuebutton", Color(1, 1, 1), 1.f);
+	meshList[GEO_RESULT_RESET] = MeshBuilder::GenerateQuad("resetbutton", Color(1, 1, 1), 1.f);
 
 	meshList[GEO_GAMEFONT] = MeshBuilder::GenerateText("teko", 16, 16);
 	meshList[GEO_GAMEFONT]->textureID = LoadTGA("Image//KidsZone.tga");
@@ -45,6 +47,7 @@ void Results::InitVars()
 	m_sixteenthWorldWidth = m_worldWidth / 16;
 	m_thirtytwothWorldWidth = m_worldWidth / 32;
 
+	m_thirdWorldHeight = m_worldHeight / 3;
 	m_sixthWorldHeight = m_worldHeight / 6;
 	m_quarterWorldHeight = m_worldHeight / 4;
 	m_twelfthWorldHeight = m_worldHeight / 12;
@@ -75,6 +78,7 @@ void Results::UpdateVars(double dt)
 	m_sixteenthWorldWidth = m_worldWidth / 16;
 	m_thirtytwothWorldWidth = m_worldWidth / 32;
 
+	m_thirdWorldHeight = m_worldHeight / 3;
 	m_sixthWorldHeight = m_worldHeight / 6;
 	m_quarterWorldHeight = m_worldHeight / 4;
 	m_twelfthWorldHeight = m_worldHeight / 12;
@@ -126,8 +130,6 @@ void Results::RenderResults(int score)
 	ss << "MINIGAME OVER";
 	RenderTextOnScreen(meshList[GEO_GAMEFONT], ss.str(), Color(1, 1, 1), 5, 10, 50);
 
-
-
 	ss.clear();
 	ss.str("");
 	ss << "Score: " << score;
@@ -137,7 +139,6 @@ void Results::RenderResults(int score)
 	ss.str("");
 	ss << "Stats left: " << m_statsToDistribute;
 	RenderTextOnScreen(meshList[GEO_GAMEFONT], ss.str(), Color(1, 1, 1), 2, 50, 45);
-	// get instance of player stats
 
 	// Render Character Quad -> stats
 	// C01 Quad
@@ -176,11 +177,8 @@ void Results::RenderResults(int score)
 	RenderStats();
 
 	// Render Reset and Continue
-	modelStack.PushMatrix();
-	modelStack.PopMatrix();
-
-	modelStack.PushMatrix();
-	modelStack.PopMatrix();
+	RenderGO(continueButton);
+	RenderGO(resetButton);
 }
 
 void Results::RenderGO(ResultObject * go)
@@ -199,6 +197,20 @@ void Results::RenderGO(ResultObject * go)
 		modelStack.Translate(go->pos.x, go->pos.y, go->pos.z);
 		modelStack.Scale(go->scale.x, go->scale.y, go->scale.z);
 		RenderMesh(meshList[GEO_RESULT_MINUS], false);
+		modelStack.PopMatrix();
+		break;
+	case ResultObject::GO_CONTINUE:
+		modelStack.PushMatrix();
+		modelStack.Translate(go->pos.x, go->pos.y, go->pos.z);
+		modelStack.Scale(go->scale.x, go->scale.y, go->scale.z);
+		RenderMesh(meshList[GEO_RESULT_CONTINUE], false);
+		modelStack.PopMatrix();
+		break;
+	case ResultObject::GO_RESET:
+		modelStack.PushMatrix();
+		modelStack.Translate(go->pos.x, go->pos.y, go->pos.z);
+		modelStack.Scale(go->scale.x, go->scale.y, go->scale.z);
+		RenderMesh(meshList[GEO_RESULT_RESET], false);
 		modelStack.PopMatrix();
 		break;
 	default:
@@ -319,6 +331,21 @@ void Results::InitButtons()
 		}
 		ButtonList.push_back(temp);
 	}
+
+	// Continue Button
+	continueButton = new ResultObject(ResultObject::GO_NONE);
+	continueButton->objType = ResultObject::GO_CONTINUE;
+	continueButton->pos.Set(m_halfWorldWidth + m_eightWorldWidth, 2 * m_thirdWorldHeight + m_twentyfourthWorldHeight, 0.65f);
+	continueButton->scale.Set(30, 5, 1);
+	ButtonList.push_back(continueButton);
+
+	// Reset Button
+	resetButton = new ResultObject(ResultObject::GO_NONE);
+	resetButton->objType = ResultObject::GO_RESET;
+	resetButton->pos.Set(m_halfWorldWidth - m_eightWorldWidth, 2 * m_thirdWorldHeight + m_twentyfourthWorldHeight, 0.65f);
+	resetButton->scale.Set(30, 5, 1);
+	ButtonList.push_back(resetButton);
+
 	// Objects C01
 	//c01PlusM = new ResultObject(ResultObject::GO_NONE);
 	//c01PlusM->objType = ResultObject::GO_PLUS;
@@ -396,7 +423,6 @@ bool Results::ButtonMouseCollision()
 							}
 							else
 							{
-								cout << " ....Sike bitch you thought";
 								return false;
 								// REJECT SFX outside
 							}
@@ -412,7 +438,6 @@ bool Results::ButtonMouseCollision()
 							}
 							else
 							{
-								cout << " ....Sike bitch you thought";
 								return false;
 							}
 						}
@@ -430,7 +455,6 @@ bool Results::ButtonMouseCollision()
 							}
 							else
 							{
-								cout << " ....Sike bitch you thought";
 								return false;
 							}
 						}
@@ -445,7 +469,6 @@ bool Results::ButtonMouseCollision()
 							}
 							else
 							{
-								cout << " ....Sike bitch you thought";
 								return false;
 							}
 						}
@@ -471,7 +494,6 @@ bool Results::ButtonMouseCollision()
 							}
 							else
 							{
-								cout << " ....Sike bitch you thought";
 								return false;
 							}
 						}
@@ -668,12 +690,19 @@ bool Results::ButtonMouseCollision()
 						if (m_statsToDistribute == 0)
 						{
 							//switch scene
+							cout << "next scene" << endl;
 							return true;
+						}
+						else
+						{
+							cout << "please use up all stats" << endl;
+							return false;
 						}
 						break;
 					case ResultObject::GO_RESET:
 						StatManager::GetInstance()->ResetValues();
 						m_statsToDistribute = m_originStatsToDistribute;
+						cout << "reset stats" << endl;
 						break;
 					default:
 						break;

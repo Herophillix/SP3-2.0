@@ -52,6 +52,7 @@ private:
 	float m_sixteenthWorldWidth;
 	float m_thirtytwothWorldWidth;
 
+	float m_thirdWorldHeight;
 	float m_sixthWorldHeight;
 	float m_quarterWorldHeight;
 	float m_twelfthWorldHeight;
