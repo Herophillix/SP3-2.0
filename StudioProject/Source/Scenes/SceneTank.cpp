@@ -24,6 +24,9 @@ void SceneTank::Init()
 	// End James 13/8/2019
 	m_worldWidth = m_worldHeight * (float)Application::GetWindowWidth() / Application::GetWindowHeight();
 
+	meshList[GEO_ARROW] = MeshBuilder::GenerateQuad("arrow", Color(1, 1, 1), 1.f);
+	meshList[GEO_ARROW]->textureID = LoadTGA("Image//Arrow.tga");
+
 	//Physics code here
 	m_speed = 1.f;
 
@@ -74,7 +77,7 @@ void SceneTank::Init()
 	// End James 13/8/2019
 
 	// James 15/8/2019
-	enableStencil = true;
+	enableStencil = false;
 	// End James 15/8/2019
 
 	// James 16/8/2019
@@ -84,6 +87,7 @@ void SceneTank::Init()
 	Tank[0]->normal.Set(0, 1, 0);
 	Tank[0]->active = true;
 	m_goList->push_back(Tank[0]);
+	Tank[0]->Init(m_goList);
 
 	Tank[1] = new TankObject(PhysicsObject::GO_WALL);
 	Tank[1]->pos.Set(m_worldWidth* 0.5f, m_worldHeight * 0.75f, 0);
@@ -91,6 +95,7 @@ void SceneTank::Init()
 	Tank[1]->normal.Set(0, 1, 0);
 	Tank[1]->active = true;
 	m_goList->push_back(Tank[1]);
+	Tank[1]->Init(m_goList);
 
 	Tank[2] = new TankObject(PhysicsObject::GO_WALL);
 	Tank[2]->pos.Set(m_worldWidth* 0.75f, m_worldHeight * 0.5f, 0);
@@ -98,6 +103,7 @@ void SceneTank::Init()
 	Tank[2]->normal.Set(0, 1, 0);
 	Tank[2]->active = true;
 	m_goList->push_back(Tank[2]);
+	Tank[2]->Init(m_goList);
 
 	Tank[3] = new TankObject(PhysicsObject::GO_WALL);
 	Tank[3]->pos.Set(m_worldWidth* 0.25f, m_worldHeight * 0.75f, 0);
@@ -105,14 +111,28 @@ void SceneTank::Init()
 	Tank[3]->normal.Set(0, 1, 0);
 	Tank[3]->active = true;
 	m_goList->push_back(Tank[3]);
+	Tank[3]->Init(m_goList);
 
-	DummyTank = new TankObject(PhysicsObject::GO_WALL);
-	DummyTank->active = false;
+	Ball = FetchGO();
+	Ball->type = PhysicsObject::GO_BALL;
+	Ball->scale.Set(2, 2, 1);
+	Ball->active = false;
 
 	TankObject::currentTank = Tank[0];
+	TankObject::previousTank = Tank[3];
 
 	endGame = true;
 	elapsedTime = 0;
+	ballthrown = false;
+	ballcollisionnum = 0;
+
+	arrow = new PhysicsObject(PhysicsObject::GO_ARROW);
+	arrow->pos = Vector3(m_worldWidth * 0.9f, m_worldHeight*0.2f, 0);
+	arrow->scale = Vector3(20, 20, 1);
+	arrow->active = true;
+
+	PhysicsObject::WindDirection = Vector3(Math::RandFloatMinMax(-9.8, 9.8), Math::RandFloatMinMax(-9.8, 9.8), 0);
+	PhysicsObject::WindDirection = Math::Clamp(PhysicsObject::WindDirection.Length(), 0.f, 9.8f) * PhysicsObject::WindDirection.Normalized();
 }
 
 void SceneTank::Update(double dt)
@@ -137,6 +157,7 @@ void SceneTank::Update(double dt)
 	tempwall4->pos = Vector3(m_worldWidth, m_worldHeight * 0.5f, 0);
 	tempwall4->scale.Set(5, m_worldHeight, 1);
 
+	arrow->pos = Vector3(m_worldWidth * 0.9f, m_worldHeight*0.2f, 0);
 	// End James 14/8/2019
 	// James 13/8/2019
 	double x, y;
@@ -150,38 +171,75 @@ void SceneTank::Update(double dt)
 	}
 	// End James 13/8/2019
 
+	if (!TankObject::currentTank->active)
+	{
+		bool done = false;
+		while (!done)
+		{
+			// James 16/8/2019
+			TankObject::TankIndex = ++TankObject::TankIndex % TankObject::TankCount;
+			TankObject::previousTank = TankObject::currentTank;
+			TankObject::currentTank = Tank[TankObject::TankIndex];
+			// End James 16/8/2019
+			if (TankObject::currentTank->active)
+			{
+				done = true;
+			}
+		}
+	}
+
 	static bool bLButtonState = false;
-	if (!bLButtonState && Application::IsMousePressed(0))
+	if (!bLButtonState && Application::IsMousePressed(0) && !ballthrown)
 	{
 		bLButtonState = true;
 		std::cout << "LBUTTON DOWN" << std::endl;
-
-		// James 16/8/2019
-		TankObject::currentTank = Tank[TankObject::TankIndex++ % (TankObject::TankCount - 1)];
-		// End James 16/8/2019
 		// James 13/8/2019
 		Ghost->active = true;
-		Ghost->pos = TankObject::currentTank->pos;
+		Ghost->pos = TankObject::currentTank->Head->pos;
 		OldPos = v_mousepos;
 		// End James 13/8/2019
 	}
-	else if (bLButtonState && !Application::IsMousePressed(0))
+	else if (bLButtonState && !Application::IsMousePressed(0) && !ballthrown)
 	{
 		bLButtonState = false;
 		std::cout << "LBUTTON UP" << std::endl;
 
-		// James 13/8/2019
-		PhysicsObject *temp = FetchGO();
-		temp->type = PhysicsObject::GO_BALL;
-		temp->pos = Ghost->pos;
-		temp->vel = OldPos - v_mousepos;
-		temp->scale.Set(2, 2, 1);
+		if ((OldPos - v_mousepos).y > 0)
+		{
+			// James 13/8/2019
+			Ball->active = true;
+			Ball->pos = Ghost->pos;
+			Ball->vel = OldPos - v_mousepos;
+			Ball->scale.Set(2, 2, 1);
+			TankObject::currentTank->Ball = Ball;
+			ballthrown = true;
+			if (TankObject::TankCount > 0)
+			{
+			bool done = false;
+				while (!done)
+				{
+					// James 16/8/2019
+					TankObject::TankIndex = ++TankObject::TankIndex % TankObject::TankCount;
+					TankObject::previousTank = TankObject::currentTank;
+					TankObject::currentTank = Tank[TankObject::TankIndex];
+					// End James 16/8/2019
+					if (TankObject::currentTank->active)
+					{
+						done = true;
+					}
+				}
+			}
+			ballcollisionnum = 0;
+			// End James 13/8/2019
+			// James 15/8/2019
+			//	Ball = temp;
+			// End James 15/8/2019
+		}
 		Ghost->active = false;
-		TankObject::currentTank = DummyTank;
-		// End James 13/8/2019
-		// James 15/8/2019
-		//	Ball = temp;
-		// End James 15/8/2019
+	}
+	if (!Ball->active)
+	{
+		ballthrown = false;
 	}
 	static bool bRButtonState = false;
 	if (!bRButtonState && Application::IsMousePressed(1))
@@ -226,7 +284,66 @@ void SceneTank::Update(double dt)
 		endGame = false;
 	}
 
-	// James 13/8/2019
+	UpdateRayTracing(dt);
+
+	for (int i = 0; i < (int)m_goList->size(); ++i)
+	{
+		PhysicsObject *go = (*m_goList)[i];
+		if (go->active)
+		{
+			if (!((Ghost->active || ballthrown) && go == TankObject::currentTank))
+			{
+				go->Update(dt, m_worldWidth, m_worldHeight);
+				Constrain(go);
+			}
+			for (int k = i + 1; k < (int)m_goList->size(); ++k)
+			{
+				PhysicsObject* go2 = (*m_goList)[k];
+				if (go2->active)
+				{
+					if (go->type != PhysicsObject::GO_BALL)
+					{
+						if (go2->type == PhysicsObject::GO_BALL)
+						{
+							PhysicsObject* temp = go;
+							go = go2;
+							go2 = temp;
+						}
+						else
+						{
+							continue;
+						}
+					}
+					if (CheckCollision(go, go2))
+					{
+						if (go == Ball)
+						{
+							if (++ballcollisionnum > 8)
+							{
+								go->active = false;
+								ballcollisionnum = 0;
+								PhysicsObject::WindDirection = Vector3(Math::RandFloatMinMax(-9.8, 9.8), Math::RandFloatMinMax(-9.8, 9.8), 0);
+								PhysicsObject::WindDirection = Math::Clamp(PhysicsObject::WindDirection.Length(), 0.f, 9.8f) * PhysicsObject::WindDirection.Normalized();
+							}
+						}
+						go2->CollisionResponse(go, dt);
+						//CollisionResponse(go, go2, dt);
+					}
+					go = (*m_goList)[i];
+				}
+			}
+		}
+	}
+	// End James 13/8/2019
+
+	if (!endGame)
+	{
+		elapsedTime += dt;
+	}
+}
+
+void SceneTank::UpdateRayTracing(double dt)
+{// James 13/8/2019
 	for (int i = 0; i < TraceSize; ++i)
 	{
 		Trace[i]->active = false;
@@ -237,13 +354,22 @@ void SceneTank::Update(double dt)
 		PhysicsObject temp;
 		temp = *Ghost;
 		temp.vel = OldPos - v_mousepos;
+		if (temp.vel.y < 0)
+		{
+			return;
+		}
 		temp.type = PhysicsObject::GO_TRACE;
+		TankObject::currentTank->Ball = &temp;
 		float time = 0.f;
 		int index = 0;
 		float accumulatedtime = 0.f;
 		//Vector3 prevpos = Ghost->pos + m_gravity * dt;
 		for (float time = 0; time < 5.f; time += dt)
 		{
+			if (!temp.active)
+			{
+				break;
+			}
 			temp.vel += Vector3(0, -9.8, 0) * dt;
 			temp.pos += temp.vel * dt;
 			accumulatedtime += temp.vel.Length() * dt;
@@ -289,51 +415,51 @@ void SceneTank::Update(double dt)
 			Trace[i]->active = false;
 		}
 	}
-	for (int i = 0; i < (int)m_goList->size(); ++i)
-	{
-		PhysicsObject *go = (*m_goList)[i];
-		if (go->active)
-		{
-			go->Update(dt, m_worldWidth, m_worldHeight);
-			for (int k = i + 1; k < (int)m_goList->size(); ++k)
-			{
-				PhysicsObject* go2 = (*m_goList)[k];
-				if (go2->active)
-				{
-					if (go->type != PhysicsObject::GO_BALL)
-					{
-						if (go2->type == PhysicsObject::GO_BALL)
-						{
-							PhysicsObject* temp = go;
-							go = go2;
-							go2 = temp;
-						}
-						else
-						{
-							continue;
-						}
-					}
-					if (CheckCollision(go, go2))
-					{
-						go2->CollisionResponse(go, dt);
-						//CollisionResponse(go, go2, dt);
-					}
-					go = (*m_goList)[i];
-				}
-			}
-		}
-	}
-	// End James 13/8/2019
+}
 
-	if (!endGame)
+void SceneTank::Constrain(PhysicsObject* go)
+{
+	if (go->pos.y < go->scale.x /2+ tempwall->scale.x / 2)
 	{
-		elapsedTime += dt;
+		go->DownBound = true;
+	}
+	else
+	{
+		go->DownBound = false;
+	}
+	if (go->pos.y > m_worldHeight - (go->scale.x + tempwall2->scale.x / 2))
+	{
+		go->UpBound = true;
+	}
+	else
+	{
+		go->UpBound = false;
+	}
+	if (go->pos.x < go->scale.x + tempwall3->scale.x / 2)
+	{
+		go->LeftBound = true;
+	}
+	else
+	{
+		go->LeftBound = false;
+	}
+	if (go->pos.x > m_worldWidth - (go->scale.x + tempwall4->scale.x / 2))
+	{
+		go->RightBound = true;
+	}
+	else
+	{
+		go->RightBound = false;
 	}
 }
 
 // James 13/8/2019
 bool SceneTank::CheckCollision(PhysicsObject* go, PhysicsObject* go2)
 {
+	if (go2 == TankObject::previousTank->Head)
+	{
+		return false;
+	}
 	switch (go2->type)
 	{
 	case PhysicsObject::GO_BALL:
@@ -505,6 +631,7 @@ void SceneTank::Render()
 			RenderGO(go);
 		}
 	}
+	RenderGO(arrow);
 
 	for (int i = 0; i < TraceSize; ++i)
 	{
@@ -525,7 +652,7 @@ void SceneTank::Render()
 	//On screen text
 	std::ostringstream ss;
 	ss.precision(3);
-	ss << "T:" << elapsedTime;
+	ss << "T:" << TankObject::TankIndex << " " << to_string(Tank[0]->health) << " " << to_string(Tank[1]->health) << " " << to_string(Tank[2]->health) << " " << to_string(Tank[3]->health);
 	RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(0, 1, 0), 3, 0, 0);
 	// End James 14/8/2019
 }
@@ -541,7 +668,7 @@ void SceneTank::Exit()
 		m_goList->pop_back();
 	}
 	delete m_goList;
-	delete DummyTank;
+	delete arrow;
 }
 
 void SceneTank::RenderGO(PhysicsObject * go)
@@ -587,6 +714,16 @@ void SceneTank::RenderGO(PhysicsObject * go)
 		break;
 	}
 	// End James 13/8/2019
+	case PhysicsObject::GO_ARROW:
+	{
+		modelStack.PushMatrix();
+		modelStack.Translate(go->pos);
+		modelStack.Rotate(Math::RadianToDegree(atan2(TankObject::WindDirection.y, TankObject::WindDirection.x)) + 90, 0, 0, 1);
+		modelStack.Scale(fabs(TankObject::WindDirection.Length()) * 2, fabs(TankObject::WindDirection.Length()) * 2, 1);
+		RenderMesh(meshList[GEO_ARROW], false);
+		modelStack.PopMatrix();
+		break;
+	}
 	default:
 		break;
 	}

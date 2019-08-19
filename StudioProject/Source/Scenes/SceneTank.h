@@ -14,6 +14,7 @@ public:
 
 	virtual void Init();
 	virtual void Update(double dt);
+	void UpdateRayTracing(double dt);
 	virtual void Render();
 	virtual void Exit();
 
@@ -30,6 +31,8 @@ public:
 	void DeactivateStencil();
 	// End James 15/8/2019
 
+	// James 19/8/2019
+	void Constrain(PhysicsObject* go);
 private:
 	std::vector<PhysicsObject *>* m_goList;
 	float m_speed;
@@ -41,11 +44,12 @@ private:
 	const int TraceSize = 30;
 	PhysicsObject* Trace[30];
 	Vector3 v_mousepos;
-	PhysicsObject *tempwall, *tempwall2, *tempwall3, *tempwall4;
+	PhysicsObject *tempwall, *tempwall2, *tempwall3, *tempwall4, *arrow;
 	// End James 13/8/2019
 
 	// James 15/8/2019
 	PhysicsObject* Ball;
+	int ballcollisionnum;
 	bool enableStencil;
 	// End James 15/8/2019	
 
@@ -54,10 +58,10 @@ private:
 
 	// James 16/8/2019
 	TankObject* Tank[4];
-	TankObject* DummyTank;
 	Vector3 OldPos;
 	// End James 16/8/2019
-
+	int ballcount = 0;
+	bool ballthrown;
 };
 
 #endif // !STUDIOPROJECT_SCENE_H
