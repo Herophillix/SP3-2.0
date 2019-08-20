@@ -243,6 +243,14 @@ void SceneFrog::Update(double dt)
 			{
 				go->Frog_pos += go->Frog_vel * (float)dt;
 			//	cout << go->Frog_vel << endl;
+				if (go->Frog_pos.x >= (m_worldWidth / 2) + 50)
+				{
+					go->Frog_pos.x = (m_worldWidth / 2) - 49;
+				}
+				else if (go->Frog_pos.x <= (m_worldWidth / 2) - 50)
+				{
+					go->Frog_pos.x = (m_worldWidth / 2) + 49;
+				}
 				break;
 			}
 			}
@@ -385,7 +393,7 @@ void SceneFrog::Render()
 		}
 	}
 
-
+	cout << m_worldWidth << endl;
 	std::ostringstream ss;
 	ss.precision(5);
 	ss << "M:" << v_mousepos;
@@ -395,6 +403,10 @@ void SceneFrog::Render()
 	ss2.precision(2);
 	ss2 << "HP: " << Frog->getHP();
 	RenderTextOnScreen(meshList[GEO_TEXT], ss2.str(), Color(0, 1, 0), 3, 0, 3);
+	std::ostringstream ss3;
+	ss3.precision(5);
+	ss3 << "Pos: " << Frog->Frog_pos;
+	RenderTextOnScreen(meshList[GEO_TEXT], ss3.str(), Color(0, 1, 0), 3, 0, 6);
 	//RenderMap();
 }
 
