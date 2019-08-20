@@ -45,10 +45,10 @@ public:
 	Vector3 normal;
 	int hp;
 	double timerInvincibility;
+	int score;
 
 
 private:
-	int score;
 	bool isJump;
 	bool isMove;
 	bool isInvincible;

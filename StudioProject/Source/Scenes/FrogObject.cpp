@@ -8,6 +8,7 @@ FrogObject::FrogObject(FROGOBJECT_TYPE typevalue) :
 	isJump(false),
 	isInvincible(false),
 	timerInvincibility(0),
+	score(0),
 	Frog_vel(0, 0, 0)
 	
 {

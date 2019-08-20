@@ -482,6 +482,10 @@ void SceneFrog::Render()
 	ss3.precision(5);
 	ss3 << "Pos: " << Frog->Frog_pos;
 	RenderTextOnScreen(meshList[GEO_TEXT], ss3.str(), Color(0, 1, 0), 3, 0, 6);
+	std::ostringstream ss4;
+	ss4.precision(6);
+	ss4 << "Score: " << Frog->score;
+	RenderTextOnScreen(meshList[GEO_TEXT], ss4.str(), Color(0, 1, 0), 3, 0, 9);
 
 
 }
