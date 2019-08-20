@@ -76,9 +76,9 @@ void SceneFrog::Init()
 	Frog->Frog_jumpVel.Set(0, 20, 0);
 	hp = Frog->getHP();
 	cout << m_worldHeight << " , " << m_worldWidth << endl;
-	max_rock = 5;
-	max_coin = 5;
-
+	max_rock = 10;
+	max_coin = 10;
+	timer = 60.f;
 	for (int i = 0; i < 5; i++)
 	{
 		FrogObject* rock = new FrogObject(FrogObject::GO_ROCK);
@@ -127,6 +127,7 @@ FrogObject* SceneFrog::getRock()
 		rock_List.push_back(coin);
 	}
 	m_rockCount++;
+	m_coinCount++;
 	rock_List[rock_List.size() - 1]->active = true;
 	return rock_List[rock_List.size() - 1];
 }
@@ -135,12 +136,12 @@ void SceneFrog::UpdateRock(double dt)
 {
 	float sc;
 	sc = Math::RandFloatMinMax(15, 30) / 2;
-	m_grav.Set(0, -sc * 2, 0);
 
 	if (m_rockCount < max_rock)
 	{
 		FrogObject* rock = getRock();
 		rock->type = FrogObject::GO_ROCK;
+		m_grav.Set(0, -sc * 2, 0);
 		rock->scale.Set(sc, sc, sc);
 		rock->pos.Set(Math::RandFloatMinMax((m_worldWidth / 2) - 50,(m_worldWidth / 2) + 50), m_worldHeight, 0);
 	}
@@ -232,7 +233,7 @@ void SceneFrog::Update(double dt)
 	int w = Application::GetWindowWidth();
 	int h = Application::GetWindowHeight();
 	v_mousepos = Vector3(static_cast<float>(x) / (w / m_worldWidth), (h - static_cast<float>(y)) / (h / m_worldHeight), 0.0f);
-
+	timer -= dt;
 
 	static bool bMovingLeft = false;
 	if (Frog->Frog_pos.x >= (m_worldWidth / 2) - 50)
@@ -312,7 +313,6 @@ void SceneFrog::Update(double dt)
 				if (go2->active)
 				{
 					go = (*m_goList)[i];
-					//cout << go2->pos << endl;
 					if (CheckCollision(go, go2))
 					{
 						go->CollisionResponse(go, go2, dt);
@@ -484,9 +484,12 @@ void SceneFrog::Render()
 	RenderTextOnScreen(meshList[GEO_TEXT], ss3.str(), Color(0, 1, 0), 3, 0, 6);
 	std::ostringstream ss4;
 	ss4.precision(6);
-	ss4 << "Score: " << Frog->score;
+	ss4 << "Score: " << Frog->getScore();
 	RenderTextOnScreen(meshList[GEO_TEXT], ss4.str(), Color(0, 1, 0), 3, 0, 9);
-
+	std::ostringstream ss5;
+	ss5.precision(2);
+	ss5 << "Time left: " << timer;
+	RenderTextOnScreen(meshList[GEO_TEXT], ss5.str(), Color(0, 1, 0), 3, 0, 12);
 
 }
 
@@ -500,5 +503,6 @@ void SceneFrog::Exit()
 		delete go;
 		m_goList->pop_back();
 	}
+
 	delete m_goList;
 }

@@ -53,6 +53,7 @@ private:
 	float m_coinCount;
 	float max_rock;
 	float max_coin;
+	float timer;
 	FrogObject* Frog;
 	FrogObject* Platform;
 

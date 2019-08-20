@@ -40,6 +40,11 @@ bool FrogObject::getInvincible()
 	return isInvincible;
 }
 
+int FrogObject::getScore()
+{
+	return score;
+}
+
 // SETS
 
 void FrogObject::setJump(bool jump)
