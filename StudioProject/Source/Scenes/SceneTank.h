@@ -24,6 +24,7 @@ public:
 	// James 13/8/2019
 	bool CheckCollision(PhysicsObject* go, PhysicsObject* go2);
 	float CheckCollision2(PhysicsObject* go, PhysicsObject* go2);
+	void CheckCollisionTank(TankObject* go, TankObject* go2);
 	// End James 13/8/2019
 
 	// James 15/8/2019
@@ -32,7 +33,11 @@ public:
 	// End James 15/8/2019
 
 	// James 19/8/2019
-	void Constrain(PhysicsObject* go);
+	bool Constrain(PhysicsObject* go);
+	// End James 19/8/2019
+
+	void UpdateAI(TankObject* com, double dt);
+
 private:
 	std::vector<PhysicsObject *>* m_goList;
 	float m_speed;
@@ -44,7 +49,7 @@ private:
 	const int TraceSize = 30;
 	PhysicsObject* Trace[30];
 	Vector3 v_mousepos;
-	PhysicsObject *tempwall, *tempwall2, *tempwall3, *tempwall4, *arrow;
+	PhysicsObject *tempwall, *tempwall2, *tempwall3, *tempwall4;
 	// End James 13/8/2019
 
 	// James 15/8/2019
@@ -57,11 +62,16 @@ private:
 	double elapsedTime;
 
 	// James 16/8/2019
-	TankObject* Tank[4];
+	TankObject* Tank[TankObject::MaxTank];
 	Vector3 OldPos;
 	// End James 16/8/2019
 	int ballcount = 0;
 	bool ballthrown;
+	bool TankChange;
+	double delaytime;
+
+	Vector3 m_gravity;
+	int score;
 };
 
 #endif // !STUDIOPROJECT_SCENE_H
