@@ -41,14 +41,14 @@ void SceneFrog::Init()
 	//  ******************************* PROPS HERE  ******************************* //
 
 
-	meshList[GEO_FROG] = MeshBuilder::GenerateQuad("frog", Color(1, 1, 1), 1.f);
+	meshList[GEO_FROG] = MeshBuilder::GenerateCircle("frog", Color(1, 1, 1), 1.f);
 	//meshList[GEO_FROG]->textureID = LoadTGA("Image//balloon.tga");
 	meshList[GEO_FROG_MAP] = MeshBuilder::GenerateQuad("map", Color(1, 1, 1), 1.f);
 	meshList[GEO_FROG_MAP]->textureID = LoadTGA("Image//BGTest.tga");
 	meshList[GEO_FROG_PLATFORM] = MeshBuilder::GenerateQuad("platform", Color(1, 1, 1), 1.f);
-	meshList[GEO_FROG_PLATFORM]->textureID = LoadTGA("Image//BGTest.tga");
-	//meshList[GEO_FROG_ROCK] = MeshBuilder::GenerateCircle("rock", Color(1, 1, 1), 1.f);
-	//meshList[GEO_FROG_ROCK]->textureID = LoadTGA("Image//Frog_rock.tga");
+	//meshList[GEO_FROG_PLATFORM]->textureID = LoadTGA("Image//BGTest.tga");
+	meshList[GEO_FROG_ROCK] = MeshBuilder::GenerateCircle("rock", Color(1, 1, 1), 1.f);
+//	meshList[GEO_FROG_ROCK]->textureID = LoadTGA("Image//Frog_rock.tga");
 	meshList[GEO_TEXT] = MeshBuilder::GenerateText("text", 16, 16);
 	meshList[GEO_TEXT]->textureID = LoadTGA("Image//calibri.tga");
 	//  ******************************* SPRITE ANIMATIONS HERE  ******************************* //
@@ -61,43 +61,92 @@ void SceneFrog::Init()
 	projectionStack.LoadMatrix(projection);
 
 
-	m_grav.Set(0, -10 * (1 / rockSize), 0);
+	m_rockCount = 0;
 
 	Frog = FetchGO();
 	Frog->active = true;
 	Frog->type = FrogObject::GO_FROG;
-	Frog->scale.Set(2, 2, 1);
-	Frog->Frog_pos.Set(100, 100, 0);
+	Frog->scale.Set(5, 5, 1);
+	Frog->Frog_pos.Set(200, 10, 0);
 	Frog->Frog_vel.Set(0, 0, 0);
 	Frog->Frog_jumpVel.Set(0, 20, 0);
+	hp = Frog->getHP();
+	cout << m_worldHeight << " , " << m_worldWidth << endl;
+	max_rock = 5;
 
-	Platform = FetchGO();
-	Platform->active = true;
-	Platform->type = FrogObject::GO_PLATFORM;
-	Platform->scale.Set(10, 1, 1);
-	Platform->pos.Set(100,99, 0);
-	Platform->normal.Set(1, 1, 0);
-
-	rockSize = (Math::RandFloatMinMax(10, 20));
-
-	/*for (int i = 0; i < 10; i++)
+	for (int i = 0; i < 5; i++)
 	{
 		FrogObject* rock = new FrogObject(FrogObject::GO_ROCK);
-		rock->active = true;
-		rock->pos.Set(Math::RandFloatMinMax(50, m_worldWidth - 50), m_worldHeight + 10, 0);
-		rock->Frog_vel.Set(0, m_grav.y, 0);
-	}*/
+		rock_List.push_back(rock);
+	}
 	
 }
 
-bool CheckCollision(FrogObject* go, FrogObject* go2) 
+FrogObject* SceneFrog::getRock()
+{
+	for (std::vector<FrogObject *>::iterator it = rock_List.begin(); it != rock_List.end(); ++it)
+	{
+		FrogObject *Rock = (FrogObject *)*it;
+
+		if (!Rock->active)
+		{
+			Rock->active = true;
+			m_rockCount++;
+			return Rock;
+		}
+	}
+	for (unsigned i = 0; i < 2; ++i)
+	{
+		FrogObject *rock = new FrogObject(FrogObject::GO_ROCK);
+		rock_List.push_back(rock);
+	}
+	m_rockCount++;
+	rock_List[rock_List.size() - 1]->active = true;
+	return rock_List[rock_List.size() - 1];
+}
+
+void SceneFrog::UpdateRock(double dt)
+{
+	float sc;
+	sc = Math::RandFloatMinMax(10, 30);
+	m_grav.Set(0, -sc * 2, 0);
+
+	if (m_rockCount < max_rock)
+	{
+		FrogObject* rock = getRock();
+		rock->type = FrogObject::GO_ROCK;
+		rock->scale.Set(sc, sc, sc);
+		rock->pos.Set(Math::RandFloatMinMax((m_worldWidth / 2) - 50,(m_worldWidth / 2) + 50), m_worldHeight, 0);
+	}
+	for (std::vector<FrogObject *>::iterator it = rock_List.begin(); it != rock_List.end(); ++it)
+	{
+		FrogObject *rock = (FrogObject *)*it;
+		if (rock->active)
+		{
+			if (rock->type == FrogObject::GO_ROCK)
+			{
+				rock->Frog_vel += Vector3(0, m_grav.y, 0)* (float)dt;
+				rock->pos += rock->Frog_vel * (float)dt;
+			}
+			if (rock->pos.y <= 0)
+			{
+				rock->Frog_vel.SetZero();
+				rock->pos.y = m_worldHeight;
+				rock->pos.x = Math::RandFloatMinMax((m_worldWidth / 2) - 50, (m_worldWidth / 2) + 50);
+			}
+		}
+	}
+}
+
+bool SceneFrog::CheckCollision(FrogObject* go, FrogObject* go2) 
 {
 	switch (go2->type)
 	{
 	case FrogObject::GO_ROCK:
 	{
-		Vector3 dis = go2->pos - go->pos;
-		if ((dis).Length() <= go->scale.x + go2->scale.x)
+		Vector3 dis = go2->pos - go->Frog_pos;
+		Vector3 u = go->Frog_vel - go2->Frog_vel;
+		if ((dis).Length() <= go2->scale.x && u.Dot(dis) > 0)
 		{
 			return true;
 		}
@@ -111,11 +160,11 @@ bool CheckCollision(FrogObject* go, FrogObject* go2)
 		{
 			N = -N;
 		}
+
 		Vector3 NP(N.y, -N.x);
 		if (dist.Dot(N) < (go->scale.x + go2->scale.x * 0.5f) &&
 			abs(dist.Dot(NP)) < (go->scale.y + go2->scale.y * 0.5f))
 		{
-			std::cout << "collided" << std::endl;
 			return true;
 		}
 		break;
@@ -131,27 +180,55 @@ bool CheckCollision(FrogObject* go, FrogObject* go2)
 void SceneFrog::Update(double dt)
 {
 	SceneBase::Update(dt);
-
 	double x, y;
+	Frog->timerInvincibility += dt;
 	Application::GetCursorPos(&x, &y);
 	int w = Application::GetWindowWidth();
 	int h = Application::GetWindowHeight();
 	v_mousepos = Vector3(static_cast<float>(x) / (w / m_worldWidth), (h - static_cast<float>(y)) / (h / m_worldHeight), 0.0f);
-	if (Application::IsKeyPressed('A'))
+	static bool bMovingLeft = false;
+	if (Application::IsKeyPressed('A') && !bMovingLeft)
 	{
-		Frog->Frog_vel.x -= 10.f * dt;
+		Frog->Frog_pos.x -= 10.f;
+		bMovingLeft = true;
 	}
-	if (Application::IsKeyPressed('D'))
+	else if (!Application::IsKeyPressed('A') && bMovingLeft)
 	{
-		Frog->Frog_vel.x += 10.f * dt;
+		bMovingLeft = false;
 	}
-	if (Application::IsKeyPressed(' ') && !Frog->getJump())
+	static bool bMovingRight = false;
+	if (Application::IsKeyPressed('D')&& !bMovingRight)
 	{
-		Frog->Frog_vel += Frog->Frog_jumpVel;
-		Frog->setJump(true);
+		Frog->Frog_pos.x += 10.f;
+		bMovingRight = true;
 	}
+	else if (!Application::IsKeyPressed('D') && bMovingRight)
+	{
+		bMovingRight = false;
+	}
+	static bool bMovingUp = false;
+	if (Application::IsKeyPressed('W') && !bMovingUp)
+	{
+		Frog->Frog_pos.y += 5.f;
+		bMovingUp = true;
+	}
+	else if (!Application::IsKeyPressed('W') && bMovingUp)
+	{
+		bMovingUp = false;
+	}
+	//if (Application::IsKeyPressed(' ') && !Frog->getJump())
+	//{
+	//	Frog->Frog_vel += Frog->Frog_jumpVel;
+	//	Frog->setJump(true);
+	//}
+	//if (Frog->getJump())
+	//{
+	//	Frog->Frog_vel += m_grav * (float)dt;
+	//}
 
-	m_grav.Set(0, -10, 0);
+	UpdateRock(dt);
+	cout << Frog->getInvincible() << endl;
+
 
 	for (int i = 0; i < (int)m_goList->size(); ++i)
 	{
@@ -164,34 +241,22 @@ void SceneFrog::Update(double dt)
 			{
 			case FrogObject::GO_FROG:
 			{
-				if (go->getJump())
-				{
-					go->Frog_vel += m_grav * (float)dt;
-				}
 				go->Frog_pos += go->Frog_vel * (float)dt;
-				cout << Frog->Frog_pos << endl;
+			//	cout << go->Frog_vel << endl;
 				break;
-
 			}
-			case FrogObject::GO_ROCK:
+			}
+			for (int k = i + 1; k < (int)rock_List.size(); ++k)
 			{
-				if (0 > go->pos.y + go->scale.y)
-				{
-					go->active = false;
-					RockCount--;
-				}
-			}
-			}
-			for (int k = i + 1; k < (int)m_goList->size(); ++k)
-			{
-				FrogObject* go2 = (*m_goList)[k];
+				FrogObject* go2 = (rock_List)[k];
 				if (go2->active)
 				{
+					go = (*m_goList)[i];
+					//cout << go2->pos << endl;
 					if (CheckCollision(go, go2))
 					{
 						go->CollisionResponse(go, go2, dt);
 					}
-					go = (*m_goList)[i];
 				}
 			}
 		}
@@ -220,9 +285,13 @@ FrogObject * SceneFrog::FetchGO()
 }
 
 
-void SceneFrog::UpdateParticles(double dt)
+void SceneFrog::RenderRock(FrogObject* rock)
 {
-
+	modelStack.PushMatrix();
+	modelStack.Translate(rock->pos.x, rock->pos.y, rock->pos.z);
+	modelStack.Scale(rock->scale.x, rock->scale.y, rock->scale.z);
+	RenderMesh(meshList[GEO_FROG_ROCK], false);
+	modelStack.PopMatrix();
 }
 
 void SceneFrog::RenderGO(FrogObject* go)
@@ -307,10 +376,25 @@ void SceneFrog::Render()
 		}
 	}
 
+	for (std::vector<FrogObject *>::iterator it = rock_List.begin(); it != rock_List.end(); ++it)
+	{
+		FrogObject *rock = (FrogObject*)*it;
+		if (rock->active)
+		{
+			RenderRock(rock);
+		}
+	}
+
+
 	std::ostringstream ss;
 	ss.precision(5);
 	ss << "M:" << v_mousepos;
 	RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(0, 1, 0), 3, 0, 0);
+
+	std::ostringstream ss2;
+	ss2.precision(2);
+	ss2 << "HP: " << Frog->getHP();
+	RenderTextOnScreen(meshList[GEO_TEXT], ss2.str(), Color(0, 1, 0), 3, 0, 3);
 	//RenderMap();
 }
 

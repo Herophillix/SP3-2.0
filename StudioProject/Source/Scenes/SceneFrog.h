@@ -20,14 +20,23 @@ public:
 	void RenderGO(FrogObject *go);
 	Particles* getParticle();
 
+	void UpdateRock(double dt);
+	FrogObject* getRock();
+
 	void UpdateParticles(double dt);
 	void RenderParticles(Particles *particle);
 	void RenderAnimation();
+	void RenderRock(FrogObject* rock);
 	void RenderMap();
 	FrogObject* FetchGO();
 
 	std::vector<FrogObject* >* m_goList;
+	std::vector<FrogObject* > rock_List;
 	std::vector<Particles* > m_particleList;
+
+	bool CheckCollision(FrogObject* go, FrogObject* go2);
+
+	int hp;
 
 private:
 	float m_speed;
@@ -37,6 +46,9 @@ private:
 	float m_halfWorldHeight;
 	float RockCount;
 	float rockSize;
+	bool m_ButtonPress;
+	float m_rockCount;
+	float max_rock;
 	FrogObject* Frog;
 	FrogObject* Platform;
 

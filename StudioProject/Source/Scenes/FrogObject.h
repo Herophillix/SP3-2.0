@@ -33,17 +33,20 @@ public:
 	bool getJump();
 	bool getMove();
 	int getHP();
+	bool getInvincible();
+
 
 	// Functions
 	void CollisionResponse(FrogObject *go, FrogObject* go2, double dt);
 	void FrogInvincibilityFrame(FrogObject *go, double dt);
 
 	Vector3 normal;
+	int hp;
+	double timerInvincibility;
 
 
 private:
 
-	int hp;
 	bool isJump;
 	bool isMove;
 	bool isInvincible;
