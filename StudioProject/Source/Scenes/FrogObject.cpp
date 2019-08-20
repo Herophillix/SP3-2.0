@@ -109,5 +109,11 @@ void FrogObject::CollisionResponse(FrogObject* go, FrogObject* go2, double dt)
 		}
 		break;
 	}
+	case FrogObject::GO_COIN:
+	{
+		go->score += 100;
+		go2->active = false;
+		break;
+	}
 	}
 }

@@ -12,6 +12,7 @@ public:
 		GO_FROG,
 		GO_ROCK,
 		GO_TRAP,
+		GO_COIN,
 		GO_PLATFORM,
 		GO_TOTAL
 	};
@@ -34,6 +35,7 @@ public:
 	bool getMove();
 	int getHP();
 	bool getInvincible();
+	int getScore();
 
 
 	// Functions
@@ -46,7 +48,7 @@ public:
 
 
 private:
-
+	int score;
 	bool isJump;
 	bool isMove;
 	bool isInvincible;

@@ -4,6 +4,7 @@
 #include "GameObject.h"
 #include "FrogObject.h"
 #include <vector>
+#include <sstream>
 
 
 class SceneFrog :public SceneBase
@@ -27,6 +28,7 @@ public:
 	void RenderParticles(Particles *particle);
 	void RenderAnimation();
 	void RenderRock(FrogObject* rock);
+	void RenderCoin(FrogObject* coin);
 	void RenderMap();
 	FrogObject* FetchGO();
 
@@ -48,7 +50,9 @@ private:
 	float rockSize;
 	bool m_ButtonPress;
 	float m_rockCount;
+	float m_coinCount;
 	float max_rock;
+	float max_coin;
 	FrogObject* Frog;
 	FrogObject* Platform;
 
