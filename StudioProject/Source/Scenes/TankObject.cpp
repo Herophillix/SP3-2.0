@@ -14,6 +14,9 @@ TankObject::TankObject(PHYSICSOBJECT_TYPE typeValue)
 	type = typeValue;
 	++TankCount;
 	health = 2;
+	isPlayer = false;
+	radius = 0;
+	fuel = 100;
 }
 
 TankObject::~TankObject()
@@ -37,22 +40,30 @@ void TankObject::Update(double dt, float m_worldWidth, float m_worldHeight)
 	{
 		return;
 	}
-	float tempvel = 50 * dt;
-	if (Application::IsKeyPressed('A') && !LeftBorder->LeftBound)
+	if (isPlayer && fuel > 0)
 	{
-		pos.x -= tempvel;
-	}
-	if (Application::IsKeyPressed('D') && !RightBorder->RightBound)
-	{
-		pos.x += tempvel;
-	}
-	if (Application::IsKeyPressed('S') && !DownBound)
-	{
-		pos.y -= tempvel;
-	}
-	if (Application::IsKeyPressed('W') && !Head->UpBound)
-	{
-		pos.y += tempvel;
+		float tempvel = 50 * dt;
+		if (Application::IsKeyPressed('A') || Application::IsKeyPressed('D')
+			|| Application::IsKeyPressed('S') || Application::IsKeyPressed('W'))
+		{
+			fuel -= tempvel * 2;
+		}
+		if (Application::IsKeyPressed('A') && !LeftBorder->LeftBound)
+		{
+			pos.x -= tempvel;
+		}
+		if (Application::IsKeyPressed('D') && !RightBorder->RightBound)
+		{
+			pos.x += tempvel;
+		}
+		if (Application::IsKeyPressed('S') && !DownBound)
+		{
+			pos.y -= tempvel;
+		}
+		if (Application::IsKeyPressed('W') && !Head->UpBound)
+		{
+			pos.y += tempvel;
+		}
 	}
 	LeftBorder->pos.Set(pos.x - scale.y / 2, pos.y, 0);
 	RightBorder->pos.Set(pos.x + scale.y / 2, pos.y, 0);
@@ -101,16 +112,6 @@ void TankObject::Init(vector<PhysicsObject*>* m_goList)
 	Head->pos.Set(pos.x, pos.y + scale.x * 1.5f, 0);
 	Head->active = true;
 	m_goList->push_back(Head);
-}
 
-bool TankObject::Contains(PhysicsObject* Input)
-{
-	if (Input == this || Input == Head || Input == RightBorder || Input == LeftBorder)
-	{
-		return true;
-	}
-	else
-	{
-		return false;
-	}
+	radius = Head->scale.x / 2 + scale.x;
 }

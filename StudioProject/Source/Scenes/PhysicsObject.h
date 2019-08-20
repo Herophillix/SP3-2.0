@@ -15,7 +15,6 @@ public:
 		GO_PILLAR,
 		GO_TRACE,
 		GO_CUBE,
-		GO_ARROW,
 		GO_TOTAL, //must be last
 	};
 	Vector3 vel;

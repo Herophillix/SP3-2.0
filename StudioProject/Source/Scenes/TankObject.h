@@ -18,8 +18,7 @@ public:
 	void Init(vector<PhysicsObject*>* m_goList);
 	void DeactivateTank();
 
-	bool Contains(PhysicsObject* Input);
-
+	static const int MaxTank = 8;
 	static int TankCount;
 	static int TankIndex;
 	static TankObject* currentTank;
@@ -31,4 +30,8 @@ public:
 	PhysicsObject* Ball;
 
 	int health;
+	bool isPlayer;
+	float radius;
+	Vector3 middlepos;
+	float fuel;
 };
