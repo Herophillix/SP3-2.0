@@ -17,11 +17,13 @@ c:\users\mikc\desktop\sp3\sp3-2.0\studioproject\debug\loadobj.obj
 c:\users\mikc\desktop\sp3\sp3-2.0\studioproject\debug\mazegenerator.obj
 c:\users\mikc\desktop\sp3\sp3-2.0\studioproject\debug\main.obj
 c:\users\mikc\desktop\sp3\sp3-2.0\studioproject\debug\camera.obj
+c:\users\mikc\desktop\sp3\sp3-2.0\studioproject\debug\application.obj
 c:\users\mikc\desktop\sp3\sp3-2.0\studioproject\debug\sheepobject.obj
+c:\users\mikc\desktop\sp3\sp3-2.0\studioproject\debug\sheepgame.obj
 c:\users\mikc\desktop\sp3\sp3-2.0\studioproject\debug\utility.obj
 c:\users\mikc\desktop\sp3\sp3-2.0\studioproject\debug\spriteanimation.obj
 c:\users\mikc\desktop\sp3\sp3-2.0\studioproject\debug\tankobject.obj
-c:\users\mikc\desktop\sp3\sp3-2.0\studioproject\debug\tankchildobject.obj
+c:\users\mikc\desktop\sp3\sp3-2.0\studioproject\debug\subtankobject.obj
 c:\users\mikc\desktop\sp3\sp3-2.0\studioproject\debug\studioprojectscene.obj
 c:\users\mikc\desktop\sp3\sp3-2.0\studioproject\debug\statmanager.obj
 c:\users\mikc\desktop\sp3\sp3-2.0\studioproject\debug\scenetank.obj
@@ -29,11 +31,10 @@ c:\users\mikc\desktop\sp3\sp3-2.0\studioproject\debug\scenemole.obj
 c:\users\mikc\desktop\sp3\sp3-2.0\studioproject\debug\scenemaze.obj
 c:\users\mikc\desktop\sp3\sp3-2.0\studioproject\debug\scenefrog.obj
 c:\users\mikc\desktop\sp3\sp3-2.0\studioproject\debug\scenebase.obj
-c:\users\mikc\desktop\sp3\sp3-2.0\studioproject\debug\application.obj
-c:\users\mikc\desktop\sp3\sp3-2.0\studioproject\debug\sheepgame.obj
-c:\users\mikc\desktop\sp3\sp3-2.0\debug\studio project.ilk
 c:\users\mikc\desktop\sp3\sp3-2.0\debug\studio project.exe
+c:\users\mikc\desktop\sp3\sp3-2.0\debug\studio project.ilk
 c:\users\mikc\desktop\sp3\sp3-2.0\debug\studio project.pdb
+c:\users\mikc\desktop\sp3\sp3-2.0\studioproject\debug\tankchildobject.obj
 c:\users\mikc\desktop\sp3\sp3-2.0\studioproject\debug\studio project.tlog\cl.command.1.tlog
 c:\users\mikc\desktop\sp3\sp3-2.0\studioproject\debug\studio project.tlog\cl.read.1.tlog
 c:\users\mikc\desktop\sp3\sp3-2.0\studioproject\debug\studio project.tlog\cl.write.1.tlog

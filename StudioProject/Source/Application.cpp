@@ -45,6 +45,7 @@ void resize_callback(GLFWwindow* window, int w, int h)
 	glViewport(0, 0, w, h);
 }
 
+
 bool Application::IsKeyPressed(unsigned short key)
 {
     return ((GetAsyncKeyState(key) & 0x8001) != 0);
@@ -93,11 +94,10 @@ void Application::Init()
 	//glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE); // To make MacOS happy; should not be needed
 	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE); //We don't want the old OpenGL
 
-
 	//Create a window and create its OpenGL context
 	m_width = 1920;
 	m_height = 1080;
-	m_window = glfwCreateWindow(m_width, m_height, "Studio Project 3", NULL, NULL);
+	m_window = glfwCreateWindow(m_width, m_height, "Studio Project 3",NULL, NULL);
 
 	//If the window couldn't be created
 	if (!m_window)
@@ -113,7 +113,7 @@ void Application::Init()
 	//Sets the key callback
 	//glfwSetKeyCallback(m_window, key_callback);
 	glfwSetWindowSizeCallback(m_window, resize_callback);
-
+	glfwSetInputMode(m_window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
 	glewExperimental = true; // Needed for core profile
 	//Initialize GLEW
 	GLenum err = glewInit();

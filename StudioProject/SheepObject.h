@@ -15,7 +15,10 @@ public:
 		E_SHEEPFLIPPED,
 		E_PLAYER,
 		E_WALL,
+		E_EYES,
 		E_FIREBALL,
+		E_TRACE,
+		E_WARNING,
 		E_TOTAL
 	};
 	bool m_dLeftRight;

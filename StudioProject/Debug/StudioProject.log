@@ -1,13 +1,1 @@
-﻿  SceneTank.cpp
-c:\users\181103l\documents\github\sp3-2.0\studioproject\source\scenes\scenetank.cpp(54): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
-c:\users\181103l\documents\github\sp3-2.0\studioproject\source\scenes\scenetank.cpp(60): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
-c:\users\181103l\documents\github\sp3-2.0\studioproject\source\scenes\scenetank.cpp(134): warning C4305: 'argument': truncation from 'double' to 'float'
-c:\users\181103l\documents\github\sp3-2.0\studioproject\source\scenes\scenetank.cpp(148): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
-c:\users\181103l\documents\github\sp3-2.0\studioproject\source\scenes\scenetank.cpp(151): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
-c:\users\181103l\documents\github\sp3-2.0\studioproject\source\scenes\scenetank.cpp(325): warning C4305: 'argument': truncation from 'double' to 'float'
-c:\users\181103l\documents\github\sp3-2.0\studioproject\source\scenes\scenetank.cpp(367): warning C4244: '+=': conversion from 'double' to 'float', possible loss of data
-c:\users\181103l\documents\github\sp3-2.0\studioproject\source\scenes\scenetank.cpp(373): warning C4305: 'argument': truncation from 'double' to 'float'
-c:\users\181103l\documents\github\sp3-2.0\studioproject\source\scenes\scenetank.cpp(373): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
-c:\users\181103l\documents\github\sp3-2.0\studioproject\source\scenes\scenetank.cpp(374): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
-c:\users\181103l\documents\github\sp3-2.0\studioproject\source\scenes\scenetank.cpp(375): warning C4244: '+=': conversion from 'double' to 'float', possible loss of data
-  StudioProject.vcxproj -> C:\Users\181103l\Documents\GitHub\SP3-2.0\Debug\Studio Project.exe
+﻿
