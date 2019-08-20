@@ -22,7 +22,7 @@ StatManager::StatManager()
 	m_char03.m_motivation = 0;
 	m_char04.m_motivation = 0;
 
-	m_char01.m_frustration = 0;
+	m_char01.m_frustration = 30;
 	m_char02.m_frustration = 0;
 	m_char03.m_frustration = 0;
 	m_char04.m_frustration = 0;
