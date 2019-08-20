@@ -68,7 +68,7 @@ int Application::GetWindowHeight()
 
 Application::Application()
 {
-	currentScene = SCENESHEEP;
+	currentScene = SCENEMOLE;
 }
 
 Application::~Application()
@@ -171,7 +171,7 @@ void Application::Run()
 }
 void Application::setScene(int i)
 {
- currentScene = i;
+	currentScene = i;
 }
 
 
