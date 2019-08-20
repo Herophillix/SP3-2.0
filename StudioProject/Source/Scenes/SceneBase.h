@@ -102,6 +102,7 @@ public:
 		GEO_FROG_HEARTS,
 		GEO_FROG_MAP,
 		GEO_FROG_PLATFORM,
+		GEO_COIN,
 
 		// SCENE MOLE
 		// Props

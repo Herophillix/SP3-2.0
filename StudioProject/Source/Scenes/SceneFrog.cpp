@@ -41,14 +41,16 @@ void SceneFrog::Init()
 	//  ******************************* PROPS HERE  ******************************* //
 
 
-	meshList[GEO_FROG] = MeshBuilder::GenerateQuad("frog", Color(1, 1, 1), 1.f);
+	meshList[GEO_FROG] = MeshBuilder::GenerateQuad("frog", Color(1, 1, 1), 2.f);
 	//meshList[GEO_FROG]->textureID = LoadTGA("Image//balloon.tga");
 	meshList[GEO_FROG_MAP] = MeshBuilder::GenerateQuad("map", Color(1, 1, 1), 1.f);
 	meshList[GEO_FROG_MAP]->textureID = LoadTGA("Image//BGTest.tga");
-	//meshList[GEO_FROG_PLATFORM] = MeshBuilder::GenerateQuad("platform", Color(1, 1, 1), 1.f);
-	//meshList[GEO_FROG_PLATFORM]->textureID = LoadTGA("Image//Frog_ground.tga");
-	//meshList[GEO_FROG_ROCK] = MeshBuilder::GenerateCircle("rock", Color(1, 1, 1), 1.f);
-	//meshList[GEO_FROG_ROCK]->textureID = LoadTGA("Image//Frog_rock.tga");
+	meshList[GEO_FROG_PLATFORM] = MeshBuilder::GenerateQuad("platform", Color(1, 1, 1), 1.f);
+	//meshList[GEO_FROG_PLATFORM]->textureID = LoadTGA("Image//BGTest.tga");
+	meshList[GEO_FROG_ROCK] = MeshBuilder::GenerateQuad("rock", Color(1, 1, 1), 2.f);
+	meshList[GEO_FROG_ROCK]->textureID = LoadTGA("Image//rock.tga");
+	meshList[GEO_COIN] = MeshBuilder::GenerateCircle("coin", Color(1, 1, 1), 2.f);
+	meshList[GEO_COIN]->textureID = LoadTGA("Image//coin.tga");
 	meshList[GEO_TEXT] = MeshBuilder::GenerateText("text", 16, 16);
 	meshList[GEO_TEXT]->textureID = LoadTGA("Image//calibri.tga");
 	//  ******************************* SPRITE ANIMATIONS HERE  ******************************* //
@@ -61,36 +63,137 @@ void SceneFrog::Init()
 	projectionStack.LoadMatrix(projection);
 
 
-	m_grav.Set(0, -10 * (1 / rockSize), 0);
+
+	m_rockCount = 0;
+	m_coinCount = 0;
 
 	Frog = FetchGO();
 	Frog->active = true;
 	Frog->type = FrogObject::GO_FROG;
-	Frog->scale.Set(2, 2, 1);
-	Frog->Frog_pos.Set(100, 100, 0);
+	Frog->scale.Set(3, 3, 1);
+	Frog->Frog_pos.Set(200, 10, 0);
 	Frog->Frog_vel.Set(0, 0, 0);
 	Frog->Frog_jumpVel.Set(0, 20, 0);
-
-	rockSize = (Math::RandFloatMinMax(10, 20));
-
-	/*for (int i = 0; i < 10; i++)
+	hp = Frog->getHP();
+	cout << m_worldHeight << " , " << m_worldWidth << endl;
+	max_rock = 10;
+	max_coin = 10;
+	timer = 60.f;
+	for (int i = 0; i < 5; i++)
 	{
 		FrogObject* rock = new FrogObject(FrogObject::GO_ROCK);
-		rock->active = true;
-		rock->pos.Set(Math::RandFloatMinMax(50, m_worldWidth - 50), m_worldHeight + 10, 0);
-		rock->Frog_vel.Set(0, m_grav.y, 0);
-	}*/
+		rock_List.push_back(rock);
+	}
+	for (int i = 0; i < 5; i++)
+	{
+		FrogObject* coin = new FrogObject(FrogObject::GO_COIN);
+		rock_List.push_back(coin);
+	}
 	
 }
 
-bool CheckCollision(FrogObject* go, FrogObject* go2) 
+FrogObject* SceneFrog::getRock()
+{
+	for (std::vector<FrogObject *>::iterator it = rock_List.begin(); it != rock_List.end(); ++it)
+	{
+		FrogObject *Rock = (FrogObject *)*it;
+		if (Rock->type == FrogObject::GO_COIN)
+		{
+			if (!Rock->active)
+			{
+				Rock->active = true;
+				m_coinCount++;
+				return Rock;
+			}
+		}
+		else if (Rock->type == FrogObject::GO_ROCK)
+		{
+			if (!Rock->active)
+			{
+				Rock->active = true;
+				m_rockCount++;
+				return Rock;
+			}
+		}
+	}
+	for (unsigned i = 0; i < 2; ++i)
+	{
+		FrogObject *rock = new FrogObject(FrogObject::GO_ROCK);
+		rock_List.push_back(rock);
+	}
+	for (unsigned i = 0; i < 2; ++i)
+	{
+		FrogObject *coin = new FrogObject(FrogObject::GO_COIN);
+		rock_List.push_back(coin);
+	}
+	m_rockCount++;
+	m_coinCount++;
+	rock_List[rock_List.size() - 1]->active = true;
+	return rock_List[rock_List.size() - 1];
+}
+
+void SceneFrog::UpdateRock(double dt)
+{
+	float sc;
+	sc = Math::RandFloatMinMax(15, 30) / 2;
+
+	if (m_rockCount < max_rock)
+	{
+		FrogObject* rock = getRock();
+		rock->type = FrogObject::GO_ROCK;
+		m_grav.Set(0, -sc * 2, 0);
+		rock->scale.Set(sc, sc, sc);
+		rock->pos.Set(Math::RandFloatMinMax((m_worldWidth / 2) - 50,(m_worldWidth / 2) + 50), m_worldHeight, 0);
+	}
+	if (m_coinCount < max_coin)
+	{
+		FrogObject* coin = getRock();
+		coin->type = FrogObject::GO_COIN;
+		coin->scale.Set(3, 3, 1);
+		coin->pos.Set(Math::RandIntMinMax(14, 25) * 10, Math::RandIntMinMax(2, 38) * 5, 0);
+	}
+	for (std::vector<FrogObject *>::iterator it = rock_List.begin(); it != rock_List.end(); ++it)
+	{
+		FrogObject *rock = (FrogObject *)*it;
+		if (rock->active)
+		{
+			if (rock->type == FrogObject::GO_ROCK)
+			{
+				rock->Frog_vel += Vector3(0, m_grav.y, 0)* (float)dt;
+				rock->pos += rock->Frog_vel * (float)dt;
+			}
+			if (rock->type == FrogObject::GO_COIN)
+			{
+			}
+			if (rock->pos.y <= 0)
+			{
+				rock->Frog_vel.SetZero();
+				rock->pos.y = m_worldHeight;
+				rock->pos.x = Math::RandFloatMinMax((m_worldWidth / 2) - 50, (m_worldWidth / 2) + 50);
+			}
+		}
+	}
+}
+
+bool SceneFrog::CheckCollision(FrogObject* go, FrogObject* go2) 
 {
 	switch (go2->type)
 	{
 	case FrogObject::GO_ROCK:
 	{
-		Vector3 dis = go2->pos - go->pos;
-		if ((dis).Length() <= go->scale.x + go2->scale.x)
+		Vector3 dis = go2->pos - go->Frog_pos;
+		Vector3 u = go->Frog_vel - go2->Frog_vel;
+		if ((dis).Length() <= go2->scale.x && u.Dot(dis) > 0)
+		{
+			return true;
+		}
+		break;
+	}
+	case FrogObject::GO_COIN:
+	{
+		Vector3 dis = go2->pos - go->Frog_pos;
+		Vector3 u = go->Frog_vel - go2->Frog_vel;
+		if ((dis).Length() <= go2->scale.x)
 		{
 			return true;
 		}
@@ -104,6 +207,7 @@ bool CheckCollision(FrogObject* go, FrogObject* go2)
 		{
 			N = -N;
 		}
+
 		Vector3 NP(N.y, -N.x);
 		if (dist.Dot(N) < (go->scale.x + go2->scale.x * 0.5f) &&
 			abs(dist.Dot(NP)) < (go->scale.y + go2->scale.y * 0.5f))
@@ -123,27 +227,74 @@ bool CheckCollision(FrogObject* go, FrogObject* go2)
 void SceneFrog::Update(double dt)
 {
 	SceneBase::Update(dt);
-
 	double x, y;
+	Frog->timerInvincibility += dt;
 	Application::GetCursorPos(&x, &y);
 	int w = Application::GetWindowWidth();
 	int h = Application::GetWindowHeight();
 	v_mousepos = Vector3(static_cast<float>(x) / (w / m_worldWidth), (h - static_cast<float>(y)) / (h / m_worldHeight), 0.0f);
-	if (Application::IsKeyPressed('A'))
+	timer -= dt;
+
+	static bool bMovingLeft = false;
+	if (Frog->Frog_pos.x >= (m_worldWidth / 2) - 50)
 	{
-		Frog->Frog_vel.x -= 10.f * dt;
+		if (Application::IsKeyPressed('A') && !bMovingLeft)
+		{
+			Frog->Frog_pos.x -= 10.f;
+			bMovingLeft = true;
+		}
+
+		else if (!Application::IsKeyPressed('A') && bMovingLeft)
+		{
+			bMovingLeft = false;
+		}
 	}
-	if (Application::IsKeyPressed('D'))
+	static bool bMovingRight = false;
+	if (Frog->Frog_pos.x <= (m_worldWidth / 2) + 50)
 	{
-		Frog->Frog_vel.x += 10.f * dt;
+		if (Application::IsKeyPressed('D') && !bMovingRight)
+		{
+			Frog->Frog_pos.x += 10.f;
+			bMovingRight = true;
+		}
+		else if (!Application::IsKeyPressed('D') && bMovingRight)
+		{
+			bMovingRight = false;
+		}
 	}
-	m_grav.Set(0, -10 * (1 / rockSize), 0);
+	static bool bMovingUp = false;
+	if (Frog->Frog_pos.y < m_worldHeight - 10)
+	{
+		if (Application::IsKeyPressed('W') && !bMovingUp)
+		{
+			Frog->Frog_pos.y += 5.f;
+			bMovingUp = true;
+		}
+		else if (!Application::IsKeyPressed('W') && bMovingUp)
+		{
+			bMovingUp = false;
+		}
+	}
+	static bool bMovingDown = false;
+	if (Frog->Frog_pos.y > 10)
+	{
+		if (Application::IsKeyPressed('S') && !bMovingDown)
+		{
+			Frog->Frog_pos.y -= 5.f;
+			bMovingDown = true;
+		}
+		else if (!Application::IsKeyPressed('S') && bMovingDown)
+		{
+			bMovingDown = false;
+		}
+	}
+
+	UpdateRock(dt);
 
 	for (int i = 0; i < (int)m_goList->size(); ++i)
 	{
 
 		FrogObject *go = (*m_goList)[i];
-		go->Frog_pos += go->Frog_vel * (float)dt;
 
 		if (go->active)
 		{
@@ -151,30 +302,21 @@ void SceneFrog::Update(double dt)
 			{
 			case FrogObject::GO_FROG:
 			{
+				go->Frog_pos += go->Frog_vel * (float)dt;
 
-				cout << Frog->Frog_pos << endl;
 				break;
-
 			}
-			case FrogObject::GO_ROCK:
+			}
+			for (int k = i + 1; k < (int)rock_List.size(); ++k)
 			{
-				if (0 > go->pos.y + go->scale.y)
-				{
-					go->active = false;
-					RockCount--;
-				}
-			}
-			}
-			for (int k = i + 1; k < (int)m_goList->size(); ++k)
-			{
-				FrogObject* go2 = (*m_goList)[k];
+				FrogObject* go2 = (rock_List)[k];
 				if (go2->active)
 				{
+					go = (*m_goList)[i];
 					if (CheckCollision(go, go2))
 					{
 						go->CollisionResponse(go, go2, dt);
 					}
-					go = (*m_goList)[i];
 				}
 			}
 		}
@@ -203,9 +345,34 @@ FrogObject * SceneFrog::FetchGO()
 }
 
 
-void SceneFrog::UpdateParticles(double dt)
+void SceneFrog::RenderRock(FrogObject* rock)
 {
+	switch (rock->type)
+	{
+	case FrogObject::GO_ROCK:
+		modelStack.PushMatrix();
+		modelStack.Translate(rock->pos.x, rock->pos.y, rock->pos.z);
+		modelStack.Scale(rock->scale.x, rock->scale.y, rock->scale.z);
+		RenderMesh(meshList[GEO_FROG_ROCK], false);
+		modelStack.PopMatrix();
+		break;
+	case FrogObject::GO_COIN:
+		modelStack.PushMatrix();
+		modelStack.Translate(rock->pos.x, rock->pos.y, rock->pos.z);
+		modelStack.Scale(rock->scale.x, rock->scale.y, rock->scale.z);
+		RenderMesh(meshList[GEO_COIN], false);
+		modelStack.PopMatrix();
+		break;
+	}
+}
 
+void SceneFrog::RenderCoin(FrogObject* coin)
+{
+	modelStack.PushMatrix();
+	modelStack.Translate(coin->pos);
+	modelStack.Scale(coin->scale);
+	RenderMesh(meshList[GEO_COIN], false);
+	modelStack.PopMatrix();
 }
 
 void SceneFrog::RenderGO(FrogObject* go)
@@ -251,7 +418,7 @@ void SceneFrog::RenderMap()
 	modelStack.PushMatrix();
 	modelStack.Translate(m_worldHeight / 2.f, m_worldWidth / 2.f, 0);
 	modelStack.Rotate(Math::RadianToDegree(atan2(camera.position.x - 0, camera.position.z - 0)), 0, 1, 0);
-	modelStack.Scale(m_worldWidth, m_worldHeight, 1);
+	modelStack.Scale(2 *m_worldWidth,2* m_worldHeight, 1);
 	RenderMesh(meshList[GEO_FROG_MAP], false);
 	modelStack.PopMatrix();
 }
@@ -281,6 +448,8 @@ void SceneFrog::Render()
 //	 Model matrix : an identity matrix (model will be at the origin)
 	modelStack.LoadIdentity();
 
+	RenderMap();
+
 	for (std::vector<FrogObject *>::iterator it = m_goList->begin(); it != m_goList->end(); ++it)
 	{
 		FrogObject *go = (FrogObject *)*it;
@@ -290,11 +459,38 @@ void SceneFrog::Render()
 		}
 	}
 
+	for (std::vector<FrogObject *>::iterator it = rock_List.begin(); it != rock_List.end(); ++it)
+	{
+		FrogObject *rock = (FrogObject*)*it;
+		if (rock->active)
+		{
+			RenderRock(rock);
+		}
+	}
+
+	cout << m_worldWidth << endl;
 	std::ostringstream ss;
 	ss.precision(5);
 	ss << "M:" << v_mousepos;
 	RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(0, 1, 0), 3, 0, 0);
-	//RenderMap();
+
+	std::ostringstream ss2;
+	ss2.precision(2);
+	ss2 << "HP: " << Frog->getHP();
+	RenderTextOnScreen(meshList[GEO_TEXT], ss2.str(), Color(0, 1, 0), 3, 0, 3);
+	std::ostringstream ss3;
+	ss3.precision(5);
+	ss3 << "Pos: " << Frog->Frog_pos;
+	RenderTextOnScreen(meshList[GEO_TEXT], ss3.str(), Color(0, 1, 0), 3, 0, 6);
+	std::ostringstream ss4;
+	ss4.precision(6);
+	ss4 << "Score: " << Frog->getScore();
+	RenderTextOnScreen(meshList[GEO_TEXT], ss4.str(), Color(0, 1, 0), 3, 0, 9);
+	std::ostringstream ss5;
+	ss5.precision(2);
+	ss5 << "Time left: " << timer;
+	RenderTextOnScreen(meshList[GEO_TEXT], ss5.str(), Color(0, 1, 0), 3, 0, 12);
+
 }
 
 void SceneFrog::Exit()
@@ -307,5 +503,6 @@ void SceneFrog::Exit()
 		delete go;
 		m_goList->pop_back();
 	}
+
 	delete m_goList;
 }

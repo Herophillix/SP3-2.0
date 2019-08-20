@@ -6,6 +6,9 @@ FrogObject::FrogObject(FROGOBJECT_TYPE typevalue) :
 	hp(3),
 	isMove(false),
 	isJump(false),
+	isInvincible(false),
+	timerInvincibility(0),
+	score(0),
 	Frog_vel(0, 0, 0)
 	
 {
@@ -30,6 +33,16 @@ bool FrogObject::getMove()
 int FrogObject::getHP()
 {
 	return hp;
+}
+
+bool FrogObject::getInvincible()
+{
+	return isInvincible;
+}
+
+int FrogObject::getScore()
+{
+	return score;
 }
 
 // SETS
@@ -58,15 +71,14 @@ void FrogObject::setInvincible(bool invin)
 
 void FrogObject::FrogInvincibilityFrame(FrogObject *go, double dt)
 {
-	double timerInvincibility;
-	timerInvincibility += dt;
-	while (timerInvincibility < 5)
+	if (timerInvincibility < dt)
 	{
-		isInvincible = true;
+		timerInvincibility += dt;
+		go->setInvincible(true);
 	}
-	if (timerInvincibility >= 5)
+	if (timerInvincibility >= dt)
 	{
-		isInvincible = false;
+		go->setInvincible(false);
 	}
 }
 
@@ -78,19 +90,35 @@ void FrogObject::CollisionResponse(FrogObject* go, FrogObject* go2, double dt)
 	{
 	case FrogObject::GO_PLATFORM:
 	{
-		if (!isJump)
+		if (go->getJump())
 		{
 			go->Frog_vel.y = 0;
+			go->setJump(false);
 		}
 		break;
 	}
 	case FrogObject::GO_ROCK:
 	{
-		if (isInvincible == false)
+		if (!go->getInvincible())
 		{
 			go->hp -= 1;
-			go->FrogInvincibilityFrame(go, dt);
+			go->setInvincible(true);
+			timerInvincibility = 0;
+		//	go->FrogInvincibilityFrame(go, dt);
 		}
+		else if (go->getInvincible())
+		{
+			if (timerInvincibility >= 2)
+			{
+				go->setInvincible(false);
+			}
+		}
+		break;
+	}
+	case FrogObject::GO_COIN:
+	{
+		go->score += 100;
+		go2->active = false;
 		break;
 	}
 	}
