@@ -1,11 +1,16 @@
 #pragma once
-#include "Source/Scenes/SceneBase.h"
+
+#include "SceneBase.h"
 #include "SheepObject.h"
+#include "Results.h"
+#include "StatManager.h"
+
 class SheepGame : public SceneBase
 {
 private:
 	float m_worldWidth;
 	std::vector<SheepObject*> m_goList;
+	char m_Grade;
 	float m_worldHeight;
 	Vector3 m_Gravity;
 	Vector3 mousePos;
@@ -22,6 +27,7 @@ private:
 	bool Transition;
 	bool EvilKing;
 	bool gameOver;
+	bool statsGain;
 	float BossTimer;
 	float transitionY;
 	float Timer1;
@@ -46,6 +52,7 @@ public:
 	virtual void Exit();
 	SheepGame();
 	void renderBG();
+	void reset();
 	void renderLives();
 	void renderCrossHair();
 	void renderEvilSheep();
@@ -55,6 +62,7 @@ public:
 	void RenderGO(SheepObject *go);
 	void UpdateRayTracing(double dt);
 	bool CollisionCheck(SheepObject *go, SheepObject *go2);
+	void GameEndCalculations();
 	SheepObject *FetchGO();
 	~SheepGame();
 };

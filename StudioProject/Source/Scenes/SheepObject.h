@@ -1,5 +1,5 @@
 #pragma once
-#include "Source/Scenes/PhysicsObject.h"
+#include "PhysicsObject.h"
 class SheepObject : public PhysicsObject
 {
 public:

@@ -95,7 +95,7 @@ void SceneFrog::Init()
 		FrogObject* coin = new FrogObject(FrogObject::GO_COIN);
 		rock_List.push_back(coin);
 	}
-	
+
 
 	m_setOriginValues = false;
 	m_setStatsToDist = false;
@@ -186,7 +186,7 @@ void SceneFrog::UpdateRock(double dt)
 	}
 }
 
-bool SceneFrog::CheckCollision(FrogObject* go, FrogObject* go2) 
+bool SceneFrog::CheckCollision(FrogObject* go, FrogObject* go2)
 {
 	switch (go2->type)
 	{
@@ -551,7 +551,7 @@ void SceneFrog::Render()
 
 	if (m_GameOver)
 	{
-		Results::getInstance()->RenderResults(Frog->getScore(), 'B');
+		Results::getInstance()->RenderResults(Frog->getScore(),'F');
 	}
 
 }
