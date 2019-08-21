@@ -127,52 +127,58 @@ void SceneMole::Init()
 
 	// 2 == normal mole // 3 == bronze mole // 4 == silver mole // 5 == gold mole // 6 == bomb mole // 7 == frost mole
 	int randIndex = 0; 
-	for (int i = 0; i < 60; i++)
+	for (int i = 0; i < 60;)
 	{
 		randIndex = Math::RandIntMinMax(0, 99);
 		if (moleTypeRNG[randIndex] == 0)
 		{
 			moleTypeRNG[randIndex] = 2;
+			i++;
 		}
 	}
-	for (int i = 0; i < 20; i++)
+	for (int i = 0; i < 20;)
 	{
 		randIndex = Math::RandIntMinMax(0, 99);
 		if (moleTypeRNG[randIndex] == 0)
 		{
 			moleTypeRNG[randIndex] = 3;
+			i++;
 		}
 	}
-	for (int i = 0; i < 10; i++)
+	for (int i = 0; i < 10;)
 	{
 		randIndex = Math::RandIntMinMax(0, 99);
 		if (moleTypeRNG[randIndex] == 0)
 		{
 			moleTypeRNG[randIndex] = 4;
+			i++;
 		}
 	}
-	for (int i = 0; i < 2; i++)
+	for (int i = 0; i < 2;)
 	{
 		randIndex = Math::RandIntMinMax(0, 99);
 		if (moleTypeRNG[randIndex] == 0)
 		{
 			moleTypeRNG[randIndex] = 5;
+			i++;
 		}
 	}
-	for (int i = 0; i < 4; i++)
+	for (int i = 0; i < 4;)
 	{
 		randIndex = Math::RandIntMinMax(0, 99);
 		if (moleTypeRNG[randIndex] == 0)
 		{
 			moleTypeRNG[randIndex] = 6;
+			i++;
 		}
 	}
-	for (int i = 0; i < 4; i++)
+	for (int i = 0; i < 4;)
 	{
 		randIndex = Math::RandIntMinMax(0, 99);
 		if (moleTypeRNG[randIndex] == 0)
 		{
 			moleTypeRNG[randIndex] = 7;
+			i++;
 		}
 	}
 	m_frontScale.Set(198, 36, 1);
