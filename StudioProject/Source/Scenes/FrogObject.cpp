@@ -77,6 +77,11 @@ void FrogObject::setCoin(int coin)
 {
 	coinLeft = coin;
 }
+
+void FrogObject::setScore(int sco)
+{
+	score = sco;
+}
 // FUNCTIONS
 
 void FrogObject::FrogInvincibilityFrame(FrogObject *go, double dt)

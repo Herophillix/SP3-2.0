@@ -80,6 +80,8 @@ void SceneFrog::Init()
 	Frog->Frog_jumpVel.Set(0, 20, 0);
 	Frog->setCoin(m_coinCount);
 
+	score = 0;
+
 	hp = Frog->getHP();
 	cout << m_worldHeight << " , " << m_worldWidth << endl;
 	max_rock = 10;
@@ -238,28 +240,27 @@ bool SceneFrog::CheckCollision(FrogObject* go, FrogObject* go2)
 void SceneFrog::Update(double dt)
 {
 	SceneBase::Update(dt);
-
 	if (m_GameOver)
 	{
-		Results::getInstance()->UpdateVars(dt);
-	}
-	if (m_GameOver && !m_setStatsToDist)
-	{
-		Results::getInstance()->InitStatsToDist(10);
-		m_setStatsToDist = true;
-	}
-	if (m_GameOver && !m_setOriginValues)
-	{
-		StatManager::GetInstance()->SetCharsOriginalValues();
-		m_setOriginValues = true;
+		if (!m_setOriginValues && !m_setStatsToDist)
+		{
+			score = Frog->getScore();
 
+			GameEndCalculations();
+			StatManager::GetInstance()->SetCharsOriginalValues();
+			m_setStatsToDist = true;
+			m_setOriginValues = true;
+			Reset();
+		}
 	}
-
 	if (timer <= 0)
 	{
 		m_GameOver = true;
 	}
-
+	//if (Application::IsKeyPressed('L'))
+	//{
+	//	Reset();
+	//}
 	double x, y;
 	Frog->timerInvincibility += dt;
 	Application::GetCursorPos(&x, &y);
@@ -322,8 +323,25 @@ void SceneFrog::Update(double dt)
 		}
 	}
 
+	static bool bLButtonState = false;
+	if (!bLButtonState && Application::IsMousePressed(0))
+	{
+		bLButtonState = true;
+		std::cout << "LBUTTON DOWN" << std::endl;
+		if (m_GameOver)
+		{
+			if (Results::getInstance()->ButtonMouseCollision())
+			{
+				cout << "hit" << endl;
+			}
+		}
+	}
+	else if (!Application::IsMousePressed(0) && bLButtonState)
+	{
+		bLButtonState = false;
+		std::cout << "LBUTTON UP" << std::endl;
 
-
+	}
 	UpdateRock(dt);
 
 	for (int i = 0; i < (int)m_goList->size(); ++i)
@@ -551,7 +569,7 @@ void SceneFrog::Render()
 
 	if (m_GameOver)
 	{
-		Results::getInstance()->RenderResults(Frog->getScore());
+		Results::getInstance()->RenderResults(score, m_grade);
 	}
 
 }
@@ -566,6 +584,72 @@ void SceneFrog::Exit()
 		delete go;
 		m_goList->pop_back();
 	}
+	while (rock_List.size() > 0)
+	{
+		FrogObject *go = rock_List.back();
+		delete go;
+		rock_List.pop_back();
+	}
 
 	delete m_goList;
+}
+
+void SceneFrog::Reset()
+{
+	m_rockCount = 0;
+	m_coinCount = 0;
+	m_GameOver = false;
+	Frog->Frog_pos.Set(200, 10, 0);
+	Frog->setScore(0);
+	Frog->setCoin(m_coinCount);
+}
+void SceneFrog::GameEndCalculations()
+{
+	if (Frog->getScore() >= 2000)
+	{
+		m_grade = 'S';
+		StatManager::GetInstance()->UpdateChar01F(-20);
+		StatManager::GetInstance()->UpdateChar01M(20);
+		StatManager::GetInstance()->UpdateChar02F(-20);
+		StatManager::GetInstance()->UpdateChar02M(20);
+		StatManager::GetInstance()->UpdateChar03F(-20);
+		StatManager::GetInstance()->UpdateChar03M(20);
+		StatManager::GetInstance()->UpdateChar04F(-20);
+		StatManager::GetInstance()->UpdateChar04M(20);
+		Results::getInstance()->InitStatsToDist(35);
+	}
+	else if (Frog->getScore() >= 1500 && Frog->getScore() < 2000)
+	{
+		m_grade = 'A';
+		Results::getInstance()->InitStatsToDist(25);
+
+	}
+	else if (Frog->getScore() >= 1000 && Frog->getScore() < 1500)
+	{
+		m_grade = 'B';
+		Results::getInstance()->InitStatsToDist(20);
+	}
+	else if (Frog->getScore() >= 500 && Frog->getScore() < 1000)
+	{
+		m_grade = 'C';
+		Results::getInstance()->InitStatsToDist(15);
+	}
+	else if (Frog->getScore() >= 100 && Frog->getScore() < 500)
+	{
+		m_grade = 'D';
+		Results::getInstance()->InitStatsToDist(10);
+	}
+	else
+	{
+		m_grade = 'F';
+		StatManager::GetInstance()->UpdateChar01F(10);
+		StatManager::GetInstance()->UpdateChar01M(-10);
+		StatManager::GetInstance()->UpdateChar02F(10);
+		StatManager::GetInstance()->UpdateChar02M(-10);
+		StatManager::GetInstance()->UpdateChar03F(10);
+		StatManager::GetInstance()->UpdateChar03M(-10);
+		StatManager::GetInstance()->UpdateChar04F(10);
+		StatManager::GetInstance()->UpdateChar04M(-10);
+	}
+
 }
