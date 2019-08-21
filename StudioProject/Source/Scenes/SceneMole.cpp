@@ -55,11 +55,11 @@ void SceneMole::Init()
 
 	//meshList[GEO_MOLERESULTS] = MeshBuilder::GenerateQuad("results", Color(0, 0, 0), 1.f);
 
-	meshList[GEO_C01_RESULT_QUAD] = MeshBuilder::GenerateQuad("c01result", Color(1, 1, 1), 1.f);
-	meshList[GEO_C01_RESULT_QUAD]->textureID = LoadTGA("Image//resultTest.tga");
-	meshList[GEO_C02_RESULT_QUAD] = MeshBuilder::GenerateQuad("c01result", Color(1, 1, 1), 1.f);
-	meshList[GEO_C03_RESULT_QUAD] = MeshBuilder::GenerateQuad("c01result", Color(1, 1, 1), 1.f);
-	meshList[GEO_C04_RESULT_QUAD] = MeshBuilder::GenerateQuad("c01result", Color(1, 1, 1), 1.f);
+	//meshList[GEO_C01_RESULT_QUAD] = MeshBuilder::GenerateQuad("c01result", Color(1, 1, 1), 1.f);
+	//meshList[GEO_C01_RESULT_QUAD]->textureID = LoadTGA("Image//resultTest.tga");
+	//meshList[GEO_C02_RESULT_QUAD] = MeshBuilder::GenerateQuad("c01result", Color(1, 1, 1), 1.f);
+	//meshList[GEO_C03_RESULT_QUAD] = MeshBuilder::GenerateQuad("c01result", Color(1, 1, 1), 1.f);
+	//meshList[GEO_C04_RESULT_QUAD] = MeshBuilder::GenerateQuad("c01result", Color(1, 1, 1), 1.f);
 
 	meshList[GEO_MOLE] = MeshBuilder::GenerateQuad("testmole", Color(1, 1, 1), 1.f);
 	meshList[GEO_MOLE]->textureID = LoadTGA("Image//MOLE.tga");
@@ -229,6 +229,22 @@ void SceneMole::Update(double dt)
 			m_setStatsToDist = true;
 			m_setOriginValues = true;
 		}
+
+		static bool bLButtonState = false;
+		if (!bLButtonState && Application::IsMousePressed(0))
+		{
+			bLButtonState = true;
+			std::cout << "LBUTTON DOWN" << std::endl;
+			if (Results::getInstance()->ButtonMouseCollision())
+			{
+				cout << "hit" << endl;
+			}
+		}
+		else if (bLButtonState && !Application::IsMousePressed(0))
+		{
+			bLButtonState = false;
+			std::cout << "LBUTTON UP" << std::endl;
+		}
 	}
 
 	// GAME TIMER
@@ -253,37 +269,17 @@ void SceneMole::Update(double dt)
 		m_frostTimer = 10.f;
 		m_frostOn = false;
 	}
-
-	static bool bLButtonState = false;
-	if (!bLButtonState && Application::IsMousePressed(0))
-	{
-		bLButtonState = true;
-		std::cout << "LBUTTON DOWN" << std::endl;
-		if (m_gameOver)
-		{
-			if (Results::getInstance()->ButtonMouseCollision())
-			{
-				cout << "hit" << endl;
-			}
-		}
-	}
-	else if (bLButtonState && !Application::IsMousePressed(0))
-	{
-		bLButtonState = false;
-		std::cout << "LBUTTON UP" << std::endl;
-		meshList[GEO_HAMMER]->textureID = t_hammerIdle;
-	}
-	static bool bRButtonState = false;
-	if (!bRButtonState && Application::IsMousePressed(1))
-	{
-		bRButtonState = true;
-		std::cout << "RBUTTON DOWN" << std::endl;
-	}
-	else if (bRButtonState && !Application::IsMousePressed(1))
-	{
-		bRButtonState = false;
-		std::cout << "RBUTTON UP" << std::endl;
-	}
+	//static bool bRButtonState = false;
+	//if (!bRButtonState && Application::IsMousePressed(1))
+	//{
+	//	bRButtonState = true;
+	//	std::cout << "RBUTTON DOWN" << std::endl;
+	//}
+	//else if (bRButtonState && !Application::IsMousePressed(1))
+	//{
+	//	bRButtonState = false;
+	//	std::cout << "RBUTTON UP" << std::endl;
+	//}
 
 
 	// ****************************** MOVEMENT CONTROLS ****************************** //
@@ -689,7 +685,6 @@ void SceneMole::UpdateMoles(double dt)
 			m_popUpTimer = Math::RandFloatMinMax(0.5f, 1.f);
 		else
 			m_popUpTimer = Math::RandFloatMinMax(0.3f, 0.6f);
-
 	}
 
 	// Check their lifetime
@@ -806,7 +801,7 @@ void SceneMole::RenderUI()
 	modelStack.PushMatrix();
 	modelStack.Translate(m_worldWidth - m_eightWorldWidth / 2, m_worldHeight - 5, 0);
 	modelStack.Scale(10, 10, 10);
-	RenderText(meshList[GEO_GAMEFONT], ss.str(), Color(1, 1, 1));
+	RenderText(meshList[GEO_GAMEFONT], ss.str(), multiplier);
 	modelStack.PopMatrix();
 
 }
@@ -860,6 +855,24 @@ void SceneMole::GameEndCalculations() // Setting the stats and other stuff
 		StatManager::GetInstance()->UpdateChar04M(-10);
 	}
 
+}
+
+void SceneMole::ResetVars()
+{
+	m_popUpTimer = Math::RandFloatMinMax(0.5f, 1.5f);
+	m_multiplier = 1;
+	m_score = 0;
+	m_hitCounter = 0;
+	m_frostTimer = 10.f;
+	m_gameTimer = 90.f;
+	m_gameOver = false;
+	m_frostOn = false;
+
+	multiplier.Set(1, 1, 1);
+	m_hammerPosIndex = 0;
+
+	m_setOriginValues = false;
+	m_setStatsToDist = false;
 }
 
 //void SceneMole::RenderResults()

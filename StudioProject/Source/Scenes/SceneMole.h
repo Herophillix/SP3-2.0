@@ -30,6 +30,7 @@ public:
 	void RenderMachine(); // the machine and the moles
 	void RenderUI();
 	void GameEndCalculations();
+	void ResetVars();
 	//void RenderResults();
 
 	// Mole Functions
