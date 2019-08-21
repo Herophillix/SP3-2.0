@@ -9,6 +9,7 @@ FrogObject::FrogObject(FROGOBJECT_TYPE typevalue) :
 	isInvincible(false),
 	timerInvincibility(0),
 	score(0),
+	coinLeft(0),
 	Frog_vel(0, 0, 0)
 	
 {
@@ -45,6 +46,11 @@ int FrogObject::getScore()
 	return score;
 }
 
+int FrogObject::getCoin()
+{
+	return coinLeft;
+}
+
 // SETS
 
 void FrogObject::setJump(bool jump)
@@ -67,6 +73,10 @@ void FrogObject::setInvincible(bool invin)
 	isInvincible = invin;
 }
 
+void FrogObject::setCoin(int coin)
+{
+	coinLeft = coin;
+}
 // FUNCTIONS
 
 void FrogObject::FrogInvincibilityFrame(FrogObject *go, double dt)
@@ -118,6 +128,7 @@ void FrogObject::CollisionResponse(FrogObject* go, FrogObject* go2, double dt)
 	case FrogObject::GO_COIN:
 	{
 		go->score += 100;
+		
 		go2->active = false;
 		break;
 	}

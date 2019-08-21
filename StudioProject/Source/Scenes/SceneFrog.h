@@ -3,6 +3,7 @@
 #include "SceneBase.h"
 #include "GameObject.h"
 #include "FrogObject.h"
+#include "../Scenes/Results.h"
 #include <vector>
 #include <sstream>
 
@@ -40,6 +41,7 @@ public:
 
 	int hp;
 
+
 private:
 	float m_speed;
 	float m_worldWidth;
@@ -49,6 +51,7 @@ private:
 	float RockCount;
 	float rockSize;
 	bool m_ButtonPress;
+	bool m_GameOver;
 	float m_rockCount;
 	float m_coinCount;
 	float max_rock;
@@ -60,6 +63,9 @@ private:
 	Vector3 m_grav;
 
 	Vector3 v_mousepos;
+
+	bool m_setOriginValues;
+	bool m_setStatsToDist;
 };
 
 #endif

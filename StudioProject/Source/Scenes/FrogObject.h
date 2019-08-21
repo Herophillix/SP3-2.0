@@ -30,12 +30,14 @@ public:
 	void setMove(bool Move);
 	void setHP(int health);
 	void setInvincible(bool invin);
+	void setCoin(int coins);
 	// GET
 	bool getJump();
 	bool getMove();
 	int getHP();
 	bool getInvincible();
 	int getScore();
+	int getCoin();
 
 
 	// Functions
@@ -51,6 +53,7 @@ private:
 	bool isJump;
 	bool isMove;
 	bool isInvincible;
+	int coinLeft;
 	int score;
 
 
