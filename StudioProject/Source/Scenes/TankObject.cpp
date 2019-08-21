@@ -1,4 +1,5 @@
 #include "TankObject.h"
+#include "SceneTank.h"
 
 TankObject* TankObject::currentTank = nullptr;
 TankObject* TankObject::previousTank = nullptr;
@@ -77,6 +78,7 @@ void TankObject::DeactivateTank()
 	RightBorder->active = false;
 	Head->active = false;
 	Ball = nullptr; 
+	SceneTank::score += 100;
 	//--TankCount;
 }
 
@@ -87,9 +89,6 @@ void TankObject::CollisionResponse(PhysicsObject* go, double dt)
 	if (go->vel.Length() > 0)
 	{
 		go->vel = Math::Clamp(go->vel.Length(), 0.f, 75.f) * go->vel.Normalized();
-	}
-	if (this != currentTank)
-	{
 	}
 }
 

@@ -4,7 +4,10 @@
 #include "SceneBase.h"
 #include "PhysicsObject.h"
 #include "TankObject.h"
+#include "MenuObject.h"
 #include <vector>
+
+using namespace std;
 
 class SceneTank : public SceneBase
 {
@@ -12,10 +15,20 @@ public:
 	SceneTank();
 	~SceneTank();
 
+	enum SceneState
+	{
+		S_MENU,
+		S_GAME
+	};
+
 	virtual void Init();
 	virtual void Update(double dt);
+	void UpdateMenu(double dt);
+	void UpdateGame(double dt);
 	void UpdateRayTracing(double dt);
 	virtual void Render();
+	void RenderMenu();
+	void RenderGame();
 	virtual void Exit();
 
 	void RenderGO(PhysicsObject *go);
@@ -37,9 +50,11 @@ public:
 	// End James 19/8/2019
 
 	void UpdateAI(TankObject* com, double dt);
-
+	void ChangeAIPosition();
+	static int score;
 private:
 	std::vector<PhysicsObject *>* m_goList;
+	std::vector<MenuObject *> m_menuList;
 	float m_speed;
 	float m_worldWidth;
 	float m_worldHeight;
@@ -71,7 +86,10 @@ private:
 	double delaytime;
 
 	Vector3 m_gravity;
-	int score;
+
+	int SceneState;
+	int turn;
+	float velocity;
 };
 
 #endif // !STUDIOPROJECT_SCENE_H

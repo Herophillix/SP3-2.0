@@ -177,6 +177,7 @@
     <ClCompile Include="Source\Scenes\FrogObject.cpp" />
     <ClCompile Include="Source\Scenes\GameObject.cpp" />
     <ClCompile Include="Source\Scenes\MazeObject.cpp" />
+    <ClCompile Include="Source\Scenes\MenuObject.cpp" />
     <ClCompile Include="Source\Scenes\MoleObject.cpp" />
     <ClCompile Include="Source\Scenes\PhysicsObject.cpp" />
     <ClCompile Include="Source\Scenes\ResultObject.cpp" />
@@ -200,6 +201,7 @@
     <ClInclude Include="Source\Scenes\CharacterObject.h" />
     <ClInclude Include="Source\Scenes\FrogObject.h" />
     <ClInclude Include="Source\Scenes\MazeObject.h" />
+    <ClInclude Include="Source\Scenes\MenuObject.h" />
     <ClInclude Include="Source\Scenes\MoleObject.h" />
     <ClInclude Include="Source\Scenes\PhysicsObject.h" />
     <ClInclude Include="Source\Scenes\ResultObject.h" />
