@@ -103,7 +103,7 @@ public:
 		GEO_FROG_MAP,
 		GEO_FROG_PLATFORM,
 		GEO_COIN,
-
+		GEO_FROG_BORDER,
 		// SCENE MOLE
 		// Props
 		GEO_HAMMER,

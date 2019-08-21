@@ -18,7 +18,7 @@ SceneFrog::~SceneFrog()
 void SceneFrog::Init()
 {
 	SceneBase::Init();
-
+	Results::getInstance()->InitVars();
 
 	//m_worldHeight = 200.f;
 	//// End James 13/8/2019
@@ -44,8 +44,8 @@ void SceneFrog::Init()
 	meshList[GEO_FROG] = MeshBuilder::GenerateQuad("frog", Color(1, 1, 1), 2.f);
 	//meshList[GEO_FROG]->textureID = LoadTGA("Image//balloon.tga");
 	meshList[GEO_FROG_MAP] = MeshBuilder::GenerateQuad("map", Color(1, 1, 1), 1.f);
-	meshList[GEO_FROG_MAP]->textureID = LoadTGA("Image//BGTest.tga");
-	meshList[GEO_FROG_PLATFORM] = MeshBuilder::GenerateQuad("platform", Color(1, 1, 1), 1.f);
+	meshList[GEO_FROG_MAP]->textureID = LoadTGA("Image//Frog_Background.tga");
+	meshList[GEO_FROG_BORDER] = MeshBuilder::GenerateQuad("border", Color(0, 1, 1), 1.f);
 	//meshList[GEO_FROG_PLATFORM]->textureID = LoadTGA("Image//BGTest.tga");
 	meshList[GEO_FROG_ROCK] = MeshBuilder::GenerateQuad("rock", Color(1, 1, 1), 2.f);
 	meshList[GEO_FROG_ROCK]->textureID = LoadTGA("Image//rock.tga");
@@ -53,6 +53,10 @@ void SceneFrog::Init()
 	meshList[GEO_COIN]->textureID = LoadTGA("Image//coin.tga");
 	meshList[GEO_TEXT] = MeshBuilder::GenerateText("text", 16, 16);
 	meshList[GEO_TEXT]->textureID = LoadTGA("Image//calibri.tga");
+
+	//meshList[GEO_GAMEFONT] = MeshBuilder::GenerateText("kzone", 16, 16);
+	//meshList[GEO_GAMEFONT]->textureID = LoadTGA("Image//KidsZone.tga");
+
 	//  ******************************* SPRITE ANIMATIONS HERE  ******************************* //
 
 
@@ -66,7 +70,7 @@ void SceneFrog::Init()
 
 	m_rockCount = 0;
 	m_coinCount = 0;
-
+	m_GameOver = false;
 	Frog = FetchGO();
 	Frog->active = true;
 	Frog->type = FrogObject::GO_FROG;
@@ -74,22 +78,28 @@ void SceneFrog::Init()
 	Frog->Frog_pos.Set(200, 10, 0);
 	Frog->Frog_vel.Set(0, 0, 0);
 	Frog->Frog_jumpVel.Set(0, 20, 0);
+	Frog->setCoin(m_coinCount);
+
 	hp = Frog->getHP();
 	cout << m_worldHeight << " , " << m_worldWidth << endl;
 	max_rock = 10;
 	max_coin = 10;
-	timer = 60.f;
-	for (int i = 0; i < 5; i++)
+	timer = 30.f;
+	for (int i = 0; i < 10; i++)
 	{
 		FrogObject* rock = new FrogObject(FrogObject::GO_ROCK);
 		rock_List.push_back(rock);
 	}
-	for (int i = 0; i < 5; i++)
+	for (int i = 0; i < 10; i++)
 	{
 		FrogObject* coin = new FrogObject(FrogObject::GO_COIN);
 		rock_List.push_back(coin);
 	}
 	
+
+	m_setOriginValues = false;
+	m_setStatsToDist = false;
+
 }
 
 FrogObject* SceneFrog::getRock()
@@ -116,12 +126,12 @@ FrogObject* SceneFrog::getRock()
 			}
 		}
 	}
-	for (unsigned i = 0; i < 2; ++i)
+	for (unsigned i = 0; i < 10; ++i)
 	{
 		FrogObject *rock = new FrogObject(FrogObject::GO_ROCK);
 		rock_List.push_back(rock);
 	}
-	for (unsigned i = 0; i < 2; ++i)
+	for (unsigned i = 0; i < 10; ++i)
 	{
 		FrogObject *coin = new FrogObject(FrogObject::GO_COIN);
 		rock_List.push_back(coin);
@@ -150,7 +160,8 @@ void SceneFrog::UpdateRock(double dt)
 		FrogObject* coin = getRock();
 		coin->type = FrogObject::GO_COIN;
 		coin->scale.Set(3, 3, 1);
-		coin->pos.Set(Math::RandIntMinMax(14, 25) * 10, Math::RandIntMinMax(2, 38) * 5, 0);
+		coin->pos.Set(Math::RandIntMinMax(14 , 23) * 10 , Math::RandIntMinMax(1, 25) * 5, 0);
+		m_coinCount++;
 	}
 	for (std::vector<FrogObject *>::iterator it = rock_List.begin(); it != rock_List.end(); ++it)
 	{
@@ -227,6 +238,28 @@ bool SceneFrog::CheckCollision(FrogObject* go, FrogObject* go2)
 void SceneFrog::Update(double dt)
 {
 	SceneBase::Update(dt);
+
+	if (m_GameOver)
+	{
+		Results::getInstance()->UpdateVars(dt);
+	}
+	if (m_GameOver && !m_setStatsToDist)
+	{
+		Results::getInstance()->InitStatsToDist(10);
+		m_setStatsToDist = true;
+	}
+	if (m_GameOver && !m_setOriginValues)
+	{
+		StatManager::GetInstance()->SetCharsOriginalValues();
+		m_setOriginValues = true;
+
+	}
+
+	if (timer <= 0)
+	{
+		m_GameOver = true;
+	}
+
 	double x, y;
 	Frog->timerInvincibility += dt;
 	Application::GetCursorPos(&x, &y);
@@ -288,6 +321,8 @@ void SceneFrog::Update(double dt)
 			bMovingDown = false;
 		}
 	}
+
+
 
 	UpdateRock(dt);
 
@@ -415,11 +450,29 @@ void SceneFrog::RenderGO(FrogObject* go)
 
 void SceneFrog::RenderMap()
 {
+	for (int i = 1; i < 20; i++)
+	{
+		for (int k = 0; k < 10; k++)
+		{
+			modelStack.PushMatrix();
+			modelStack.Translate(20 * i, 20 * k, 0);
+			modelStack.Rotate(Math::RadianToDegree(atan2(camera.position.x - 0, camera.position.z - 0)), 0, 1, 0);
+			modelStack.Scale(50, 50, 50);
+			RenderMesh(meshList[GEO_FROG_MAP], false);
+			modelStack.PopMatrix();
+		}
+	}
 	modelStack.PushMatrix();
-	modelStack.Translate(m_worldHeight / 2.f, m_worldWidth / 2.f, 0);
+	modelStack.Translate((m_worldWidth / 2) - 65, m_worldHeight / 2, 0);
 	modelStack.Rotate(Math::RadianToDegree(atan2(camera.position.x - 0, camera.position.z - 0)), 0, 1, 0);
-	modelStack.Scale(2 *m_worldWidth,2* m_worldHeight, 1);
-	RenderMesh(meshList[GEO_FROG_MAP], false);
+	modelStack.Scale(5, 200, 1);
+	RenderMesh(meshList[GEO_FROG_BORDER], false);
+	modelStack.PopMatrix();
+	modelStack.PushMatrix();
+	modelStack.Translate((m_worldWidth / 2) + 60, m_worldHeight / 2, 0);
+	modelStack.Rotate(Math::RadianToDegree(atan2(camera.position.x - 0, camera.position.z - 0)), 0, 1, 0);
+	modelStack.Scale(5, 200, 1);
+	RenderMesh(meshList[GEO_FROG_BORDER], false);
 	modelStack.PopMatrix();
 }
 
@@ -490,6 +543,16 @@ void SceneFrog::Render()
 	ss5.precision(2);
 	ss5 << "Time left: " << timer;
 	RenderTextOnScreen(meshList[GEO_TEXT], ss5.str(), Color(0, 1, 0), 3, 0, 12);
+
+	//std::ostringstream ss6;
+	//ss6.precision(2);
+	//ss6 << "Coins left: " << Frog->getCoin();
+	//RenderTextOnScreen(meshList[GEO_TEXT], ss6.str(), Color(0, 1, 0), 3, 0, 15);
+
+	if (m_GameOver)
+	{
+		Results::getInstance()->RenderResults(Frog->getScore());
+	}
 
 }
 
