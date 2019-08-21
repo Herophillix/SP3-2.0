@@ -1,9 +1,9 @@
 #include "SheepGame.h"
 #include "GL\glew.h"
-#include "Source/Application.h"
+#include "..\Application.h"
 #include <sstream>
-#include "Source/Rendering/LoadTGA.h"
-#include "Source/Rendering/MeshBuilder.h"
+#include "..\Rendering\LoadTGA.h"
+#include "..\Rendering\MeshBuilder.h"
 
 SheepGame::SheepGame() :
 	m_Gravity(0, -9.8, 0),
@@ -16,7 +16,9 @@ SheepGame::SheepGame() :
 	Timer2Check(false),
 	Timer3Check(false),
 	patternDone(false),
-	gameOver(false)
+	gameOver(false),
+	statsGain(false),
+	m_Grade('F')
 {
 
 }
@@ -28,6 +30,7 @@ SheepGame::~SheepGame()
 void SheepGame::Init()
 {
 	SceneBase::Init();
+	Results::getInstance()->InitVars();
 
 	//Calculating aspect ratio
 	m_worldHeight = 100.f;
@@ -179,9 +182,81 @@ void SheepGame::Init()
 	m_goList.push_back(player);
 }
 
+void SheepGame::reset()
+{
+
+	transitionY = 0;
+	Transition = false;
+	EvilKing = false;
+	pointGain = false;
+	rndNum = 0;
+	player->active = true;
+	player->pos.Set(0, 18, 0);
+	player->scale.Set(10, 10, 10);
+	player->cooldown = 2.f;
+	player->vel.Set(0, 0, 0);
+	player->health = 3;
+	points = 0;
+
+
+	Warning3->type = SheepObject::E_WARNING;
+	Warning3->pos.Set(m_worldWidth / 2 + 50, m_worldHeight / 2, 0);
+	Warning3->scale.Set(100, 100, 1);
+	Warning3->active = false;
+
+	Warning2->type = SheepObject::E_WARNING;
+	Warning2->pos.Set(m_worldWidth / 2 - 50, m_worldHeight / 2, 0);
+	Warning2->scale.Set(100, 100, 1);
+	Warning2->active = false;
+
+	Warning->type = SheepObject::E_WARNING;
+	Warning->pos.Set(m_worldWidth / 2, m_worldHeight / 2, 0);
+	Warning->scale.Set(100, 100, 1);
+	Warning->active = false;
+
+	EvilKingSheep->type = SheepObject::E_EYES;
+	EvilKingSheep->pos.Set(m_worldWidth / 2, 5, 0);
+	EvilKingSheep->normal.Set(0, 1, 0);
+	EvilKingSheep->scale.Set(20, 30, 1);
+	EvilKingSheep->health = 150;
+	EvilKingSheep->active = true;
+
+	tempwall->type = SheepObject::E_WALL;
+	tempwall->pos.Set(m_worldWidth / 2, 5, 0);
+	tempwall->normal.Set(0, 1, 0);
+	tempwall->scale.Set(2, m_worldWidth, 1);
+}
+
 void SheepGame::Update(double dt)
 {
 	SceneBase::Update(dt);
+	if (gameOver)
+	{
+		Results::getInstance()->UpdateVars(dt);
+		player->active = false;
+		if (!statsGain)
+		{
+			GameEndCalculations();
+			StatManager::GetInstance()->SetCharsOriginalValues();
+			//reset();
+			statsGain = true;
+		}
+		static bool bLButtonState = false;
+		if (!bLButtonState && Application::IsMousePressed(0))
+		{
+			bLButtonState = true;
+			std::cout << "LBUTTON DOWN" << std::endl;
+			if (Results::getInstance()->ButtonMouseCollision())
+			{
+				cout << "hit" << endl;
+			}
+		}
+		else if (bLButtonState && !Application::IsMousePressed(0))
+		{
+			bLButtonState = false;
+			std::cout << "LBUTTON UP" << std::endl;
+		}
+	}
 	//Calculating aspect ratio
 	m_worldHeight = 100.f;
 	m_worldWidth = m_worldHeight * (float)Application::GetWindowWidth() / Application::GetWindowHeight();
@@ -210,261 +285,263 @@ void SheepGame::Update(double dt)
 	mousePos = Vector3(static_cast<float>(x) / (w / m_worldWidth), (h - static_cast<float>(y)) / (h / m_worldHeight), 0.0f);
 
 
-
-	if (!bLButtonState && Application::IsMousePressed(0))
+	if (!gameOver)
 	{
-		bLButtonState = true;
-		std::cout << "LBUTTON DOWN" << std::endl;
-	}
-	else if (bLButtonState && !Application::IsMousePressed(0))
-	{
-		bLButtonState = false;
-		double x, y;
-		Application::GetCursorPos(&x, &y);
-
-		int w = Application::GetWindowWidth();
-		int h = Application::GetWindowHeight();
-		if (!player->onCooldown)
+		if (!bLButtonState && Application::IsMousePressed(0))
 		{
-			SheepObject *Fireball = FetchGO();
-			Fireball->type = SheepObject::E_FIREBALL;
-			Fireball->pos.Set(player->pos.x, player->pos.y, 0);
-			Fireball->vel.Set(((x / w * m_worldWidth) - player->pos.x), ((m_worldHeight - y / h * m_worldHeight) - player->pos.y), 0);
-			Fireball->vel = 85 * Fireball->vel.Normalized();
-			Fireball->scale.Set(8, 8, 8);
-			player->onCooldown = true;
+			bLButtonState = true;
+			std::cout << "LBUTTON DOWN" << std::endl;
 		}
-
-		std::cout << "LBUTTON UP" << std::endl;
-	}
-	static bool bRButtonState = false;
-	if (!bRButtonState && Application::IsMousePressed(1))
-	{
-		bRButtonState = true;
-		std::cout << "RBUTTON DOWN" << std::endl;
-	}
-	else if (bRButtonState && !Application::IsMousePressed(1))
-	{
-		bRButtonState = false;
-		std::cout << "RBUTTON UP" << std::endl;
-	}
-	if (m_Timer < 0)
-	{
-		SheepObject* Sheep = FetchGO();
-		Sheep->type = SheepObject::E_SHEEPFLIPPED;
-		Sheep->scale.Set(10, 10, 10);
-		Sheep->vel.Set(Math::RandFloatMinMax(-10, -20), Math::RandFloatMinMax(10, 15), 0);
-		Sheep->pos.Set(m_worldWidth - 10, Math::RandFloatMinMax(m_worldHeight / 3, m_worldHeight / 2), 0);
-		Sheep->active = true;
-		Sheep->isDown = false;
-		m_Timer = Math::RandFloatMinMax(2, 5);
-
-
-		SheepObject* Sheep2 = FetchGO();
-		Sheep2->type = SheepObject::E_SHEEP;
-		Sheep2->scale.Set(10, 10, 10);
-		Sheep2->vel.Set(Math::RandFloatMinMax(10, 20), Math::RandFloatMinMax(10, 15), 0);
-		Sheep2->pos.Set(0, Math::RandFloatMinMax(m_worldHeight / 3, m_worldHeight / 2), 0);
-		Sheep2->active = true;
-		Sheep2->isDown = false;
-		m_Timer = Math::RandFloatMinMax(2, 5);
-	}
-	if (BossTimer < 0 && !startPhase)
-	{
-		rndNum = Math::RandIntMinMax(1, 3);
-		BossTimer = 100.f;
-	}
-	switch (rndNum)
-	{
-	case 1:
-		Pattern1(dt);
-		break;
-	case 2:
-		Pattern2(dt);
-		break;
-	case 3:
-		Pattern3(dt);
-		break;
-	default:
-		cout << "???" << endl;
-		break;
-	}
-	/*if (!patternDone && Timer1Check)
-	{
-		Pattern1(dt);
-	}
-	if (!patternDone && Timer2Check)
-	{
-		Pattern2(dt);
-	}
-	if (!patternDone && Timer3Check)
-	{
-		Pattern3(dt);
-	}*/
-	if (patternDone == true)
-	{
-		Timer1 = 10.f;
-		Timer2 = 10.f;
-		Timer3 = 10.f;
-		patternDone = false;
-		startPhase = false;
-		BossTimer = Math::RandFloatMinMax(30.f, 40.f);
-		stop1 = false;
-		stop2 = false;
-		stop3 = false;
-		rndNum = 0;
-	}
-	//Iterator for sheep objects
-	for (std::vector<SheepObject *>::iterator it = m_goList.begin(); it != m_goList.end(); ++it)
-	{
-		SheepObject *go = (SheepObject *)*it;
-		if(go->active)
-		{ 
-			if (go->type == SheepObject::E_SHEEPFLIPPED)
-			{
-				go->pos += go->vel * (float)dt;
-				if (go->pos.y > m_worldHeight - 40)
-				{
-					go->isDown = true;
-				}
-				//if (go->pos.y < 60)
-				//{
-				//	go->isDown = false;
-				//}
-				if (go->isDown == true)
-				{
-					go->vel.y -= sin(m_Gravity.y) * 2;
-					//go->vel += m_Gravity * dt;
-				}
-				if (go->pos.x < 0)
-				{
-					go->active = false;
-				}
-				//if (go->isDown == false)
-				//{
-				//	go->vel.y += sin(m_Gravity.y) * 2;
-				//}
-				
-			}
-			if (go->type == SheepObject::E_SHEEP)
-			{
-				go->pos += go->vel * (float)dt;
-				if (go->pos.y > m_worldHeight - 40)
-				{
-					go->isDown = true;
-				}
-				//if (go->pos.y < 60)
-				//{
-				//	go->isDown = false;
-				//}
-				if (go->isDown == true)
-				{
-					go->vel.y -= sin(m_Gravity.y) * 2;
-					//go->vel += m_Gravity * dt;
-				}
-				if (go->pos.x > m_worldWidth)
-				{
-					go->active = false;
-				}
-				//if (go->isDown == false)
-				//{
-				//	go->vel.y += sin(m_Gravity.y) * 2;
-				//}
-			}
-		if (go->type == SheepObject::E_LINUX)
+		else if (bLButtonState && !Application::IsMousePressed(0))
 		{
-			go->pos += go->vel * (float)dt;
-			if (go->pos.y < -1)
+			bLButtonState = false;
+			double x, y;
+			Application::GetCursorPos(&x, &y);
+
+			int w = Application::GetWindowWidth();
+			int h = Application::GetWindowHeight();
+			if (!player->onCooldown)
 			{
-				go->active = false;
+				SheepObject *Fireball = FetchGO();
+				Fireball->type = SheepObject::E_FIREBALL;
+				Fireball->pos.Set(player->pos.x, player->pos.y, 0);
+				Fireball->vel.Set(((x / w * m_worldWidth) - player->pos.x), ((m_worldHeight - y / h * m_worldHeight) - player->pos.y), 0);
+				Fireball->vel = 85 * Fireball->vel.Normalized();
+				Fireball->scale.Set(8, 8, 8);
+				player->onCooldown = true;
 			}
+
+			std::cout << "LBUTTON UP" << std::endl;
 		}
-		if (go->type == SheepObject::E_FIREBALL)
+		static bool bRButtonState = false;
+		if (!bRButtonState && Application::IsMousePressed(1))
 		{
-			go->pos += go->vel * (float)dt;
+			bRButtonState = true;
+			std::cout << "RBUTTON DOWN" << std::endl;
 		}
-		for (std::vector<SheepObject *>::iterator it2 = m_goList.begin(); it2 != m_goList.end(); ++it2)
+		else if (bRButtonState && !Application::IsMousePressed(1))
 		{
-			SheepObject* go2 = (SheepObject *)*it2;
-			if (go2->active)
+			bRButtonState = false;
+			std::cout << "RBUTTON UP" << std::endl;
+		}
+		if (m_Timer < 0)
+		{
+			SheepObject* Sheep = FetchGO();
+			Sheep->type = SheepObject::E_SHEEPFLIPPED;
+			Sheep->scale.Set(10, 10, 10);
+			Sheep->vel.Set(Math::RandFloatMinMax(-10, -20), Math::RandFloatMinMax(10, 15), 0);
+			Sheep->pos.Set(m_worldWidth - 10, Math::RandFloatMinMax(m_worldHeight / 3, m_worldHeight / 2), 0);
+			Sheep->active = true;
+			Sheep->isDown = false;
+			m_Timer = Math::RandFloatMinMax(2, 5);
+
+
+			SheepObject* Sheep2 = FetchGO();
+			Sheep2->type = SheepObject::E_SHEEP;
+			Sheep2->scale.Set(10, 10, 10);
+			Sheep2->vel.Set(Math::RandFloatMinMax(10, 20), Math::RandFloatMinMax(10, 15), 0);
+			Sheep2->pos.Set(0, Math::RandFloatMinMax(m_worldHeight / 3, m_worldHeight / 2), 0);
+			Sheep2->active = true;
+			Sheep2->isDown = false;
+			m_Timer = Math::RandFloatMinMax(2, 5);
+		}
+		if (BossTimer < 0 && !startPhase)
+		{
+			rndNum = Math::RandIntMinMax(1, 3);
+			BossTimer = 100.f;
+		}
+		switch (rndNum)
+		{
+		case 1:
+			Pattern1(dt);
+			break;
+		case 2:
+			Pattern2(dt);
+			break;
+		case 3:
+			Pattern3(dt);
+			break;
+		default:
+			cout << "???" << endl;
+			break;
+		}
+		/*if (!patternDone && Timer1Check)
+		{
+			Pattern1(dt);
+		}
+		if (!patternDone && Timer2Check)
+		{
+			Pattern2(dt);
+		}
+		if (!patternDone && Timer3Check)
+		{
+			Pattern3(dt);
+		}*/
+		if (patternDone == true)
+		{
+			Timer1 = 10.f;
+			Timer2 = 10.f;
+			Timer3 = 10.f;
+			patternDone = false;
+			startPhase = false;
+			BossTimer = Math::RandFloatMinMax(30.f, 40.f);
+			stop1 = false;
+			stop2 = false;
+			stop3 = false;
+			rndNum = 0;
+		}
+		//Iterator for sheep objects
+		for (std::vector<SheepObject *>::iterator it = m_goList.begin(); it != m_goList.end(); ++it)
+		{
+			SheepObject *go = (SheepObject *)*it;
+			if (go->active)
 			{
-				if (go2->type == SheepObject::E_WALL && go->type != SheepObject::E_LINUX)
+				if (go->type == SheepObject::E_SHEEPFLIPPED)
 				{
-					if (CollisionCheck(go, go2))
+					go->pos += go->vel * (float)dt;
+					if (go->pos.y > m_worldHeight - 40)
 					{
-						go->vel.y = -go->vel.y;
-						//cout << CollisionCheck(go2,go) << endl;
+						go->isDown = true;
 					}
-				}
-				if (go2->type == SheepObject::E_FIREBALL && go->type == SheepObject::E_SHEEPFLIPPED
-					|| go2->type == SheepObject::E_FIREBALL && go->type == SheepObject::E_SHEEP)
-				{
-					if (CollisionCheck(go, go2))
+					//if (go->pos.y < 60)
+					//{
+					//	go->isDown = false;
+					//}
+					if (go->isDown == true)
+					{
+						go->vel.y -= sin(m_Gravity.y) * 2;
+						//go->vel += m_Gravity * dt;
+					}
+					if (go->pos.x < 0)
 					{
 						go->active = false;
-						go2->active = false;
-						pointGain = true;
+					}
+					//if (go->isDown == false)
+					//{
+					//	go->vel.y += sin(m_Gravity.y) * 2;
+					//}
+
+				}
+				if (go->type == SheepObject::E_SHEEP)
+				{
+					go->pos += go->vel * (float)dt;
+					if (go->pos.y > m_worldHeight - 40)
+					{
+						go->isDown = true;
+					}
+					//if (go->pos.y < 60)
+					//{
+					//	go->isDown = false;
+					//}
+					if (go->isDown == true)
+					{
+						go->vel.y -= sin(m_Gravity.y) * 2;
+						//go->vel += m_Gravity * dt;
+					}
+					if (go->pos.x > m_worldWidth)
+					{
+						go->active = false;
+					}
+					//if (go->isDown == false)
+					//{
+					//	go->vel.y += sin(m_Gravity.y) * 2;
+					//}
+				}
+				if (go->type == SheepObject::E_LINUX)
+				{
+					go->pos += go->vel * (float)dt;
+					if (go->pos.y < -1)
+					{
+						go->active = false;
 					}
 				}
-				if (go2->type == SheepObject::E_FIREBALL && go->type == SheepObject::E_EYES)
+				if (go->type == SheepObject::E_FIREBALL)
 				{
-					if (CollisionCheck(go, go2))
-					{
-						cout << "hit" << endl;
-						go2->active = false;
-						points += 100;
-						EvilKingSheep->health -= 10;
-					}
+					go->pos += go->vel * (float)dt;
 				}
-				if (go2->type == SheepObject::E_SHEEPFLIPPED && go->type == SheepObject::E_PLAYER 
-					|| go2->type == SheepObject::E_SHEEP && go->type == SheepObject::E_PLAYER
-					|| go2->type == SheepObject::E_LINUX && go->type == SheepObject::E_PLAYER)
+				for (std::vector<SheepObject *>::iterator it2 = m_goList.begin(); it2 != m_goList.end(); ++it2)
 				{
-					if (CollisionCheck(go2, go))
+					SheepObject* go2 = (SheepObject *)*it2;
+					if (go2->active)
 					{
-						go2->active = false;
-						player->health -= 1;
-						cout << player->health << endl;
+						if (go2->type == SheepObject::E_WALL && go->type != SheepObject::E_LINUX)
+						{
+							if (CollisionCheck(go, go2))
+							{
+								go->vel.y = -go->vel.y;
+								//cout << CollisionCheck(go2,go) << endl;
+							}
+						}
+						if (go2->type == SheepObject::E_FIREBALL && go->type == SheepObject::E_SHEEPFLIPPED
+							|| go2->type == SheepObject::E_FIREBALL && go->type == SheepObject::E_SHEEP)
+						{
+							if (CollisionCheck(go, go2))
+							{
+								go->active = false;
+								go2->active = false;
+								pointGain = true;
+							}
+						}
+						if (go2->type == SheepObject::E_FIREBALL && go->type == SheepObject::E_EYES)
+						{
+							if (CollisionCheck(go, go2))
+							{
+								cout << "hit" << endl;
+								go2->active = false;
+								points += 100;
+								EvilKingSheep->health -= 10;
+							}
+						}
+						if (go2->type == SheepObject::E_SHEEPFLIPPED && go->type == SheepObject::E_PLAYER
+							|| go2->type == SheepObject::E_SHEEP && go->type == SheepObject::E_PLAYER
+							|| go2->type == SheepObject::E_LINUX && go->type == SheepObject::E_PLAYER)
+						{
+							if (CollisionCheck(go2, go))
+							{
+								go2->active = false;
+								player->health -= 1;
+								cout << player->health << endl;
+							}
+						}
+
 					}
 				}
 
 			}
 		}
-
+		if (EvilKingSheep->health == 0 || player->health == 0)
+		{
+			gameOver = true;
 		}
-	}
-	if (EvilKingSheep->health == 100 || player->health == 0)
-	{
-		gameOver = true;
-	}
-	if (points > 150)
-	{
-		Transition = true;
-	}
-	if (player->onCooldown)
-	{
-		player->cooldown -= dt;
-	}
-	if (player->cooldown < 0)
-	{
-		player->cooldown = 1.f;
-		player->onCooldown = false;
-	}
-	if (pointGain)
-	{
-		points += 20;
-		pointGain = false;
-	}
-	if (Transition == true)
-	{
-		meshList[GEO_LIFEBAR] = MeshBuilder::GenerateBar("GEO_LIFEBAR", Color(1, 0, 0), EvilKingSheep->health / 2, 1.f);
-	}
-	UpdateRayTracing(dt);
-	player->UpdateMovement(dt);
-	m_Timer -= dt;
-	if (Transition == true)
-	{
-		BossTimer -= dt;
+		if (points > 150)
+		{
+			Transition = true;
+		}
+		if (player->onCooldown)
+		{
+			player->cooldown -= dt;
+		}
+		if (player->cooldown < 0)
+		{
+			player->cooldown = 1.f;
+			player->onCooldown = false;
+		}
+		if (pointGain)
+		{
+			points += 20;
+			pointGain = false;
+		}
+		if (Transition == true)
+		{
+			meshList[GEO_LIFEBAR] = MeshBuilder::GenerateBar("GEO_LIFEBAR", Color(1, 0, 0), EvilKingSheep->health / 2, 1.f);
+		}
+		UpdateRayTracing(dt);
+		player->UpdateMovement(dt);
+		m_Timer -= dt;
+		if (Transition == true)
+		{
+			BossTimer -= dt;
+		}
 	}
 }
 void SheepGame::Pattern1(double dt)
@@ -874,7 +951,8 @@ void SheepGame::Render()
 		);
 		// Model matrix : an identity matrix (model will be at the origin)
 		modelStack.LoadIdentity();
-
+	if (!gameOver)
+	{
 		renderBG();
 		if (Transition == true)
 		{
@@ -904,7 +982,7 @@ void SheepGame::Render()
 		{
 			RenderGO(player);
 		}
-	
+
 		for (std::vector<SheepObject *>::iterator it = m_goList.begin(); it != m_goList.end(); ++it)
 		{
 			SheepObject *go = (SheepObject *)*it;
@@ -922,6 +1000,11 @@ void SheepGame::Render()
 		}
 		renderLives();
 		renderCrossHair();
+	}
+	else
+	{
+		Results::getInstance()->RenderResults(points,m_Grade);
+	}
 
 }
 void SheepGame::renderCrossHair()
@@ -932,7 +1015,56 @@ void SheepGame::renderCrossHair()
 	RenderMesh(meshList[GEO_CROSSHAIR], false);
 	modelStack.PopMatrix();
 }
+void SheepGame::GameEndCalculations() // Setting the stats and other stuff
+{
+	if (points >= 700)
+	{
+		m_Grade = 'S';
+		StatManager::GetInstance()->UpdateChar01F(-20);
+		StatManager::GetInstance()->UpdateChar01M(20);
+		StatManager::GetInstance()->UpdateChar02F(-20);
+		StatManager::GetInstance()->UpdateChar02M(20);
+		StatManager::GetInstance()->UpdateChar03F(-20);
+		StatManager::GetInstance()->UpdateChar03M(20);
+		StatManager::GetInstance()->UpdateChar04F(-20);
+		StatManager::GetInstance()->UpdateChar04M(20);
+		Results::getInstance()->InitStatsToDist(35);
+	}
+	else if (points >= 450 && points < 700)
+	{
+		m_Grade = 'A';
+		Results::getInstance()->InitStatsToDist(25);
 
+	}
+	else if (points >= 400 && points < 450)
+	{
+		m_Grade = 'B';
+		Results::getInstance()->InitStatsToDist(20);
+	}
+	else if (points >= 360 && points < 400)
+	{
+		m_Grade = 'C';
+		Results::getInstance()->InitStatsToDist(15);
+	}
+	else if (points >= 300 && points < 360)
+	{
+		m_Grade = 'D';
+		Results::getInstance()->InitStatsToDist(10);
+	}
+	else
+	{
+		m_Grade = 'F';
+		StatManager::GetInstance()->UpdateChar01F(10);
+		StatManager::GetInstance()->UpdateChar01M(-10);
+		StatManager::GetInstance()->UpdateChar02F(10);
+		StatManager::GetInstance()->UpdateChar02M(-10);
+		StatManager::GetInstance()->UpdateChar03F(10);
+		StatManager::GetInstance()->UpdateChar03M(-10);
+		StatManager::GetInstance()->UpdateChar04F(10);
+		StatManager::GetInstance()->UpdateChar04M(-10);
+	}
+
+}
 void SheepGame::renderEvilSheep()
 {
 	if (EvilKing == false)

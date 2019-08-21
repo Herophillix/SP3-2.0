@@ -190,7 +190,7 @@ void SceneMole::Init()
 	m_score = 0;
 	m_hitCounter = 0;
 	m_frostTimer = 10.f;
-	m_gameTimer = 90.f;
+	m_gameTimer = 2.f;
 	m_gameOver = false;
 	m_frostOn = false;
 

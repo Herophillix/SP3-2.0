@@ -22,7 +22,7 @@
     <ProjectGuid>{0A9B1DD2-76DC-427D-B5E8-D8CF2ADDA603}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>
     <RootNamespace>Physics</RootNamespace>
-    <WindowsTargetPlatformVersion>10.0.17763.0</WindowsTargetPlatformVersion>
+    <WindowsTargetPlatformVersion>10.0.17134.0</WindowsTargetPlatformVersion>
     <ProjectName>Studio Project</ProjectName>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
@@ -161,8 +161,6 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="SheepGame.cpp" />
-    <ClCompile Include="SheepObject.cpp" />
     <ClCompile Include="Source\Application.cpp" />
     <ClCompile Include="Source\Camera\Camera.cpp" />
     <ClCompile Include="Source\main.cpp" />
@@ -186,6 +184,8 @@
     <ClCompile Include="Source\Scenes\SceneMaze.cpp" />
     <ClCompile Include="Source\Scenes\SceneMole.cpp" />
     <ClCompile Include="Source\Scenes\SceneTank.cpp" />
+    <ClCompile Include="Source\Scenes\SheepGame.cpp" />
+    <ClCompile Include="Source\Scenes\SheepObject.cpp" />
     <ClCompile Include="Source\Scenes\StatManager.cpp" />
     <ClCompile Include="Source\Scenes\StudioProjectScene.cpp" />
     <ClCompile Include="Source\Scenes\SubTankObject.cpp" />
@@ -194,8 +194,6 @@
     <ClCompile Include="Source\Utility.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="SheepGame.h" />
-    <ClInclude Include="SheepObject.h" />
     <ClInclude Include="Source\Minigames\Maze\MazeGenerator.h" />
     <ClInclude Include="Source\Scenes\CharacterObject.h" />
     <ClInclude Include="Source\Scenes\FrogObject.h" />
@@ -221,6 +219,8 @@
     <ClInclude Include="Source\Scenes\SceneMaze.h" />
     <ClInclude Include="Source\Scenes\SceneMole.h" />
     <ClInclude Include="Source\Scenes\SceneTank.h" />
+    <ClInclude Include="Source\Scenes\SheepGame.h" />
+    <ClInclude Include="Source\Scenes\SheepObject.h" />
     <ClInclude Include="Source\Scenes\StatManager.h" />
     <ClInclude Include="Source\Scenes\StudioProjectScene.h" />
     <ClInclude Include="Source\Scenes\SubTankObject.h" />
