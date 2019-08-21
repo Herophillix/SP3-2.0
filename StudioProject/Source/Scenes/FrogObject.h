@@ -31,6 +31,7 @@ public:
 	void setHP(int health);
 	void setInvincible(bool invin);
 	void setCoin(int coins);
+	void setScore(int score);
 	// GET
 	bool getJump();
 	bool getMove();

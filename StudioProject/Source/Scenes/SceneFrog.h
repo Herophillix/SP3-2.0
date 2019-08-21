@@ -31,6 +31,8 @@ public:
 	void RenderRock(FrogObject* rock);
 	void RenderCoin(FrogObject* coin);
 	void RenderMap();
+	void Reset();
+	void GameEndCalculations();
 	FrogObject* FetchGO();
 
 	std::vector<FrogObject* >* m_goList;
@@ -57,6 +59,8 @@ private:
 	float max_rock;
 	float max_coin;
 	float timer;
+	char m_grade;
+	int score;
 	FrogObject* Frog;
 	FrogObject* Platform;
 

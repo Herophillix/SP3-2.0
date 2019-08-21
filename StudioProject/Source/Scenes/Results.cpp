@@ -99,7 +99,7 @@ void Results::UpdateVars(double dt)
 	r_quad02Pos.Set(m_quarterWorldWidth * 3, m_sixthWorldHeight * 3, 0.5f);
 	r_quad03Pos.Set(m_quarterWorldWidth, m_sixthWorldHeight, 0.5f);
 	r_quad04Pos.Set(m_quarterWorldWidth * 3, m_sixthWorldHeight, 0.5f);
-
+	
 	// Update mouse pos
 	double x, y;
 	Application::GetCursorPos(&x, &y);
