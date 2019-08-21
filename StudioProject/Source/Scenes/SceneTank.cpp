@@ -19,6 +19,8 @@ void SceneTank::Init()
 {
 	SceneBase::Init();
 
+	Results::getInstance()->InitVars();
+
 	//Calculating aspect ratio
 	// James 13/8/2019
 	m_worldHeight = 200.f;
@@ -49,6 +51,8 @@ void SceneTank::Init()
 	meshList[GEO_TANK_FORMATION_5]->textureID = LoadTGA("Image//Tank_Formation_5.tga");
 	meshList[GEO_TANK_FORMATION_6] = MeshBuilder::GenerateQuad("Formation 6", Color(1, 1, 1), 1.f);
 	meshList[GEO_TANK_FORMATION_6]->textureID = LoadTGA("Image//Tank_Formation_6.tga");
+	meshList[GEO_CROSSHAIR] = MeshBuilder::GenerateQuad("CrossHair", Color(1, 1, 1), 1.f);
+	meshList[GEO_CROSSHAIR]->textureID = LoadTGA("Image//Crosshair.tga");
 
 	//Physics code here
 	m_speed = 1.f;
@@ -157,6 +161,11 @@ void SceneTank::Init()
 		if (i % 2  == 0)
 		{
 			Tank[i]->isPlayer = true;
+			TankObject::PlayerTankCount++;
+		}
+		else
+		{
+			TankObject::EnemyTankCount++;
 		}
 	}
 	
@@ -211,11 +220,16 @@ void SceneTank::Init()
 	SceneState = S_MENU;
 	turn = 0;
 	velocity = 0;
+
+	gameover = false;
+	statgained = false;
+	grade = 'F';
 }
 
 void SceneTank::Update(double dt)
 {
 	SceneBase::Update(dt);
+
 	//Calculating aspect ratio
 	// James 13/8/2019
 	m_worldHeight = 200.f;
@@ -240,6 +254,32 @@ void SceneTank::Update(double dt)
 		UpdateGame(dt);
 		break;
 	}
+	case S_GAMEOVER:
+	{
+		Results::getInstance()->UpdateVars(dt);
+		if (!statgained)
+		{
+			GameEndCalculations();
+			StatManager::GetInstance()->SetCharsOriginalValues();
+			statgained = true;
+		}
+		static bool bLButtonState = false;
+		if (!bLButtonState && Application::IsMousePressed(0))
+		{
+			bLButtonState = true;
+			std::cout << "LBUTTON DOWN" << std::endl;
+			if (Results::getInstance()->ButtonMouseCollision())
+			{
+				cout << "hit" << endl;
+			}
+		}
+		else if (bLButtonState && !Application::IsMousePressed(0))
+		{
+			bLButtonState = false;
+			std::cout << "LBUTTON UP" << std::endl;
+		}
+		break;
+	}
 	default:
 	{
 		cout << "No Scene State" << endl;
@@ -250,7 +290,10 @@ void SceneTank::Update(double dt)
 
 void SceneTank::UpdateGame(double dt)
 {
-
+	if (turn == 16 || TankObject::PlayerTankCount == 0 || TankObject::EnemyTankCount == 0)
+	{
+		SceneState = S_GAMEOVER;
+	}
 	// James 14/8/2019
 	tempwall->pos = Vector3(m_worldWidth*0.5, m_worldHeight * 0.25f, 0);
 	tempwall->scale.Set(5, m_worldWidth, 1);
@@ -328,8 +371,9 @@ void SceneTank::UpdateGame(double dt)
 	if (!Ball->active)
 	{
 		ballthrown = false;
-		if (TankObject::TankCount > 0 && TankChange)
+		if (TankObject::PlayerTankCount > 0 && TankChange)
 		{
+			++turn;
 			TankObject::currentTank->Ball = nullptr;
 			bool done = false;
 			while (!done)
@@ -970,7 +1014,7 @@ void SceneTank::UpdateAI(TankObject* com, double dt)
 		Ball->active = true;
 		Ball->pos = com->Head->pos;
 		float angle = atan2(straightLine.y, straightLine.x);
-		Vector3 direction = Vector3(cosf(Math::DegreeToRadian(angle + Math::RandFloatMinMax(-5, 5))), sinf(Math::DegreeToRadian(angle + Math::RandFloatMinMax(-5, 5))), 0);
+		Vector3 direction = Vector3(cosf(angle + Math::DegreeToRadian(Math::RandFloatMinMax(-5, 5))), sinf(angle + Math::DegreeToRadian(Math::RandFloatMinMax(-5, 5))), 0);
 		Ball->vel = Math::Clamp(straightLine.Length(), 1.f, 50.f) * direction;
 		Ball->scale.Set(2, 2, 1);
 		TankObject::currentTank->Ball = Ball;
@@ -1205,6 +1249,7 @@ void SceneTank::Render()
 
 	//RenderMesh(meshList[GEO_AXES], false);
 
+
 	switch (SceneState)
 	{
 	case S_MENU:
@@ -1217,6 +1262,11 @@ void SceneTank::Render()
 		RenderGame();
 		break;
 	}
+	case S_GAMEOVER:
+	{
+		Results::getInstance()->RenderResults(score, grade);
+		break;
+	}
 	default:
 	{
 		std::ostringstream ss;
@@ -1226,7 +1276,11 @@ void SceneTank::Render()
 	}
 	}
 
-	
+	modelStack.PushMatrix();
+	modelStack.Translate(v_mousepos);
+	modelStack.Scale(10, 10, 1);
+	RenderMesh(meshList[GEO_CROSSHAIR], false);
+	modelStack.PopMatrix();
 }
 
 void SceneTank::RenderGame()
@@ -1260,6 +1314,12 @@ void SceneTank::RenderGame()
 		}
 	}
 
+	modelStack.PushMatrix();
+	modelStack.Translate(m_worldWidth* 0.5f, 0, 0);
+	modelStack.Rotate(90, 0, 0, 1);
+	modelStack.Scale(5, m_worldWidth, 1);
+	RenderMesh(meshList[GEO_WALL], false);
+	modelStack.PopMatrix();
 	for (int i = 0; i < TraceSize; ++i)
 	{
 		if (Trace[i]->active)
@@ -1284,15 +1344,15 @@ void SceneTank::RenderGame()
 	{
 		RenderMesh(meshList[GEO_TANK_HEAD_1], false);
 	}
-	else if (TankObject::currentTank == Tank[1])
+	else if (TankObject::currentTank == Tank[2])
 	{
 		RenderMesh(meshList[GEO_TANK_HEAD_2], false);
 	}
-	else if (TankObject::currentTank == Tank[2])
+	else if (TankObject::currentTank == Tank[4])
 	{
 		RenderMesh(meshList[GEO_TANK_HEAD_3], false);
 	}
-	else if (TankObject::currentTank == Tank[3])
+	else if (TankObject::currentTank == Tank[6])
 	{
 		RenderMesh(meshList[GEO_TANK_HEAD_4], false);
 	}
@@ -1325,8 +1385,7 @@ void SceneTank::RenderGame()
 	RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(0, 1, 0), 3, 1, 1);
 	ss.str("");
 	ss << "P:";
-	for (int i = 0; i < velocity; i+= 10
-		)
+	for (int i = 0; i < velocity; i+= 10)
 	{
 		ss << "@";
 	}
@@ -1335,11 +1394,6 @@ void SceneTank::RenderGame()
 	ss.str("");
 	ss << "Score:" << score;
 	RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(0, 0, 1), 3, 1, 7);
-
-	ss.str("");
-	ss << v_mousepos.x / m_worldWidth * 80.f << " " << v_mousepos.y / m_worldHeight * 60.f;
-	RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(0, 0, 1), 3, v_mousepos.x / m_worldWidth * 80.f, v_mousepos.y / m_worldHeight * 60.f);
-	RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(0, 0, 1), 3, 40, 30);
 	// End James 14/8/2019
 }
 
@@ -1548,3 +1602,54 @@ void SceneTank::DeactivateStencil()
 	glDisable(GL_STENCIL_TEST);
 }
 // End James 15/8/2019
+void SceneTank::GameEndCalculations() // Setting the stats and other stuff
+{
+	score += 500 * (16 - turn);
+	if (score >= 6000)
+	{
+		grade = 'S';
+		StatManager::GetInstance()->UpdateChar01F(-20);
+		StatManager::GetInstance()->UpdateChar01M(20);
+		StatManager::GetInstance()->UpdateChar02F(-20);
+		StatManager::GetInstance()->UpdateChar02M(20);
+		StatManager::GetInstance()->UpdateChar03F(-20);
+		StatManager::GetInstance()->UpdateChar03M(20);
+		StatManager::GetInstance()->UpdateChar04F(-20);
+		StatManager::GetInstance()->UpdateChar04M(20);
+		Results::getInstance()->InitStatsToDist(35);
+	}
+	else if (score >= 5000 && score < 6000)
+	{
+		grade = 'A';
+		Results::getInstance()->InitStatsToDist(25);
+
+	}
+	else if (score >= 4000 && score < 5000)
+	{
+		grade = 'B';
+		Results::getInstance()->InitStatsToDist(20);
+	}
+	else if (score >= 3000 && score < 4000)
+	{
+		grade = 'C';
+		Results::getInstance()->InitStatsToDist(15);
+	}
+	else if (score >= 2000 && score < 3000)
+	{
+		grade = 'D';
+		Results::getInstance()->InitStatsToDist(10);
+	}
+	else
+	{
+		grade = 'F';
+		StatManager::GetInstance()->UpdateChar01F(10);
+		StatManager::GetInstance()->UpdateChar01M(-10);
+		StatManager::GetInstance()->UpdateChar02F(10);
+		StatManager::GetInstance()->UpdateChar02M(-10);
+		StatManager::GetInstance()->UpdateChar03F(10);
+		StatManager::GetInstance()->UpdateChar03M(-10);
+		StatManager::GetInstance()->UpdateChar04F(10);
+		StatManager::GetInstance()->UpdateChar04M(-10);
+	}
+
+}

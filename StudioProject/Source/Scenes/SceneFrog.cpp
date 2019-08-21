@@ -551,7 +551,7 @@ void SceneFrog::Render()
 
 	if (m_GameOver)
 	{
-		Results::getInstance()->RenderResults(Frog->getScore());
+		Results::getInstance()->RenderResults(Frog->getScore(), 'B');
 	}
 
 }

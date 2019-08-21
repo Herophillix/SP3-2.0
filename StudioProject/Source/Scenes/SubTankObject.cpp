@@ -1,4 +1,5 @@
 #include "SubTankObject.h"
+#include "SceneTank.h"
 
 SubTankObject::SubTankObject(PHYSICSOBJECT_TYPE typeValue, SUBTANKOBJECT_TYPE type, TankObject* TankParent)
 {
@@ -50,6 +51,10 @@ void SubTankObject::CollisionResponse(PhysicsObject* go, double dt)
 			if (go->type != PhysicsObject::GO_TRACE)
 			{
 				parent->health--;
+				if (!parent->isPlayer)
+				{
+					SceneTank::score += 250;
+				}
 				parent->Ball = nullptr;
 			}
 			break;

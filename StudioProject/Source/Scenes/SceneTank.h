@@ -5,6 +5,8 @@
 #include "PhysicsObject.h"
 #include "TankObject.h"
 #include "MenuObject.h"
+#include "Results.h"
+#include "StatManager.h"
 #include <vector>
 
 using namespace std;
@@ -18,7 +20,9 @@ public:
 	enum SceneState
 	{
 		S_MENU,
-		S_GAME
+		S_INSTRUCTIONS,
+		S_GAME,
+		S_GAMEOVER
 	};
 
 	virtual void Init();
@@ -51,6 +55,7 @@ public:
 
 	void UpdateAI(TankObject* com, double dt);
 	void ChangeAIPosition();
+	void GameEndCalculations();
 	static int score;
 private:
 	std::vector<PhysicsObject *>* m_goList;
@@ -90,6 +95,9 @@ private:
 	int SceneState;
 	int turn;
 	float velocity;
+	bool gameover;
+	char grade;
+	bool statgained;
 };
 
 #endif // !STUDIOPROJECT_SCENE_H
