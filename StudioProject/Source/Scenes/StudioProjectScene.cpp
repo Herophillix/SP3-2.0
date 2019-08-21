@@ -403,7 +403,7 @@ void StudioProjectScene::Update(double dt)
 	}
 	if (m_eventTimer < -2)
 	{
-		Application::setScene(Math::RandIntMinMax(1, 4));
+		Application::setScene(Math::RandIntMinMax(1, 5));
 		m_eventTimer = Math::RandFloatMinMax(20.0f, 40.f);
 	}
 	UpdateParticles(dt);

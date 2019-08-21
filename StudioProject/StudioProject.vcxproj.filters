@@ -94,6 +94,12 @@
     <ClCompile Include="Source\Scenes\StatManager.cpp">
       <Filter>Stats</Filter>
     </ClCompile>
+    <ClCompile Include="Source\Scenes\MenuObject.cpp">
+      <Filter>GameObjects</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\SoundEngine.cpp">
+      <Filter>SoundEngine</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\Application.h">
@@ -198,6 +204,12 @@
     <ClInclude Include="Source\Scenes\StatManager.h">
       <Filter>Stats</Filter>
     </ClInclude>
+    <ClInclude Include="Source\Scenes\MenuObject.h">
+      <Filter>GameObjects\Header</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\SoundEngine.h">
+      <Filter>SoundEngine</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Text Include="Source\Minigames\Maze\Map\Map1.txt">
@@ -243,6 +255,9 @@
     </Filter>
     <Filter Include="Stats">
       <UniqueIdentifier>{57202da5-80c6-449d-8b71-4f43e9e935e2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="SoundEngine">
+      <UniqueIdentifier>{f58d1919-c600-4313-8f22-f4ed3683f2c3}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>
