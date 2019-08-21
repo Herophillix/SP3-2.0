@@ -21,7 +21,21 @@ private:
 	bool pointGain;
 	bool Transition;
 	bool EvilKing;
+	bool gameOver;
+	float BossTimer;
 	float transitionY;
+	float Timer1;
+	float Timer2;
+	float Timer3;
+	bool Timer1Check;
+	bool Timer2Check;
+	bool Timer3Check;
+	bool stop1 = false;
+	bool stop2 = false;
+	bool stop3 = false;
+	bool patternDone;
+	bool startPhase;
+	int rndNum;
 	const int TraceSize = 30;
 	SheepObject *Trace[30];
 public:
@@ -35,6 +49,9 @@ public:
 	void renderLives();
 	void renderCrossHair();
 	void renderEvilSheep();
+	void Pattern1(double dt);
+	void Pattern2(double dt);
+	void Pattern3(double dt);
 	void RenderGO(SheepObject *go);
 	void UpdateRayTracing(double dt);
 	bool CollisionCheck(SheepObject *go, SheepObject *go2);
