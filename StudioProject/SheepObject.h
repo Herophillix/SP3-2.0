@@ -13,6 +13,7 @@ public:
 		E_NONE,
 		E_SHEEP,
 		E_SHEEPFLIPPED,
+		E_LINUX,
 		E_PLAYER,
 		E_WALL,
 		E_EYES,

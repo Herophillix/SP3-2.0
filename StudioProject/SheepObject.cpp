@@ -5,7 +5,7 @@
 SheepObject::SheepObject(sheepGameType typeValue)
 	:spreadAngle(0),
 	health(100),
-	cooldown(2.f),
+	cooldown(1.f),
 	onCooldown(false),
 	isDown(false),
 	m_dLeftRight(false),
