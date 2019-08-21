@@ -14,13 +14,14 @@ class MazeGenerator
 public:
 	MazeGenerator();
 	~MazeGenerator();
-	void SetUp(string FileDirectory);
-	void Update(double dt);
-	void AddMazetoGOList(vector<PhysicsObject*>*);
+	void SetUp(string FileDirectory, vector<PhysicsObject*>* m_goList);
+	//void AddMazetoGOList(vector<PhysicsObject*>*);
+	float getBiggestLength();
 private:
 	vector<MazeObject*> MazeList;
 	float m_worldWidth;
 	float m_worldHeight;
+	float BiggestLength;
 };
 
 #endif // !MAZEGENERATOR_H

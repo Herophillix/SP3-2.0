@@ -1,15 +1,36 @@
 #include "PhysicsObject.h"
 
+Vector3 PhysicsObject::WindDirection;
+
 PhysicsObject::PhysicsObject(PHYSICSOBJECT_TYPE typeValue)
 	:
 	normal(0, 1, 0),
 	mass(1.f)
 {
 	type = typeValue;
+	UpBound = false;
+	DownBound = false;
+	LeftBound = false;
+	RightBound = false;
 }
 
 PhysicsObject::~PhysicsObject()
 {
+}
+
+void PhysicsObject::Update(double dt, float m_worldWidth, float m_worldHeight)
+{
+	switch (type)
+	{
+	case PhysicsObject::GO_BALL:
+	{
+		Vector3 m_gravity(0, -9.8f, 0);
+		vel += m_gravity * (float)dt;
+		vel += WindDirection * (float)dt;
+		pos += vel * (float)dt;
+		break;
+	}
+	}
 }
 
 void PhysicsObject::CollisionResponse(PhysicsObject* go, double dt)
@@ -49,7 +70,11 @@ void PhysicsObject::CollisionResponse(PhysicsObject* go, double dt)
 	case PhysicsObject::GO_WALL:
 	{
 		// BALL-WALL COLLISION
-		go->vel = go->vel - 2 * go->vel.Dot(go2->normal) * go2->normal;
+		go->vel = go->vel - 1.98f * go->vel.Dot(go2->normal) * go2->normal;
+		if (go->vel.Length() > 0)
+		{
+			go->vel = Math::Clamp(go->vel.Length(), 0.f, 75.f) * go->vel.Normalized();
+		}
 		//if (go2->member == GameObject::M_WALL_NORMAL)
 		//{
 		//	go->vel *= 0.90f;

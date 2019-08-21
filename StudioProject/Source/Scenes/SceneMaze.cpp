@@ -70,8 +70,7 @@ void SceneMaze::Init()
 	tempwall4->normal = Vector3(1, 0, 0);
 	tempwall4->scale.Set(5, m_worldHeight, 1);
 
-	Maze.SetUp("Source\\Minigames\\Maze\\Map\\Map1.txt");
-	Maze.AddMazetoGOList(m_goList);
+	Maze.SetUp("Source\\Minigames\\Maze\\Map\\Map1.txt",m_goList);
 
 	// End James 14/8/2019
 	// End James 13/8/2019
@@ -79,12 +78,14 @@ void SceneMaze::Init()
 	// James 15/8/2019
 	enableStencil = true;
 	// End James 15/8/2019
+
+	endGame = true;
+	elapsedTime = 0;
 }
 
 void SceneMaze::Update(double dt)
 {
 	SceneBase::Update(dt);
-	Maze.Update(dt);
 	//Calculating aspect ratio
 	// James 13/8/2019
 	m_worldHeight = 200.f;
@@ -142,7 +143,7 @@ void SceneMaze::Update(double dt)
 		Ghost->active = false;
 		// End James 13/8/2019
 		// James 15/8/2019
-		Ball = temp;
+		//Ball = temp;
 		// End James 15/8/2019
 	}
 	static bool bRButtonState = false;
@@ -176,6 +177,16 @@ void SceneMaze::Update(double dt)
 	else if (bFState && !Application::IsKeyPressed('F'))
 	{
 		bFState = false;
+	}
+
+	if (Ball == nullptr && Application::IsKeyPressed(VK_SPACE))
+	{
+		Ball = FetchGO();
+		Ball->type = PhysicsObject::GO_BALL;
+		Ball->pos = Vector3(m_worldWidth * 0.5f, m_worldHeight * 0.5f, 0);
+		Ball->vel.SetZero();;
+		Ball->scale.Set(2, 2, 1);
+		endGame = false;
 	}
 
 	// James 13/8/2019
@@ -245,15 +256,13 @@ void SceneMaze::Update(double dt)
 		PhysicsObject *go = (*m_goList)[i];
 		if (go->active)
 		{
-			switch (go->type)
+			go->Update(dt, m_worldWidth, m_worldHeight);
+			if (go == Ball)
 			{
-			case PhysicsObject::GO_BALL:
-			{
-				Vector3 m_gravity(0, -9.8f, 0);
-				go->vel += m_gravity * (float)dt;
-				go->pos += go->vel * (float)dt;
-				break;
-			}
+				if ((go->pos - Vector3(m_worldWidth * 0.5f, m_worldHeight * 0.5f, 0)).Length() > Maze.getBiggestLength())
+				{
+					endGame = true;
+				}
 			}
 			for (int k = i + 1; k < (int)m_goList->size(); ++k)
 			{
@@ -284,6 +293,11 @@ void SceneMaze::Update(double dt)
 		}
 	}
 	// End James 13/8/2019
+
+	if (!endGame)
+	{
+		elapsedTime += dt;
+	}
 }
 
 // James 13/8/2019
@@ -479,8 +493,8 @@ void SceneMaze::Render()
 
 	//On screen text
 	std::ostringstream ss;
-	ss.precision(5);
-	ss << "M:" << v_mousepos;
+	ss.precision(3);
+	ss << "T:" << elapsedTime;
 	RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(0, 1, 0), 3, 0, 0);
 	// End James 14/8/2019
 }

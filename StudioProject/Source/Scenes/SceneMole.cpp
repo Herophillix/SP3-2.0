@@ -18,7 +18,7 @@ SceneMole::~SceneMole()
 void SceneMole::Init()
 {
 	SceneBase::Init();
-
+	Results::getInstance()->InitVars();
 	//Calculating aspect ratio
 	m_worldHeight = 100.f;
 	m_worldWidth = m_worldHeight * (float)Application::GetWindowWidth() / Application::GetWindowHeight();
@@ -48,9 +48,35 @@ void SceneMole::Init()
 	meshList[GEO_FRONTPANEL] = MeshBuilder::GenerateQuad("front", Color(0, 0, 1), 1.f);
 	meshList[GEO_FRONTPANEL]->textureID = LoadTGA("Image//frontpanel.tga");
 
-	meshList[GEO_MOLETEST] = MeshBuilder::GenerateQuad("testmole", Color(1, 1, 1), 1.f);
 	meshList[GEO_TEXT] = MeshBuilder::GenerateText("text", 16, 16);
 	meshList[GEO_TEXT]->textureID = LoadTGA("Image//calibri.tga");
+
+	meshList[GEO_MOLESTATS] = MeshBuilder::GenerateQuad("ui", Color(0, 0, 0), 1.f);
+
+	//meshList[GEO_MOLERESULTS] = MeshBuilder::GenerateQuad("results", Color(0, 0, 0), 1.f);
+
+	meshList[GEO_C01_RESULT_QUAD] = MeshBuilder::GenerateQuad("c01result", Color(1, 1, 1), 1.f);
+	meshList[GEO_C01_RESULT_QUAD]->textureID = LoadTGA("Image//resultTest.tga");
+	meshList[GEO_C02_RESULT_QUAD] = MeshBuilder::GenerateQuad("c01result", Color(1, 1, 1), 1.f);
+	meshList[GEO_C03_RESULT_QUAD] = MeshBuilder::GenerateQuad("c01result", Color(1, 1, 1), 1.f);
+	meshList[GEO_C04_RESULT_QUAD] = MeshBuilder::GenerateQuad("c01result", Color(1, 1, 1), 1.f);
+
+	meshList[GEO_MOLE] = MeshBuilder::GenerateQuad("testmole", Color(1, 1, 1), 1.f);
+	meshList[GEO_MOLE]->textureID = LoadTGA("Image//MOLE.tga");
+	meshList[GEO_MOLE_BRONZE] = MeshBuilder::GenerateQuad("bronzeMole", Color(0.2f, 0, 0), 1.f);
+	meshList[GEO_MOLE_BRONZE]->textureID = LoadTGA("Image//MOLE_BRONZE.tga");
+	meshList[GEO_MOLE_SILVER] = MeshBuilder::GenerateQuad("silverMole", Color(0, 0.9f, 0), 1.f);
+	meshList[GEO_MOLE_SILVER]->textureID = LoadTGA("Image//MOLE_SILVER.tga");
+	meshList[GEO_MOLE_GOLD] = MeshBuilder::GenerateQuad("goldMole", Color(1, 0.5f, 0), 1.f);
+	meshList[GEO_MOLE_GOLD]->textureID = LoadTGA("Image//MOLE_GOLD.tga");
+	meshList[GEO_MOLE_BOMB] = MeshBuilder::GenerateQuad("bombMole", Color(0, 0, 0), 1.f);
+	meshList[GEO_MOLE_BOMB]->textureID = LoadTGA("Image//MOLE_BOMB.tga");
+	meshList[GEO_MOLE_FROST] = MeshBuilder::GenerateQuad("frostMole", Color(0, 0, 1), 1.f);
+	meshList[GEO_MOLE_FROST]->textureID = LoadTGA("Image//MOLE_FROST.tga");
+
+	meshList[GEO_GAMEFONT] = MeshBuilder::GenerateText("kzone", 16, 16);
+	meshList[GEO_GAMEFONT]->textureID = LoadTGA("Image//KidsZone.tga");
+
 	//  ******************************* SPRITE ANIMATIONS HERE  ******************************* //
 
 	//  ******************************* PARTICLES HERE  ******************************* //
@@ -58,7 +84,7 @@ void SceneMole::Init()
 	projection.SetToOrtho(0, m_worldWidth, 0, m_worldHeight, -10, 10);
 	projectionStack.LoadMatrix(projection);
 	
-	// ******************************* INIT THINGS HERE ******************************* //
+	// ******************************* INIT GAME THINGS HERE ******************************* //
 
 	// Top row of moles for rendering
 	for (unsigned int i = 0 ; i < 4 ; i++)
@@ -94,45 +120,148 @@ void SceneMole::Init()
 			m_moleListTotal.push_back(m_moleListTop[j]);
 		}
 	}
+	for (int i = 0; i < 100; i++)
+	{
+		moleTypeRNG[i] = 0;
+	}
 
-	m_Hammer = FetchGO();
-	m_Hammer->type = MoleObject::GO_HAMMER;
-	m_Hammer->pos.Set(m_halfWorldWidth, m_halfWorldHeight, 5);
-	m_Hammer->scale.Set(20, 20, 20);
-
+	// 2 == normal mole // 3 == bronze mole // 4 == silver mole // 5 == gold mole // 6 == bomb mole // 7 == frost mole
+	int randIndex = 0; 
+	for (int i = 0; i < 70; i++)
+	{
+		randIndex = Math::RandIntMinMax(0, 99);
+		if (moleTypeRNG[randIndex] == 0)
+		{
+			moleTypeRNG[randIndex] = 2;
+		}
+	}
+	for (int i = 0; i < 15; i++)
+	{
+		randIndex = Math::RandIntMinMax(0, 99);
+		if (moleTypeRNG[randIndex] == 0)
+		{
+			moleTypeRNG[randIndex] = 3;
+		}
+	}
+	for (int i = 0; i < 5; i++)
+	{
+		randIndex = Math::RandIntMinMax(0, 99);
+		if (moleTypeRNG[randIndex] == 0)
+		{
+			moleTypeRNG[randIndex] = 4;
+		}
+	}
+	for (int i = 0; i < 2; i++)
+	{
+		randIndex = Math::RandIntMinMax(0, 99);
+		if (moleTypeRNG[randIndex] == 0)
+		{
+			moleTypeRNG[randIndex] = 5;
+		}
+	}
+	for (int i = 0; i < 4; i++)
+	{
+		randIndex = Math::RandIntMinMax(0, 99);
+		if (moleTypeRNG[randIndex] == 0)
+		{
+			moleTypeRNG[randIndex] = 6;
+		}
+	}
+	for (int i = 0; i < 4; i++)
+	{
+		randIndex = Math::RandIntMinMax(0, 99);
+		if (moleTypeRNG[randIndex] == 0)
+		{
+			moleTypeRNG[randIndex] = 7;
+		}
+	}
 	m_frontScale.Set(198, 36, 1);
 	m_midScale.Set(198, 36, 1);
 	m_backScale.Set(198, 36, 1);
 
 	m_popUpTimer = Math::RandFloatMinMax(0.5f, 1.5f);
+	m_multiplier = 1;
 	m_score = 0;
-	m_gameTimer = 60.f;
+	m_hitCounter = 0;
+	m_frostTimer = 10.f;
+	m_gameTimer = 90.f;
 	m_gameOver = false;
+	m_frostOn = false;
+
+	multiplier.Set(1, 1, 1);
+
+	// ******************************* INIT HAMMER THINGS HERE ******************************* //
+	m_Hammer = FetchGO();
+	m_Hammer->type = MoleObject::GO_HAMMER;
+	m_Hammer->pos.Set(m_halfWorldWidth, m_halfWorldHeight, 5);
+	m_Hammer->scale.Set(20, 20, 20);
+
+	m_hammerMoveBT = 0.1f;
+
+	m_hammerPosIndex = 0;
+	InitHammerPosList();
+
+	// ******************************* INIT RESULT THINGS HERE ******************************* //
+
+	m_setOriginValues = false;
+	m_setStatsToDist = false;
+
 }
 
 void SceneMole::Update(double dt)
 {
 	SceneBase::Update(dt);
+	// RESULT SCREEN STUFF
+	if (m_gameOver)
+	{
+		Results::getInstance()->UpdateVars(dt);
+	}
+	if (m_gameOver && !m_setStatsToDist)
+	{
+		Results::getInstance()->InitStatsToDist(10);
+		m_setStatsToDist = true;
+	}
+	if (m_gameOver && !m_setOriginValues)
+	{
+		StatManager::GetInstance()->SetCharsOriginalValues();
+		m_setOriginValues = true;
+
+	}
+	// GAME TIMER
+	if (!m_gameOver)
+		m_gameTimer -= dt;
 	if (m_gameTimer <= 0)
 	{
 		m_gameTimer = 0.f;
 		m_gameOver = true;
 	}
-	if (!m_gameOver)
-		m_gameTimer -= dt;
+	if (m_gameTimer < 0)
+	{
+		m_gameOver = true;
+	} 
+	// FROST DEBUFF
+	if (m_frostOn)
+	{
+		m_frostTimer -= dt;
+	}
+	if (m_frostTimer <= 0.f)
+	{
+		m_frostTimer = 10.f;
+		m_frostOn = false;
+	}
 
 	static bool bLButtonState = false;
 	if (!bLButtonState && Application::IsMousePressed(0))
 	{
 		bLButtonState = true;
 		std::cout << "LBUTTON DOWN" << std::endl;
-		meshList[GEO_HAMMER]->textureID = t_hammerHit;
-		if (!m_gameOver)
+		if (m_gameOver)
 		{
-			if (HammerCollisionCheck());
-
+			if (Results::getInstance()->ButtonMouseCollision())
+			{
+				cout << "hit" << endl;
+			}
 		}
-			//play sound effect/ particle effect idk
 	}
 	else if (bLButtonState && !Application::IsMousePressed(0))
 	{
@@ -151,17 +280,92 @@ void SceneMole::Update(double dt)
 		bRButtonState = false;
 		std::cout << "RBUTTON UP" << std::endl;
 	}
-	UpdateHammerPos();
 
-	UpdateMoles(dt);
 
-	if (m_gameTimer < 0)
+	// ****************************** MOVEMENT CONTROLS ****************************** //
+	m_hammerMoveBT -= dt;
+	if (Application::IsKeyPressed('W') && m_hammerMoveBT <= 0.f)
 	{
-		Application::setScene(0);
-		m_gameTimer = 60;
+		UpdateHammerPos('W');
+		m_hammerMoveBT = 0.15f;
+	}
+	if (Application::IsKeyPressed('S') && m_hammerMoveBT <= 0.f)
+	{
+		UpdateHammerPos('S');
+		m_hammerMoveBT = 0.15f;
+	}
+	if (Application::IsKeyPressed('A') && m_hammerMoveBT <= 0.f)
+	{
+		UpdateHammerPos('A');
+		m_hammerMoveBT = 0.15f;
+	}
+	if (Application::IsKeyPressed('D') && m_hammerMoveBT <= 0.f)
+	{
+		UpdateHammerPos('D');
+		m_hammerMoveBT = 0.15f;
+	}
+	static bool bSpaceButtonState = false;
+	if (!bSpaceButtonState && Application::IsKeyPressed(VK_SPACE))
+	{
+		bSpaceButtonState = true;
+		std::cout << "SPACE DOWN" << endl;
+		meshList[GEO_HAMMER]->textureID = t_hammerHit;
+		if (HammerCollisionCheck())
+		{
+			// sfx
+			cout << "hit" << endl;
+			m_hitCounter++;
+		}
+		else
+		{
+			// sfx
+			cout << "miss" << endl;
+			m_hitCounter = 0;
+		}
+	}
+	else if (bSpaceButtonState && !Application::IsKeyPressed(VK_SPACE))
+	{
+		bSpaceButtonState = false;
+		std::cout << "SPACE UP" << endl;
+		meshList[GEO_HAMMER]->textureID = t_hammerIdle;
 	}
 
+	if (m_hitCounter >= 10 && m_hitCounter <= 19)
+	{
+		m_multiplier = 2;
+	}
+	else if (m_hitCounter >= 20 && m_hitCounter <= 29)
+	{
+		m_multiplier = 4;
+	}
+	else if (m_hitCounter >= 30)
+	{
+		m_multiplier = 8;
+	}
+	else
+	{
+		m_multiplier = 1;
+	}
+
+	UpdateMoles(dt);
 	UpdateParticles(dt);
+
+	if (m_multiplier == 2)
+	{
+		multiplier.Set(0.941f, 0.969f, 0.157f);
+	}
+	else if (m_multiplier == 4)
+	{
+		multiplier.Set(0.969f, 0.604f, 0.157f);
+	}
+	else if (m_multiplier == 8)
+	{
+		multiplier.Set(1, 0.141f, 0.141f);
+	}
+	else
+	{
+		multiplier.Set(1, 1, 1);
+	}
 }
 
 
@@ -276,7 +480,7 @@ void SceneMole::Render()
 	m_worldWidth = m_worldHeight * (float)Application::GetWindowWidth() / Application::GetWindowHeight();
 	m_halfWorldHeight = m_worldHeight / 2;
 	m_halfWorldWidth = m_worldWidth / 2;
-
+	
 	m_quarterWorldWidth = m_worldWidth / 4;
 	m_eightWorldWidth = m_worldWidth / 8;
 
@@ -295,19 +499,17 @@ void SceneMole::Render()
 	// Model matrix : an identity matrix (model will be at the origin)
 	modelStack.LoadIdentity();
 
-	RenderMachine();
-
-	RenderGO(m_Hammer);
-
-	std::ostringstream ss;
-	ss << "Score: " << m_score;
-	RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(1, 1, 1), 2, 30, 6);
-
-	ss.clear();
-	ss.str("");
-	ss.precision(3);
-	ss << "Time Left: " << m_gameTimer;
-	RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(1, 1, 1), 2, 25, 2);
+	if (!m_gameOver)
+	{
+		RenderMachine();
+		RenderGO(m_Hammer);
+		RenderUI();
+	}
+	if (m_gameOver)
+	{
+		Results::getInstance()->RenderResults(m_score);
+		//RenderResults();
+	}
 
 }
 
@@ -326,8 +528,44 @@ void SceneMole::RenderGO(MoleObject * go)
 		modelStack.PushMatrix();
 		modelStack.Translate(go->pos.x, go->pos.y + go->mole_yOffset, go->pos.z);
 		modelStack.Scale(go->scale.x, go->scale.y, go->scale.z);
-		RenderMesh(meshList[GEO_MOLETEST], false);
+		RenderMesh(meshList[GEO_MOLE], false);
 		modelStack.PopMatrix();
+		break;
+	case MoleObject::GO_MOLE_BRONZE:
+		modelStack.PushMatrix();
+		modelStack.Translate(go->pos.x, go->pos.y + go->mole_yOffset, go->pos.z);
+		modelStack.Scale(go->scale.x, go->scale.y, go->scale.z);
+		RenderMesh(meshList[GEO_MOLE_BRONZE], false);
+		modelStack.PopMatrix();
+		break;
+	case MoleObject::GO_MOLE_SILVER:
+		modelStack.PushMatrix();
+		modelStack.Translate(go->pos.x, go->pos.y + go->mole_yOffset, go->pos.z);
+		modelStack.Scale(go->scale.x, go->scale.y, go->scale.z);
+		RenderMesh(meshList[GEO_MOLE_SILVER], false);
+		modelStack.PopMatrix();
+		break;
+	case MoleObject::GO_MOLE_GOLD:
+		modelStack.PushMatrix();
+		modelStack.Translate(go->pos.x, go->pos.y + go->mole_yOffset, go->pos.z);
+		modelStack.Scale(go->scale.x, go->scale.y, go->scale.z);
+		RenderMesh(meshList[GEO_MOLE_GOLD], false);
+		modelStack.PopMatrix();
+		break;
+	case MoleObject::GO_MOLE_BOMB:
+		modelStack.PushMatrix();
+		modelStack.Translate(go->pos.x, go->pos.y + go->mole_yOffset, go->pos.z);
+		modelStack.Scale(go->scale.x, go->scale.y, go->scale.z);
+		RenderMesh(meshList[GEO_MOLE_BOMB], false);
+		modelStack.PopMatrix();
+		break;
+	case MoleObject::GO_MOLE_FROST:
+		modelStack.PushMatrix();
+		modelStack.Translate(go->pos.x, go->pos.y + go->mole_yOffset, go->pos.z);
+		modelStack.Scale(go->scale.x, go->scale.y, go->scale.z);
+		RenderMesh(meshList[GEO_MOLE_FROST], false);
+		modelStack.PopMatrix();
+		break;
 	default:
 		break;
 	}
@@ -350,16 +588,63 @@ MoleObject * SceneMole::FetchGO()
 	return m_goList[m_goList.size() - 1];
 }
 
-void SceneMole::UpdateHammerPos()
+void SceneMole::UpdateHammerPos(char wasd)
 {
-	double x, y;
-	Application::GetCursorPos(&x, &y);
-	int w = Application::GetWindowWidth();
-	int h = Application::GetWindowHeight();
-	float posX = static_cast<float>(x) / w * m_worldWidth;
-	float posY = (h - static_cast<float>(y)) / h * m_worldHeight;
+	//double x, y;
+	//Application::GetCursorPos(&x, &y);
+	//int w = Application::GetWindowWidth();
+	//int h = Application::GetWindowHeight();
+	//float posX = static_cast<float>(x) / w * m_worldWidth;
+	//float posY = (h - static_cast<float>(y)) / h * m_worldHeight;
+	//
+	//m_Hammer->pos.Set(posX, posY, 5);
+	switch (wasd)
+	{
+	case 'W':
+		if (m_hammerPosIndex < 4) // Hammer at top row go down 
+		{
+			m_hammerPosIndex += 4;
+		}
+		else
+		{
+			m_hammerPosIndex -= 4;
+		}
+		break;
+	case 'S':
+		if (m_hammerPosIndex < 4)
+		{
+			m_hammerPosIndex += 4;
+		}
+		else
+		{
+			m_hammerPosIndex -= 4;
+		}
+		break;
+	case 'A':
+		if (m_hammerPosIndex == 0 || m_hammerPosIndex == 4)
+		{
+			m_hammerPosIndex += 3;
+		}
+		else
+		{
+			m_hammerPosIndex--;
+		}
+		break;
+	case 'D':
+		if (m_hammerPosIndex == 3 || m_hammerPosIndex == 7)
+		{
+			m_hammerPosIndex -= 3;
+		}
+		else
+		{
+			m_hammerPosIndex++;
+		}
+		break;
+	default:
+		break;
+	}
 
-	m_Hammer->pos.Set(posX, posY, 5);
+	m_Hammer->pos = m_hammerPosList[m_hammerPosIndex];
 }
 
 void SceneMole::UpdateMoles(double dt)
@@ -390,6 +675,9 @@ void SceneMole::UpdateMoles(double dt)
 				m_moleListTotal[randMole]->active = true;
 				m_moleListTotal[randMole]->mole_goUp = true;
 				m_moleListTotal[randMole]->mole_lifeTime = 10.5f;
+				// do rng stuff here for mole type
+				int randMoleType = Math::RandIntMinMax(0, 99);
+				m_moleListTotal[randMole]->type = (MoleObject::MOLEOBJECT_TYPE)(moleTypeRNG[randMoleType]);
 				break;
 			}
 		}
@@ -407,8 +695,10 @@ void SceneMole::UpdateMoles(double dt)
 			{
 				m_moleListTotal[i]->active = false;
 				m_moleListTotal[i]->mole_hit = true;
-				m_moleListTotal[i]->mole_lifeTime = 0.f;
-
+				if (m_moleListTotal[i]->type != MoleObject::GO_MOLE_BOMB && m_moleListTotal[i]->type != MoleObject::GO_MOLE_FROST)
+				{
+					m_hitCounter = 0;
+				}
 			}
 			// 'Animation' for going up
 			if (m_moleListTotal[i]->mole_goUp)
@@ -473,6 +763,149 @@ void SceneMole::RenderMachine()
 
 }
 
+void SceneMole::RenderUI()
+{
+	modelStack.PushMatrix();
+	modelStack.Translate(m_halfWorldWidth, 10, 0);
+	modelStack.Scale(120, 20, 1);
+	RenderMesh(meshList[GEO_MOLESTATS], false);
+	modelStack.PopMatrix();
+
+	std::ostringstream ss;
+	ss << "Score: " << m_score;
+	RenderTextOnScreen(meshList[GEO_GAMEFONT], ss.str(), Color(1, 1, 1), 3, 25, 6);
+
+	ss.clear();
+	ss.str("");
+	ss.precision(3);
+	ss << "Time Left: " << m_gameTimer;
+	RenderTextOnScreen(meshList[GEO_GAMEFONT], ss.str(), Color(1, 1, 1), 3, 18, 2);
+
+	ss.clear();
+	ss.str("");
+	ss << "Combo: " << m_hitCounter;
+	modelStack.PushMatrix();
+	modelStack.Translate(m_halfWorldWidth - m_eightWorldWidth, m_worldHeight - 5, 0);
+	modelStack.Scale(5, 5, 5);
+	RenderText(meshList[GEO_GAMEFONT], ss.str(), Color(1, 1, 1));
+	modelStack.PopMatrix();
+
+	ss.clear();
+	ss.str("");
+	ss << "x" << m_multiplier;
+	modelStack.PushMatrix();
+	modelStack.Translate(m_worldWidth - m_eightWorldWidth / 2, m_worldHeight - 5, 0);
+	modelStack.Scale(10, 10, 10);
+	RenderText(meshList[GEO_GAMEFONT], ss.str(), Color(1, 1, 1));
+	modelStack.PopMatrix();
+
+}
+
+//void SceneMole::RenderResults()
+//{
+//	// the black bg the player sees
+//	modelStack.PushMatrix();
+//	modelStack.Translate(m_halfWorldWidth, m_halfWorldHeight, 5);
+//	modelStack.Scale(198, 108, 1);
+//	RenderMesh(meshList[GEO_MOLERESULTS], false);
+//	modelStack.PopMatrix();
+//
+//	std::ostringstream ss;
+//	ss << "MINIGAME OVER";
+//	RenderTextOnScreen(meshList[GEO_MOLEFONT], ss.str(), Color(1, 1, 1), 5, 10, 50);
+//
+//	ss.clear();
+//	ss.str("");
+//	ss << "Score: " << m_score;
+//	RenderTextOnScreen(meshList[GEO_MOLEFONT], ss.str(), Color(1, 1, 1), 2, 30, 45);
+//	// get instance of player stats
+//
+//	// Render Character Quad -> stats
+//	// C01 Quad
+//	modelStack.PushMatrix();
+//	modelStack.Translate(r_quad01Pos);
+//	modelStack.Scale(90, 30, 1);
+//	RenderMesh(meshList[GEO_C01_RESULT_QUAD], false);
+//	modelStack.PopMatrix();
+//
+//	// C01 Stats
+//
+//	// C02 Quad
+//	modelStack.PushMatrix();
+//	modelStack.Translate(r_quad02Pos);
+//	modelStack.Scale(90, 30, 1);
+//	RenderMesh(meshList[GEO_C02_RESULT_QUAD], false);
+//	modelStack.PopMatrix();
+//
+//	// C01 Stats
+//
+//	// C03 Quad
+//	modelStack.PushMatrix();
+//	modelStack.Translate(r_quad03Pos);
+//	modelStack.Scale(90, 30, 1);
+//	RenderMesh(meshList[GEO_C03_RESULT_QUAD], false);
+//	modelStack.PopMatrix();
+//
+//	// C01 Stats
+//
+//	// C04 Quad
+//	modelStack.PushMatrix();
+//	modelStack.Translate(r_quad04Pos);
+//	modelStack.Scale(90, 30, 1);
+//	RenderMesh(meshList[GEO_C04_RESULT_QUAD], false);
+//	modelStack.PopMatrix();
+//
+//	// C04 Stats
+//
+//
+//	// Collision check for mouse position and quad for rObjects
+//
+//
+//
+//	// Render Reset and Continue
+//	modelStack.PushMatrix();
+//	modelStack.PopMatrix();
+//
+//	modelStack.PushMatrix();
+//	modelStack.PopMatrix();
+//}
+
+void SceneMole::InitHammerPosList()
+{
+	//for (unsigned int i = 0; i < 8; i++)
+	//{
+	//	Vector3 temp;
+	//	if (i < 4) // Top row
+	//	{
+	//		temp.Set(m_eightWorldWidth + (i * m_quarterWorldWidth), (m_worldHeight - m_sixthWorldHeight) - 35, -1);
+	//	}
+	//	else // Bottom Row
+	//	{
+	//		temp.Set(m_eightWorldWidth + (i * m_quarterWorldWidth), (m_worldHeight - 3 * m_sixthWorldHeight) - 35, -1);
+	//	}
+	//	m_hammerPosList.push_back(temp);
+	//}
+
+
+	for (unsigned int i = 0; i < m_moleListTop.size(); i++)
+	{
+		Vector3 temp;
+		temp = m_moleListTop[i]->pos;
+		temp.y += 30.f;
+		m_hammerPosList.push_back(temp);
+	}
+	for (unsigned int i = 0; i < m_moleListBot.size(); i++)
+	{
+		Vector3 temp;
+		temp = m_moleListBot[i]->pos;
+		temp.y += 30.f;
+		m_hammerPosList.push_back(temp);
+	}
+
+
+	m_Hammer->pos = m_hammerPosList[m_hammerPosIndex];
+}
+
 bool SceneMole::HammerCollisionCheck()
 {
 	for (unsigned int i = 0; i < m_moleListTotal.size(); i++)
@@ -486,10 +919,45 @@ bool SceneMole::HammerCollisionCheck()
 				if (m_moleListTotal[i]->active)
 				{
 					std::cout << "Hit Mole No: " << i << std::endl;
-					m_score += m_moleListTotal[i]->mole_lifeTime * 100;
-					m_moleListTotal[i]->mole_lifeTime = 0.f;
 					m_moleListTotal[i]->mole_hit = true;
 					m_moleListTotal[i]->active = false;
+					int addToScore = 0;
+					switch (m_moleListTotal[i]->type)
+					{
+					case MoleObject::GO_MOLE:
+						addToScore = m_moleListTotal[i]->mole_lifeTime * 100 * m_multiplier;
+						break;
+					case MoleObject::GO_MOLE_BRONZE:
+						addToScore += m_moleListTotal[i]->mole_lifeTime * 100 * m_multiplier * 1.3;
+						break;
+					case MoleObject::GO_MOLE_SILVER:
+						addToScore += m_moleListTotal[i]->mole_lifeTime * 100 * m_multiplier * 1.5;
+						break;
+					case MoleObject::GO_MOLE_GOLD:
+						addToScore += m_moleListTotal[i]->mole_lifeTime * 100 * m_multiplier * 2.f;
+						break;
+					case MoleObject::GO_MOLE_BOMB:
+						m_score /= 2;
+						m_hitCounter = 0;
+						break;
+					case MoleObject::GO_MOLE_FROST:
+						m_frostOn = true;
+						m_score -= m_score / 5;
+						m_hitCounter = 0;
+						break;
+					default:
+						break;
+					}
+					if (m_frostOn)
+					{
+						m_score += addToScore / 2;
+					}
+					else
+					{
+						m_score += addToScore;
+					}
+					cout << addToScore << endl;
+					//m_moleListTotal[i]->mole_lifeTime = 0.f;
 					return true;
 				}
 			}

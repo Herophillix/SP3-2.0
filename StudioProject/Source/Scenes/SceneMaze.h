@@ -49,6 +49,10 @@ private:
 	PhysicsObject* Ball;
 	bool enableStencil;
 	// End James 15/8/2019	
+
+	bool endGame;
+	double elapsedTime;
+
 };
 
 #endif // !STUDIOPROJECT_SCENE_H

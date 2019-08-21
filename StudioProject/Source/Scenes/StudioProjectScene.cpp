@@ -27,7 +27,7 @@ void StudioProjectScene::Init()
 	//Variables here
 	m_speed = 1.f;
 	Math::InitRNG();
-	m_eventTimer = 500000.f; //Math::RandFloatMinMax(20.0f, 40.f);
+	m_eventTimer = 2.f;//Math::RandFloatMinMax(20.0f, 40.f);
 	b_transitioning = false;
 
 	meshList[GEO_QUAD] = MeshBuilder::GenerateQuad("test", Color(1, 1, 1), 1.f);
@@ -40,9 +40,9 @@ void StudioProjectScene::Init()
 	meshList[GEO_SPRITE_ANIMATION] = MeshBuilder::GenerateSpriteAnimation("test", 1, 4);
 	meshList[GEO_SPRITE_ANIMATION]->textureID = LoadTGA("Image//Idle_anim.tga");
 	meshList[GEO_WALKLEFT] = MeshBuilder::GenerateSpriteAnimation("char1walkleft", 1, 4);
-	meshList[GEO_WALKLEFT]->textureID = LoadTGA("Image//Walk_animLeft.tga");
+	meshList[GEO_WALKLEFT]->textureID = LoadTGA("Image//Walk_animLeft2.tga");
 	meshList[GEO_WALKRIGHT] = MeshBuilder::GenerateSpriteAnimation("char1walkright", 1, 4);
-	meshList[GEO_WALKRIGHT]->textureID = LoadTGA("Image//Walk_animRight.tga");
+	meshList[GEO_WALKRIGHT]->textureID = LoadTGA("Image//Walk_animRight2.tga");
 	meshList[GEO_SPRITE_TEST2] = MeshBuilder::GenerateSpriteAnimation("test2", 1, 6);
 	meshList[GEO_SPRITE_TEST2]->textureID = LoadTGA("Image//Idle_anim2.tga");
 	meshList[GEO_TELEVISION] = MeshBuilder::GenerateQuad("Television", Color(1, 1, 1), 1.f);
@@ -175,18 +175,26 @@ void StudioProjectScene::Update(double dt)
 
 	if (Application::IsKeyPressed(VK_F1))
 	{
+		prevChar = currentChar;
+		prevChar->setState(false);
 		currentChar = charOne;
 	}
 	if (Application::IsKeyPressed(VK_F2))
 	{
+		prevChar = currentChar;
+		prevChar->setState(false);
 		currentChar = charTwo;
 	}
 	if (Application::IsKeyPressed(VK_F3))
 	{
+		prevChar = currentChar;
+		prevChar->setState(false);
 		currentChar = charThree;
 	}
 	if (Application::IsKeyPressed(VK_F4))
 	{
+		prevChar = currentChar;
+		prevChar->setState(false);
 		currentChar = charFour;
 	}
 
@@ -374,7 +382,7 @@ void StudioProjectScene::Update(double dt)
 	}
 	if (m_eventTimer < -2)
 	{
-		Application::setScene(Math::RandIntMinMax(1, 2));
+		Application::setScene(Math::RandIntMinMax(1, 4));
 		m_eventTimer = Math::RandFloatMinMax(20.0f, 40.f);
 	}
 	UpdateParticles(dt);

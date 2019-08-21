@@ -2,8 +2,11 @@
 #define SCENEMOLE_H
 #include "scenebase.h"
 #include "StudioProjectScene.h"
+#include "StatManager.h"
 #include "GameObject.h"
 #include "MoleObject.h"
+#include "ResultObject.h"
+#include "Results.h"
 #include <vector>
 class SceneMole : public SceneBase
 {
@@ -23,11 +26,17 @@ public:
 	void RenderAnimation();
 	MoleObject* FetchGO();
 
-
-	void UpdateHammerPos(); // update hammer variables
-	void UpdateMoles(double dt); // update mole variables
+	// Game Functions
 	void RenderMachine(); // the machine and the moles
+	void RenderUI();
+	//void RenderResults();
 
+	// Mole Functions
+	void UpdateMoles(double dt); // update mole variables
+
+	// Hammer Functions
+	void InitHammerPosList();
+	void UpdateHammerPos(char wasd); // update hammer variables
 	bool HammerCollisionCheck();
 
 private:
@@ -50,25 +59,42 @@ private:
 
 	// Minigame stuff
 	int m_score;
+	int m_multiplier;
+	int m_hitCounter;
+	int m_stats;
 	float m_gameTimer;
+	float m_frostTimer;
+	bool m_frostOn;   
 	bool m_gameOver;
 
 	// Hammer stuff
 	MoleObject* m_Hammer;
 
+	// --Textures for the hammer
 	unsigned int t_hammerIdle;
 	unsigned int t_hammerHit;
+
+	// --Positions for the hammer
+	std::vector<Vector3> m_hammerPosList;
+	int m_hammerPosIndex;
+	float m_hammerMoveBT;
 
 	// Mole Stuff
 	std::vector<MoleObject *> m_moleListTop;
 	std::vector<MoleObject *> m_moleListBot;
 	std::vector<MoleObject *> m_moleListTotal;
 	float m_popUpTimer; // timer for a random mole to pop up
+	int moleTypeRNG[100];
 
 	// Machine Stuff
 	Vector3 m_frontScale;
 	Vector3 m_midScale;
 	Vector3 m_backScale;
+	Color multiplier;
+
+	// Result Screen Stuff
+	bool m_setOriginValues;
+	bool m_setStatsToDist;
 };
 
 #endif 
