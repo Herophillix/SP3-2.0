@@ -20,6 +20,7 @@ void Results::InitVars()
 {
 	SceneBase::Init();
 	// THE PROPS
+
 	meshList[GEO_RESULTSCREEN_QUAD] = MeshBuilder::GenerateQuad("results", Color(0, 0, 0), 1.f);
 	meshList[GEO_C01_RESULT_QUAD] = MeshBuilder::GenerateQuad("c01result", Color(1, 1, 1), 1.f);
 	//meshList[GEO_C01_RESULT_QUAD]->textureID = LoadTGA("Image//resultTest.tga");
@@ -28,13 +29,23 @@ void Results::InitVars()
 	meshList[GEO_C04_RESULT_QUAD] = MeshBuilder::GenerateQuad("c01result", Color(0.4, 0.4, 0.4), 1.f);
 
 	meshList[GEO_RESULT_PLUS] = MeshBuilder::GenerateQuad("plusButton", Color(0, 0, 1), 1.f);
+	meshList[GEO_RESULT_PLUS]->textureID = LoadTGA("Image//plusButton.tga");
 	meshList[GEO_RESULT_MINUS] = MeshBuilder::GenerateQuad("minusButton", Color(1, 0, 0), 1.f);
+	meshList[GEO_RESULT_MINUS]->textureID = LoadTGA("Image//minusButton.tga");
+
+	meshList[GEO_RESULT_PLUS_HIGHLIGHT] = MeshBuilder::GenerateQuad("plusButton", Color(0, 0, 1), 1.f);
+	meshList[GEO_RESULT_PLUS_HIGHLIGHT]->textureID = LoadTGA("Image//plusButtonHighlight.tga");
+	meshList[GEO_RESULT_MINUS_HIGHLIGHT] = MeshBuilder::GenerateQuad("minusButton", Color(1, 0, 0), 1.f);
+	meshList[GEO_RESULT_MINUS_HIGHLIGHT]->textureID = LoadTGA("Image//minusButtonHighlight.tga");
 	
 	meshList[GEO_RESULT_CONTINUE] = MeshBuilder::GenerateQuad("continuebutton", Color(1, 1, 1), 1.f);
 	meshList[GEO_RESULT_RESET] = MeshBuilder::GenerateQuad("resetbutton", Color(1, 1, 1), 1.f);
 
 	meshList[GEO_GAMEFONT] = MeshBuilder::GenerateText("teko", 16, 16);
 	meshList[GEO_GAMEFONT]->textureID = LoadTGA("Image//KidsZone.tga");
+
+	meshList[GEO_CURSOR] = MeshBuilder::GenerateQuad("cursor", Color(1, 1, 1), 10.f);
+	meshList[GEO_CURSOR]->textureID = LoadTGA("Image//gameCursor.tga");
 
 	// THE VARS
 	m_worldHeight = 100.f;
@@ -98,10 +109,51 @@ void Results::UpdateVars(double dt)
 	float posY = (h - static_cast<float>(y)) / h * m_worldHeight;
 
 	MousePos.Set(posX, posY, 0);
+	UpdateButtonTexture();
+}
+
+void Results::UpdateButtonTexture()
+{
+	for (unsigned int i = 0; i < ButtonList.size(); i++)
+	{
+		if (MousePos.x < ButtonList[i]->pos.x + ButtonList[i]->scale.x / 2
+			&& MousePos.x > ButtonList[i]->pos.x - ButtonList[i]->scale.x / 2 &&
+			MousePos.y < ButtonList[i]->pos.y + ButtonList[i]->scale.y / 2
+			&& MousePos.y > ButtonList[i]->pos.y - ButtonList[i]->scale.y / 2)
+		{
+
+			switch (ButtonList[i]->objType)
+			{
+			case ResultObject::RESULT_TYPE::GO_PLUS:
+				ButtonList[i]->objType = ResultObject::RESULT_TYPE::GO_PLUS_HIGHLIGHT;
+				break;
+			case ResultObject::RESULT_TYPE::GO_MINUS:
+				ButtonList[i]->objType = ResultObject::RESULT_TYPE::GO_MINUS_HIGHLIGHT;
+				break;
+			default:
+				break;
+			}
+		}
+		else
+		{
+			switch (ButtonList[i]->objType)
+			{
+			case ResultObject::RESULT_TYPE::GO_PLUS_HIGHLIGHT:
+				ButtonList[i]->objType = ResultObject::RESULT_TYPE::GO_PLUS;
+				break;
+			case ResultObject::RESULT_TYPE::GO_MINUS_HIGHLIGHT:
+				ButtonList[i]->objType = ResultObject::RESULT_TYPE::GO_MINUS;
+				break;
+			default:
+				break;
+			}
+		}
+	}
+
 }
 
 // MAIN RENDERING FUNCTION
-void Results::RenderResults(int score)
+void Results::RenderResults(int score, char grade)
 {
 	// Projection matrix : Orthographic Projection
 	Mtx44 projection;
@@ -132,8 +184,8 @@ void Results::RenderResults(int score)
 
 	ss.clear();
 	ss.str("");
-	ss << "Score: " << score;
-	RenderTextOnScreen(meshList[GEO_GAMEFONT], ss.str(), Color(1, 1, 1), 2, 5, 45);
+	ss << "Score: " << score << "  Grade: " << grade;
+	RenderTextOnScreen(meshList[GEO_GAMEFONT], ss.str(), Color(1, 1, 1), 2, 1, 45);
 
 	ss.clear();
 	ss.str("");
@@ -179,6 +231,13 @@ void Results::RenderResults(int score)
 	// Render Reset and Continue
 	RenderGO(continueButton);
 	RenderGO(resetButton);
+
+	// Render cursor
+	modelStack.PushMatrix();
+	modelStack.Translate(MousePos);
+	//modelStack.Scale(10, 10, 10);
+	RenderMesh(meshList[GEO_CURSOR], false);
+	modelStack.PopMatrix();
 }
 
 void Results::RenderGO(ResultObject * go)
@@ -197,6 +256,20 @@ void Results::RenderGO(ResultObject * go)
 		modelStack.Translate(go->pos.x, go->pos.y, go->pos.z);
 		modelStack.Scale(go->scale.x, go->scale.y, go->scale.z);
 		RenderMesh(meshList[GEO_RESULT_MINUS], false);
+		modelStack.PopMatrix();
+		break;
+	case ResultObject::GO_PLUS_HIGHLIGHT:
+		modelStack.PushMatrix();
+		modelStack.Translate(go->pos.x, go->pos.y, go->pos.z);
+		modelStack.Scale(go->scale.x, go->scale.y, go->scale.z);
+		RenderMesh(meshList[GEO_RESULT_PLUS_HIGHLIGHT], false);
+		modelStack.PopMatrix();
+		break;
+	case ResultObject::GO_MINUS_HIGHLIGHT:
+		modelStack.PushMatrix();
+		modelStack.Translate(go->pos.x, go->pos.y, go->pos.z);
+		modelStack.Scale(go->scale.x, go->scale.y, go->scale.z);
+		RenderMesh(meshList[GEO_RESULT_MINUS_HIGHLIGHT], false);
 		modelStack.PopMatrix();
 		break;
 	case ResultObject::GO_CONTINUE:
@@ -237,13 +310,13 @@ void Results::InitButtons()
 			temp->pos.Set((r_quad01Pos.x - 3 * m_thirtytwothWorldWidth), (r_quad01Pos.y + m_twelfthWorldHeight), 0.65f);
 			break;
 		case 1:
-			temp->pos.Set((r_quad02Pos.x - m_thirtytwothWorldWidth), (r_quad02Pos.y + m_twelfthWorldHeight), 0.65f);
+			temp->pos.Set((r_quad02Pos.x - 3 * m_thirtytwothWorldWidth), (r_quad02Pos.y + m_twelfthWorldHeight), 0.65f);
 			break;
 		case 2:
 			temp->pos.Set((r_quad03Pos.x - 3 * m_thirtytwothWorldWidth), (r_quad03Pos.y + m_twelfthWorldHeight), 0.65f);
 			break;
 		case 3:
-			temp->pos.Set((r_quad04Pos.x - m_thirtytwothWorldWidth), (r_quad04Pos.y + m_twelfthWorldHeight), 0.65f);
+			temp->pos.Set((r_quad04Pos.x - 3 * m_thirtytwothWorldWidth), (r_quad04Pos.y + m_twelfthWorldHeight), 0.65f);
 			break;
 		default:
 			break;
@@ -264,13 +337,13 @@ void Results::InitButtons()
 			temp->pos.Set((r_quad01Pos.x - m_thirtytwothWorldWidth), (r_quad01Pos.y + m_twelfthWorldHeight), 0.65f);
 			break;
 		case 1:
-			temp->pos.Set((r_quad02Pos.x + m_thirtytwothWorldWidth), (r_quad02Pos.y + m_twelfthWorldHeight), 0.65f);
+			temp->pos.Set((r_quad02Pos.x - m_thirtytwothWorldWidth), (r_quad02Pos.y + m_twelfthWorldHeight), 0.65f);
 			break;
 		case 2:
 			temp->pos.Set((r_quad03Pos.x - m_thirtytwothWorldWidth), (r_quad03Pos.y + m_twelfthWorldHeight), 0.65f);
 			break;
 		case 3:
-			temp->pos.Set((r_quad04Pos.x + m_thirtytwothWorldWidth), (r_quad04Pos.y + m_twelfthWorldHeight), 0.65f);
+			temp->pos.Set((r_quad04Pos.x - m_thirtytwothWorldWidth), (r_quad04Pos.y + m_twelfthWorldHeight), 0.65f);
 			break;
 		default:
 			break;
@@ -291,13 +364,13 @@ void Results::InitButtons()
 			temp->pos.Set((r_quad01Pos.x - 3 * m_thirtytwothWorldWidth), (r_quad01Pos.y - m_twelfthWorldHeight), 0.65f);
 			break;
 		case 1:
-			temp->pos.Set((r_quad02Pos.x - m_thirtytwothWorldWidth), (r_quad02Pos.y - m_twelfthWorldHeight), 0.65f);
+			temp->pos.Set((r_quad02Pos.x - 3 * m_thirtytwothWorldWidth), (r_quad02Pos.y - m_twelfthWorldHeight), 0.65f);
 			break;
 		case 2:
 			temp->pos.Set((r_quad03Pos.x - 3 * m_thirtytwothWorldWidth), (r_quad03Pos.y - m_twelfthWorldHeight), 0.65f);
 			break;
 		case 3:
-			temp->pos.Set((r_quad04Pos.x - m_thirtytwothWorldWidth), (r_quad04Pos.y - m_twelfthWorldHeight), 0.65f);
+			temp->pos.Set((r_quad04Pos.x - 3 * m_thirtytwothWorldWidth), (r_quad04Pos.y - m_twelfthWorldHeight), 0.65f);
 			break;
 		default:
 			break;
@@ -318,13 +391,13 @@ void Results::InitButtons()
 			temp->pos.Set((r_quad01Pos.x - m_thirtytwothWorldWidth), (r_quad01Pos.y - m_twelfthWorldHeight), 0.65f);
 			break;
 		case 1:
-			temp->pos.Set((r_quad02Pos.x + m_thirtytwothWorldWidth), (r_quad02Pos.y - m_twelfthWorldHeight), 0.65f);
+			temp->pos.Set((r_quad02Pos.x - m_thirtytwothWorldWidth), (r_quad02Pos.y - m_twelfthWorldHeight), 0.65f);
 			break;
 		case 2:
 			temp->pos.Set((r_quad03Pos.x - m_thirtytwothWorldWidth), (r_quad03Pos.y - m_twelfthWorldHeight), 0.65f);
 			break;
 		case 3:
-			temp->pos.Set((r_quad04Pos.x + m_thirtytwothWorldWidth), (r_quad04Pos.y - m_twelfthWorldHeight), 0.65f);
+			temp->pos.Set((r_quad04Pos.x - m_thirtytwothWorldWidth), (r_quad04Pos.y - m_twelfthWorldHeight), 0.65f);
 			break;
 		default:
 			break;
@@ -412,7 +485,7 @@ bool Results::ButtonMouseCollision()
 					{
 					case ResultObject::WHICH_STAT::S_MOTIVATION:
 						cout << "Motivation stat, ";
-						if (ButtonList[i]->objType == ResultObject::GO_PLUS)
+						if (ButtonList[i]->objType == ResultObject::GO_PLUS_HIGHLIGHT)
 						{
 							cout << "Plus button";
 							if ((StatManager::GetInstance()->GetChar01().m_motivation + 1) <= 100.f && m_statsToDistribute != 0)
@@ -427,7 +500,7 @@ bool Results::ButtonMouseCollision()
 								// REJECT SFX outside
 							}
 						}
-						else if (ButtonList[i]->objType == ResultObject::GO_MINUS)
+						else if (ButtonList[i]->objType == ResultObject::GO_MINUS_HIGHLIGHT)
 						{
 							cout << "Minus button";
 							if ((StatManager::GetInstance()->GetChar01().m_motivation - 1) >= StatManager::GetInstance()->GetChar01().m_originMotivation)
@@ -444,7 +517,7 @@ bool Results::ButtonMouseCollision()
 						break;
 					case ResultObject::WHICH_STAT::S_FRUSTRATION:
 						cout << "Frustration stat, ";
-						if (ButtonList[i]->objType == ResultObject::GO_PLUS)
+						if (ButtonList[i]->objType == ResultObject::GO_PLUS_HIGHLIGHT)
 						{
 							cout << "Plus button";
 							if ((StatManager::GetInstance()->GetChar01().m_frustration + 1) <= StatManager::GetInstance()->GetChar01().m_originFrustration)
@@ -458,7 +531,7 @@ bool Results::ButtonMouseCollision()
 								return false;
 							}
 						}
-						else if (ButtonList[i]->objType == ResultObject::GO_MINUS)
+						else if (ButtonList[i]->objType == ResultObject::GO_MINUS_HIGHLIGHT)
 						{
 							cout << "Minus button";
 							if ((StatManager::GetInstance()->GetChar01().m_frustration - 1) >= 0.f && m_statsToDistribute != 0)
@@ -483,7 +556,7 @@ bool Results::ButtonMouseCollision()
 					{
 					case ResultObject::WHICH_STAT::S_MOTIVATION:
 						cout << "Motivation stat, ";
-						if (ButtonList[i]->objType == ResultObject::GO_PLUS)
+						if (ButtonList[i]->objType == ResultObject::GO_PLUS_HIGHLIGHT)
 						{
 							cout << "Plus button";
 							if ((StatManager::GetInstance()->GetChar02().m_motivation + 1) <= 100.f && m_statsToDistribute != 0)
@@ -497,7 +570,7 @@ bool Results::ButtonMouseCollision()
 								return false;
 							}
 						}
-						else if (ButtonList[i]->objType == ResultObject::GO_MINUS)
+						else if (ButtonList[i]->objType == ResultObject::GO_MINUS_HIGHLIGHT)
 						{
 							cout << "Minus button";
 							if ((StatManager::GetInstance()->GetChar02().m_motivation - 1) >= StatManager::GetInstance()->GetChar02().m_originMotivation)
@@ -514,7 +587,7 @@ bool Results::ButtonMouseCollision()
 						break;
 					case ResultObject::WHICH_STAT::S_FRUSTRATION:
 						cout << "Frustration stat, ";
-						if (ButtonList[i]->objType == ResultObject::GO_PLUS)
+						if (ButtonList[i]->objType == ResultObject::GO_PLUS_HIGHLIGHT)
 						{
 							cout << "Plus button";
 							if ((StatManager::GetInstance()->GetChar02().m_frustration + 1) <= StatManager::GetInstance()->GetChar02().m_originFrustration)
@@ -528,7 +601,7 @@ bool Results::ButtonMouseCollision()
 								return false;
 							}
 						}
-						else if (ButtonList[i]->objType == ResultObject::GO_MINUS)
+						else if (ButtonList[i]->objType == ResultObject::GO_MINUS_HIGHLIGHT)
 						{
 							cout << "Minus button";
 							if ((StatManager::GetInstance()->GetChar02().m_frustration - 1) >= 0.f && m_statsToDistribute != 0)
@@ -553,7 +626,7 @@ bool Results::ButtonMouseCollision()
 					{
 					case ResultObject::WHICH_STAT::S_MOTIVATION:
 						cout << "Motivation stat, ";
-						if (ButtonList[i]->objType == ResultObject::GO_PLUS)
+						if (ButtonList[i]->objType == ResultObject::GO_PLUS_HIGHLIGHT)
 						{
 							cout << "Plus button";
 							if ((StatManager::GetInstance()->GetChar03().m_motivation + 1) <= 100.f && m_statsToDistribute != 0)
@@ -567,7 +640,7 @@ bool Results::ButtonMouseCollision()
 								return false;
 							}
 						}
-						else if (ButtonList[i]->objType == ResultObject::GO_MINUS)
+						else if (ButtonList[i]->objType == ResultObject::GO_MINUS_HIGHLIGHT)
 						{
 							cout << "Minus button";
 							if ((StatManager::GetInstance()->GetChar03().m_motivation - 1) >= StatManager::GetInstance()->GetChar03().m_originMotivation)
@@ -584,7 +657,7 @@ bool Results::ButtonMouseCollision()
 						break;
 					case ResultObject::WHICH_STAT::S_FRUSTRATION:
 						cout << "Frustration stat, ";
-						if (ButtonList[i]->objType == ResultObject::GO_PLUS)
+						if (ButtonList[i]->objType == ResultObject::GO_PLUS_HIGHLIGHT)
 						{
 							cout << "Plus button";
 							if ((StatManager::GetInstance()->GetChar03().m_frustration + 1) <= StatManager::GetInstance()->GetChar03().m_originFrustration)
@@ -594,7 +667,7 @@ bool Results::ButtonMouseCollision()
 								return true;
 							}
 						}
-						else if (ButtonList[i]->objType == ResultObject::GO_MINUS)
+						else if (ButtonList[i]->objType == ResultObject::GO_MINUS_HIGHLIGHT)
 						{
 							cout << "Minus button";
 							if ((StatManager::GetInstance()->GetChar03().m_frustration - 1) >= 0.f && m_statsToDistribute != 0)
@@ -619,7 +692,7 @@ bool Results::ButtonMouseCollision()
 					{
 					case ResultObject::WHICH_STAT::S_MOTIVATION:
 						cout << "Motivation stat, ";
-						if (ButtonList[i]->objType == ResultObject::GO_PLUS)
+						if (ButtonList[i]->objType == ResultObject::GO_PLUS_HIGHLIGHT)
 						{
 							cout << "Plus button";
 							if ((StatManager::GetInstance()->GetChar04().m_motivation + 1) <= 100.f && m_statsToDistribute != 0)
@@ -633,7 +706,7 @@ bool Results::ButtonMouseCollision()
 								return false;
 							}
 						}
-						else if (ButtonList[i]->objType == ResultObject::GO_MINUS)
+						else if (ButtonList[i]->objType == ResultObject::GO_MINUS_HIGHLIGHT)
 						{
 							cout << "Minus button";
 							if ((StatManager::GetInstance()->GetChar04().m_motivation - 1) >= StatManager::GetInstance()->GetChar04().m_originMotivation)
@@ -650,7 +723,7 @@ bool Results::ButtonMouseCollision()
 						break;
 					case ResultObject::WHICH_STAT::S_FRUSTRATION:
 						cout << "Frustration stat, ";
-						if (ButtonList[i]->objType == ResultObject::GO_PLUS)
+						if (ButtonList[i]->objType == ResultObject::GO_PLUS_HIGHLIGHT)
 						{
 							cout << "Plus button";
 							if ((StatManager::GetInstance()->GetChar04().m_frustration + 1) <= StatManager::GetInstance()->GetChar04().m_originFrustration)
@@ -664,7 +737,7 @@ bool Results::ButtonMouseCollision()
 								return false;
 							}
 						}
-						else if (ButtonList[i]->objType == ResultObject::GO_MINUS)
+						else if (ButtonList[i]->objType == ResultObject::GO_MINUS_HIGHLIGHT)
 						{
 							cout << "Minus button ";
 							if ((StatManager::GetInstance()->GetChar04().m_frustration - 1) >= 0.f && m_statsToDistribute != 0)
@@ -726,7 +799,7 @@ void Results::RenderStats()
 	s2 << "Motivation";
 	modelStack.PushMatrix();
 	modelStack.Translate((r_quad01Pos.x + m_thirtytwothWorldWidth), (r_quad01Pos.y + m_twelfthWorldHeight + m_twentyfourthWorldHeight), 0.65f);
-	modelStack.Scale(4.f, 4.f, 1);
+	modelStack.Scale(3.5f, 3.5f, 1);
 	RenderText(meshList[GEO_GAMEFONT], s2.str(), Color(0, 0, 1));
 	modelStack.PopMatrix();
 
@@ -746,7 +819,7 @@ void Results::RenderStats()
 	s2 << "Frustration";
 	modelStack.PushMatrix();
 	modelStack.Translate((r_quad01Pos.x + m_thirtytwothWorldWidth), (r_quad01Pos.y - m_twentyfourthWorldHeight), 0.65f);
-	modelStack.Scale(4.f, 4.f, 1);
+	modelStack.Scale(3.5f, 3.5f, 1);
 	RenderText(meshList[GEO_GAMEFONT], s2.str(), Color(0, 0, 1));
 	modelStack.PopMatrix();
 
@@ -767,7 +840,7 @@ void Results::RenderStats()
 
 	modelStack.PushMatrix();
 	modelStack.Translate((r_quad02Pos.x + m_thirtytwothWorldWidth), (r_quad02Pos.y + m_twelfthWorldHeight + m_twentyfourthWorldHeight), 0.65f);
-	modelStack.Scale(4.f, 4.f, 1);
+	modelStack.Scale(3.5f, 3.5f, 1);
 	RenderText(meshList[GEO_GAMEFONT], s2.str(), Color(0, 0, 1));
 	modelStack.PopMatrix();
 
@@ -786,7 +859,7 @@ void Results::RenderStats()
 	s2 << "Frustration";
 	modelStack.PushMatrix();
 	modelStack.Translate((r_quad02Pos.x + m_thirtytwothWorldWidth), (r_quad02Pos.y - m_twentyfourthWorldHeight), 0.65f);
-	modelStack.Scale(4.f, 4.f, 1);
+	modelStack.Scale(3.5f, 3.5f, 1);
 	RenderText(meshList[GEO_GAMEFONT], s2.str(), Color(0, 0, 1));
 	modelStack.PopMatrix();
 
@@ -807,7 +880,7 @@ void Results::RenderStats()
 
 	modelStack.PushMatrix();
 	modelStack.Translate((r_quad03Pos.x + m_thirtytwothWorldWidth), (r_quad03Pos.y + m_twelfthWorldHeight + m_twentyfourthWorldHeight), 0.65f);
-	modelStack.Scale(4.f, 4.f, 1);
+	modelStack.Scale(3.5f, 3.5f, 1);
 	RenderText(meshList[GEO_GAMEFONT], s2.str(), Color(0, 0, 1));
 	modelStack.PopMatrix();
 
@@ -826,7 +899,7 @@ void Results::RenderStats()
 	s2 << "Frustration";
 	modelStack.PushMatrix();
 	modelStack.Translate((r_quad03Pos.x + m_thirtytwothWorldWidth), (r_quad03Pos.y - m_twentyfourthWorldHeight), 0.65f);
-	modelStack.Scale(4.f, 4.f, 1);
+	modelStack.Scale(3.5f, 3.5f, 1);
 	RenderText(meshList[GEO_GAMEFONT], s2.str(), Color(0, 0, 1));
 	modelStack.PopMatrix();
 
@@ -847,7 +920,7 @@ void Results::RenderStats()
 
 	modelStack.PushMatrix();
 	modelStack.Translate((r_quad04Pos.x + m_thirtytwothWorldWidth), (r_quad04Pos.y + m_twelfthWorldHeight + m_twentyfourthWorldHeight), 0.65f);
-	modelStack.Scale(4.f, 4.f, 1);
+	modelStack.Scale(3.5f, 3.5f, 1);
 	RenderText(meshList[GEO_GAMEFONT], s2.str(), Color(0, 0, 1));
 	modelStack.PopMatrix();
 
@@ -866,7 +939,7 @@ void Results::RenderStats()
 	s2 << "Frustration";
 	modelStack.PushMatrix();
 	modelStack.Translate((r_quad04Pos.x + m_thirtytwothWorldWidth), (r_quad04Pos.y - m_twentyfourthWorldHeight), 0.65f);
-	modelStack.Scale(4.f, 4.f, 1);
+	modelStack.Scale(3.5f, 3.5f, 1);
 	RenderText(meshList[GEO_GAMEFONT], s2.str(), Color(0, 0, 1));
 	modelStack.PopMatrix();
 

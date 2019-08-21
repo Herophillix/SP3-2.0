@@ -29,6 +29,7 @@ public:
 	// Game Functions
 	void RenderMachine(); // the machine and the moles
 	void RenderUI();
+	void GameEndCalculations();
 	//void RenderResults();
 
 	// Mole Functions
@@ -66,6 +67,7 @@ private:
 	float m_frostTimer;
 	bool m_frostOn;   
 	bool m_gameOver;
+	char m_grade;
 
 	// Hammer stuff
 	MoleObject* m_Hammer;

@@ -32,9 +32,10 @@ public:
 	void InitButtons();
 	void InitStatsToDist(int stats);
 	void UpdateVars(double dt);
+	void UpdateButtonTexture();
 	void RenderStats();
 	void RenderButtons();
-	void RenderResults(int score);
+	void RenderResults(int score, char grade);
 	void RenderGO(ResultObject* go);
 	bool ButtonMouseCollision();
 

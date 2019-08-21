@@ -127,7 +127,7 @@ void SceneMole::Init()
 
 	// 2 == normal mole // 3 == bronze mole // 4 == silver mole // 5 == gold mole // 6 == bomb mole // 7 == frost mole
 	int randIndex = 0; 
-	for (int i = 0; i < 70; i++)
+	for (int i = 0; i < 60; i++)
 	{
 		randIndex = Math::RandIntMinMax(0, 99);
 		if (moleTypeRNG[randIndex] == 0)
@@ -135,7 +135,7 @@ void SceneMole::Init()
 			moleTypeRNG[randIndex] = 2;
 		}
 	}
-	for (int i = 0; i < 15; i++)
+	for (int i = 0; i < 20; i++)
 	{
 		randIndex = Math::RandIntMinMax(0, 99);
 		if (moleTypeRNG[randIndex] == 0)
@@ -143,7 +143,7 @@ void SceneMole::Init()
 			moleTypeRNG[randIndex] = 3;
 		}
 	}
-	for (int i = 0; i < 5; i++)
+	for (int i = 0; i < 10; i++)
 	{
 		randIndex = Math::RandIntMinMax(0, 99);
 		if (moleTypeRNG[randIndex] == 0)
@@ -215,18 +215,16 @@ void SceneMole::Update(double dt)
 	if (m_gameOver)
 	{
 		Results::getInstance()->UpdateVars(dt);
-	}
-	if (m_gameOver && !m_setStatsToDist)
-	{
-		Results::getInstance()->InitStatsToDist(10);
-		m_setStatsToDist = true;
-	}
-	if (m_gameOver && !m_setOriginValues)
-	{
-		StatManager::GetInstance()->SetCharsOriginalValues();
-		m_setOriginValues = true;
 
+		if (!m_setOriginValues && !m_setStatsToDist)
+		{
+			GameEndCalculations();
+			StatManager::GetInstance()->SetCharsOriginalValues();
+			m_setStatsToDist = true;
+			m_setOriginValues = true;
+		}
 	}
+
 	// GAME TIMER
 	if (!m_gameOver)
 		m_gameTimer -= dt;
@@ -507,7 +505,7 @@ void SceneMole::Render()
 	}
 	if (m_gameOver)
 	{
-		Results::getInstance()->RenderResults(m_score);
+		Results::getInstance()->RenderResults(m_score, m_grade);
 		//RenderResults();
 	}
 
@@ -681,8 +679,11 @@ void SceneMole::UpdateMoles(double dt)
 				break;
 			}
 		}
+		if (m_gameTimer > 45.f)
+			m_popUpTimer = Math::RandFloatMinMax(0.5f, 1.f);
+		else
+			m_popUpTimer = Math::RandFloatMinMax(0.3f, 0.6f);
 
-		m_popUpTimer = Math::RandFloatMinMax(0.5f, 1.5f);
 	}
 
 	// Check their lifetime
@@ -691,11 +692,14 @@ void SceneMole::UpdateMoles(double dt)
 		if (m_moleListTotal[i]->active)
 		{
 			m_moleListTotal[i]->mole_lifeTime -= dt;
-			if (m_moleListTotal[i]->mole_lifeTime <= 0.f)
+			if (m_moleListTotal[i]->mole_lifeTime <= 0.f) // When fail to hit in time
 			{
 				m_moleListTotal[i]->active = false;
 				m_moleListTotal[i]->mole_hit = true;
-				if (m_moleListTotal[i]->type != MoleObject::GO_MOLE_BOMB && m_moleListTotal[i]->type != MoleObject::GO_MOLE_FROST)
+				if (m_moleListTotal[i]->type == MoleObject::GO_MOLE ||
+					m_moleListTotal[i]->type == MoleObject::GO_MOLE_BRONZE || 
+					m_moleListTotal[i]->type == MoleObject::GO_MOLE_SILVER || 
+					m_moleListTotal[i]->type == MoleObject::GO_MOLE_GOLD)
 				{
 					m_hitCounter = 0;
 				}
@@ -798,6 +802,57 @@ void SceneMole::RenderUI()
 	modelStack.Scale(10, 10, 10);
 	RenderText(meshList[GEO_GAMEFONT], ss.str(), Color(1, 1, 1));
 	modelStack.PopMatrix();
+
+}
+
+void SceneMole::GameEndCalculations() // Setting the stats and other stuff
+{
+	if (m_score >= 200000)
+	{
+		m_grade = 'S';
+		StatManager::GetInstance()->UpdateChar01F(-20);
+		StatManager::GetInstance()->UpdateChar01M(20);
+		StatManager::GetInstance()->UpdateChar02F(-20);
+		StatManager::GetInstance()->UpdateChar02M(20);
+		StatManager::GetInstance()->UpdateChar03F(-20);
+		StatManager::GetInstance()->UpdateChar03M(20);
+		StatManager::GetInstance()->UpdateChar04F(-20);
+		StatManager::GetInstance()->UpdateChar04M(20);
+		Results::getInstance()->InitStatsToDist(35);
+	}
+	else if (m_score >= 100000 && m_score < 200000)
+	{
+		m_grade = 'A';
+		Results::getInstance()->InitStatsToDist(25);
+
+	}
+	else if (m_score >= 80000 && m_score < 100000)
+	{
+		m_grade = 'B';
+		Results::getInstance()->InitStatsToDist(20);
+	}
+	else if (m_score >= 50000 && m_score < 80000)
+	{
+		m_grade = 'C';
+		Results::getInstance()->InitStatsToDist(15);
+	}
+	else if (m_score >= 20000 && m_score < 50000)
+	{
+		m_grade = 'D';
+		Results::getInstance()->InitStatsToDist(10);
+	}
+	else
+	{
+		m_grade = 'F';
+		StatManager::GetInstance()->UpdateChar01F(10);
+		StatManager::GetInstance()->UpdateChar01M(-10);
+		StatManager::GetInstance()->UpdateChar02F(10);
+		StatManager::GetInstance()->UpdateChar02M(-10);
+		StatManager::GetInstance()->UpdateChar03F(10);
+		StatManager::GetInstance()->UpdateChar03M(-10);
+		StatManager::GetInstance()->UpdateChar04F(10);
+		StatManager::GetInstance()->UpdateChar04M(-10);
+	}
 
 }
 
@@ -928,13 +983,13 @@ bool SceneMole::HammerCollisionCheck()
 						addToScore = m_moleListTotal[i]->mole_lifeTime * 100 * m_multiplier;
 						break;
 					case MoleObject::GO_MOLE_BRONZE:
-						addToScore += m_moleListTotal[i]->mole_lifeTime * 100 * m_multiplier * 1.3;
-						break;
-					case MoleObject::GO_MOLE_SILVER:
 						addToScore += m_moleListTotal[i]->mole_lifeTime * 100 * m_multiplier * 1.5;
 						break;
-					case MoleObject::GO_MOLE_GOLD:
+					case MoleObject::GO_MOLE_SILVER:
 						addToScore += m_moleListTotal[i]->mole_lifeTime * 100 * m_multiplier * 2.f;
+						break;
+					case MoleObject::GO_MOLE_GOLD:
+						addToScore += m_moleListTotal[i]->mole_lifeTime * 100 * m_multiplier * 5.f;
 						break;
 					case MoleObject::GO_MOLE_BOMB:
 						m_score /= 2;
