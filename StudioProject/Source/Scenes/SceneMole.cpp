@@ -80,6 +80,9 @@ void SceneMole::Init()
 	meshList[GEO_MOLE_INSTRUCT] = MeshBuilder::GenerateQuad("instructions_mole", Color(1, 1, 1), 1.f);
 	meshList[GEO_MOLE_INSTRUCT]->textureID = LoadTGA("Image//Mole_Instructions.tga");
 
+	meshList[GEO_MOLE_SMOKE_PARTICLE] = MeshBuilder::GenerateQuad("smoke", Color(1,1,1), 1.f);
+	meshList[GEO_MOLE_SMOKE_PARTICLE]->textureID = LoadTGA("Image//Mole_smoke.tga");
+
 	//  ******************************* SPRITE ANIMATIONS HERE  ******************************* //
 
 	//  ******************************* PARTICLES HERE  ******************************* //
@@ -200,6 +203,9 @@ void SceneMole::Init()
 
 	multiplier.Set(1, 1, 1);
 
+	m_particleCount = 0;
+	MAX_PARTICLE = 1000;
+
 	// ******************************* INIT HAMMER THINGS HERE ******************************* //
 	m_Hammer = FetchGO();
 	m_Hammer->type = MoleObject::GO_HAMMER;
@@ -287,7 +293,7 @@ void SceneMole::Update(double dt)
 
 
 	// ****************************** MOVEMENT CONTROLS ****************************** //
-	if (!m_instructions)
+	if (!m_instructions & !m_gameOver)
 	{
 		m_hammerMoveBT -= dt;
 		if (Application::IsKeyPressed('W') && m_hammerMoveBT <= 0.f)
@@ -416,16 +422,16 @@ Particles* SceneMole::getParticle()
 
 void SceneMole::UpdateParticles(double dt)
 {
-	if (m_particleCount < MAX_PARTICLE)
-	{
-		Particles* particle = getParticle();
-		particle->type = ParticleObject_TYPE::P_ParticleTest;
-		particle->scale.Set(2, 2, 2);
-		particle->vel.Set(Math::RandFloatMinMax(0, 0.2f), Math::RandFloatMinMax(0, 0.2f), 0.0f);
-		//particle->rotationSpeed = Math::RandFloatMinMax(20.f, 40.f);
-		particle->pos.Set(Math::RandFloatMinMax(0, m_worldWidth), 0, 0);
-		particle->lifeTime = 4.4f;
-	}
+	//if (m_particleCount < MAX_PARTICLE)
+	//{
+	//	Particles* particle = getParticle();
+	//	particle->type = ParticleObject_TYPE::P_ParticleTest;
+	//	particle->scale.Set(2, 2, 2);
+	//	particle->vel.Set(Math::RandFloatMinMax(0, 0.2f), Math::RandFloatMinMax(0, 0.2f), 0.0f);
+	//	//particle->rotationSpeed = Math::RandFloatMinMax(20.f, 40.f);
+	//	particle->pos.Set(Math::RandFloatMinMax(0, m_worldWidth), 0, 0);
+	//	particle->lifeTime = 4.4f;
+	//}
 	for (std::vector<Particles *>::iterator it = m_particleList.begin(); it != m_particleList.end(); ++it)
 	{
 		Particles *particle = (Particles *)*it;
@@ -434,6 +440,14 @@ void SceneMole::UpdateParticles(double dt)
 			if (particle->type == ParticleObject_TYPE::P_ParticleTest)
 			{
 				particle->vel += Vector3(0, -m_Gravity.y, 0)* (float)dt;
+				particle->pos += particle->vel * (float)dt;
+				particle->rotation += particle->rotationSpeed * (float)dt;
+				particle->lifeTime -= dt;
+			}
+			if (particle->type == ParticleObject_TYPE::P_MOLE_SMOKE)
+			{
+				particle->vel *= 0.99f;
+				particle->scale *= 0.99f;
 				particle->pos += particle->vel * (float)dt;
 				particle->rotation += particle->rotationSpeed * (float)dt;
 				particle->lifeTime -= dt;
@@ -462,6 +476,14 @@ void SceneMole::RenderParticles(Particles *particle)
 		modelStack.Rotate(particle->rotation, 0, 0, 1);
 		modelStack.Scale(particle->scale.x, particle->scale.y, particle->scale.z);
 		RenderMesh(meshList[GEO_PARTICLE_TEST], false);
+		modelStack.PopMatrix();
+		break;
+	case ParticleObject_TYPE::P_MOLE_SMOKE:
+		modelStack.PushMatrix();
+		modelStack.Translate(particle->pos.x, particle->pos.y, particle->pos.z);
+		modelStack.Rotate(particle->rotation, 0, 0, 1);
+		modelStack.Scale(particle->scale.x, particle->scale.y, particle->scale.z);
+		RenderMesh(meshList[GEO_MOLE_SMOKE_PARTICLE], false);
 		modelStack.PopMatrix();
 		break;
 	default:
@@ -538,8 +560,15 @@ void SceneMole::Render()
 	if (!m_gameOver && !m_instructions)
 	{
 		RenderMachine();
-		RenderGO(m_Hammer);
 		RenderUI();
+		for (unsigned int i = 0; i < m_particleList.size(); i++)
+		{
+			if (m_particleList[i]->active)
+			{
+				RenderParticles(m_particleList[i]);
+			}
+		}
+		RenderGO(m_Hammer);
 	}
 	if (m_gameOver)
 	{
@@ -818,7 +847,7 @@ void SceneMole::RenderUI()
 
 	ss.clear();
 	ss.str("");
-	ss.precision(3);
+	ss.precision(2);
 	ss << "Time Left: " << m_gameTimer;
 	RenderTextOnScreen(meshList[GEO_GAMEFONT], ss.str(), Color(1, 1, 1), 3, 18, 2);
 
@@ -1068,6 +1097,22 @@ bool SceneMole::HammerCollisionCheck()
 						m_score += addToScore;
 					}
 					cout << addToScore << endl;
+					for (int i = 0; i < 50; i++)
+					{
+						if (m_particleCount < MAX_PARTICLE)
+						{
+							Particles* temp = getParticle();
+							temp->type = ParticleObject_TYPE::P_MOLE_SMOKE;
+							temp->pos = m_Hammer->pos;
+							temp->pos.y -= 5.f;
+							temp->lifeTime = 1.f;
+							temp->scale.Set(3, 3, 3);
+							temp->rotation = Math::RandFloatMinMax(45.f, 135.f);
+							temp->rotationSpeed = Math::RandFloatMinMax(110.f, 220.f);
+							temp->vel.Set(Math::RandFloatMinMax(-15.f, 15.f), Math::RandFloatMinMax(-15.f, 15.f), 0);
+							temp->active = true;
+						}
+					}
 					//m_moleListTotal[i]->mole_lifeTime = 0.f;
 					return true;
 				}
