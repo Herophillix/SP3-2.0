@@ -48,11 +48,11 @@ void SceneFrog::Init()
 	meshList[GEO_FROG_BORDER] = MeshBuilder::GenerateQuad("border", Color(0, 1, 1), 1.f);
 	//meshList[GEO_FROG_PLATFORM]->textureID = LoadTGA("Image//BGTest.tga");
 	meshList[GEO_FROG_ROCK] = MeshBuilder::GenerateQuad("rock", Color(1, 1, 1), 2.f);
-	meshList[GEO_FROG_ROCK]->textureID = LoadTGA("Image//rock.tga");
-	meshList[GEO_COIN] = MeshBuilder::GenerateCircle("coin", Color(1, 1, 1), 2.f);
-	meshList[GEO_COIN]->textureID = LoadTGA("Image//coin.tga");
+	meshList[GEO_FROG_ROCK]->textureID = LoadTGA("Image//Frog_Rock.tga");
+	meshList[GEO_COIN] = MeshBuilder::GenerateQuad("coin", Color(1, 1, 1), 2.f);
+	meshList[GEO_COIN]->textureID = LoadTGA("Image//Frog_Coin.tga");
 	meshList[GEO_TEXT] = MeshBuilder::GenerateText("text", 16, 16);
-	meshList[GEO_TEXT]->textureID = LoadTGA("Image//calibri.tga");
+	meshList[GEO_TEXT]->textureID = LoadTGA("Image//KidsZone.tga");
 
 	//meshList[GEO_GAMEFONT] = MeshBuilder::GenerateText("kzone", 16, 16);
 	//meshList[GEO_GAMEFONT]->textureID = LoadTGA("Image//KidsZone.tga");
@@ -571,10 +571,10 @@ void SceneFrog::Render()
 	ss5 << "Time left: " << timer;
 	RenderTextOnScreen(meshList[GEO_TEXT], ss5.str(), Color(0, 1, 0), 3, 0, 12);
 
-	//std::ostringstream ss6;
-	//ss6.precision(2);
-	//ss6 << "Coins left: " << Frog->getCoin();
-	//RenderTextOnScreen(meshList[GEO_TEXT], ss6.str(), Color(0, 1, 0), 3, 0, 15);
+	std::ostringstream ss6;
+	ss6.precision(2);
+	ss6 << "Coins left: " << Frog->getCoin();
+	RenderTextOnScreen(meshList[GEO_TEXT], ss6.str(), Color(0, 1, 0), 3, 0, 15);
 
 	if (m_GameOver)
 	{
