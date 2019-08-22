@@ -92,13 +92,19 @@
       <Filter>Scenes</Filter>
     </ClCompile>
     <ClCompile Include="Source\Scenes\StatManager.cpp">
-      <Filter>Stats</Filter>
+      <Filter>Source\Stats</Filter>
     </ClCompile>
     <ClCompile Include="Source\Scenes\MenuObject.cpp">
       <Filter>GameObjects</Filter>
     </ClCompile>
     <ClCompile Include="Source\SoundEngine.cpp">
       <Filter>SoundEngine</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Scenes\SceneMainMenu.cpp">
+      <Filter>Scenes</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Scenes\MainMenuObject.cpp">
+      <Filter>GameObjects</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -202,13 +208,16 @@
       <Filter>GameObjects\Header</Filter>
     </ClInclude>
     <ClInclude Include="Source\Scenes\StatManager.h">
-      <Filter>Stats</Filter>
+      <Filter>Source\Stats</Filter>
     </ClInclude>
     <ClInclude Include="Source\Scenes\MenuObject.h">
       <Filter>GameObjects\Header</Filter>
     </ClInclude>
     <ClInclude Include="Source\SoundEngine.h">
       <Filter>SoundEngine</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Scenes\SceneMainMenu.h">
+      <Filter>Scenes\Header</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -253,11 +262,11 @@
     <Filter Include="GameObjects\Header">
       <UniqueIdentifier>{d1cd6f44-2990-4baf-82ab-c106ff7c62f3}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Stats">
-      <UniqueIdentifier>{57202da5-80c6-449d-8b71-4f43e9e935e2}</UniqueIdentifier>
-    </Filter>
     <Filter Include="SoundEngine">
       <UniqueIdentifier>{f58d1919-c600-4313-8f22-f4ed3683f2c3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Stats">
+      <UniqueIdentifier>{57202da5-80c6-449d-8b71-4f43e9e935e2}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

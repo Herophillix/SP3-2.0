@@ -68,6 +68,7 @@ private:
 	float m_frostTimer;
 	bool m_frostOn;   
 	bool m_gameOver;
+	bool m_instructions;
 	char m_grade;
 
 	// Hammer stuff
