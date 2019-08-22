@@ -19,7 +19,8 @@ public:
 	void DeactivateTank();
 
 	static const int MaxTank = 8;
-	static int TankCount;
+	static int PlayerTankCount;
+	static int EnemyTankCount;
 	static int TankIndex;
 	static TankObject* currentTank;
 	static TankObject* previousTank;

@@ -156,7 +156,7 @@ void Results::UpdateButtonTexture()
 void Results::RenderResults(int score, char grade)
 {
 	// Projection matrix : Orthographic Projection
-	Mtx44 projection;
+  	Mtx44 projection;
 	projection.SetToOrtho(0, m_worldWidth, 0, m_worldHeight, -10, 10);
 	projectionStack.LoadMatrix(projection);
 
@@ -763,6 +763,7 @@ bool Results::ButtonMouseCollision()
 						if (m_statsToDistribute == 0)
 						{
 							//switch scene
+							Application::setScene(0);
 							cout << "next scene" << endl;
 							return true;
 						}

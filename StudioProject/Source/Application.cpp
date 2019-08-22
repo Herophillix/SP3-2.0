@@ -17,7 +17,7 @@
 #include "../Source/Scenes/SceneFrog.h"
 #include "../Source/Scenes/SceneTank.h"
 #include "../Source/Scenes/Results.h"
-#include "../SheepGame.h"
+#include "../Source/Scenes/SheepGame.h"
 GLFWwindow* m_window;
 const unsigned char FPS = 60; // FPS of this game
 const unsigned int frameTime = 1000 / FPS; // time for each frame
@@ -69,7 +69,7 @@ int Application::GetWindowHeight()
 
 Application::Application()
 {
-	currentScene = SCENEFROG;
+	currentScene = SCENEMAIN;
 }
 
 Application::~Application()
@@ -98,8 +98,10 @@ void Application::Init()
 	// glfwGetPrimaryMonitor()
 	m_width = 1920;
 	m_height = 1080;
-	m_window = glfwCreateWindow(m_width, m_height, "Studio Project 3", NULL, NULL);
-	//glfwGetPrimaryMonitor()	
+	//m_window = glfwCreateWindow(m_width, m_height, "Studio Project 3", glfwGetPrimaryMonitor(), NULL);
+	//glfwGetPrimaryMonitor()
+	m_window = glfwCreateWindow(m_width, m_height, "Studio Project 3", glfwGetPrimaryMonitor(), NULL);
+	//m_window = glfwCreateWindow(m_width, m_height, "Studio Project 3", NULL, NULL);
 	//If the window couldn't be created
 	if (!m_window)
 	{

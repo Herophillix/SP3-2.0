@@ -97,7 +97,7 @@ void SceneFrog::Init()
 		FrogObject* coin = new FrogObject(FrogObject::GO_COIN);
 		rock_List.push_back(coin);
 	}
-	
+
 
 	m_setOriginValues = false;
 	m_setStatsToDist = false;
@@ -188,7 +188,7 @@ void SceneFrog::UpdateRock(double dt)
 	}
 }
 
-bool SceneFrog::CheckCollision(FrogObject* go, FrogObject* go2) 
+bool SceneFrog::CheckCollision(FrogObject* go, FrogObject* go2)
 {
 	switch (go2->type)
 	{

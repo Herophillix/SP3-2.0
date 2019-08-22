@@ -1,8 +1,10 @@
 #include "TankObject.h"
+#include "SceneTank.h"
 
 TankObject* TankObject::currentTank = nullptr;
 TankObject* TankObject::previousTank = nullptr;
-int TankObject::TankCount = 0;
+int TankObject::PlayerTankCount = 0;
+int TankObject::EnemyTankCount = 0;
 int TankObject::TankIndex = 0;
 
 TankObject::TankObject(PHYSICSOBJECT_TYPE typeValue)
@@ -12,7 +14,6 @@ TankObject::TankObject(PHYSICSOBJECT_TYPE typeValue)
 	LeftBorder = nullptr;
 	Head = nullptr;
 	type = typeValue;
-	++TankCount;
 	health = 2;
 	isPlayer = false;
 	radius = 0;
@@ -77,6 +78,20 @@ void TankObject::DeactivateTank()
 	RightBorder->active = false;
 	Head->active = false;
 	Ball = nullptr; 
+	if (isPlayer)
+	{
+		--PlayerTankCount;
+		SceneTank::score -= 500;
+		if (SceneTank::score < 0)
+		{
+			SceneTank::score = 0;
+		}
+	}
+	else
+	{
+		--EnemyTankCount;
+		SceneTank::score += 1000;
+	}
 	//--TankCount;
 }
 
@@ -87,9 +102,6 @@ void TankObject::CollisionResponse(PhysicsObject* go, double dt)
 	if (go->vel.Length() > 0)
 	{
 		go->vel = Math::Clamp(go->vel.Length(), 0.f, 75.f) * go->vel.Normalized();
-	}
-	if (this != currentTank)
-	{
 	}
 }
 
