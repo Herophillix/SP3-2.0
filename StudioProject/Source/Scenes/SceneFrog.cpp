@@ -82,6 +82,8 @@ void SceneFrog::Init()
 
 	score = 0;
 
+
+
 	hp = Frog->getHP();
 	cout << m_worldHeight << " , " << m_worldWidth << endl;
 	max_rock = 10;
@@ -114,7 +116,6 @@ FrogObject* SceneFrog::getRock()
 			if (!Rock->active)
 			{
 				Rock->active = true;
-				m_coinCount++;
 				return Rock;
 			}
 		}
@@ -123,7 +124,6 @@ FrogObject* SceneFrog::getRock()
 			if (!Rock->active)
 			{
 				Rock->active = true;
-				m_rockCount++;
 				return Rock;
 			}
 		}
@@ -138,8 +138,6 @@ FrogObject* SceneFrog::getRock()
 		FrogObject *coin = new FrogObject(FrogObject::GO_COIN);
 		rock_List.push_back(coin);
 	}
-	m_rockCount++;
-	m_coinCount++;
 	rock_List[rock_List.size() - 1]->active = true;
 	return rock_List[rock_List.size() - 1];
 }
@@ -156,14 +154,16 @@ void SceneFrog::UpdateRock(double dt)
 		m_grav.Set(0, -sc * 2, 0);
 		rock->scale.Set(sc, sc, sc);
 		rock->pos.Set(Math::RandFloatMinMax((m_worldWidth / 2) - 50,(m_worldWidth / 2) + 50), m_worldHeight, 0);
+		m_rockCount++;
 	}
 	if (m_coinCount < max_coin)
 	{
 		FrogObject* coin = getRock();
 		coin->type = FrogObject::GO_COIN;
 		coin->scale.Set(3, 3, 1);
-		coin->pos.Set(Math::RandIntMinMax(14 , 23) * 10 , Math::RandIntMinMax(1, 25) * 5, 0);
+		coin->pos.Set(Math::RandIntMinMax(14 , 23) * 10 , Math::RandIntMinMax(3, 38) * 5, 0);
 		m_coinCount++;
+		Frog->plusCoin(Frog);
 	}
 	for (std::vector<FrogObject *>::iterator it = rock_List.begin(); it != rock_List.end(); ++it)
 	{
@@ -240,6 +240,10 @@ bool SceneFrog::CheckCollision(FrogObject* go, FrogObject* go2)
 void SceneFrog::Update(double dt)
 {
 	SceneBase::Update(dt);
+	if (Frog->hp == 0)
+	{
+		m_GameOver = true;
+	}
 	if (m_GameOver)
 	{
 		if (!m_setOriginValues && !m_setStatsToDist)
@@ -369,6 +373,11 @@ void SceneFrog::Update(double dt)
 					if (CheckCollision(go, go2))
 					{
 						go->CollisionResponse(go, go2, dt);
+
+						if (Frog->getCoin() == 0)
+						{
+							m_coinCount = 0;
+						}
 					}
 				}
 			}
@@ -483,13 +492,13 @@ void SceneFrog::RenderMap()
 	modelStack.PushMatrix();
 	modelStack.Translate((m_worldWidth / 2) - 65, m_worldHeight / 2, 0);
 	modelStack.Rotate(Math::RadianToDegree(atan2(camera.position.x - 0, camera.position.z - 0)), 0, 1, 0);
-	modelStack.Scale(5, 200, 1);
+	modelStack.Scale(5, m_worldHeight, 1);
 	RenderMesh(meshList[GEO_FROG_BORDER], false);
 	modelStack.PopMatrix();
 	modelStack.PushMatrix();
 	modelStack.Translate((m_worldWidth / 2) + 60, m_worldHeight / 2, 0);
 	modelStack.Rotate(Math::RadianToDegree(atan2(camera.position.x - 0, camera.position.z - 0)), 0, 1, 0);
-	modelStack.Scale(5, 200, 1);
+	modelStack.Scale(5, m_worldHeight, 1);
 	RenderMesh(meshList[GEO_FROG_BORDER], false);
 	modelStack.PopMatrix();
 }

@@ -43,6 +43,8 @@ public:
 
 	int hp;
 
+	int coinsLeft;
+
 
 private:
 	float m_speed;
