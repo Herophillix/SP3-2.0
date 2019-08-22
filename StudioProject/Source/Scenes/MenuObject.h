@@ -14,6 +14,8 @@ public:
 		M_FORMATION_4,
 		M_FORMATION_5,
 		M_FORMATION_6,
+		M_HOW_TO_PLAY,
+		M_BACK,
 		M_TOTAL
 	};
 

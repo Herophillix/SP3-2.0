@@ -69,7 +69,7 @@ int Application::GetWindowHeight()
 
 Application::Application()
 {
-	currentScene = SCENETANK;
+	currentScene = SCENEMAZE;
 }
 
 Application::~Application()
@@ -99,8 +99,8 @@ void Application::Init()
 	m_height = 1080;
 	//m_window = glfwCreateWindow(m_width, m_height, "Studio Project 3", glfwGetPrimaryMonitor(), NULL);
 	//glfwGetPrimaryMonitor()
-	m_window = glfwCreateWindow(m_width, m_height, "Studio Project 3", glfwGetPrimaryMonitor(), NULL);
-	//m_window = glfwCreateWindow(m_width, m_height, "Studio Project 3", NULL, NULL);
+	//m_window = glfwCreateWindow(m_width, m_height, "Studio Project 3", glfwGetPrimaryMonitor(), NULL);
+	m_window = glfwCreateWindow(m_width, m_height, "Studio Project 3", NULL, NULL);
 	//If the window couldn't be created
 	if (!m_window)
 	{
@@ -115,7 +115,7 @@ void Application::Init()
 	//Sets the key callback
 	//glfwSetKeyCallback(m_window, key_callback);
 	glfwSetWindowSizeCallback(m_window, resize_callback);
-	glfwSetInputMode(m_window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+	glfwSetInputMode(m_window, GLFW_CURSOR, GLFW_CURSOR_HIDDEN);
 	glewExperimental = true; // Needed for core profile
 	//Initialize GLEW
 	GLenum err = glewInit();

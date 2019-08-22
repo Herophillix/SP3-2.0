@@ -29,10 +29,13 @@ public:
 	virtual void Update(double dt);
 	void UpdateMenu(double dt);
 	void UpdateGame(double dt);
+	void UpdateInstructions(double dt);
 	void UpdateRayTracing(double dt);
 	virtual void Render();
 	void RenderMenu();
 	void RenderGame();
+	void RenderInstructions();
+	void Reset();
 	virtual void Exit();
 
 	void RenderGO(PhysicsObject *go);
@@ -95,9 +98,11 @@ private:
 	int SceneState;
 	int turn;
 	float velocity;
-	bool gameover;
 	char grade;
 	bool statgained;
+	bool mousepressed;
+
+	MenuObject* back;
 };
 
 #endif // !STUDIOPROJECT_SCENE_H
