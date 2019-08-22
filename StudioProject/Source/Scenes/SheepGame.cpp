@@ -390,6 +390,38 @@ void SheepGame::Update(double dt)
 			stop3 = false;
 			rndNum = 0;
 		}
+
+		SpriteAnimation *sa = dynamic_cast<SpriteAnimation*>(meshList[GEO_SPRITE_ANIMATION]);
+		if (sa)
+		{
+			sa->Update(dt);
+			sa->m_anim->animActive = true;
+
+		}
+
+		SpriteAnimation *sa2 = dynamic_cast<SpriteAnimation*>(meshList[GEO_SPRITE_TEST2]);
+		if (sa2)
+		{
+			sa2->Update(dt);
+			sa2->m_anim->animActive = true;
+
+		}
+
+		SpriteAnimation *walkRight = dynamic_cast<SpriteAnimation*>(meshList[GEO_WALKRIGHT]);
+		if (walkRight)
+		{
+			walkRight->Update(dt);
+			walkRight->m_anim->animActive = true;
+
+		}
+		SpriteAnimation *walkLeft = dynamic_cast<SpriteAnimation*>(meshList[GEO_WALKLEFT]);
+		if (walkLeft)
+		{
+			walkLeft->Update(dt);
+			walkLeft->m_anim->animActive = true;
+
+		}
+
 		//Iterator for sheep objects
 		for (std::vector<SheepObject *>::iterator it = m_goList.begin(); it != m_goList.end(); ++it)
 		{

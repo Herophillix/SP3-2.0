@@ -69,7 +69,7 @@ int Application::GetWindowHeight()
 
 Application::Application()
 {
-	currentScene = SCENEMAIN;
+	currentScene = SCENESHEEP;
 }
 
 Application::~Application()
