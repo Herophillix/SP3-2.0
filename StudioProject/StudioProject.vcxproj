@@ -182,6 +182,7 @@
     <ClCompile Include="Source\Scenes\Results.cpp" />
     <ClCompile Include="Source\Scenes\SceneBase.cpp" />
     <ClCompile Include="Source\Scenes\SceneFrog.cpp" />
+    <ClCompile Include="Source\Scenes\SceneMainMenu.cpp" />
     <ClCompile Include="Source\Scenes\SceneMaze.cpp" />
     <ClCompile Include="Source\Scenes\SceneMole.cpp" />
     <ClCompile Include="Source\Scenes\SceneTank.cpp" />
@@ -219,6 +220,7 @@
     <ClInclude Include="Source\Scenes\GameObject.h" />
     <ClInclude Include="Source\Scenes\Scene.h" />
     <ClInclude Include="Source\Scenes\SceneFrog.h" />
+    <ClInclude Include="Source\Scenes\SceneMainMenu.h" />
     <ClInclude Include="Source\Scenes\SceneMaze.h" />
     <ClInclude Include="Source\Scenes\SceneMole.h" />
     <ClInclude Include="Source\Scenes\SceneTank.h" />
