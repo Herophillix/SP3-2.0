@@ -22,6 +22,7 @@ private:
 	SheepObject* Warning;
 	SheepObject* Warning2;
 	SheepObject* Warning3;
+	std::vector<Particles* > m_particleList;
 	int points;
 	bool isFiring;
 	float fireRate;
@@ -30,12 +31,16 @@ private:
 	bool EvilKing;
 	bool gameOver;
 	bool statsGain;
+	int MAX_PARTICLES;
+	int m_particleCount;
+
 	float BossTimer;
 	float ManaRegen;
 	float transitionY;
 	float Timer1;
 	float Timer2;
 	float Timer3;
+
 	bool Timer1Check;
 	bool Timer2Check;
 	bool Timer3Check;
@@ -45,6 +50,7 @@ private:
 	bool patternDone;
 	bool startPhase;
 	int rndNum;
+
 	const int TraceSize = 30;
 	SheepObject *Trace[30];
 public:
@@ -59,6 +65,9 @@ public:
 	void renderLives();
 	void renderCrossHair();
 	void renderEvilSheep();
+	void UpdateParticles(double dt);
+	Particles* getParticle();
+	void RenderParticles(Particles *particle);
 	void Pattern1(double dt);
 	void Pattern2(double dt);
 	void Pattern3(double dt);

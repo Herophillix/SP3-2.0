@@ -96,9 +96,24 @@ void SheepGame::Init()
 	meshList[GEO_LINUX] = MeshBuilder::GenerateQuad("LinuxPenguin", Color(1, 1, 1), 1.f);
 	meshList[GEO_LINUX]->textureID = LoadTGA("Image//LinuxPenguin.tga");
 
+	meshList[GEO_PARTICLE_TEST] = MeshBuilder::GenerateQuad("testParticle", Color(1, 1, 1), 1.f);
+	meshList[GEO_PARTICLE_TEST]->textureID = LoadTGA("Image//Smoke.tga");
+
+	meshList[GEO_HAM] = MeshBuilder::GenerateQuad("Ham", Color(1, 1, 1), 1.f);
+	meshList[GEO_HAM]->textureID = LoadTGA("Image//Ham.tga");
+
+	meshList[GEO_ELECTROCUTED] = MeshBuilder::GenerateQuad("Electrocuted", Color(1, 1, 1), 1.f);
+	meshList[GEO_ELECTROCUTED]->textureID = LoadTGA("Image//SheepElectrocuted.tga");
+
+	meshList[GEO_ELECTROCUTEDR] = MeshBuilder::GenerateQuad("ElectrocutedR", Color(1, 1, 1), 1.f);
+	meshList[GEO_ELECTROCUTEDR]->textureID = LoadTGA("Image//SheepElectrocutedR.tga");
+
 	transitionY = 0;
 	Transition = false;
 	EvilKing = false;
+
+	m_particleCount = 0;
+	MAX_PARTICLES = 2000;
 
 	Mtx44 projection;
 	projection.SetToOrtho(0, m_worldWidth, 0, m_worldHeight, -10, 10);
@@ -117,7 +132,7 @@ void SheepGame::Init()
 	EvilKingSheep->pos.Set(m_worldWidth / 2, 5, 0);
 	EvilKingSheep->normal.Set(0, 1, 0);
 	EvilKingSheep->scale.Set(20, 30, 1);
-	EvilKingSheep->health = 150;
+	EvilKingSheep->health = 200;
 	EvilKingSheep->active = true;
 
 	Warning = FetchGO();
@@ -185,7 +200,7 @@ void SheepGame::Init()
 	player->vel.Set(0, 0, 0);
 	player->health = 3;
 	player->Mana = 100;
-	ManaRegen = 5.f;
+	ManaRegen = 3.f;
 	points = 0;
 
 	startPhase = false;
@@ -198,6 +213,8 @@ void SheepGame::reset()
 	transitionY = 0;
 	Transition = false;
 	EvilKing = false;
+	gameOver = false;
+	
 	pointGain = false;
 	rndNum = 0;
 	player->active = true;
@@ -505,14 +522,72 @@ void SheepGame::Update(double dt)
 							}
 						}
 						if (go2->type == SheepObject::E_FIREBALL && go->type == SheepObject::E_SHEEPFLIPPED
-							|| go2->type == SheepObject::E_FIREBALL && go->type == SheepObject::E_SHEEP
-							|| go2->type == SheepObject::E_LIGHTNING && go->type == SheepObject::E_SHEEPFLIPPED
-							|| go2->type == SheepObject::E_LIGHTNING && go->type == SheepObject::E_SHEEP)
+							|| go2->type == SheepObject::E_FIREBALL && go->type == SheepObject::E_SHEEP)
 						{
 							if (CollisionCheck(go, go2))
 							{
 								go->active = false;
 								go2->active = false;
+								Particles* particle = getParticle();
+								particle->type = ParticleObject_TYPE::P_ParticleTest;
+								particle->active = true;
+								particle->scale.Set(2, 2, 2);
+								particle->vel.Set(0, 2.f, 0.0f);
+								particle->pos.Set(go->pos.x, go->pos.y, 0);
+								particle->lifeTime = 2.f;
+								Particles* particle2 = getParticle();
+								particle2->type = ParticleObject_TYPE::P_HAM;
+								particle2->active = true;
+								particle2->scale.Set(5, 5, 5);
+								particle2->vel.Set(0, 4.5f, 0.0f);
+								particle2->pos.Set(go->pos.x, go->pos.y, 0);
+								particle2->lifeTime = 3.f;
+								pointGain = true;
+							}
+						}
+						if (go2->type == SheepObject::E_LIGHTNING && go->type == SheepObject::E_SHEEPFLIPPED)
+						{
+							if (CollisionCheck(go, go2))
+							{
+								go->active = false;
+								go2->active = false;
+								Particles* particle2 = getParticle();
+								particle2->type = ParticleObject_TYPE::P_ParticleTest;
+								particle2->active = true;
+								particle2->scale.Set(2, 2, 2);
+								particle2->vel.Set(0, 2.f, 0.0f);
+								particle2->pos.Set(go->pos.x, go->pos.y, 0);
+								particle2->lifeTime = 2.f;
+								Particles* particle = getParticle();
+								particle->type = ParticleObject_TYPE::P_ELECTROCUTE;
+								particle->active = true;
+								particle->scale.Set(10, 10, 10);
+								particle->vel.Set(0, 4.5f, 0.0f);
+								particle->pos.Set(go->pos.x, go->pos.y, 0);
+								particle->lifeTime = 3.f;
+								pointGain = true;
+							}
+						}
+						if (go2->type == SheepObject::E_LIGHTNING && go->type == SheepObject::E_SHEEP)
+						{
+							if (CollisionCheck(go, go2))
+							{
+								go->active = false;
+								go2->active = false;
+								Particles* particle2 = getParticle();
+								particle2->type = ParticleObject_TYPE::P_ParticleTest;
+								particle2->active = true;
+								particle2->scale.Set(2, 2, 2);
+								particle2->vel.Set(0, 2.f, 0.0f);
+								particle2->pos.Set(go->pos.x, go->pos.y, 0);
+								particle2->lifeTime = 2.f;
+								Particles* particle = getParticle();
+								particle->type = ParticleObject_TYPE::P_ELECTROCUTER;
+								particle->active = true;
+								particle->scale.Set(10, 10, 10);
+								particle->vel.Set(0, 4.5f, 0.0f);
+								particle->pos.Set(go->pos.x, go->pos.y, 0);
+								particle->lifeTime = 3.f;
 								pointGain = true;
 							}
 						}
@@ -586,14 +661,122 @@ void SheepGame::Update(double dt)
 	if (ManaRegen < 0)
 	{
 		player->Mana += 10;
-		ManaRegen = 5.f;
+		ManaRegen = 3.f;
 	}
 	if (fireRate < 0)
 	{
 		fireRate = 0.222f;
 	}
+	UpdateParticles(dt);
 	fireRate -= dt;
 	ManaRegen -= dt;
+}
+Particles* SheepGame::getParticle()
+{
+	for (std::vector<Particles *>::iterator it = m_particleList.begin(); it != m_particleList.end();++it)
+	{
+		Particles *particle = (Particles *)*it;
+
+		if (!particle->active)
+		{
+			particle->active = true;
+			m_particleCount++;
+			return particle;
+		}
+	}
+	for (unsigned i = 0; i < 2;++i)
+	{
+		Particles *particle = new Particles(ParticleObject_TYPE::P_ParticleTest);
+		m_particleList.push_back(particle);
+	}
+	m_particleCount++;
+	m_particleList[m_particleList.size() - 1]->active = true;
+	return m_particleList[m_particleList.size() - 1];
+}
+void SheepGame::UpdateParticles(double dt)
+{
+	for (std::vector<Particles *>::iterator it = m_particleList.begin(); it != m_particleList.end();++it)
+	{
+		Particles *particle = (Particles *)*it;
+		if (particle->active) 
+		{
+			if (particle->type == ParticleObject_TYPE::P_ParticleTest)
+			{
+				particle->pos.y += particle->vel.y  * (float)dt * 10;
+				particle->scale.x += particle->vel.y * (float)dt * 3;
+				particle->scale.y += particle->vel.y * (float)dt * 3;
+				particle->lifeTime -= dt;
+			}
+			if (particle->type == ParticleObject_TYPE::P_HAM)
+			{
+				if (particle->pos.y > 8)
+				{
+					particle->pos.y -= particle->vel.y  * (float)dt * 10;
+				}
+				particle->lifeTime -= dt;
+			}
+			if (particle->type == ParticleObject_TYPE::P_ELECTROCUTE || particle->type == ParticleObject_TYPE::P_ELECTROCUTER)
+			{
+				if (particle->pos.y > 8)
+				{
+					particle->pos.y -= particle->vel.y  * (float)dt * 10;
+				}
+				particle->lifeTime -= dt;
+			}
+			if (particle->lifeTime < 0)
+			{
+				particle->active = false;
+				m_particleCount--;
+			}
+			if (particle->pos.y > m_worldHeight)
+			{
+				particle->active = false;
+				m_particleCount--;
+			}
+		}
+	}
+}
+void SheepGame::RenderParticles(Particles *particle)
+{
+	switch (particle->type)
+	{
+	case ParticleObject_TYPE::P_ParticleTest:
+		modelStack.PushMatrix();
+		modelStack.Translate(particle->pos.x, particle->pos.y, particle->pos.z);
+		modelStack.Rotate(particle->rotation, 0, 0, 1);
+		modelStack.Scale(particle->scale.x, particle->scale.y, particle->scale.z);
+		RenderMesh(meshList[GEO_PARTICLE_TEST], false);
+		modelStack.PopMatrix();
+		break;
+	case ParticleObject_TYPE::P_HAM:
+		modelStack.PushMatrix();
+		modelStack.Translate(particle->pos.x, particle->pos.y, particle->pos.z);
+		modelStack.Rotate(particle->rotation, 0, 0, 1);
+		modelStack.Scale(particle->scale.x, particle->scale.y, particle->scale.z);
+		RenderMesh(meshList[GEO_HAM], false);
+		modelStack.PopMatrix();
+		break;
+	case ParticleObject_TYPE::P_ELECTROCUTE:
+		modelStack.PushMatrix();
+		modelStack.Translate(particle->pos.x, particle->pos.y, particle->pos.z);
+		modelStack.Rotate(particle->rotation, 0, 0, 1);
+		modelStack.Scale(particle->scale.x, particle->scale.y, particle->scale.z);
+		RenderMesh(meshList[GEO_ELECTROCUTED], false);
+		modelStack.PopMatrix();
+		break;
+	case ParticleObject_TYPE::P_ELECTROCUTER:
+		modelStack.PushMatrix();
+		modelStack.Translate(particle->pos.x, particle->pos.y, particle->pos.z);
+		modelStack.Rotate(particle->rotation, 0, 0, 1);
+		modelStack.Scale(particle->scale.x, particle->scale.y, particle->scale.z);
+		RenderMesh(meshList[GEO_ELECTROCUTEDR], false);
+		modelStack.PopMatrix();
+		break;
+	default:
+		cout << "Found NULL Particle" << endl;
+		break;
+	}
+
 }
 void SheepGame::Pattern1(double dt)
 {
@@ -1068,6 +1251,14 @@ void SheepGame::Render()
 		}
 		renderLives();
 		renderCrossHair();
+		for (std::vector<Particles *>::iterator it = m_particleList.begin(); it != m_particleList.end();++it)
+		{
+			Particles *particle = (Particles *)*it;
+			if (particle->active)
+			{
+				RenderParticles(particle);
+			}
+		}
 	}
 	else
 	{
@@ -1085,7 +1276,7 @@ void SheepGame::renderCrossHair()
 }
 void SheepGame::GameEndCalculations() // Setting the stats and other stuff
 {
-	if (points >= 1200)
+	if (points >= 2000)
 	{
 		m_Grade = 'S';
 		StatManager::GetInstance()->UpdateChar01F(-20);
@@ -1098,23 +1289,23 @@ void SheepGame::GameEndCalculations() // Setting the stats and other stuff
 		StatManager::GetInstance()->UpdateChar04M(20);
 		Results::getInstance()->InitStatsToDist(35);
 	}
-	else if (points >= 800 && points < 1200)
+	else if (points >= 1500 && points < 2000)
 	{
 		m_Grade = 'A';
 		Results::getInstance()->InitStatsToDist(25);
 
 	}
-	else if (points >= 650 && points < 800)
+	else if (points >= 1200 && points < 1500)
 	{
 		m_Grade = 'B';
 		Results::getInstance()->InitStatsToDist(20);
 	}
-	else if (points >= 450 && points < 650)
+	else if (points >= 850 && points < 1200)
 	{
 		m_Grade = 'C';
 		Results::getInstance()->InitStatsToDist(15);
 	}
-	else if (points >= 375 && points < 450)
+	else if (points >= 600 && points < 850)
 	{
 		m_Grade = 'D';
 		Results::getInstance()->InitStatsToDist(10);
@@ -1332,7 +1523,7 @@ SheepObject* SheepGame::FetchGO()
 		}
 	}
 
-	for (int i = 0; i < 20; ++i)
+	for (int i = 0; i < 30; ++i)
 	{
 		m_goList.push_back(new SheepObject(SheepObject::E_NONE));
 	}
