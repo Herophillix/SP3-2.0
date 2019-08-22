@@ -8,6 +8,9 @@ using namespace std;
 enum ParticleObject_TYPE
 {
 	P_ParticleTest,
+	P_HAM,
+	P_ELECTROCUTE,
+	P_ELECTROCUTER,
 	P_TOTAL,
 };
 

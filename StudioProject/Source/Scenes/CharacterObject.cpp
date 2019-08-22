@@ -1,5 +1,6 @@
 #include "CharacterObject.h"
 #include "StudioProjectScene.h"
+#include "../Rendering/Particles.h"
 
 int CharacterObject::m_Count = 0;
 
