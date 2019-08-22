@@ -84,6 +84,11 @@ void FrogObject::setScore(int sco)
 }
 // FUNCTIONS
 
+void FrogObject::plusCoin(FrogObject* frog)
+{
+	frog->coinLeft += 1;
+}
+
 void FrogObject::FrogInvincibilityFrame(FrogObject *go, double dt)
 {
 	if (timerInvincibility < dt)
@@ -133,7 +138,7 @@ void FrogObject::CollisionResponse(FrogObject* go, FrogObject* go2, double dt)
 	case FrogObject::GO_COIN:
 	{
 		go->score += 100;
-		
+		go->coinLeft -= 1;
 		go2->active = false;
 		break;
 	}

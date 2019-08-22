@@ -3,6 +3,7 @@
 
 #include "GameObject.h"
 
+
 class FrogObject : public GameObject
 {
 public:
@@ -44,6 +45,7 @@ public:
 	// Functions
 	void CollisionResponse(FrogObject *go, FrogObject* go2, double dt);
 	void FrogInvincibilityFrame(FrogObject *go, double dt);
+	void plusCoin(FrogObject* frog);
 
 	Vector3 normal;
 	int hp;
