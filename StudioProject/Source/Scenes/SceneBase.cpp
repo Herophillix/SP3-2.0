@@ -270,6 +270,11 @@ void SceneBase::Render()
 //	RenderAnimation();
 }
 
+void SceneBase::Reset()
+{
+
+}
+
 void SceneBase::Exit()
 {
 	// Cleanup VBO

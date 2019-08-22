@@ -18,6 +18,7 @@ void SceneMaze::Init()
 {
 	SceneBase::Init();
 
+	Results::getInstance()->InitVars();
 	//Calculating aspect ratio
 	// James 13/8/2019
 	m_worldHeight = 200.f;
@@ -79,7 +80,7 @@ void SceneMaze::Init()
 	enableStencil = true;
 	// End James 15/8/2019
 
-	endGame = true;
+	endGame = false;
 	elapsedTime = 0;
 }
 
@@ -157,6 +158,7 @@ void SceneMaze::Update(double dt)
 		bRButtonState = false;
 		std::cout << "RBUTTON UP" << std::endl;
 
+		endGame = true;
 		// James 13/8/2019
 		PhysicsObject *temp = FetchGO();
 		temp->type = PhysicsObject::GO_PILLAR;
@@ -297,6 +299,31 @@ void SceneMaze::Update(double dt)
 	if (!endGame)
 	{
 		elapsedTime += dt;
+	}
+	else
+	{
+		Results::getInstance()->UpdateVars(dt);
+		if (!statgained)
+		{
+			GameEndCalculations();
+			StatManager::GetInstance()->SetCharsOriginalValues();
+			statgained = true;
+		}
+		static bool bLButtonState = false;
+		if (!bLButtonState && Application::IsMousePressed(0))
+		{
+			bLButtonState = true;
+			std::cout << "LBUTTON DOWN" << std::endl;
+			if (Results::getInstance()->ButtonMouseCollision())
+			{
+				cout << "hit" << endl;
+			}
+		}
+		else if (bLButtonState && !Application::IsMousePressed(0))
+		{
+			bLButtonState = false;
+			std::cout << "LBUTTON UP" << std::endl;
+		}
 	}
 }
 
@@ -497,6 +524,11 @@ void SceneMaze::Render()
 	ss << "T:" << elapsedTime;
 	RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(0, 1, 0), 3, 0, 0);
 	// End James 14/8/2019
+
+	if (endGame)
+	{
+		Results::getInstance()->RenderResults(0, 'A');
+	}
 }
 
 void SceneMaze::Exit()
@@ -622,3 +654,54 @@ void SceneMaze::DeactivateStencil()
 	glDisable(GL_STENCIL_TEST);
 }
 // End James 15/8/2019
+
+void SceneMaze::GameEndCalculations() // Setting the stats and other stuff
+{
+	if (score >= 6000)
+	{
+		grade = 'S';
+		StatManager::GetInstance()->UpdateChar01F(-20);
+		StatManager::GetInstance()->UpdateChar01M(20);
+		StatManager::GetInstance()->UpdateChar02F(-20);
+		StatManager::GetInstance()->UpdateChar02M(20);
+		StatManager::GetInstance()->UpdateChar03F(-20);
+		StatManager::GetInstance()->UpdateChar03M(20);
+		StatManager::GetInstance()->UpdateChar04F(-20);
+		StatManager::GetInstance()->UpdateChar04M(20);
+		Results::getInstance()->InitStatsToDist(35);
+	}
+	else if (score >= 5000 && score < 6000)
+	{
+		grade = 'A';
+		Results::getInstance()->InitStatsToDist(25);
+
+	}
+	else if (score >= 4000 && score < 5000)
+	{
+		grade = 'B';
+		Results::getInstance()->InitStatsToDist(20);
+	}
+	else if (score >= 3000 && score < 4000)
+	{
+		grade = 'C';
+		Results::getInstance()->InitStatsToDist(15);
+	}
+	else if (score >= 2000 && score < 3000)
+	{
+		grade = 'D';
+		Results::getInstance()->InitStatsToDist(10);
+	}
+	else
+	{
+		grade = 'F';
+		StatManager::GetInstance()->UpdateChar01F(10);
+		StatManager::GetInstance()->UpdateChar01M(-10);
+		StatManager::GetInstance()->UpdateChar02F(10);
+		StatManager::GetInstance()->UpdateChar02M(-10);
+		StatManager::GetInstance()->UpdateChar03F(10);
+		StatManager::GetInstance()->UpdateChar03M(-10);
+		StatManager::GetInstance()->UpdateChar04F(10);
+		StatManager::GetInstance()->UpdateChar04M(-10);
+	}
+
+}

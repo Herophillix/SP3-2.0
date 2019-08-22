@@ -4,6 +4,7 @@
 #include "SceneBase.h"
 #include "PhysicsObject.h"
 #include "../Minigames/Maze/MazeGenerator.h"
+#include "Results.h"
 #include <vector>
 
 class SceneMaze : public SceneBase
@@ -30,6 +31,8 @@ public:
 	void DeactivateStencil();
 	// End James 15/8/2019
 
+	void GameEndCalculations();
+
 private:
 	std::vector<PhysicsObject *>* m_goList;
 	float m_speed;
@@ -52,7 +55,9 @@ private:
 
 	bool endGame;
 	double elapsedTime;
-
+	bool statgained = false;
+	int score = 0;
+	char grade;
 };
 
 #endif // !STUDIOPROJECT_SCENE_H

@@ -144,14 +144,24 @@ public:
 		GEO_TANK_HEAD_2,
 		GEO_TANK_HEAD_3,
 		GEO_TANK_HEAD_4,
-		GEO_BORDER,
+		GEO_TANK_BORDER,
 		GEO_TANK_FORMATION_1,
 		GEO_TANK_FORMATION_2,
 		GEO_TANK_FORMATION_3,
 		GEO_TANK_FORMATION_4,
 		GEO_TANK_FORMATION_5,
 		GEO_TANK_FORMATION_6,
-
+		GEO_TANK_HOW_TO_PLAY,
+		GEO_TANK_SELECT_FORMATION,
+		GEO_TANK_INSTRUCTIONS,
+		GEO_TANK_BACK,
+		GEO_TANK_CURSOR,
+		GEO_TANK_CURSOR_ALTERNATE,
+		GEO_TANK_BALL_1,
+		GEO_TANK_BALL_2,
+		GEO_TANK_BALL_3,
+		GEO_TANK_BALL_4,
+		GEO_TANK_BALL_5,
 		// Animations
 		GEO_HAMMER_SPRITE,
 		
@@ -164,6 +174,7 @@ public:
 	virtual void Init();
 	virtual void Update(double dt);
 	virtual void Render();
+	virtual void Reset();
 	virtual void Exit();
 
 	void RenderText(Mesh* mesh, std::string text, Color color);
