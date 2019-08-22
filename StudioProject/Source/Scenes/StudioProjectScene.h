@@ -74,7 +74,6 @@ public:
 
 	Vector3 vel;
 	Vector3 pos;
-
 private:
 	std::vector<CharacterObject *> m_goList;
 	std::vector<Particles* > m_particleList;

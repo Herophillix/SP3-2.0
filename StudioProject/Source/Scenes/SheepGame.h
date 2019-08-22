@@ -23,12 +23,15 @@ private:
 	SheepObject* Warning2;
 	SheepObject* Warning3;
 	int points;
+	bool isFiring;
+	float fireRate;
 	bool pointGain;
 	bool Transition;
 	bool EvilKing;
 	bool gameOver;
 	bool statsGain;
 	float BossTimer;
+	float ManaRegen;
 	float transitionY;
 	float Timer1;
 	float Timer2;

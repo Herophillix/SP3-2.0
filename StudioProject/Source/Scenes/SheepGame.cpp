@@ -18,7 +18,9 @@ SheepGame::SheepGame() :
 	patternDone(false),
 	gameOver(false),
 	statsGain(false),
-	m_Grade('F')
+	isFiring(false),
+	m_Grade('F'),
+	fireRate(0.5f)
 {
 
 }
@@ -54,6 +56,9 @@ void SheepGame::Init()
 	meshList[GEO_FIREBALL] = MeshBuilder::GenerateQuad("Fireball", Color(1, 1, 1), 1.f);
 	meshList[GEO_FIREBALL]->textureID = LoadTGA("Image//fireball.tga");
 
+	meshList[GEO_LIGHTNING] = MeshBuilder::GenerateQuad("Lightning", Color(1, 1, 1), 1.f);
+	meshList[GEO_LIGHTNING]->textureID = LoadTGA("Image//LightningBolt.tga");
+
 	meshList[GEO_SPRITE_ANIMATION] = MeshBuilder::GenerateSpriteAnimation("test", 1, 4);
 	meshList[GEO_SPRITE_ANIMATION]->textureID = LoadTGA("Image//Idle_anim.tga");
 
@@ -65,6 +70,9 @@ void SheepGame::Init()
 
 	meshList[GEO_SPRITE_TEST2] = MeshBuilder::GenerateSpriteAnimation("test2", 1, 6);
 	meshList[GEO_SPRITE_TEST2]->textureID = LoadTGA("Image//Idle_anim2.tga");
+
+	meshList[GEO_MANABAR] = MeshBuilder::GenerateQuad("Manabar", Color(0, 0, 1), 1.f);
+	meshList[GEO_LIFEBAR] = MeshBuilder::GenerateQuad("Lifebar", Color(1, 0, 0), 1.f);
 
 
 	meshList[GEO_SHEEPKING] = MeshBuilder::GenerateQuad("SheepKing", Color(1, 1, 1), 1.f);
@@ -175,7 +183,9 @@ void SheepGame::Init()
 	player->scale.Set(10, 10, 10);
 	player->cooldown = 2.f;
 	player->vel.Set(0, 0, 0);
-	player->health = 3;
+	player->health = 1000000;
+	player->Mana = 100;
+	ManaRegen = 5.f;
 	points = 0;
 
 	startPhase = false;
@@ -194,6 +204,7 @@ void SheepGame::reset()
 	player->pos.Set(0, 18, 0);
 	player->scale.Set(10, 10, 10);
 	player->cooldown = 2.f;
+	player->Mana = 100.0f;
 	player->vel.Set(0, 0, 0);
 	player->health = 3;
 	points = 0;
@@ -264,16 +275,6 @@ void SheepGame::Update(double dt)
 	tempwall->pos.Set(m_worldWidth / 2, 5);
 	tempwall->scale.Set(2, m_worldWidth, 1);
 
-	//Warnings
-
-	//Warning->pos.Set(m_worldWidth / 2, m_worldHeight / 2, 0);
-	//Warning->scale.Set(100, 100, 1);
-
-	//Warning2->pos.Set(m_worldWidth / 2 - 50, m_worldHeight / 2, 0);
-	//Warning2->scale.Set(100, 100, 1);
-
-	//Warning3->pos.Set(m_worldWidth / 2 + 50, m_worldHeight / 2, 0);
-	//Warning3->scale.Set(100, 100, 1);
 	static bool bLButtonState = false;
 
 	//Mouse Position
@@ -316,10 +317,12 @@ void SheepGame::Update(double dt)
 		if (!bRButtonState && Application::IsMousePressed(1))
 		{
 			bRButtonState = true;
+			isFiring = true;
 			std::cout << "RBUTTON DOWN" << std::endl;
 		}
 		else if (bRButtonState && !Application::IsMousePressed(1))
 		{
+			isFiring = false;
 			bRButtonState = false;
 			std::cout << "RBUTTON UP" << std::endl;
 		}
@@ -344,6 +347,16 @@ void SheepGame::Update(double dt)
 			Sheep2->isDown = false;
 			m_Timer = Math::RandFloatMinMax(2, 5);
 		}
+		if (isFiring == true && player->Mana > 0 && fireRate <= 0)
+		{
+			SheepObject *LightningBolt = FetchGO();
+			LightningBolt->type = SheepObject::E_LIGHTNING;
+			LightningBolt->pos.Set(player->pos.x, player->pos.y, 0);
+			LightningBolt->vel.Set(((x / w * m_worldWidth) - player->pos.x), ((m_worldHeight - y / h * m_worldHeight) - player->pos.y), 0);
+			LightningBolt->vel = 100 * LightningBolt->vel.Normalized();
+			LightningBolt->scale.Set(8, 8, 8);
+			player->Mana -= 20;
+		}
 		if (BossTimer < 0 && !startPhase)
 		{
 			rndNum = Math::RandIntMinMax(1, 3);
@@ -352,30 +365,21 @@ void SheepGame::Update(double dt)
 		switch (rndNum)
 		{
 		case 1:
+			cout << "Pattern 1" << endl;
 			Pattern1(dt);
 			break;
 		case 2:
+			cout << "Pattern 2 " << endl;
 			Pattern2(dt);
 			break;
 		case 3:
+			cout << "pattern3" << endl;
 			Pattern3(dt);
 			break;
 		default:
-			cout << "???" << endl;
 			break;
 		}
-		/*if (!patternDone && Timer1Check)
-		{
-			Pattern1(dt);
-		}
-		if (!patternDone && Timer2Check)
-		{
-			Pattern2(dt);
-		}
-		if (!patternDone && Timer3Check)
-		{
-			Pattern3(dt);
-		}*/
+
 		if (patternDone == true)
 		{
 			Timer1 = 10.f;
@@ -434,23 +438,15 @@ void SheepGame::Update(double dt)
 					{
 						go->isDown = true;
 					}
-					//if (go->pos.y < 60)
-					//{
-					//	go->isDown = false;
-					//}
+
 					if (go->isDown == true)
 					{
 						go->vel.y -= sin(m_Gravity.y) * 2;
-						//go->vel += m_Gravity * dt;
 					}
 					if (go->pos.x < 0)
 					{
 						go->active = false;
 					}
-					//if (go->isDown == false)
-					//{
-					//	go->vel.y += sin(m_Gravity.y) * 2;
-					//}
 
 				}
 				if (go->type == SheepObject::E_SHEEP)
@@ -460,23 +456,15 @@ void SheepGame::Update(double dt)
 					{
 						go->isDown = true;
 					}
-					//if (go->pos.y < 60)
-					//{
-					//	go->isDown = false;
-					//}
+
 					if (go->isDown == true)
 					{
 						go->vel.y -= sin(m_Gravity.y) * 2;
-						//go->vel += m_Gravity * dt;
 					}
 					if (go->pos.x > m_worldWidth)
 					{
 						go->active = false;
 					}
-					//if (go->isDown == false)
-					//{
-					//	go->vel.y += sin(m_Gravity.y) * 2;
-					//}
 				}
 				if (go->type == SheepObject::E_LINUX)
 				{
@@ -489,6 +477,20 @@ void SheepGame::Update(double dt)
 				if (go->type == SheepObject::E_FIREBALL)
 				{
 					go->pos += go->vel * (float)dt;
+					if (go->pos.y > m_worldHeight + go->scale.y || go->pos.x > m_worldWidth + go->scale.x
+						|| go->pos.y < 0 - go->scale.y || go->pos.x < 0 - go->scale.x)
+					{
+						go->active = false;
+					}
+				}
+				if (go->type == SheepObject::E_LIGHTNING)
+				{
+					go->pos += go->vel * (float)dt;
+					if (go->pos.y > m_worldHeight + go->scale.y || go->pos.x > m_worldWidth + go->scale.x
+						|| go->pos.y < 0 - go->scale.y || go->pos.x < 0 - go->scale.x)
+					{
+						go->active = false;
+					}
 				}
 				for (std::vector<SheepObject *>::iterator it2 = m_goList.begin(); it2 != m_goList.end(); ++it2)
 				{
@@ -500,11 +502,12 @@ void SheepGame::Update(double dt)
 							if (CollisionCheck(go, go2))
 							{
 								go->vel.y = -go->vel.y;
-								//cout << CollisionCheck(go2,go) << endl;
 							}
 						}
 						if (go2->type == SheepObject::E_FIREBALL && go->type == SheepObject::E_SHEEPFLIPPED
-							|| go2->type == SheepObject::E_FIREBALL && go->type == SheepObject::E_SHEEP)
+							|| go2->type == SheepObject::E_FIREBALL && go->type == SheepObject::E_SHEEP
+							|| go2->type == SheepObject::E_LIGHTNING && go->type == SheepObject::E_SHEEPFLIPPED
+							|| go2->type == SheepObject::E_LIGHTNING && go->type == SheepObject::E_SHEEP)
 						{
 							if (CollisionCheck(go, go2))
 							{
@@ -521,6 +524,16 @@ void SheepGame::Update(double dt)
 								go2->active = false;
 								points += 100;
 								EvilKingSheep->health -= 10;
+							}
+						}
+						if (go2->type == SheepObject::E_LIGHTNING && go->type == SheepObject::E_EYES)
+						{
+							if (CollisionCheck(go, go2))
+							{
+								cout << "zap" << endl;
+								go2->active = false;
+								points += 50;
+								EvilKingSheep->health -= 5;
 							}
 						}
 						if (go2->type == SheepObject::E_SHEEPFLIPPED && go->type == SheepObject::E_PLAYER
@@ -562,10 +575,6 @@ void SheepGame::Update(double dt)
 			points += 20;
 			pointGain = false;
 		}
-		if (Transition == true)
-		{
-			meshList[GEO_LIFEBAR] = MeshBuilder::GenerateBar("GEO_LIFEBAR", Color(1, 0, 0), EvilKingSheep->health / 2, 1.f);
-		}
 		UpdateRayTracing(dt);
 		player->UpdateMovement(dt);
 		m_Timer -= dt;
@@ -574,6 +583,17 @@ void SheepGame::Update(double dt)
 			BossTimer -= dt;
 		}
 	}
+	if (ManaRegen < 0)
+	{
+		player->Mana += 10;
+		ManaRegen = 5.f;
+	}
+	if (fireRate < 0)
+	{
+		fireRate = 0.222f;
+	}
+	fireRate -= dt;
+	ManaRegen -= dt;
 }
 void SheepGame::Pattern1(double dt)
 {
@@ -699,12 +719,12 @@ void SheepGame::Pattern2(double dt)
 						Linux->type = SheepObject::E_LINUX;
 						Linux->scale.Set(40, 40, 40);
 						Linux->vel.Set(0, -15.f, 0);
-						Linux->pos.Set(m_worldWidth / 2 - 15, m_worldHeight, 0);
+						Linux->pos.Set(m_worldWidth / 2 + 35, m_worldHeight, 0);
 						Linux->active = true;
 						Linux->isDown = false;
-						Warning2->active = false;
-						Timer2Check = false;
-						stop2 = true;
+						Warning3->active = false;
+						Timer3Check = false;
+						stop3 = true;
 					}
 				}
 				if (Timer1 < 0 && Warning->active == true)
@@ -713,7 +733,7 @@ void SheepGame::Pattern2(double dt)
 					Linux->type = SheepObject::E_LINUX;
 					Linux->scale.Set(40, 40, 40);
 					Linux->vel.Set(0, -15.f, 0);
-					Linux->pos.Set(m_worldWidth / 2 - 65, m_worldHeight, 0);
+					Linux->pos.Set(m_worldWidth / 2 - 15, m_worldHeight, 0);
 					Linux->active = true;
 					Linux->isDown = false;
 					Warning->active = false;
@@ -727,13 +747,13 @@ void SheepGame::Pattern2(double dt)
 				Linux->type = SheepObject::E_LINUX;
 				Linux->scale.Set(40, 40, 40);
 				Linux->vel.Set(0, -15.f, 0);
-				Linux->pos.Set(m_worldWidth / 2 + 35, m_worldHeight, 0);
+				Linux->pos.Set(m_worldWidth / 2 - 65, m_worldHeight, 0);
 				Linux->active = true;
 				Linux->isDown = false;
-				Warning3->active = false;
-				Timer3Check = false;
+				Warning2->active = false;
+				Timer2Check = false;
 				patternDone = true;
-				stop3 = true;
+				stop2 = true;
 			}
 		}
 	}
@@ -774,7 +794,7 @@ void SheepGame::Pattern3(double dt)
 						Linux->type = SheepObject::E_LINUX;
 						Linux->scale.Set(40, 40, 40);
 						Linux->vel.Set(0, -15.f, 0);
-						Linux->pos.Set(m_worldWidth / 2 + 35, m_worldHeight, 0);
+						Linux->pos.Set(m_worldWidth / 2 - 15, m_worldHeight, 0);
 						Linux->active = true;
 						Linux->isDown = false;
 						Warning->active = false;
@@ -789,12 +809,12 @@ void SheepGame::Pattern3(double dt)
 					Linux->type = SheepObject::E_LINUX;
 					Linux->scale.Set(40, 40, 40);
 					Linux->vel.Set(0, -15.f, 0);
-					Linux->pos.Set(m_worldWidth / 2 - 15, m_worldHeight, 0);
+					Linux->pos.Set(m_worldWidth / 2 - 65, m_worldHeight, 0);
 					Linux->active = true;
 					Linux->isDown = false;
-					Warning3->active = false;
-					Timer3Check = false;
-					stop3 = true;
+					Warning2->active = false;
+					Timer2Check = false;
+					stop2 = true;
 				}
 			}
 			if (Timer3 < 0 && Warning3->active == true)
@@ -805,12 +825,12 @@ void SheepGame::Pattern3(double dt)
 				Linux->type = SheepObject::E_LINUX;
 				Linux->scale.Set(40, 40, 40);
 				Linux->vel.Set(0, -15.f, 0);
-				Linux->pos.Set(m_worldWidth / 2 - 65, m_worldHeight, 0);
+				Linux->pos.Set(m_worldWidth / 2 + 35, m_worldHeight, 0);
 				Linux->active = true;
 				Linux->isDown = false;
-				Warning2->active = false;
-				Timer2Check = false;
-				stop2 = true;
+				Warning3->active = false;
+				Timer3Check = false;
+				stop3 = true;
 			}
 		}
 	}
@@ -928,6 +948,16 @@ bool SheepGame::CollisionCheck(SheepObject *go, SheepObject *go2)
 		}
 		break;
 	}
+	case SheepObject::E_LIGHTNING:
+	{
+		Vector3 dist = go2->pos - go->pos;
+		Vector3 u = go->vel - go2->vel;
+		if (dist.Length() < (go->scale.x / 2) + (go2->scale.x / 2) && u.Dot(dist) > 0.0f)
+		{
+			return true;
+		}
+		break;
+	}
 	case SheepObject::E_EYES:
 	{
 		Vector3 N = go2->normal;
@@ -985,6 +1015,13 @@ void SheepGame::Render()
 	if (!gameOver)
 	{
 		renderBG();
+		modelStack.PushMatrix();
+		modelStack.Translate(m_worldWidth / 2 + player->Mana / 2,2.f, 0);
+		modelStack.Scale(player->Mana, 3, 1);
+		RenderMesh(meshList[GEO_MANABAR], false);
+		modelStack.PopMatrix();
+
+		RenderTextOnScreen(meshList[GEO_GAMEFONT],"Mana", Color(1, 1, 1), 2, m_worldWidth/2 - 63, 0.3f);
 		if (Transition == true)
 		{
 			if (EvilKingSheep->health > 0)
@@ -998,8 +1035,8 @@ void SheepGame::Render()
 				{
 					EvilKing = true;
 					modelStack.PushMatrix();
-					modelStack.Translate(m_worldWidth / 2 - 50, m_worldHeight - 10, 0);
-					modelStack.Scale(3, 3, 1);
+					modelStack.Translate(m_worldWidth / 2 - 50 + EvilKingSheep->health/4, m_worldHeight - 10, 0);
+					modelStack.Scale(EvilKingSheep->health/2, 3, 1);
 					RenderMesh(meshList[GEO_LIFEBAR], false);
 					modelStack.PopMatrix();
 				}
@@ -1048,7 +1085,7 @@ void SheepGame::renderCrossHair()
 }
 void SheepGame::GameEndCalculations() // Setting the stats and other stuff
 {
-	if (points >= 700)
+	if (points >= 1200)
 	{
 		m_Grade = 'S';
 		StatManager::GetInstance()->UpdateChar01F(-20);
@@ -1061,23 +1098,23 @@ void SheepGame::GameEndCalculations() // Setting the stats and other stuff
 		StatManager::GetInstance()->UpdateChar04M(20);
 		Results::getInstance()->InitStatsToDist(35);
 	}
-	else if (points >= 450 && points < 700)
+	else if (points >= 800 && points < 1200)
 	{
 		m_Grade = 'A';
 		Results::getInstance()->InitStatsToDist(25);
 
 	}
-	else if (points >= 400 && points < 450)
+	else if (points >= 650 && points < 800)
 	{
 		m_Grade = 'B';
 		Results::getInstance()->InitStatsToDist(20);
 	}
-	else if (points >= 360 && points < 400)
+	else if (points >= 450 && points < 650)
 	{
 		m_Grade = 'C';
 		Results::getInstance()->InitStatsToDist(15);
 	}
-	else if (points >= 300 && points < 360)
+	else if (points >= 375 && points < 450)
 	{
 		m_Grade = 'D';
 		Results::getInstance()->InitStatsToDist(10);
@@ -1222,9 +1259,19 @@ void SheepGame::RenderGO(SheepObject * go)
 	{
 		modelStack.PushMatrix();
 		modelStack.Translate(go->pos.x, go->pos.y, go->pos.z);
-		modelStack.Rotate(Math::RadianToDegree(atan2(go->vel.y,go->vel.x)), 0, 0, 1);
+		modelStack.Rotate(Math::RadianToDegree(atan2(go->vel.y, go->vel.x)), 0, 0, 1);
 		modelStack.Scale(go->scale.x, go->scale.y, go->scale.z);
 		RenderMesh(meshList[GEO_FIREBALL], false);
+		modelStack.PopMatrix();
+		break;
+	}
+	case SheepObject::E_LIGHTNING:
+	{
+		modelStack.PushMatrix();
+		modelStack.Translate(go->pos.x, go->pos.y, go->pos.z);
+		modelStack.Rotate(Math::RadianToDegree(atan2(go->vel.y, go->vel.x)), 0, 0, 1);
+		modelStack.Scale(go->scale.x, go->scale.y, go->scale.z);
+		RenderMesh(meshList[GEO_LIGHTNING], false);
 		modelStack.PopMatrix();
 		break;
 	}

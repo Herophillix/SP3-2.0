@@ -147,25 +147,25 @@ void StudioProjectScene::Init()
 	color = 1.0f;
 
 
-	meshList[GEO_CHARONEFRUST] = MeshBuilder::GenerateBar("charOneFrustration", Color(1, 0, 0), charOne->frustration / 2, 1.f);
-	meshList[GEO_CHARONEMOTIVE] = MeshBuilder::GenerateBar("CharOneMotivation", Color(1, 1, 0), charOne->motivation / 2, 1.f);
-	meshList[GEO_CHARONEREST] = MeshBuilder::GenerateBar("CharOneRest", Color(1, 0, 1), charOne->rest / 2, 1.f);
-	meshList[GEO_CHARONEWD] = MeshBuilder::GenerateBar("CharOneWorkDone", Color(0, 1, 1), charOne->workDone / 2, 1.f);
+	meshList[GEO_CHARONEFRUST] = MeshBuilder::GenerateQuad("charOneFrustration", Color(1, 0, 0), 1.f);
+	meshList[GEO_CHARONEMOTIVE] = MeshBuilder::GenerateQuad("CharOneMotivation", Color(1, 1, 0), 1.f);
+	meshList[GEO_CHARONEREST] = MeshBuilder::GenerateQuad("CharOneRest", Color(1, 0, 1), 1.f);
+	meshList[GEO_CHARONEWD] = MeshBuilder::GenerateQuad("CharOneWorkDone", Color(0, 1, 1),1.f);
 
-	meshList[GEO_CHARTWOFRUST] = MeshBuilder::GenerateBar("charTwoFrustration", Color(1, 0, 0), charTwo->frustration / 2, 1.f);
-	meshList[GEO_CHARTWOMOTIVE] = MeshBuilder::GenerateBar("CharTwoMotivation", Color(1, 1, 0), charTwo->motivation / 2, 1.f);
-	meshList[GEO_CHARTWOREST] = MeshBuilder::GenerateBar("CharTwoRest", Color(1, 0, 1), charTwo->rest / 2, 1.f);
-	meshList[GEO_CHARTWOWD] = MeshBuilder::GenerateBar("CharTwoWorkDone", Color(0, 1, 1), charTwo->workDone / 2, 1.f);
+	meshList[GEO_CHARTWOFRUST] = MeshBuilder::GenerateQuad("charTwoFrustration", Color(1, 0, 0), 1.f);
+	meshList[GEO_CHARTWOMOTIVE] = MeshBuilder::GenerateQuad("CharTwoMotivation", Color(1, 1, 0),1.f);
+	meshList[GEO_CHARTWOREST] = MeshBuilder::GenerateQuad("CharTwoRest", Color(1, 0, 1),1.f);
+	meshList[GEO_CHARTWOWD] = MeshBuilder::GenerateQuad("CharTwoWorkDone", Color(0, 1, 1),1.f);
 
-	meshList[GEO_CHARTHREEFRUST] = MeshBuilder::GenerateBar("charThreeFrustration", Color(1, 0, 0), charThree->frustration / 2, 1.f);
-	meshList[GEO_CHARTHREEMOTIVE] = MeshBuilder::GenerateBar("CharThreeMotivation", Color(1, 1, 0), charThree->motivation / 2, 1.f);
-	meshList[GEO_CHARTHREEREST] = MeshBuilder::GenerateBar("CharThreeRest", Color(1, 0, 1), charThree->rest / 2, 1.f);
-	meshList[GEO_CHARTHREEWD] = MeshBuilder::GenerateBar("CharThreeWorkDone", Color(0, 1, 1), charThree->workDone / 2, 1.f);
+	meshList[GEO_CHARTHREEFRUST] = MeshBuilder::GenerateQuad("charThreeFrustration", Color(1, 0, 0),1.f);
+	meshList[GEO_CHARTHREEMOTIVE] = MeshBuilder::GenerateQuad("CharThreeMotivation", Color(1, 1, 0),1.f);
+	meshList[GEO_CHARTHREEREST] = MeshBuilder::GenerateQuad("CharThreeRest", Color(1, 0, 1),1.f);
+	meshList[GEO_CHARTHREEWD] = MeshBuilder::GenerateQuad("CharThreeWorkDone", Color(0, 1, 1),1.f);
 
-	meshList[GEO_CHARFOURFRUST] = MeshBuilder::GenerateBar("charThreeFrustration", Color(1, 0, 0), charFour->frustration / 2, 1.f);
-	meshList[GEO_CHARFOURMOTIVE] = MeshBuilder::GenerateBar("CharThreeMotivation", Color(1, 1, 0), charFour->motivation / 2, 1.f);
-	meshList[GEO_CHARFOURREST] = MeshBuilder::GenerateBar("CharThreeRest", Color(1, 0, 1), charFour->rest / 2, 1.f);
-	meshList[GEO_CHARFOURWD] = MeshBuilder::GenerateBar("CharFourWorkDone", Color(0, 1, 1), charFour->workDone / 2, 1.f);
+	meshList[GEO_CHARFOURFRUST] = MeshBuilder::GenerateQuad("charThreeFrustration", Color(1, 0, 0),1.f);
+	meshList[GEO_CHARFOURMOTIVE] = MeshBuilder::GenerateQuad("CharThreeMotivation", Color(1, 1, 0),1.f);
+	meshList[GEO_CHARFOURREST] = MeshBuilder::GenerateQuad("CharThreeRest", Color(1, 0, 1), 1.f);
+	meshList[GEO_CHARFOURWD] = MeshBuilder::GenerateQuad("CharFourWorkDone", Color(0, 1, 1),1.f);
 }
 void StudioProjectScene::Update(double dt)
 {
@@ -220,29 +220,29 @@ void StudioProjectScene::Update(double dt)
 	}
 
 	charOne->Update(dt);
-	meshList[GEO_CHARONEFRUST] = MeshBuilder::GenerateBar("charOneFrustration", Color(1, 0, 0), charOne->frustration / 2, 1.f);
-	meshList[GEO_CHARONEMOTIVE] = MeshBuilder::GenerateBar("CharOneMotivation", Color(1, 1, 0), charOne->motivation / 2, 1.f);
-	meshList[GEO_CHARONEREST] = MeshBuilder::GenerateBar("CharOneRest", Color(1, 0, 1), charOne->rest / 2, 1.f);
-	meshList[GEO_CHARONEWD] = MeshBuilder::GenerateBar("CharOneWorkDone", Color(0, 1, 1), charOne->workDone / 2, 1.f);
+	//meshList[GEO_CHARONEFRUST] = MeshBuilder::GenerateBar("charOneFrustration", Color(1, 0, 0), charOne->frustration / 2, 1.f);
+	//meshList[GEO_CHARONEMOTIVE] = MeshBuilder::GenerateBar("CharOneMotivation", Color(1, 1, 0), charOne->motivation / 2, 1.f);
+	//meshList[GEO_CHARONEREST] = MeshBuilder::GenerateBar("CharOneRest", Color(1, 0, 1), charOne->rest / 2, 1.f);
+	//meshList[GEO_CHARONEWD] = MeshBuilder::GenerateBar("CharOneWorkDone", Color(0, 1, 1), charOne->workDone / 2, 1.f);
 
 	charTwo->Update(dt);
-	meshList[GEO_CHARTWOFRUST] = MeshBuilder::GenerateBar("charTwoFrustration", Color(1, 0, 0), charTwo->frustration / 2, 1.f);
-	meshList[GEO_CHARTWOMOTIVE] = MeshBuilder::GenerateBar("CharTwoMotivation", Color(1, 1, 0), charTwo->motivation / 2, 1.f);
-	meshList[GEO_CHARTWOREST] = MeshBuilder::GenerateBar("CharTwoRest", Color(1, 0, 1), charTwo->rest / 2, 1.f);
-	meshList[GEO_CHARTWOWD] = MeshBuilder::GenerateBar("CharTwoWorkDone", Color(0, 1, 1), charTwo->workDone / 2, 1.f);
+	//meshList[GEO_CHARTWOFRUST] = MeshBuilder::GenerateBar("charTwoFrustration", Color(1, 0, 0), charTwo->frustration / 2, 1.f);
+	//meshList[GEO_CHARTWOMOTIVE] = MeshBuilder::GenerateBar("CharTwoMotivation", Color(1, 1, 0), charTwo->motivation / 2, 1.f);
+	//meshList[GEO_CHARTWOREST] = MeshBuilder::GenerateBar("CharTwoRest", Color(1, 0, 1), charTwo->rest / 2, 1.f);
+	//meshList[GEO_CHARTWOWD] = MeshBuilder::GenerateBar("CharTwoWorkDone", Color(0, 1, 1), charTwo->workDone / 2, 1.f);
 
 	charThree->Update(dt);
-	meshList[GEO_CHARTHREEFRUST] = MeshBuilder::GenerateBar("charThreeFrustration", Color(1, 0, 0), charThree->frustration / 2, 1.f);
-	meshList[GEO_CHARTHREEMOTIVE] = MeshBuilder::GenerateBar("CharThreeMotivation", Color(1, 1, 0), charThree->motivation / 2, 1.f);
-	meshList[GEO_CHARTHREEREST] = MeshBuilder::GenerateBar("CharThreeRest", Color(1, 0, 1), charThree->rest / 2, 1.f);
-	meshList[GEO_CHARTHREEWD] = MeshBuilder::GenerateBar("CharThreeWorkDone", Color(0, 1, 1), charThree->workDone / 2, 1.f);
+	//meshList[GEO_CHARTHREEFRUST] = MeshBuilder::GenerateBar("charThreeFrustration", Color(1, 0, 0), charThree->frustration / 2, 1.f);
+	//meshList[GEO_CHARTHREEMOTIVE] = MeshBuilder::GenerateBar("CharThreeMotivation", Color(1, 1, 0), charThree->motivation / 2, 1.f);
+	//meshList[GEO_CHARTHREEREST] = MeshBuilder::GenerateBar("CharThreeRest", Color(1, 0, 1), charThree->rest / 2, 1.f);
+	//meshList[GEO_CHARTHREEWD] = MeshBuilder::GenerateBar("CharThreeWorkDone", Color(0, 1, 1), charThree->workDone / 2, 1.f);
 
 
 	charFour->Update(dt);
-	meshList[GEO_CHARFOURFRUST] = MeshBuilder::GenerateBar("charThreeFrustration", Color(1, 0, 0), charFour->frustration / 2, 1.f);
-	meshList[GEO_CHARFOURMOTIVE] = MeshBuilder::GenerateBar("CharThreeMotivation", Color(1, 1, 0), charFour->motivation / 2, 1.f);
-	meshList[GEO_CHARFOURREST] = MeshBuilder::GenerateBar("CharThreeRest", Color(1, 0, 1), charFour->rest / 2, 1.f);
-	meshList[GEO_CHARFOURWD] = MeshBuilder::GenerateBar("CharFourWorkDone", Color(0, 1, 1), charFour->workDone / 2, 1.f);
+	//meshList[GEO_CHARFOURFRUST] = MeshBuilder::GenerateBar("charThreeFrustration", Color(1, 0, 0), charFour->frustration / 2, 1.f);
+	//meshList[GEO_CHARFOURMOTIVE] = MeshBuilder::GenerateBar("CharThreeMotivation", Color(1, 1, 0), charFour->motivation / 2, 1.f);
+	//meshList[GEO_CHARFOURREST] = MeshBuilder::GenerateBar("CharThreeRest", Color(1, 0, 1), charFour->rest / 2, 1.f);
+	//meshList[GEO_CHARFOURWD] = MeshBuilder::GenerateBar("CharFourWorkDone", Color(0, 1, 1), charFour->workDone / 2, 1.f);
 
 	currentChar->UpdateMovement(dt);
 		float dist = currentChar->pos.x - Television->pos.x;
@@ -898,26 +898,26 @@ void StudioProjectScene::RenderStats1()
 
 	// RenderStats here
 	modelStack.PushMatrix();
-	modelStack.Translate(m_worldWidthDiv8 + 10 , m_worldHeight / 2, 0);
-	modelStack.Scale(5, 10, 1);
+	modelStack.Translate(m_worldWidthDiv8 + 10 + charOne->frustration/2, m_worldHeight / 2, 0);
+	modelStack.Scale(charOne->frustration, 10, 1);
 	RenderMesh(meshList[GEO_CHARONEFRUST], false);
 	modelStack.PopMatrix();
 
 	modelStack.PushMatrix();
-	modelStack.Translate(m_worldWidthDiv8 + 15, m_worldHeight / 2 + 15, 0);
-	modelStack.Scale(5, 10, 1);
+	modelStack.Translate(m_worldWidthDiv8 + 15 + charOne->motivation/2, m_worldHeight / 2 + 15, 0);
+	modelStack.Scale(charOne->motivation, 10, 1);
 	RenderMesh(meshList[GEO_CHARONEMOTIVE], false);
 	modelStack.PopMatrix();
 
 	modelStack.PushMatrix();
-	modelStack.Translate(m_worldWidthDiv8 + 5, m_worldHeight / 2 - 15 , 0);
-	modelStack.Scale(5, 10, 1);
+	modelStack.Translate(m_worldWidthDiv8 + 5 + charOne->rest/2, m_worldHeight / 2 - 15 , 0);
+	modelStack.Scale(charOne->rest, 10, 1);
 	RenderMesh(meshList[GEO_CHARONEREST], false);
 	modelStack.PopMatrix();
 
 	modelStack.PushMatrix();
-	modelStack.Translate(m_worldWidthDiv8, m_worldHeight / 2 - 30, 0);
-	modelStack.Scale(5, 10, 1);
+	modelStack.Translate(m_worldWidthDiv8 + charOne->workDone/2, m_worldHeight / 2 - 30, 0);
+	modelStack.Scale(charOne->workDone, 10, 1);
 	RenderMesh(meshList[GEO_CHARONEWD], false);
 	modelStack.PopMatrix();
 }
@@ -948,26 +948,26 @@ void StudioProjectScene::RenderStats2()
 
 	// RenderStats here
 	modelStack.PushMatrix();
-	modelStack.Translate(m_worldWidthDiv8 + 15, m_worldHeight / 2 + 15, 0);
-	modelStack.Scale(5, 10, 1);
+	modelStack.Translate(m_worldWidthDiv8 + 15 + charTwo->motivation/2, m_worldHeight / 2 + 15, 0);
+	modelStack.Scale(charTwo->motivation, 10, 1);
 	RenderMesh(meshList[GEO_CHARTWOMOTIVE], false);
 	modelStack.PopMatrix();
 
 	modelStack.PushMatrix();
-	modelStack.Translate(m_worldWidthDiv8 + 10, m_worldHeight / 2, 0);
-	modelStack.Scale(5, 10, 1);
+	modelStack.Translate(m_worldWidthDiv8 + 10 + charTwo->frustration/2, m_worldHeight / 2, 0);
+	modelStack.Scale(charTwo->frustration, 10, 1);
 	RenderMesh(meshList[GEO_CHARTWOFRUST], false);
 	modelStack.PopMatrix();
 
 	modelStack.PushMatrix();
-	modelStack.Translate(m_worldWidthDiv8 + 5, m_worldHeight / 2 - 15, 0);
-	modelStack.Scale(5, 10, 1);
+	modelStack.Translate(m_worldWidthDiv8 + 5 + charTwo->rest/2, m_worldHeight / 2 - 15, 0);
+	modelStack.Scale(charTwo->rest, 10, 1);
 	RenderMesh(meshList[GEO_CHARTWOREST], false);
 	modelStack.PopMatrix();
 
 	modelStack.PushMatrix();
-	modelStack.Translate(m_worldWidthDiv8, m_worldHeight / 2 - 30, 0);
-	modelStack.Scale(5, 10, 1);
+	modelStack.Translate(m_worldWidthDiv8 + charTwo->workDone/2, m_worldHeight / 2 - 30, 0);
+	modelStack.Scale(charTwo->workDone, 10, 1);
 	RenderMesh(meshList[GEO_CHARTWOWD], false);
 	modelStack.PopMatrix();
 }
@@ -999,27 +999,27 @@ void StudioProjectScene::RenderStats3()
 
 	// RenderStats here
 	modelStack.PushMatrix();
-	modelStack.Translate(m_worldWidthDiv8 + 15, m_worldHeight / 2 + 15, 0);
-	modelStack.Scale(5, 10, 1);
+	modelStack.Translate(m_worldWidthDiv8 + 15 + charThree->motivation/2, m_worldHeight / 2 + 15, 0);
+	modelStack.Scale(charThree->motivation , 10, 1);
 	RenderMesh(meshList[GEO_CHARTHREEMOTIVE], false);
 	modelStack.PopMatrix();
 
 	modelStack.PushMatrix();
-	modelStack.Translate(m_worldWidthDiv8 + 10, m_worldHeight / 2, 0);
-	modelStack.Scale(5, 10, 1);
+	modelStack.Translate(m_worldWidthDiv8 + 10 + charThree->frustration/2, m_worldHeight / 2, 0);
+	modelStack.Scale(charThree->frustration , 10, 1);
 	RenderMesh(meshList[GEO_CHARTHREEFRUST], false);
 	modelStack.PopMatrix();
 
 
 	modelStack.PushMatrix();
-	modelStack.Translate(m_worldWidthDiv8 + 5, m_worldHeight / 2 - 15, 0);
-	modelStack.Scale(5, 10, 1);
+	modelStack.Translate(m_worldWidthDiv8 + 5 + charThree->rest/2, m_worldHeight / 2 - 15, 0);
+	modelStack.Scale(charThree->rest, 10, 1);
 	RenderMesh(meshList[GEO_CHARTHREEREST], false);
 	modelStack.PopMatrix();
 
 	modelStack.PushMatrix();
-	modelStack.Translate(m_worldWidthDiv8, m_worldHeight / 2 - 30, 0);
-	modelStack.Scale(5, 10, 1);
+	modelStack.Translate(m_worldWidthDiv8 + charThree->workDone/2, m_worldHeight / 2 - 30, 0);
+	modelStack.Scale(charThree->workDone, 10, 1);
 	RenderMesh(meshList[GEO_CHARTHREEWD], false);
 	modelStack.PopMatrix();
 }
@@ -1052,26 +1052,26 @@ void StudioProjectScene::RenderStats4()
 	// RenderStats here
 
 	modelStack.PushMatrix();
-	modelStack.Translate(m_worldWidthDiv8 + 15, m_worldHeight / 2 + 15, 0);
-	modelStack.Scale(5, 10, 1);
+	modelStack.Translate(m_worldWidthDiv8 + 15 + charFour->motivation/2, m_worldHeight / 2 + 15, 0);
+	modelStack.Scale(charFour->motivation, 10, 1);
 	RenderMesh(meshList[GEO_CHARFOURMOTIVE], false);
 	modelStack.PopMatrix();
 
 	modelStack.PushMatrix();
-	modelStack.Translate(m_worldWidthDiv8 + 10, m_worldHeight / 2, 0);
-	modelStack.Scale(5, 10, 1);
+	modelStack.Translate(m_worldWidthDiv8 + 10 + charFour->frustration/2, m_worldHeight / 2, 0);
+	modelStack.Scale(charFour->frustration, 10, 1);
 	RenderMesh(meshList[GEO_CHARFOURFRUST], false);
 	modelStack.PopMatrix();
 
 	modelStack.PushMatrix();
-	modelStack.Translate(m_worldWidthDiv8 + 5, m_worldHeight / 2 - 15, 0);
-	modelStack.Scale(5, 10, 1);
+	modelStack.Translate(m_worldWidthDiv8 + 5 + charFour->rest/2, m_worldHeight / 2 - 15, 0);
+	modelStack.Scale(charFour->rest, 10, 1);
 	RenderMesh(meshList[GEO_CHARFOURREST], false);
 	modelStack.PopMatrix();
 
 	modelStack.PushMatrix();
-	modelStack.Translate(m_worldWidthDiv8, m_worldHeight / 2 - 30, 0);
-	modelStack.Scale(5, 10, 1);
+	modelStack.Translate(m_worldWidthDiv8 + charFour->workDone/2, m_worldHeight / 2 - 30, 0);
+	modelStack.Scale(charFour->workDone, 10, 1);
 	RenderMesh(meshList[GEO_CHARFOURWD], false);
 	modelStack.PopMatrix();
 }
