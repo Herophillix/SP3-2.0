@@ -30,11 +30,13 @@ public:
 	void UpdateMenu(double dt);
 	void UpdateGame(double dt);
 	void UpdateInstructions(double dt);
+	void UpdateGameOver(double dt);
 	void UpdateRayTracing(double dt);
 	virtual void Render();
 	void RenderMenu();
 	void RenderGame();
 	void RenderInstructions();
+	void RenderGameOver(double dt);
 	void Reset();
 	virtual void Exit();
 
@@ -101,6 +103,7 @@ private:
 	char grade;
 	bool statgained;
 	bool mousepressed;
+
 
 	MenuObject* back;
 };

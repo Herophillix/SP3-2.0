@@ -15,6 +15,10 @@ public:
 		M_FORMATION_5,
 		M_FORMATION_6,
 		M_HOW_TO_PLAY,
+		
+		M_START,
+		M_STENCIL_PLUS,
+		M_STENCIL_MINUS,
 		M_BACK,
 		M_TOTAL
 	};

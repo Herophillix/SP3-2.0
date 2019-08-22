@@ -153,6 +153,9 @@
     <ClInclude Include="Source\Scenes\Results.h">
       <Filter>Scenes\Header</Filter>
     </ClInclude>
+    <ClInclude Include="Source\Scenes\Scene.h">
+      <Filter>Scenes\Header</Filter>
+    </ClInclude>
     <ClInclude Include="Source\Scenes\SceneBase.h">
       <Filter>Scenes\Header</Filter>
     </ClInclude>
