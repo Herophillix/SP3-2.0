@@ -12,6 +12,10 @@ struct CharacterStats
 	float m_motivation;
 	float m_originFrustration;
 	float m_originMotivation;
+
+
+	float m_rest;
+	float m_workDone;
 };
 
 
@@ -47,6 +51,7 @@ private:
 	CharacterStats m_char02;
 	CharacterStats m_char03;
 	CharacterStats m_char04;
+	int m_DayNo;
 };
 
 
