@@ -2,24 +2,47 @@
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
     <ClCompile Include="SheepGame.cpp" />
-    <ClCompile Include="SheepObject.cpp" />
-
-    <ClCompile Include="Source\Application.cpp">
-      <Filter>Source</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Scenes\Results.cpp">
-      <Filter>Scenes</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Scenes\SceneFrog.cpp">
-      <Filter>Scenes</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Scenes\StatManager.cpp">
-      <Filter>Scenes</Filter>
-    </ClCompile>
     <ClCompile Include="SheepGame.cpp">
       <Filter>Scenes</Filter>
     </ClCompile>
+    <ClCompile Include="SheepObject.cpp">
+      <Filter>Scenes\GameObject</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Application.cpp" />
+    <ClCompile Include="Source\Application.cpp">
+      <Filter>Source</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\main.cpp">
+      <Filter>Source</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\SpriteAnimation.cpp">
+      <Filter>Source</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Utility.cpp">
+      <Filter>Source</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Camera\Camera.cpp">
+      <Filter>Camera</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Scenes\CharacterObject.cpp">
+      <Filter>Scenes\GameObject</Filter>
+    </ClCompile>
     <ClCompile Include="Source\Scenes\FrogObject.cpp">
+      <Filter>Scenes\GameObject</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Scenes\GameObject.cpp">
+      <Filter>Scenes\GameObject</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Scenes\MazeObject.cpp">
+      <Filter>Scenes\GameObject</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Scenes\MenuObject.cpp">
+      <Filter>Scenes\GameObject</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Scenes\MoleObject.cpp">
+      <Filter>Scenes\GameObject</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Scenes\PhysicsObject.cpp">
       <Filter>Scenes\GameObject</Filter>
     </ClCompile>
     <ClCompile Include="Source\Scenes\ResultObject.cpp">
@@ -31,11 +54,13 @@
     <ClCompile Include="Source\Scenes\SubTankObject.cpp">
       <Filter>Scenes\GameObject</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Application.cpp" />
-    <ClCompile Include="Source\Camera\Camera.cpp">
-      <Filter>Camera</Filter>
+    <ClCompile Include="Source\Scenes\TankObject.cpp">
+      <Filter>Scenes\GameObject</Filter>
     </ClCompile>
     <ClCompile Include="Source\Scenes\SceneBase.cpp">
+      <Filter>Scenes</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Scenes\SceneFrog.cpp">
       <Filter>Scenes</Filter>
     </ClCompile>
     <ClCompile Include="Source\Scenes\SceneMaze.cpp">
@@ -50,20 +75,14 @@
     <ClCompile Include="Source\Scenes\StudioProjectScene.cpp">
       <Filter>Scenes</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Scenes\GameObject.cpp">
-      <Filter>Scenes\GameObject</Filter>
+    <ClCompile Include="Source\Scenes\StatManager.cpp">
+      <Filter>Scenes</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Scenes\MazeObject.cpp">
-      <Filter>Scenes\GameObject</Filter>
+    <ClCompile Include="Source\Minigames\Maze\MazeGenerator.cpp">
+      <Filter>Minigames\Maze</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Scenes\MoleObject.cpp">
-      <Filter>Scenes\GameObject</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Scenes\PhysicsObject.cpp">
-      <Filter>Scenes\GameObject</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Scenes\TankObject.cpp">
-      <Filter>Scenes\GameObject</Filter>
+    <ClCompile Include="Source\Scenes\Results.cpp">
+      <Filter>Scenes</Filter>
     </ClCompile>
     <ClCompile Include="Source\Rendering\LoadOBJ.cpp">
       <Filter>Rendering</Filter>
@@ -83,27 +102,48 @@
     <ClCompile Include="Source\Rendering\shader.cpp">
       <Filter>Rendering</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Minigames\Maze\MazeGenerator.cpp">
-      <Filter>Minigames\Maze</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\main.cpp">
-      <Filter>Source</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\SpriteAnimation.cpp">
-      <Filter>Source</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Utility.cpp">
-      <Filter>Source</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Scenes\CharacterObject.cpp">
-      <Filter>Scenes\GameObject</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Scenes\MenuObject.cpp">
-      <Filter>Scenes\GameObject</Filter>
-    </ClCompile>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Source\Application.h">
+      <Filter>Source\Header</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Light.h">
+      <Filter>Source\Header</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Material.h">
+      <Filter>Source\Header</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\SpriteAnimation.h">
+      <Filter>Source\Header</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Utility.h">
+      <Filter>Source\Header</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Vertex.h">
+      <Filter>Source\Header</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Camera\Camera.h">
+      <Filter>Camera</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Scenes\CharacterObject.h">
+      <Filter>Scenes\GameObject\Header</Filter>
+    </ClInclude>
     <ClInclude Include="Source\Scenes\FrogObject.h">
+      <Filter>Scenes\GameObject\Header</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Scenes\GameObject.h">
+      <Filter>Scenes\GameObject\Header</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Scenes\MazeObject.h">
+      <Filter>Scenes\GameObject\Header</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Scenes\MenuObject.h">
+      <Filter>Scenes\GameObject\Header</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Scenes\MoleObject.h">
+      <Filter>Scenes\GameObject\Header</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Scenes\PhysicsObject.h">
       <Filter>Scenes\GameObject\Header</Filter>
     </ClInclude>
     <ClInclude Include="Source\Scenes\ResultObject.h">
@@ -115,46 +155,16 @@
     <ClInclude Include="Source\Scenes\SubTankObject.h">
       <Filter>Scenes\GameObject\Header</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Scenes\Results.h">
-      <Filter>Scenes\Header</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Scenes\SceneFrog.h">
-      <Filter>Scenes\Header</Filter>
-    </ClInclude>
-    <ClInclude Include="SheepGame.h">
-      <Filter>Scenes\Header</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Scenes\StatManager.h">
-      <Filter>Scenes\Header</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Application.h">
-      <Filter>Source\Header</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Camera\Camera.h">
-      <Filter>Camera</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Scenes\CharacterObject.h">
-      <Filter>Scenes\GameObject\Header</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Scenes\GameObject.h">
-      <Filter>Scenes\GameObject\Header</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Scenes\MazeObject.h">
-      <Filter>Scenes\GameObject\Header</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Scenes\MoleObject.h">
-      <Filter>Scenes\GameObject\Header</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Scenes\PhysicsObject.h">
-      <Filter>Scenes\GameObject\Header</Filter>
-    </ClInclude>
     <ClInclude Include="Source\Scenes\TankObject.h">
       <Filter>Scenes\GameObject\Header</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Scenes\Scene.h">
+      <Filter>Scenes\Header</Filter>
     </ClInclude>
     <ClInclude Include="Source\Scenes\SceneBase.h">
       <Filter>Scenes\Header</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Scenes\Scene.h">
+    <ClInclude Include="Source\Scenes\SceneFrog.h">
       <Filter>Scenes\Header</Filter>
     </ClInclude>
     <ClInclude Include="Source\Scenes\SceneMaze.h">
@@ -166,7 +176,19 @@
     <ClInclude Include="Source\Scenes\SceneTank.h">
       <Filter>Scenes\Header</Filter>
     </ClInclude>
+    <ClInclude Include="SheepGame.h">
+      <Filter>Scenes\Header</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Scenes\StatManager.h">
+      <Filter>Scenes\Header</Filter>
+    </ClInclude>
     <ClInclude Include="Source\Scenes\StudioProjectScene.h">
+      <Filter>Scenes\Header</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Minigames\Maze\MazeGenerator.h">
+      <Filter>Minigames\Maze</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Scenes\Results.h">
       <Filter>Scenes\Header</Filter>
     </ClInclude>
     <ClInclude Include="Source\Rendering\LoadOBJ.h">
@@ -186,27 +208,6 @@
     </ClInclude>
     <ClInclude Include="Source\Rendering\shader.hpp">
       <Filter>Rendering\Header</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Minigames\Maze\MazeGenerator.h">
-      <Filter>Minigames\Maze</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Light.h">
-      <Filter>Source\Header</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Material.h">
-      <Filter>Source\Header</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\SpriteAnimation.h">
-      <Filter>Source\Header</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Utility.h">
-      <Filter>Source\Header</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Vertex.h">
-      <Filter>Source\Header</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Scenes\MenuObject.h">
-      <Filter>Scenes\GameObject\Header</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -247,6 +248,33 @@
     <ClCompile Include="Source\Scenes\TankObject.cpp" />
     <ClCompile Include="Source\SpriteAnimation.cpp" />
     <ClCompile Include="Source\Utility.cpp" />
+    <Filter Include="Source">
+      <UniqueIdentifier>{68c09085-4c4d-4fc5-97ff-772cbf5a1f17}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Header">
+      <UniqueIdentifier>{f4ff4bed-c145-44bd-a583-ff2eb43c9f85}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Scenes\Header">
+      <UniqueIdentifier>{c296ae67-b410-4b7e-a712-1920bf713bb2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Scenes\GameObject">
+      <UniqueIdentifier>{6f7610a0-ccb4-43eb-92c7-c779aefac024}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Scenes\GameObject\Header">
+      <UniqueIdentifier>{a89fac20-2a56-445a-9517-61eb34ca2064}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Minigames">
+      <UniqueIdentifier>{fe1dd03a-9663-4e8b-bb66-48a3bcc369db}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Minigames\Maze">
+      <UniqueIdentifier>{ede3e501-5a3f-4509-ba9f-d58cd91c5bf7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Minigames\Maze\Map">
+      <UniqueIdentifier>{0cd3813d-ecbd-4538-b1c6-8d73db75015b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Rendering\Header">
+      <UniqueIdentifier>{96458531-76b4-4871-a0ba-662c7f95d8ce}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="SheepGame.h" />

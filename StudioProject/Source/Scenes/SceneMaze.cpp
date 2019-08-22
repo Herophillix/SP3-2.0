@@ -32,20 +32,25 @@ void SceneMaze::Init()
 
 	m_goList = new std::vector<PhysicsObject*>;
 
+	meshList[GEO_MAZE_INSTRUCTIONS] = MeshBuilder::GenerateQuad("Maze_Instructions", Color(1, 1, 1), 1.f);
+	meshList[GEO_MAZE_INSTRUCTIONS]->textureID = LoadTGA("Image//Maze_Instructions.tga");
+	meshList[GEO_MAZE_PLUS] = MeshBuilder::GenerateQuad("Maze_Plus", Color(1, 1, 1), 1.f);
+	meshList[GEO_MAZE_PLUS]->textureID = LoadTGA("Image//Maze_Plus.tga");
+	meshList[GEO_MAZE_MINUS] = MeshBuilder::GenerateQuad("Maze_Minus", Color(1, 1, 1), 1.f);
+	meshList[GEO_MAZE_MINUS]->textureID = LoadTGA("Image//Maze_Minus.tga");
+	meshList[GEO_MAZE_START] = MeshBuilder::GenerateQuad("Maze_Start", Color(1, 1, 1), 1.f);
+	meshList[GEO_MAZE_START]->textureID = LoadTGA("Image//Maze_Start.tga");
+	meshList[GEO_TANK_BORDER] = MeshBuilder::GenerateQuad("Border", Color(1, 1, 1), 1.f);
+	meshList[GEO_TANK_BORDER]->textureID = LoadTGA("Image//Border.tga");
+	meshList[GEO_MAZE_SAMPLE] = MeshBuilder::GenerateQuad("Maze_Sample", Color(1, 1, 1), 1.f);
+	meshList[GEO_MAZE_SAMPLE]->textureID = LoadTGA("Image//Maze_Sample.tga");
+	meshList[GEO_TANK_CURSOR] = MeshBuilder::GenerateQuad("Cursor", Color(1, 1, 1), 1.f);
+	meshList[GEO_TANK_CURSOR]->textureID = LoadTGA("Image//Tank_Cursor.tga");
+	meshList[GEO_TANK_CURSOR_ALTERNATE] = MeshBuilder::GenerateQuad("Cursor	Alternate", Color(1, 1, 1), 1.f);
+	meshList[GEO_TANK_CURSOR_ALTERNATE]->textureID = LoadTGA("Image//Tank_Cursor_Alternate.tga");
 	// James 13/8/2019
 	v_mousepos.SetZero();
-	Ghost = new PhysicsObject(PhysicsObject::GO_BALL);
-	Ghost->active = false;
-	Ghost->pos.SetZero();
-	Ghost->scale.Set(2, 2, 1);
 
-	Ball = nullptr;
-
-	for (int i = 0; i < TraceSize; ++i)
-	{
-		Trace[i] = new PhysicsObject(PhysicsObject::GO_BALL);
-		Trace[i]->scale.Set(1, 1, 1);
-	}
 	// James 14/8/2019
 	tempwall = FetchGO();
 	tempwall->type = PhysicsObject::GO_WALL;
@@ -73,6 +78,27 @@ void SceneMaze::Init()
 
 	Maze.SetUp("Source\\Minigames\\Maze\\Map\\Map1.txt",m_goList);
 
+	Ball = FetchGO();
+	Ball->type = PhysicsObject::GO_BALL;
+	Ball->vel.SetZero();
+	Ball->scale.Set(2, 2, 1);
+	Ball->pos.Set(m_worldWidth * 0.625f, m_worldHeight * 0.75f, 0);
+
+	for (int i = 0; i < 3; ++i)
+	{
+		MenuObject* temp = new MenuObject(MenuObject::M_NONE, Vector3(60, 60, 1));
+		temp->active = true;
+		m_menuList.push_back(temp);
+	}
+
+	m_menuList[0]->pos.Set(m_worldWidth * 0.625f, m_worldHeight * 0.25f, 0);
+	m_menuList[0]->type = MenuObject::M_STENCIL_MINUS;
+
+	m_menuList[1]->pos.Set(m_worldWidth * 0.875f, m_worldHeight * 0.25f, 0);
+	m_menuList[1]->type = MenuObject::M_STENCIL_PLUS;
+
+	m_menuList[2]->pos.Set(m_worldWidth * 0.875f, m_worldHeight * 0.75f, 0);
+	m_menuList[2]->type = MenuObject::M_START;
 	// End James 14/8/2019
 	// End James 13/8/2019
 
@@ -81,7 +107,13 @@ void SceneMaze::Init()
 	// End James 15/8/2019
 
 	endGame = false;
+	SceneState = S_MENU;
 	elapsedTime = 0;
+	stencilsize = 1;
+	grade = 'S';
+	score = 10000;
+	mousepressed = false;
+	endGametime = 0.0;
 }
 
 void SceneMaze::Update(double dt)
@@ -93,7 +125,58 @@ void SceneMaze::Update(double dt)
 	// End James 13/8/2019
 	m_worldWidth = m_worldHeight * (float)Application::GetWindowWidth() / Application::GetWindowHeight();
 
+	double x, y;
+	Application::GetCursorPos(&x, &y);
+	int w = Application::GetWindowWidth();
+	int h = Application::GetWindowHeight();
+	v_mousepos = Vector3(static_cast<float>(x) / (w / m_worldWidth), (h - static_cast<float>(y)) / (h / m_worldHeight), 0.0f);
+	static bool bLButtonState = false;
+	if (!bLButtonState && Application::IsMousePressed(0))
+	{
+		bLButtonState = true;
+		std::cout << "LBUTTON DOWN" << std::endl;
+		mousepressed = true;
+	}
+	else if (bLButtonState && !Application::IsMousePressed(0))
+	{
+		bLButtonState = false;
+		mousepressed = false;
+	}
+	switch (SceneState)
+	{
+	case S_MENU:
+	{
+		UpdateMenu(dt);
+		break;
+	}
+	case S_GAME:
+	{
+		UpdateGame(dt);
+		break;
+	}
+	case S_GAMEOVER:
+	{
+		UpdateGameOver(dt);
+		break;
+	}
+	}
+}
+
+
+void SceneMaze::UpdateGame(double dt)
+{
 	// James 14/8/2019
+	if (endGame)
+	{
+		if (endGametime < 5.0)
+		{
+			endGametime += dt;
+		}
+		else
+		{
+			SceneState = S_GAMEOVER;
+		}
+	}
 	tempwall->pos = Vector3(m_worldWidth*0.5, 0, 0);
 	tempwall->scale.Set(5, m_worldWidth, 1);
 
@@ -107,69 +190,7 @@ void SceneMaze::Update(double dt)
 	tempwall4->scale.Set(5, m_worldHeight, 1);
 
 	// End James 14/8/2019
-	// James 13/8/2019
-	double x, y;
-	Application::GetCursorPos(&x, &y);
-	int w = Application::GetWindowWidth();
-	int h = Application::GetWindowHeight();
-	v_mousepos = Vector3(static_cast<float>(x) / (w / m_worldWidth), (h - static_cast<float>(y)) / (h / m_worldHeight), 0.0f);
-	if (Ghost->active)
-	{
-		Ghost->vel = Ghost->pos - v_mousepos;
-	}
-	// End James 13/8/2019
-
-	static bool bLButtonState = false;
-	if (!bLButtonState && Application::IsMousePressed(0))
-	{
-		bLButtonState = true;
-		std::cout << "LBUTTON DOWN" << std::endl;
-
-		// James 13/8/2019
-		Ghost->active = true;
-		Ghost->pos = v_mousepos;
-		// End James 13/8/2019
-	}
-	else if (bLButtonState && !Application::IsMousePressed(0))
-	{
-		bLButtonState = false;
-		std::cout << "LBUTTON UP" << std::endl;
-
-		// James 13/8/2019
-		PhysicsObject *temp = FetchGO();
-		temp->type = PhysicsObject::GO_BALL;
-		temp->pos = Ghost->pos;
-		temp->vel = Ghost->pos - v_mousepos;
-		temp->scale.Set(2, 2, 1);
-		Ghost->active = false;
-		// End James 13/8/2019
-		// James 15/8/2019
-		//Ball = temp;
-		// End James 15/8/2019
-	}
-	static bool bRButtonState = false;
-	if (!bRButtonState && Application::IsMousePressed(1))
-	{
-		bRButtonState = true;
-		std::cout << "RBUTTON DOWN" << std::endl;
-	}
-	else if (bRButtonState && !Application::IsMousePressed(1))
-	{
-		bRButtonState = false;
-		std::cout << "RBUTTON UP" << std::endl;
-
-		endGame = true;
-		// James 13/8/2019
-		PhysicsObject *temp = FetchGO();
-		temp->type = PhysicsObject::GO_PILLAR;
-		temp->pos = v_mousepos;
-		temp->scale.Set(5, 5, 1);
-		temp->normal.Set(1, 0, 0);
-		// End James 13/8/2019
-
-	}
-
-	static bool bFState = false;
+	/*static bool bFState = false;
 	if (!bFState && Application::IsKeyPressed('F'))
 	{
 		bFState = true;
@@ -189,70 +210,8 @@ void SceneMaze::Update(double dt)
 		Ball->vel.SetZero();;
 		Ball->scale.Set(2, 2, 1);
 		endGame = false;
-	}
+	}*/
 
-	// James 13/8/2019
-	for (int i = 0; i < TraceSize; ++i)
-	{
-		Trace[i]->active = false;
-	}
-	if (Ghost->active && !Ghost->vel.IsZero())
-	{
-		Vector3 m_gravity(0, -9.8f, 0);
-		PhysicsObject temp;
-		temp = *Ghost;
-		temp.type = PhysicsObject::GO_TRACE;
-		float time = 0.f;
-		int index = 0;
-		float accumulatedtime = 0.f;
-		//Vector3 prevpos = Ghost->pos + m_gravity * dt;
-		for (float time = 0; time < 5.f; time += dt)
-		{
-			temp.vel += Vector3(0, -9.8, 0) * dt;
-			temp.pos += temp.vel * dt;
-			accumulatedtime += temp.vel.Length() * dt;
-			for (int k = 0; k < (int)m_goList->size(); ++k)
-			{
-				PhysicsObject* go2 = (*m_goList)[k];
-				if (go2->active)
-				{
-					if (CheckCollision(&temp, go2))
-					{
-						go2->CollisionResponse(&temp, dt);
-						break;
-						//CollisionResponse(&temp, go2, dt);
-					}
-				}
-			}
-			if (accumulatedtime > 10 && index < TraceSize)
-			{
-				accumulatedtime = 0.f;
-				Trace[index]->active = true;
-				Trace[index]->pos = temp.pos;
-				index++;
-			}
-		}
-		//std::cout << time << std::endl;
-		//for (int i = 0; i < TraceSize; ++i)
-		//{
-		//	Trace[i]->active = true;
-		//	//Vector3 AddValue;
-		//	/*while (prevpos != Ghost->pos && abs(temppos.Length() - prevpos.Length()) < 2)
-		//	{
-		//	}*/
-		//	//tempvel += m_gravity * dt;
-		//	temppos += tempvel.Normalized() * dt * 750;
-		//	Trace[i]->pos = temppos;
-		//	//prevpos = temppos;
-		//}
-	}
-	else
-	{
-		for (int i = 0; i < TraceSize; ++i)
-		{
-			Trace[i]->active = false;
-		}
-	}
 	for (int i = 0; i < (int)m_goList->size(); ++i)
 	{
 		PhysicsObject *go = (*m_goList)[i];
@@ -295,34 +254,76 @@ void SceneMaze::Update(double dt)
 		}
 	}
 	// End James 13/8/2019
-
-	if (!endGame)
+	elapsedTime += dt;
+	if (score > 0)
 	{
-		elapsedTime += dt;
+		score -= dt * 100 / 3.f * (1 + (stencilsize - 1) * 0.25f);
 	}
 	else
 	{
-		Results::getInstance()->UpdateVars(dt);
-		if (!statgained)
+		score = 0;
+	}
+}
+
+void SceneMaze::UpdateGameOver(double dt)
+{
+	Results::getInstance()->UpdateVars(dt);
+	if (!statgained)
+	{
+		GameEndCalculations();
+		StatManager::GetInstance()->SetCharsOriginalValues();
+		statgained = true;
+	}
+	static bool bLButtonState = false;
+	if (!bLButtonState && Application::IsMousePressed(0))
+	{
+		bLButtonState = true;
+		std::cout << "LBUTTON DOWN" << std::endl;
+		if (Results::getInstance()->ButtonMouseCollision())
 		{
-			GameEndCalculations();
-			StatManager::GetInstance()->SetCharsOriginalValues();
-			statgained = true;
+			cout << "hit" << endl;
 		}
-		static bool bLButtonState = false;
-		if (!bLButtonState && Application::IsMousePressed(0))
+	}
+	else if (bLButtonState && !Application::IsMousePressed(0))
+	{
+		bLButtonState = false;
+		std::cout << "LBUTTON UP" << std::endl;
+	}
+}
+
+void SceneMaze::UpdateMenu(double dt)
+{
+	for (int i = 0; i < (int)m_menuList.size(); ++i)
+	{
+		m_menuList[i]->Update(v_mousepos);
+		if (m_menuList[i]->changed)
 		{
-			bLButtonState = true;
-			std::cout << "LBUTTON DOWN" << std::endl;
-			if (Results::getInstance()->ButtonMouseCollision())
+			m_menuList[i]->changed = false;
+			switch (m_menuList[i]->type)
 			{
-				cout << "hit" << endl;
+			case MenuObject::M_START:
+			{
+				SceneState = S_GAME; 
+				Ball->pos = Vector3(m_worldWidth * 0.5f, m_worldHeight * 0.5f, 0);
+				break;
 			}
-		}
-		else if (bLButtonState && !Application::IsMousePressed(0))
-		{
-			bLButtonState = false;
-			std::cout << "LBUTTON UP" << std::endl;
+			case MenuObject::M_STENCIL_PLUS:
+			{
+				if (stencilsize < 5)
+				{
+					stencilsize++;
+				}
+				break;
+			}
+			case MenuObject::M_STENCIL_MINUS:
+			{
+				if (stencilsize > 1)
+				{
+					stencilsize--;
+				}
+				break;
+			}
+			}
 		}
 	}
 }
@@ -379,71 +380,6 @@ bool SceneMaze::CheckCollision(PhysicsObject* go, PhysicsObject* go2)
 	}
 	return false;
 }
-
-float SceneMaze::CheckCollision2(PhysicsObject* go, PhysicsObject* go2)
-{
-	switch (go2->type)
-	{
-	case PhysicsObject::GO_BALL:
-	{
-		float time;
-		Vector3 vMu = go->vel - go2->vel;
-		Vector3 pMu = go->pos - go2->pos;
-		float radius = go->scale.x + go2->scale.x;
-		float a = vMu.LengthSquared();
-		float b = 2 * pMu.Dot(vMu);
-		float c = pMu.LengthSquared() - radius * radius;
-		float discriminant = b * b - 4 * a * c;
-		if (discriminant < 0)
-		{
-			return -1;
-		}
-		else
-		{
-			time = (-b + sqrtf(discriminant)) / (2 * a);
-			if (time > (-b - sqrtf(discriminant)) / (2 * a) && (-b - sqrtf(discriminant)) / (2 * a) >= 0)
-			{
-				return (-b - sqrtf(discriminant)) / (2 * a);
-			}
-			else
-			{
-				return time;
-			}
-		}
-		break;
-	}
-	case PhysicsObject::GO_WALL:
-	{
-		if (abs((go2->pos - go->pos).Dot(go2->normal)) < 0)
-		{
-			go2->normal *= -1.f;
-		}
-		if (go->vel.Dot(go2->normal) < 0)
-		{
-			return -1;
-		}
-		Vector3 w0 = go2->pos - (go->scale.x + go2->scale.x * 0.5f)*go2->normal;
-		float time = abs((go->pos - w0).Dot(go2->normal)) / go->vel.Dot(go2->normal);
-		Vector3 w1 = w0 + go2->scale.y * 0.5f * go2->normal.Cross(Vector3(0, 0, 1));
-		Vector3 w2 = w0 - go2->scale.y * 0.5f * go2->normal.Cross(Vector3(0, 0, 1));
-		Vector3 bh = go->pos + time * go2->normal;
-		if ((w1 - bh).Dot(w2 - bh) < 0)
-		{
-			return time;
-		}
-		else
-		{
-			return -1;
-		}
-		break;
-	}
-	default:
-	{
-		break;
-	}
-	}
-	return -1;
-}
 // End James 13/8/2019
 
 void SceneMaze::Render()
@@ -473,19 +409,99 @@ void SceneMaze::Render()
 
 	//RenderMesh(meshList[GEO_AXES], false);
 
-	// James 13/8/2019
-
-	if (Ghost->active)
+	switch (SceneState)
+	{
+	case S_MENU:
+	{
+		RenderMenu();
+		break;
+	}
+	case S_GAME:
+	{
+		RenderGame();
+		break;
+	}
+	case S_GAMEOVER:
+	{
+		RenderGameOver(); 
+		break;
+	}
+	}
+	if (SceneState != S_GAMEOVER)
 	{
 		modelStack.PushMatrix();
-		modelStack.Translate(Ghost->pos);
-		modelStack.Scale(Ghost->scale);
-		RenderMesh(meshList[GEO_BALL], false);
+		modelStack.Translate(v_mousepos);
+		modelStack.Scale(10, 10, 1);
+		if (mousepressed)
+		{
+			RenderMesh(meshList[GEO_TANK_CURSOR], false);
+		}
+		else
+		{
+			RenderMesh(meshList[GEO_TANK_CURSOR_ALTERNATE], false);
+		}
 		modelStack.PopMatrix();
 	}
+}
 
-	// End James 13/8/2019
+void SceneMaze::RenderMenu()
+{
+	ActivateStencil();
 
+	modelStack.PushMatrix();
+	modelStack.Translate(Ball->pos);
+	modelStack.Scale(100,100,1);
+	RenderMesh(meshList[GEO_MAZE_SAMPLE], false);
+	modelStack.PopMatrix();
+
+	DeactivateStencil();
+
+	for (int i = 0; i < (int)m_menuList.size(); ++i)
+	{
+		MenuObject* go = m_menuList[i];
+		modelStack.PushMatrix();
+		modelStack.Translate(go->pos);
+		modelStack.Scale(go->scale);
+		switch (go->type)
+		{
+		case MenuObject::M_START:
+		{
+			RenderMesh(meshList[GEO_MAZE_START], false);
+			break;
+		}
+		case MenuObject::M_STENCIL_MINUS:
+		{
+			RenderMesh(meshList[GEO_MAZE_MINUS], false);
+			break;
+		}
+		case MenuObject::M_STENCIL_PLUS:
+		{
+			RenderMesh(meshList[GEO_MAZE_PLUS], false);
+			break;
+		}
+		default:
+		{
+			RenderMesh(meshList[GEO_TANK_BORDER], false);
+			break;
+		}
+		}
+		modelStack.PopMatrix();
+	}
+	modelStack.PushMatrix();
+	modelStack.Translate(Ball->pos);
+	modelStack.Scale(Ball->scale);
+	RenderMesh(meshList[GEO_BALL], false);
+	modelStack.PopMatrix();
+
+	modelStack.PushMatrix();
+	modelStack.Translate(m_worldWidth * 0.25f, m_worldHeight * 0.5f, 0);
+	modelStack.Scale(160, 160, 1);
+	RenderMesh(meshList[GEO_MAZE_INSTRUCTIONS], false);
+	modelStack.PopMatrix();
+}
+
+void SceneMaze::RenderGame()
+{
 	// James 15/8/2019
 
 	if (enableStencil)
@@ -502,14 +518,6 @@ void SceneMaze::Render()
 		}
 	}
 
-	for (int i = 0; i < TraceSize; ++i)
-	{
-		if (Trace[i]->active)
-		{
-			RenderGO(Trace[i]);
-		}
-	}
-
 	if (enableStencil)
 	{
 		DeactivateStencil();
@@ -522,13 +530,17 @@ void SceneMaze::Render()
 	std::ostringstream ss;
 	ss.precision(3);
 	ss << "T:" << elapsedTime;
-	RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(0, 1, 0), 3, 0, 0);
-	// End James 14/8/2019
+	RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(0, 1, 0), 3, 0, 1);
 
-	if (endGame)
-	{
-		Results::getInstance()->RenderResults(0, 'A');
-	}
+	ss.str("");
+	ss << "S:" << score;
+	RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(0, 1, 0), 3, 0, 4);
+	// End James 14/8/2019
+}
+
+void SceneMaze::RenderGameOver()
+{
+	Results::getInstance()->RenderResults(0, 'A');
 }
 
 void SceneMaze::Exit()
@@ -633,8 +645,8 @@ void SceneMaze::ActivateStencil()
 	{
 		modelStack.PushMatrix();
 		modelStack.Translate(Ball->pos);
-		modelStack.Scale(Ball->scale * 15);
-		RenderMesh(meshList[GEO_LIGHT], false);
+		modelStack.Scale((10 + stencilsize * 2) * 2, (10 + stencilsize * 2) * 2, 1);
+		RenderMesh(meshList[GEO_BALL], false);
 		modelStack.PopMatrix();
 	}
 
