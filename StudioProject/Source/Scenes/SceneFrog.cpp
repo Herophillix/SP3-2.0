@@ -51,6 +51,8 @@ void SceneFrog::Init()
 	meshList[GEO_FROG_ROCK]->textureID = LoadTGA("Image//Frog_Rock.tga");
 	meshList[GEO_COIN] = MeshBuilder::GenerateQuad("coin", Color(1, 1, 1), 2.f);
 	meshList[GEO_COIN]->textureID = LoadTGA("Image//Frog_Coin.tga");
+	meshList[GEO_FROG_INSTRUCTIONS] = MeshBuilder::GenerateQuad("instructions", Color(1, 1, 1), 1.f);
+	meshList[GEO_FROG_INSTRUCTIONS]->textureID = LoadTGA("Image//Frog_instructions.tga");
 	meshList[GEO_TEXT] = MeshBuilder::GenerateText("text", 16, 16);
 	meshList[GEO_TEXT]->textureID = LoadTGA("Image//KidsZone.tga");
 
@@ -81,6 +83,8 @@ void SceneFrog::Init()
 	Frog->setCoin(m_coinCount);
 
 	score = 0;
+	m_instructions = true;
+	instructionTimer = 600.f;
 
 
 
@@ -240,150 +244,160 @@ bool SceneFrog::CheckCollision(FrogObject* go, FrogObject* go2)
 void SceneFrog::Update(double dt)
 {
 	SceneBase::Update(dt);
-	if (Frog->hp == 0)
+	if (m_instructions)
 	{
-		m_GameOver = true;
-	}
-	if (m_GameOver)
-	{
-		if (!m_setOriginValues && !m_setStatsToDist)
+		instructionTimer -= dt;
+		if (instructionTimer <= 0)
 		{
-			score = Frog->getScore();
-
-			GameEndCalculations();
-			StatManager::GetInstance()->SetCharsOriginalValues();
-			m_setStatsToDist = true;
-			m_setOriginValues = true;
-			Reset();
+			m_instructions = false;
 		}
 	}
-	if (timer <= 0)
+	else if (!m_instructions)
 	{
-		m_GameOver = true;
-	}
-	//if (Application::IsKeyPressed('L'))
-	//{
-	//	Reset();
-	//}
-	double x, y;
-	Frog->timerInvincibility += dt;
-	Application::GetCursorPos(&x, &y);
-	int w = Application::GetWindowWidth();
-	int h = Application::GetWindowHeight();
-	v_mousepos = Vector3(static_cast<float>(x) / (w / m_worldWidth), (h - static_cast<float>(y)) / (h / m_worldHeight), 0.0f);
-	timer -= dt;
-
-	static bool bMovingLeft = false;
-	if (Frog->Frog_pos.x >= (m_worldWidth / 2) - 50)
-	{
-		if (Application::IsKeyPressed('A') && !bMovingLeft)
+		if (Frog->hp == 0)
 		{
-			Frog->Frog_pos.x -= 10.f;
-			bMovingLeft = true;
+			m_GameOver = true;
 		}
-
-		else if (!Application::IsKeyPressed('A') && bMovingLeft)
-		{
-			bMovingLeft = false;
-		}
-	}
-	static bool bMovingRight = false;
-	if (Frog->Frog_pos.x <= (m_worldWidth / 2) + 50)
-	{
-		if (Application::IsKeyPressed('D') && !bMovingRight)
-		{
-			Frog->Frog_pos.x += 10.f;
-			bMovingRight = true;
-		}
-		else if (!Application::IsKeyPressed('D') && bMovingRight)
-		{
-			bMovingRight = false;
-		}
-	}
-	static bool bMovingUp = false;
-	if (Frog->Frog_pos.y < m_worldHeight - 10)
-	{
-		if (Application::IsKeyPressed('W') && !bMovingUp)
-		{
-			Frog->Frog_pos.y += 5.f;
-			bMovingUp = true;
-		}
-		else if (!Application::IsKeyPressed('W') && bMovingUp)
-		{
-			bMovingUp = false;
-		}
-	}
-	static bool bMovingDown = false;
-	if (Frog->Frog_pos.y > 10)
-	{
-		if (Application::IsKeyPressed('S') && !bMovingDown)
-		{
-			Frog->Frog_pos.y -= 5.f;
-			bMovingDown = true;
-		}
-		else if (!Application::IsKeyPressed('S') && bMovingDown)
-		{
-			bMovingDown = false;
-		}
-	}
-
-	static bool bLButtonState = false;
-	if (!bLButtonState && Application::IsMousePressed(0))
-	{
-		bLButtonState = true;
-		std::cout << "LBUTTON DOWN" << std::endl;
 		if (m_GameOver)
 		{
-			if (Results::getInstance()->ButtonMouseCollision())
+			if (!m_setOriginValues && !m_setStatsToDist)
 			{
-				cout << "hit" << endl;
+				score = Frog->getScore();
+
+				GameEndCalculations();
+				StatManager::GetInstance()->SetCharsOriginalValues();
+				m_setStatsToDist = true;
+				m_setOriginValues = true;
+				Reset();
 			}
 		}
-	}
-	else if (!Application::IsMousePressed(0) && bLButtonState)
-	{
-		bLButtonState = false;
-		std::cout << "LBUTTON UP" << std::endl;
-
-	}
-	UpdateRock(dt);
-
-	for (int i = 0; i < (int)m_goList->size(); ++i)
-	{
-
-		FrogObject *go = (*m_goList)[i];
-
-		if (go->active)
+		if (timer <= 0)
 		{
-			switch (go->type)
-			{
-			case FrogObject::GO_FROG:
-			{
-				go->Frog_pos += go->Frog_vel * (float)dt;
+			m_GameOver = true;
+		}
+		//if (Application::IsKeyPressed('L'))
+		//{
+		//	Reset();
+		//}
+		double x, y;
+		Frog->timerInvincibility += dt;
+		Application::GetCursorPos(&x, &y);
+		int w = Application::GetWindowWidth();
+		int h = Application::GetWindowHeight();
+		v_mousepos = Vector3(static_cast<float>(x) / (w / m_worldWidth), (h - static_cast<float>(y)) / (h / m_worldHeight), 0.0f);
+		timer -= dt;
 
-				break;
-			}
-			}
-			for (int k = i + 1; k < (int)rock_List.size(); ++k)
+		static bool bMovingLeft = false;
+		if (Frog->Frog_pos.x >= (m_worldWidth / 2) - 50)
+		{
+			if (Application::IsKeyPressed('A') && !bMovingLeft)
 			{
-				FrogObject* go2 = (rock_List)[k];
-				if (go2->active)
+				Frog->Frog_pos.x -= 10.f;
+				bMovingLeft = true;
+			}
+
+			else if (!Application::IsKeyPressed('A') && bMovingLeft)
+			{
+				bMovingLeft = false;
+			}
+		}
+		static bool bMovingRight = false;
+		if (Frog->Frog_pos.x <= (m_worldWidth / 2) + 50)
+		{
+			if (Application::IsKeyPressed('D') && !bMovingRight)
+			{
+				Frog->Frog_pos.x += 10.f;
+				bMovingRight = true;
+			}
+			else if (!Application::IsKeyPressed('D') && bMovingRight)
+			{
+				bMovingRight = false;
+			}
+		}
+		static bool bMovingUp = false;
+		if (Frog->Frog_pos.y < m_worldHeight - 10)
+		{
+			if (Application::IsKeyPressed('W') && !bMovingUp)
+			{
+				Frog->Frog_pos.y += 5.f;
+				bMovingUp = true;
+			}
+			else if (!Application::IsKeyPressed('W') && bMovingUp)
+			{
+				bMovingUp = false;
+			}
+		}
+		static bool bMovingDown = false;
+		if (Frog->Frog_pos.y > 10)
+		{
+			if (Application::IsKeyPressed('S') && !bMovingDown)
+			{
+				Frog->Frog_pos.y -= 5.f;
+				bMovingDown = true;
+			}
+			else if (!Application::IsKeyPressed('S') && bMovingDown)
+			{
+				bMovingDown = false;
+			}
+		}
+
+		static bool bLButtonState = false;
+		if (!bLButtonState && Application::IsMousePressed(0))
+		{
+			bLButtonState = true;
+			std::cout << "LBUTTON DOWN" << std::endl;
+			if (m_GameOver)
+			{
+				if (Results::getInstance()->ButtonMouseCollision())
 				{
-					go = (*m_goList)[i];
-					if (CheckCollision(go, go2))
-					{
-						go->CollisionResponse(go, go2, dt);
+					cout << "hit" << endl;
+				}
+			}
+		}
+		else if (!Application::IsMousePressed(0) && bLButtonState)
+		{
+			bLButtonState = false;
+			std::cout << "LBUTTON UP" << std::endl;
 
-						if (Frog->getCoin() == 0)
+		}
+		UpdateRock(dt);
+
+		for (int i = 0; i < (int)m_goList->size(); ++i)
+		{
+
+			FrogObject *go = (*m_goList)[i];
+
+			if (go->active)
+			{
+				switch (go->type)
+				{
+				case FrogObject::GO_FROG:
+				{
+					go->Frog_pos += go->Frog_vel * (float)dt;
+
+					break;
+				}
+				}
+				for (int k = i + 1; k < (int)rock_List.size(); ++k)
+				{
+					FrogObject* go2 = (rock_List)[k];
+					if (go2->active)
+					{
+						go = (*m_goList)[i];
+						if (CheckCollision(go, go2))
 						{
-							m_coinCount = 0;
+							go->CollisionResponse(go, go2, dt);
+
+							if (Frog->getCoin() == 0)
+							{
+								m_coinCount = 0;
+							}
 						}
 					}
 				}
 			}
 		}
 	}
-
 }
 
 FrogObject * SceneFrog::FetchGO()
@@ -507,75 +521,78 @@ void SceneFrog::Render()
 {
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-//	Calculating aspect ratio
-//	 James 13/8/2019
+	//	Calculating aspect ratio
+	//	 James 13/8/2019
 	m_worldHeight = 200.f;
-//	 End James 13/8/2019
+	//	 End James 13/8/2019
 	m_worldWidth = m_worldHeight * (float)Application::GetWindowWidth() / Application::GetWindowHeight();
 
-//	 Projection matrix : Orthographic Projection
+	//	 Projection matrix : Orthographic Projection
 	Mtx44 projection;
 	projection.SetToOrtho(0, m_worldWidth, 0, m_worldHeight, -10, 10);
 	projectionStack.LoadMatrix(projection);
 
-//	 Camera matrix
+	//	 Camera matrix
 	viewStack.LoadIdentity();
 	viewStack.LookAt(
 		camera.position.x, camera.position.y, camera.position.z,
 		camera.target.x, camera.target.y, camera.target.z,
 		camera.up.x, camera.up.y, camera.up.z
 	);
-//	 Model matrix : an identity matrix (model will be at the origin)
+	//	 Model matrix : an identity matrix (model will be at the origin)
 	modelStack.LoadIdentity();
 
-	RenderMap();
-
-	for (std::vector<FrogObject *>::iterator it = m_goList->begin(); it != m_goList->end(); ++it)
+	if (m_instructions)
 	{
-		FrogObject *go = (FrogObject *)*it;
-		if (go->active)
-		{
-			RenderGO(go);
-		}
+		modelStack.PushMatrix();
+		modelStack.Translate(m_worldWidth / 2, m_worldHeight / 2, 0);
+		modelStack.Scale(m_worldHeight / 2, m_worldHeight / 2, 0);
+		RenderMesh(meshList[GEO_FROG_INSTRUCTIONS], false);
+		modelStack.PopMatrix();
 	}
 
-	for (std::vector<FrogObject *>::iterator it = rock_List.begin(); it != rock_List.end(); ++it)
+
+	if (!m_instructions)
 	{
-		FrogObject *rock = (FrogObject*)*it;
-		if (rock->active)
+		RenderMap();
+
+		for (std::vector<FrogObject *>::iterator it = m_goList->begin(); it != m_goList->end(); ++it)
 		{
-			RenderRock(rock);
+			FrogObject *go = (FrogObject *)*it;
+			if (go->active)
+			{
+				RenderGO(go);
+			}
 		}
+
+		for (std::vector<FrogObject *>::iterator it = rock_List.begin(); it != rock_List.end(); ++it)
+		{
+			FrogObject *rock = (FrogObject*)*it;
+			if (rock->active)
+			{
+				RenderRock(rock);
+			}
+		}
+	
+	
+		std::ostringstream ss2;
+		ss2.precision(2);
+		ss2 << "HP: " << Frog->getHP();
+		RenderTextOnScreen(meshList[GEO_TEXT], ss2.str(), Color(0, 1, 0), 3, 0, 3);
+		std::ostringstream ss4;
+		ss4.precision(6);
+		ss4 << "Score: " << Frog->getScore();
+		RenderTextOnScreen(meshList[GEO_TEXT], ss4.str(), Color(0, 1, 0), 3, 0, 9);
+		std::ostringstream ss5;
+		ss5.precision(2);
+		ss5 << "Time left: " << timer;
+		RenderTextOnScreen(meshList[GEO_TEXT], ss5.str(), Color(0, 1, 0), 3, 0, 12);
+
+		std::ostringstream ss6;
+		ss6.precision(2);
+		ss6 << "Coins left: " << Frog->getCoin();
+		RenderTextOnScreen(meshList[GEO_TEXT], ss6.str(), Color(0, 1, 0), 3, 0, 15);
 	}
-
-	cout << m_worldWidth << endl;
-	std::ostringstream ss;
-	ss.precision(5);
-	ss << "M:" << v_mousepos;
-	RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(0, 1, 0), 3, 0, 0);
-
-	std::ostringstream ss2;
-	ss2.precision(2);
-	ss2 << "HP: " << Frog->getHP();
-	RenderTextOnScreen(meshList[GEO_TEXT], ss2.str(), Color(0, 1, 0), 3, 0, 3);
-	std::ostringstream ss3;
-	ss3.precision(5);
-	ss3 << "Pos: " << Frog->Frog_pos;
-	RenderTextOnScreen(meshList[GEO_TEXT], ss3.str(), Color(0, 1, 0), 3, 0, 6);
-	std::ostringstream ss4;
-	ss4.precision(6);
-	ss4 << "Score: " << Frog->getScore();
-	RenderTextOnScreen(meshList[GEO_TEXT], ss4.str(), Color(0, 1, 0), 3, 0, 9);
-	std::ostringstream ss5;
-	ss5.precision(2);
-	ss5 << "Time left: " << timer;
-	RenderTextOnScreen(meshList[GEO_TEXT], ss5.str(), Color(0, 1, 0), 3, 0, 12);
-
-	std::ostringstream ss6;
-	ss6.precision(2);
-	ss6 << "Coins left: " << Frog->getCoin();
-	RenderTextOnScreen(meshList[GEO_TEXT], ss6.str(), Color(0, 1, 0), 3, 0, 15);
-
 	if (m_GameOver)
 	{
 		Results::getInstance()->RenderResults(score, m_grade);

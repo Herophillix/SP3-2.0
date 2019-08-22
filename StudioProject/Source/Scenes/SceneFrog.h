@@ -56,6 +56,7 @@ private:
 	float rockSize;
 	bool m_ButtonPress;
 	bool m_GameOver;
+	bool m_instructions;
 	float m_rockCount;
 	float m_coinCount;
 	float max_rock;
@@ -63,6 +64,7 @@ private:
 	float timer;
 	char m_grade;
 	int score;
+	int instructionTimer;
 	FrogObject* Frog;
 	FrogObject* Platform;
 
