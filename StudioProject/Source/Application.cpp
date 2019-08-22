@@ -18,6 +18,7 @@
 #include "../Source/Scenes/SceneTank.h"
 #include "../Source/Scenes/Results.h"
 #include "../Source/Scenes/SheepGame.h"
+#include "../Source/Scenes/SceneMainMenu.h"
 GLFWwindow* m_window;
 const unsigned char FPS = 60; // FPS of this game
 const unsigned int frameTime = 1000 / FPS; // time for each frame
@@ -69,7 +70,7 @@ int Application::GetWindowHeight()
 
 Application::Application()
 {
-	currentScene = SCENESHEEP;
+	currentScene = SCENEMAINMENU;
 }
 
 Application::~Application()
@@ -127,6 +128,7 @@ void Application::Init()
 		fprintf(stderr, "Error: %s\n", glewGetErrorString(err));
 		//return -1;
 	}
+
 }
 
 void Application::Run()
@@ -139,6 +141,7 @@ void Application::Run()
 	thisScene[SCENETANK] = new SceneTank;
 	thisScene[SCENEFROG] = new SceneFrog;
 	thisScene[SCENESHEEP] = new SheepGame;
+	thisScene[SCENEMAINMENU] = new MainMenu;
 
 	for (int i = 0; i < TOTALSCENES; ++i)
 	{

@@ -77,6 +77,9 @@ void SceneMole::Init()
 	meshList[GEO_GAMEFONT] = MeshBuilder::GenerateText("kzone", 16, 16);
 	meshList[GEO_GAMEFONT]->textureID = LoadTGA("Image//KidsZone.tga");
 
+	meshList[GEO_MOLE_INSTRUCT] = MeshBuilder::GenerateQuad("instructions_mole", Color(1, 1, 1), 1.f);
+	meshList[GEO_MOLE_INSTRUCT]->textureID = LoadTGA("Image//Mole_Instructions.tga");
+
 	//  ******************************* SPRITE ANIMATIONS HERE  ******************************* //
 
 	//  ******************************* PARTICLES HERE  ******************************* //
@@ -190,9 +193,10 @@ void SceneMole::Init()
 	m_score = 0;
 	m_hitCounter = 0;
 	m_frostTimer = 10.f;
-	m_gameTimer = 2.f;
+	m_gameTimer = 90.f;
 	m_gameOver = false;
 	m_frostOn = false;
+	m_instructions = true;
 
 	multiplier.Set(1, 1, 1);
 
@@ -248,7 +252,7 @@ void SceneMole::Update(double dt)
 	}
 
 	// GAME TIMER
-	if (!m_gameOver)
+	if (!m_gameOver && !m_instructions)
 		m_gameTimer -= dt;
 	if (m_gameTimer <= 0)
 	{
@@ -283,88 +287,106 @@ void SceneMole::Update(double dt)
 
 
 	// ****************************** MOVEMENT CONTROLS ****************************** //
-	m_hammerMoveBT -= dt;
-	if (Application::IsKeyPressed('W') && m_hammerMoveBT <= 0.f)
+	if (!m_instructions)
 	{
-		UpdateHammerPos('W');
-		m_hammerMoveBT = 0.15f;
-	}
-	if (Application::IsKeyPressed('S') && m_hammerMoveBT <= 0.f)
-	{
-		UpdateHammerPos('S');
-		m_hammerMoveBT = 0.15f;
-	}
-	if (Application::IsKeyPressed('A') && m_hammerMoveBT <= 0.f)
-	{
-		UpdateHammerPos('A');
-		m_hammerMoveBT = 0.15f;
-	}
-	if (Application::IsKeyPressed('D') && m_hammerMoveBT <= 0.f)
-	{
-		UpdateHammerPos('D');
-		m_hammerMoveBT = 0.15f;
-	}
-	static bool bSpaceButtonState = false;
-	if (!bSpaceButtonState && Application::IsKeyPressed(VK_SPACE))
-	{
-		bSpaceButtonState = true;
-		std::cout << "SPACE DOWN" << endl;
-		meshList[GEO_HAMMER]->textureID = t_hammerHit;
-		if (HammerCollisionCheck())
+		m_hammerMoveBT -= dt;
+		if (Application::IsKeyPressed('W') && m_hammerMoveBT <= 0.f)
 		{
-			// sfx
-			cout << "hit" << endl;
-			m_hitCounter++;
+			UpdateHammerPos('W');
+			m_hammerMoveBT = 0.15f;
+		}
+		if (Application::IsKeyPressed('S') && m_hammerMoveBT <= 0.f)
+		{
+			UpdateHammerPos('S');
+			m_hammerMoveBT = 0.15f;
+		}
+		if (Application::IsKeyPressed('A') && m_hammerMoveBT <= 0.f)
+		{
+			UpdateHammerPos('A');
+			m_hammerMoveBT = 0.15f;
+		}
+		if (Application::IsKeyPressed('D') && m_hammerMoveBT <= 0.f)
+		{
+			UpdateHammerPos('D');
+			m_hammerMoveBT = 0.15f;
+		}
+		static bool bSpaceButtonState = false;
+		if (!bSpaceButtonState && Application::IsKeyPressed(VK_SPACE))
+		{
+			bSpaceButtonState = true;
+			std::cout << "SPACE DOWN" << endl;
+			meshList[GEO_HAMMER]->textureID = t_hammerHit;
+			if (HammerCollisionCheck())
+			{
+				// sfx
+				cout << "hit" << endl;
+				m_hitCounter++;
+			}
+			else
+			{
+				// sfx
+				cout << "miss" << endl;
+				m_hitCounter = 0;
+			}
+		}
+		else if (bSpaceButtonState && !Application::IsKeyPressed(VK_SPACE))
+		{
+			bSpaceButtonState = false;
+			std::cout << "SPACE UP" << endl;
+			meshList[GEO_HAMMER]->textureID = t_hammerIdle;
+		}
+
+		if (m_hitCounter >= 10 && m_hitCounter <= 19)
+		{
+			m_multiplier = 2;
+		}
+		else if (m_hitCounter >= 20 && m_hitCounter <= 29)
+		{
+			m_multiplier = 4;
+		}
+		else if (m_hitCounter >= 30)
+		{
+			m_multiplier = 8;
 		}
 		else
 		{
-			// sfx
-			cout << "miss" << endl;
-			m_hitCounter = 0;
+			m_multiplier = 1;
+		}
+
+		UpdateMoles(dt);
+		UpdateParticles(dt);
+
+		if (m_multiplier == 2)
+		{
+			multiplier.Set(0.941f, 0.969f, 0.157f);
+		}
+		else if (m_multiplier == 4)
+		{
+			multiplier.Set(0.969f, 0.604f, 0.157f);
+		}
+		else if (m_multiplier == 8)
+		{
+			multiplier.Set(1, 0.141f, 0.141f);
+		}
+		else
+		{
+			multiplier.Set(1, 1, 1);
 		}
 	}
-	else if (bSpaceButtonState && !Application::IsKeyPressed(VK_SPACE))
-	{
-		bSpaceButtonState = false;
-		std::cout << "SPACE UP" << endl;
-		meshList[GEO_HAMMER]->textureID = t_hammerIdle;
-	}
-
-	if (m_hitCounter >= 10 && m_hitCounter <= 19)
-	{
-		m_multiplier = 2;
-	}
-	else if (m_hitCounter >= 20 && m_hitCounter <= 29)
-	{
-		m_multiplier = 4;
-	}
-	else if (m_hitCounter >= 30)
-	{
-		m_multiplier = 8;
-	}
 	else
 	{
-		m_multiplier = 1;
-	}
-
-	UpdateMoles(dt);
-	UpdateParticles(dt);
-
-	if (m_multiplier == 2)
-	{
-		multiplier.Set(0.941f, 0.969f, 0.157f);
-	}
-	else if (m_multiplier == 4)
-	{
-		multiplier.Set(0.969f, 0.604f, 0.157f);
-	}
-	else if (m_multiplier == 8)
-	{
-		multiplier.Set(1, 0.141f, 0.141f);
-	}
-	else
-	{
-		multiplier.Set(1, 1, 1);
+		static bool bSpaceButtonState = false;
+		if (!bSpaceButtonState && Application::IsKeyPressed(VK_SPACE))
+		{
+			bSpaceButtonState = true;
+			std::cout << "SPACE DOWN" << endl;
+		}
+		else if (bSpaceButtonState && !Application::IsKeyPressed(VK_SPACE))
+		{
+			bSpaceButtonState = false;
+			m_instructions = false;
+			std::cout << "SPACE UP" << endl;
+		}
 	}
 }
 
@@ -498,8 +520,22 @@ void SceneMole::Render()
 	);
 	// Model matrix : an identity matrix (model will be at the origin)
 	modelStack.LoadIdentity();
+	if (m_instructions)
+	{
+		modelStack.PushMatrix();
+		modelStack.Translate(m_halfWorldWidth, m_halfWorldHeight, 0);
+		modelStack.Scale(70, 70, 1);
+		RenderMesh(meshList[GEO_MOLE_INSTRUCT], false);
+		modelStack.PopMatrix();
 
-	if (!m_gameOver)
+		modelStack.PushMatrix();
+		modelStack.Translate(m_halfWorldWidth - m_eightWorldWidth, m_sixthWorldHeight / 2, 0);
+		modelStack.Scale(3, 3, 3);
+		RenderText(meshList[GEO_GAMEFONT], "Hit Space to Start", Color(1, 1, 1));
+		modelStack.PopMatrix();
+	}
+
+	if (!m_gameOver && !m_instructions)
 	{
 		RenderMachine();
 		RenderGO(m_Hammer);
@@ -867,6 +903,7 @@ void SceneMole::ResetVars()
 	m_gameTimer = 90.f;
 	m_gameOver = false;
 	m_frostOn = false;
+	m_instructions = true;
 
 	multiplier.Set(1, 1, 1);
 	m_hammerPosIndex = 0;
