@@ -274,6 +274,18 @@ void SceneTank::Update(double dt)
 		bLButtonState = false;
 		mousepressed = false;
 	}
+	static bool bRButtonState = false;
+	if (!bRButtonState && Application::IsMousePressed(1))
+	{
+		bRButtonState = true;
+		std::cout << "LBUTTON DOWN" << std::endl;
+		mousepressed = true;
+	}
+	else if (bRButtonState && !Application::IsMousePressed(1))
+	{
+		bRButtonState = false;
+		SceneState = S_GAMEOVER;
+	}
 	switch (SceneState)
 	{
 	case S_MENU:

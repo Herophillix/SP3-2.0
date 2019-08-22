@@ -183,7 +183,7 @@ void SheepGame::Init()
 	player->scale.Set(10, 10, 10);
 	player->cooldown = 2.f;
 	player->vel.Set(0, 0, 0);
-	player->health = 1000000;
+	player->health = 3;
 	player->Mana = 100;
 	ManaRegen = 5.f;
 	points = 0;

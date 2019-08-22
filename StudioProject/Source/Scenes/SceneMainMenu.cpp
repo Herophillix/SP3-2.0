@@ -202,7 +202,7 @@ void MainMenu::ButtonCollision(MainMenuObject::MAINMENU_OBJECTTYPE type)
 	switch (type)
 	{
 	case MainMenuObject::GO_NEWGAME:
-		Application::setScene(2);
+		Application::setScene(0);
 		// scene change
 		break;
 	case MainMenuObject::GO_INSTRUCTIONS:
