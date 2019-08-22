@@ -24,6 +24,7 @@ public:
 	};
 	bool m_dLeftRight;
 	bool isMoving;
+	float mouseAngle;
 	bool getDirection();
 	void setDirection(bool leftTrue);
 	bool getState();

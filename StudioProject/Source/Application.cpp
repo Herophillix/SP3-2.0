@@ -116,7 +116,7 @@ void Application::Init()
 	//Sets the key callback
 	//glfwSetKeyCallback(m_window, key_callback);
 	glfwSetWindowSizeCallback(m_window, resize_callback);
-	glfwSetInputMode(m_window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+	glfwSetInputMode(m_window, GLFW_CURSOR, GLFW_CURSOR_HIDDEN);
 	glewExperimental = true; // Needed for core profile
 	//Initialize GLEW
 	GLenum err = glewInit();
@@ -139,6 +139,7 @@ void Application::Run()
 	thisScene[SCENETANK] = new SceneTank;
 	thisScene[SCENEFROG] = new SceneFrog;
 	thisScene[SCENESHEEP] = new SheepGame;
+	thisScene[SCENEMENU] = new StudioProjectScene;
 
 	for (int i = 0; i < TOTALSCENES; ++i)
 	{

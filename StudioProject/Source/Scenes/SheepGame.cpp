@@ -284,7 +284,6 @@ void SheepGame::Update(double dt)
 	int h = Application::GetWindowHeight();
 	mousePos = Vector3(static_cast<float>(x) / (w / m_worldWidth), (h - static_cast<float>(y)) / (h / m_worldHeight), 0.0f);
 
-
 	if (!gameOver)
 	{
 		if (!bLButtonState && Application::IsMousePressed(0))
@@ -1223,7 +1222,7 @@ void SheepGame::RenderGO(SheepObject * go)
 	{
 		modelStack.PushMatrix();
 		modelStack.Translate(go->pos.x, go->pos.y, go->pos.z);
-		modelStack.Rotate(90, 0, 0, 1);
+		modelStack.Rotate(Math::RadianToDegree(atan2(go->vel.y,go->vel.x)), 0, 0, 1);
 		modelStack.Scale(go->scale.x, go->scale.y, go->scale.z);
 		RenderMesh(meshList[GEO_FIREBALL], false);
 		modelStack.PopMatrix();
