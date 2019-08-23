@@ -40,8 +40,8 @@ void SceneMaze::Init()
 	meshList[GEO_MAZE_MINUS]->textureID = LoadTGA("Image//Maze_Minus.tga");
 	meshList[GEO_MAZE_START] = MeshBuilder::GenerateQuad("Maze_Start", Color(1, 1, 1), 1.f);
 	meshList[GEO_MAZE_START]->textureID = LoadTGA("Image//Maze_Start.tga");
-	meshList[GEO_TANK_BORDER] = MeshBuilder::GenerateQuad("Border", Color(1, 1, 1), 1.f);
-	meshList[GEO_TANK_BORDER]->textureID = LoadTGA("Image//Border.tga");
+	meshList[GEO_BORDER] = MeshBuilder::GenerateQuad("Border", Color(1, 1, 1), 1.f);
+	meshList[GEO_BORDER]->textureID = LoadTGA("Image//Border.tga");
 	meshList[GEO_MAZE_SAMPLE] = MeshBuilder::GenerateQuad("Maze_Sample", Color(1, 1, 1), 1.f);
 	meshList[GEO_MAZE_SAMPLE]->textureID = LoadTGA("Image//Maze_Sample.tga");
 	meshList[GEO_TANK_CURSOR] = MeshBuilder::GenerateQuad("Cursor", Color(1, 1, 1), 1.f);
@@ -257,7 +257,7 @@ void SceneMaze::UpdateGame(double dt)
 	elapsedTime += dt;
 	if (score > 0)
 	{
-		score -= dt * 100 / 3.f * (1 + (stencilsize - 1) * 0.25f);
+		score -= dt * 100 / 3.f * (1 + (stencilsize - 1) * 0.125f);
 	}
 	else
 	{
@@ -481,7 +481,7 @@ void SceneMaze::RenderMenu()
 		}
 		default:
 		{
-			RenderMesh(meshList[GEO_TANK_BORDER], false);
+			RenderMesh(meshList[GEO_BORDER], false);
 			break;
 		}
 		}
