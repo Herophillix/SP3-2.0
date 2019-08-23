@@ -1352,13 +1352,13 @@ void SheepGame::GameEndCalculations() // Setting the stats and other stuff
 	{
 		m_Grade = 'S';
 		StatManager::GetInstance()->UpdateChar01F(StatManager::GetInstance()->GetChar01().m_frustration -20);
-		StatManager::GetInstance()->UpdateChar01M(20);
-		StatManager::GetInstance()->UpdateChar02F(-20);
-		StatManager::GetInstance()->UpdateChar02M(20);
-		StatManager::GetInstance()->UpdateChar03F(-20);
-		StatManager::GetInstance()->UpdateChar03M(20);
-		StatManager::GetInstance()->UpdateChar04F(-20);
-		StatManager::GetInstance()->UpdateChar04M(20);
+		StatManager::GetInstance()->UpdateChar01M(StatManager::GetInstance()->GetChar01().m_motivation + 20);
+		StatManager::GetInstance()->UpdateChar02F(StatManager::GetInstance()->GetChar02().m_frustration -20);
+		StatManager::GetInstance()->UpdateChar02M(StatManager::GetInstance()->GetChar02().m_motivation + 20);
+		StatManager::GetInstance()->UpdateChar03F(StatManager::GetInstance()->GetChar03().m_frustration -20);
+		StatManager::GetInstance()->UpdateChar03M(StatManager::GetInstance()->GetChar03().m_motivation + 20);
+		StatManager::GetInstance()->UpdateChar04F(StatManager::GetInstance()->GetChar04().m_frustration -20);
+		StatManager::GetInstance()->UpdateChar04M(StatManager::GetInstance()->GetChar04().m_motivation + 20);
 		Results::getInstance()->InitStatsToDist(35);
 	}
 	else if (points >= 1500 && points < 2000)
@@ -1385,14 +1385,14 @@ void SheepGame::GameEndCalculations() // Setting the stats and other stuff
 	else
 	{
 		m_Grade = 'F';
-		StatManager::GetInstance()->UpdateChar01F(10);
-		StatManager::GetInstance()->UpdateChar01M(-10);
-		StatManager::GetInstance()->UpdateChar02F(10);
-		StatManager::GetInstance()->UpdateChar02M(-10);
-		StatManager::GetInstance()->UpdateChar03F(10);
-		StatManager::GetInstance()->UpdateChar03M(-10);
-		StatManager::GetInstance()->UpdateChar04F(10);
-		StatManager::GetInstance()->UpdateChar04M(-10);
+		StatManager::GetInstance()->UpdateChar01F(StatManager::GetInstance()->GetChar01().m_frustration + 10);
+		StatManager::GetInstance()->UpdateChar01M(StatManager::GetInstance()->GetChar01().m_frustration -10);
+		StatManager::GetInstance()->UpdateChar02F(StatManager::GetInstance()->GetChar02().m_frustration + 10);
+		StatManager::GetInstance()->UpdateChar02M(StatManager::GetInstance()->GetChar02().m_motivation -10);
+		StatManager::GetInstance()->UpdateChar03F(StatManager::GetInstance()->GetChar03().m_frustration + 10);
+		StatManager::GetInstance()->UpdateChar03M(StatManager::GetInstance()->GetChar03().m_motivation -10);
+		StatManager::GetInstance()->UpdateChar04F(StatManager::GetInstance()->GetChar04().m_frustration + 10);
+		StatManager::GetInstance()->UpdateChar04M(StatManager::GetInstance()->GetChar04().m_motivation -10);
 	}
 
 }
