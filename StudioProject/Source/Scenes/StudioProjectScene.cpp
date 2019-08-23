@@ -301,6 +301,39 @@ void StudioProjectScene::Update(double dt)
 	for (int i = 0; i < 4; ++i)
 	{
 		ScreenSplit[i]->Update(dt,v_mousepos, rel_mousepos, Vector3(10,10,1));
+		switch (i)
+		{
+		case 0:
+		{
+			StatManager::GetInstance()->UpdateChar01F(ScreenSplit[i]->Character->frustration);
+			StatManager::GetInstance()->UpdateChar01M(ScreenSplit[i]->Character->motivation);
+			StatManager::GetInstance()->UpdateChar01R(ScreenSplit[i]->Character->rest);
+			break;
+		}
+		case 1:
+		{
+			StatManager::GetInstance()->UpdateChar02F(ScreenSplit[i]->Character->frustration);
+			StatManager::GetInstance()->UpdateChar02M(ScreenSplit[i]->Character->motivation);
+			StatManager::GetInstance()->UpdateChar02R(ScreenSplit[i]->Character->rest);
+			break;
+		}
+		case 2:
+		{
+			StatManager::GetInstance()->UpdateChar03F(ScreenSplit[i]->Character->frustration);
+			StatManager::GetInstance()->UpdateChar03M(ScreenSplit[i]->Character->motivation);
+			StatManager::GetInstance()->UpdateChar03R(ScreenSplit[i]->Character->rest);
+			break;
+		}
+		case 3:
+		{
+			StatManager::GetInstance()->UpdateChar04F(ScreenSplit[i]->Character->frustration);
+			StatManager::GetInstance()->UpdateChar04M(ScreenSplit[i]->Character->motivation);
+			StatManager::GetInstance()->UpdateChar04R(ScreenSplit[i]->Character->rest);
+			break;
+		}
+		default:
+			break;
+		}
 	}
 	//charOne->Update(dt);
 	//Television->Update(rel_mousepos, Vector3(10, 10, 1));

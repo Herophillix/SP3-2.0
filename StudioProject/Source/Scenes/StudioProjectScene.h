@@ -3,6 +3,7 @@
 
 #include "SceneBase.h"
 #include "CharacterObject.h"
+#include "StatManager.h"
 #include "ItemObject.h"
 #include "MenuObject.h"
 #include "Screen.h"
