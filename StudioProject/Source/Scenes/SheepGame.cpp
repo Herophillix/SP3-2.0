@@ -1351,7 +1351,7 @@ void SheepGame::GameEndCalculations() // Setting the stats and other stuff
 	if (points >= 2000)
 	{
 		m_Grade = 'S';
-		StatManager::GetInstance()->UpdateChar01F(-20);
+		StatManager::GetInstance()->UpdateChar01F(StatManager::GetInstance()->GetChar01().m_frustration -20);
 		StatManager::GetInstance()->UpdateChar01M(20);
 		StatManager::GetInstance()->UpdateChar02F(-20);
 		StatManager::GetInstance()->UpdateChar02M(20);

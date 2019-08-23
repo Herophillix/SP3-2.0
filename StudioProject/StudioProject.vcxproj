@@ -202,6 +202,7 @@
   <ItemGroup>
     <ClInclude Include="Source\Minigames\Maze\MazeGenerator.h" />
     <ClInclude Include="Source\Scenes\CharacterObject.h" />
+    <ClInclude Include="Source\Scenes\CharacterStats.h" />
     <ClInclude Include="Source\Scenes\FrogObject.h" />
     <ClInclude Include="Source\Scenes\ItemObject.h" />
     <ClInclude Include="Source\Scenes\MazeObject.h" />

@@ -1,6 +1,7 @@
 #pragma once
 
 #include "GameObject.h"
+#include "CharacterStats.h"
 #include "ItemObject.h"
 
 class CharacterObject : public GameObject
@@ -22,11 +23,7 @@ public:
 	//Main Character Stats
 	static int m_Count;
 
-	float experience;
-	float frustration;
-	float motivation;
-	float rest;
-	float workDone;
+	CharacterStats Statistics;
 	bool resting;
 	bool giveUp;
 	bool m_dLeftRight;

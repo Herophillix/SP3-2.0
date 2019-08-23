@@ -100,6 +100,8 @@ private:
 	Vector3 StatsArea;
 
 	Screen* ScreenSplit[4];
+	bool changescene = false;
+
 };
 
 #endif // !STUDIOPROJECT_SCENE_H

@@ -234,6 +234,9 @@
     <ClInclude Include="Source\Scenes\Screen.h">
       <Filter>Scenes</Filter>
     </ClInclude>
+    <ClInclude Include="Source\Scenes\CharacterStats.h">
+      <Filter>Source\Stats</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Text Include="Source\Minigames\Maze\Map\Map1.txt">

@@ -196,6 +196,17 @@ void StudioProjectScene::Update(double dt)
 {
 	SceneBase::Update(dt);
 
+	if (changescene)
+	{
+		ScreenSplit[0]->Character->Statistics = StatManager::GetInstance()->m_char01;
+		ScreenSplit[1]->Character->Statistics = StatManager::GetInstance()->m_char02;
+		ScreenSplit[2]->Character->Statistics = StatManager::GetInstance()->m_char03;
+		ScreenSplit[3]->Character->Statistics = StatManager::GetInstance()->m_char04;
+		changescene = false;
+	}
+
+
+
 	ScreenSplit[0]->UseItem->pos.Set(m_worldWidth * 0.45f, m_worldHeight * 0.55f, 0);
 	ScreenSplit[1]->UseItem->pos.Set(m_worldWidth * 0.95f, m_worldHeight * 0.55f, 0);
 	ScreenSplit[2]->UseItem->pos.Set(m_worldWidth * 0.45f, m_worldHeight * 0.05f, 0);
@@ -305,30 +316,22 @@ void StudioProjectScene::Update(double dt)
 		{
 		case 0:
 		{
-			StatManager::GetInstance()->UpdateChar01F(ScreenSplit[i]->Character->frustration);
-			StatManager::GetInstance()->UpdateChar01M(ScreenSplit[i]->Character->motivation);
-			StatManager::GetInstance()->UpdateChar01R(ScreenSplit[i]->Character->rest);
+			StatManager::GetInstance()->m_char01 = ScreenSplit[i]->Character->Statistics;
 			break;
 		}
 		case 1:
 		{
-			StatManager::GetInstance()->UpdateChar02F(ScreenSplit[i]->Character->frustration);
-			StatManager::GetInstance()->UpdateChar02M(ScreenSplit[i]->Character->motivation);
-			StatManager::GetInstance()->UpdateChar02R(ScreenSplit[i]->Character->rest);
+			StatManager::GetInstance()->m_char02 = ScreenSplit[i]->Character->Statistics;
 			break;
 		}
 		case 2:
 		{
-			StatManager::GetInstance()->UpdateChar03F(ScreenSplit[i]->Character->frustration);
-			StatManager::GetInstance()->UpdateChar03M(ScreenSplit[i]->Character->motivation);
-			StatManager::GetInstance()->UpdateChar03R(ScreenSplit[i]->Character->rest);
+			StatManager::GetInstance()->m_char03 = ScreenSplit[i]->Character->Statistics;
 			break;
 		}
 		case 3:
 		{
-			StatManager::GetInstance()->UpdateChar04F(ScreenSplit[i]->Character->frustration);
-			StatManager::GetInstance()->UpdateChar04M(ScreenSplit[i]->Character->motivation);
-			StatManager::GetInstance()->UpdateChar04R(ScreenSplit[i]->Character->rest);
+			StatManager::GetInstance()->m_char04 = ScreenSplit[i]->Character->Statistics;
 			break;
 		}
 		default:
@@ -525,6 +528,7 @@ void StudioProjectScene::Update(double dt)
 	{
 		Application::setScene(Math::RandIntMinMax(1, 5));
 		m_eventTimer = Math::RandFloatMinMax(20.0f, 40.f);
+		changescene = true;
 	}
 	UpdateParticles(dt);
 	m_eventTimer -= dt;
@@ -700,6 +704,53 @@ void StudioProjectScene::Render()
 			//RenderStats4();
 			glDisable(GL_SCISSOR_TEST);
 
+			glViewport(0, 0, 1920, 1080);
+			//Calculating aspect ratio
+			m_worldHeight = 200.f;
+			m_worldWidth = m_worldHeight * (float)Application::GetWindowWidth() / Application::GetWindowHeight();
+
+			// Projection matrix : Orthographic Projection
+			Mtx44 projection;
+			projection.SetToOrtho(0, m_worldWidth, 0, m_worldHeight, -10, 10);
+			projectionStack.LoadMatrix(projection);
+
+			// viewTest1 matrix
+			viewStack.LoadIdentity();
+			viewStack.LookAt(
+				camera.position.x, camera.position.y, camera.position.z,
+				camera.target.x, camera.target.y, camera.target.z,
+				camera.up.x, camera.up.y, camera.up.z
+			);
+
+			for (int i = 0; i < 4; ++i)
+			{
+				RenderMenu(ScreenSplit[i]);
+			}
+			// Model matrix : an identity matrix (model will be at the origin)
+			modelStack.LoadIdentity();
+			modelStack.PushMatrix();
+			modelStack.Translate(v_mousepos);
+			modelStack.Scale(10, 10, 1);
+			if (mousepressed)
+			{
+				RenderMesh(meshList[GEO_TANK_CURSOR], false);
+			}
+			else
+			{
+				RenderMesh(meshList[GEO_TANK_CURSOR_ALTERNATE], false);
+			}
+			modelStack.PopMatrix();
+
+			std::ostringstream ss;
+			ss.precision(3);
+			ss << rel_mousepos;
+			RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(0, 1, 0), 3, 1, 1);
+
+			ss.str("");
+			ss << v_mousepos;
+			RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(0, 1, 0), 3, 1, 4);
+			// End of Multiple viewports
+
 		}
 		else
 		{
@@ -736,52 +787,7 @@ void StudioProjectScene::Render()
 			}
 		}
 	//}
-	glViewport(0, 0, 1920, 1080);
-	//Calculating aspect ratio
-	m_worldHeight = 200.f;
-	m_worldWidth = m_worldHeight * (float)Application::GetWindowWidth() / Application::GetWindowHeight();
-
-	// Projection matrix : Orthographic Projection
-	Mtx44 projection;
-	projection.SetToOrtho(0, m_worldWidth, 0, m_worldHeight, -10, 10);
-	projectionStack.LoadMatrix(projection);
-
-	// viewTest1 matrix
-	viewStack.LoadIdentity();
-	viewStack.LookAt(
-		camera.position.x, camera.position.y, camera.position.z,
-		camera.target.x, camera.target.y, camera.target.z,
-		camera.up.x, camera.up.y, camera.up.z
-	);
-
-	for (int i = 0; i < 4; ++i)
-	{
-		RenderMenu(ScreenSplit[i]);
-	}
-	// Model matrix : an identity matrix (model will be at the origin)
-	modelStack.LoadIdentity();
-	modelStack.PushMatrix();
-	modelStack.Translate(v_mousepos);
-	modelStack.Scale(10, 10, 1);
-	if (mousepressed)
-	{
-		RenderMesh(meshList[GEO_TANK_CURSOR], false);
-	}
-	else
-	{
-		RenderMesh(meshList[GEO_TANK_CURSOR_ALTERNATE], false);
-	}
-	modelStack.PopMatrix();
-
-	std::ostringstream ss;
-	ss.precision(3);
-	ss << rel_mousepos;
-	RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(0, 1, 0), 3, 1, 1);
-
-	ss.str("");
-	ss << v_mousepos;
-	RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(0, 1, 0), 3, 1, 4);
-	// End of Multiple viewports
+	
 }
 
 void StudioProjectScene::RenderCharObj(CharacterObject * go)
@@ -1040,26 +1046,26 @@ void StudioProjectScene::RenderStats(CharacterObject* Character)
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 	modelStack.PushMatrix();
-	modelStack.Translate(m_worldWidthDiv8 + 10 + Character->frustration / 2, m_worldHeight / 2, 0);
-	modelStack.Scale(Character->frustration, 10, 1);
+	modelStack.Translate(m_worldWidthDiv8 + 10 + Character->Statistics.m_frustration / 2, m_worldHeight / 2, 0);
+	modelStack.Scale(Character->Statistics.m_frustration, 10, 1);
 	RenderMesh(meshList[GEO_CHARONEFRUST], false);
 	modelStack.PopMatrix();
 
 	modelStack.PushMatrix();
-	modelStack.Translate(m_worldWidthDiv8 + 15 + Character->motivation / 2, m_worldHeight / 2 + 15, 0);
-	modelStack.Scale(Character->motivation, 10, 1);
+	modelStack.Translate(m_worldWidthDiv8 + 15 + Character->Statistics.m_motivation / 2, m_worldHeight / 2 + 15, 0);
+	modelStack.Scale(Character->Statistics.m_motivation, 10, 1);
 	RenderMesh(meshList[GEO_CHARONEMOTIVE], false);
 	modelStack.PopMatrix();
 
 	modelStack.PushMatrix();
-	modelStack.Translate(m_worldWidthDiv8 + 5 + Character->rest / 2, m_worldHeight / 2 - 15, 0);
-	modelStack.Scale(Character->rest, 10, 1);
+	modelStack.Translate(m_worldWidthDiv8 + 5 + Character->Statistics.m_rest / 2, m_worldHeight / 2 - 15, 0);
+	modelStack.Scale(Character->Statistics.m_rest, 10, 1);
 	RenderMesh(meshList[GEO_CHARONEREST], false);
 	modelStack.PopMatrix();
 
 	modelStack.PushMatrix();
-	modelStack.Translate(m_worldWidthDiv8 + Character->workDone / 2, m_worldHeight / 2 - 30, 0);
-	modelStack.Scale(Character->workDone, 10, 1);
+	modelStack.Translate(m_worldWidthDiv8 + Character->Statistics.m_workDone / 2, m_worldHeight / 2 - 30, 0);
+	modelStack.Scale(Character->Statistics.m_workDone, 10, 1);
 	RenderMesh(meshList[GEO_CHARONEWD], false);
 	modelStack.PopMatrix();
 }

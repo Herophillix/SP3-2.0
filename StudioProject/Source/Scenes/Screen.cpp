@@ -15,7 +15,10 @@ void Screen::Init(float m_worldWidth, float m_worldHeight)
 {
 	Character = new CharacterObject(CharacterObject::GO_SPRITE_TEST);
 	Character->giveUp = false;
-	Character->experience = Math::RandFloatMinMax(1.f, 2.f);
+	Character->Statistics.m_experience = Math::RandFloatMinMax(1.f, 2.f);
+	Character->Statistics.m_frustration = 0.f;
+	Character->Statistics.m_motivation = 100.f;
+	Character->Statistics.m_rest = 100.f;
 	Character->pos.Set(m_worldWidth / 4 - m_worldWidth / 8, m_worldHeight / 2 - 30, 5);
 	Character->scale = Vector3(30, 30, 30);
 	Character->resting = false;

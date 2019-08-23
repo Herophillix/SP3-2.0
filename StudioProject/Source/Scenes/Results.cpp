@@ -490,7 +490,7 @@ bool Results::ButtonMouseCollision()
 							cout << "Plus button";
 							if ((StatManager::GetInstance()->GetChar01().m_motivation + 1) <= 100.f && m_statsToDistribute != 0)
 							{
-								StatManager::GetInstance()->UpdateChar01M(1);
+								StatManager::GetInstance()->UpdateChar01M(StatManager::GetInstance()->GetChar01().m_motivation + 1);
 								m_statsToDistribute--;
 								return true;
 							}
@@ -505,7 +505,7 @@ bool Results::ButtonMouseCollision()
 							cout << "Minus button";
 							if ((StatManager::GetInstance()->GetChar01().m_motivation - 1) >= StatManager::GetInstance()->GetChar01().m_originMotivation)
 							{
-								StatManager::GetInstance()->UpdateChar01M(-1);
+								StatManager::GetInstance()->UpdateChar01M(StatManager::GetInstance()->GetChar01().m_motivation - 1);
 								m_statsToDistribute++;
 								return true;
 							}
@@ -522,7 +522,7 @@ bool Results::ButtonMouseCollision()
 							cout << "Plus button";
 							if ((StatManager::GetInstance()->GetChar01().m_frustration + 1) <= StatManager::GetInstance()->GetChar01().m_originFrustration)
 							{
-								StatManager::GetInstance()->UpdateChar01F(1);
+								StatManager::GetInstance()->UpdateChar01F(StatManager::GetInstance()->GetChar01().m_frustration + 1);
 								m_statsToDistribute++;
 								return true;
 							}
@@ -536,7 +536,7 @@ bool Results::ButtonMouseCollision()
 							cout << "Minus button";
 							if ((StatManager::GetInstance()->GetChar01().m_frustration - 1) >= 0.f && m_statsToDistribute != 0)
 							{
-								StatManager::GetInstance()->UpdateChar01F(-1);
+								StatManager::GetInstance()->UpdateChar01F(StatManager::GetInstance()->GetChar01().m_frustration - 1);
 								m_statsToDistribute--;
 								return true;
 							}
@@ -561,7 +561,7 @@ bool Results::ButtonMouseCollision()
 							cout << "Plus button";
 							if ((StatManager::GetInstance()->GetChar02().m_motivation + 1) <= 100.f && m_statsToDistribute != 0)
 							{
-								StatManager::GetInstance()->UpdateChar02M(1);
+								StatManager::GetInstance()->UpdateChar02M(StatManager::GetInstance()->GetChar02().m_motivation + 1);
 								m_statsToDistribute--;
 								return true;
 							}
@@ -575,7 +575,7 @@ bool Results::ButtonMouseCollision()
 							cout << "Minus button";
 							if ((StatManager::GetInstance()->GetChar02().m_motivation - 1) >= StatManager::GetInstance()->GetChar02().m_originMotivation)
 							{
-								StatManager::GetInstance()->UpdateChar02M(-1);
+								StatManager::GetInstance()->UpdateChar02M(StatManager::GetInstance()->GetChar02().m_motivation -1);
 								m_statsToDistribute++;
 								return true;
 							}
@@ -592,7 +592,7 @@ bool Results::ButtonMouseCollision()
 							cout << "Plus button";
 							if ((StatManager::GetInstance()->GetChar02().m_frustration + 1) <= StatManager::GetInstance()->GetChar02().m_originFrustration)
 							{
-								StatManager::GetInstance()->UpdateChar02F(1);
+								StatManager::GetInstance()->UpdateChar02F(StatManager::GetInstance()->GetChar02().m_frustration + 1);
 								m_statsToDistribute++;
 								return true;
 							}
@@ -606,7 +606,7 @@ bool Results::ButtonMouseCollision()
 							cout << "Minus button";
 							if ((StatManager::GetInstance()->GetChar02().m_frustration - 1) >= 0.f && m_statsToDistribute != 0)
 							{
-								StatManager::GetInstance()->UpdateChar02F(-1);
+								StatManager::GetInstance()->UpdateChar02F(StatManager::GetInstance()->GetChar02().m_frustration - 1);
 								m_statsToDistribute--;
 								return true;
 							}
@@ -631,7 +631,7 @@ bool Results::ButtonMouseCollision()
 							cout << "Plus button";
 							if ((StatManager::GetInstance()->GetChar03().m_motivation + 1) <= 100.f && m_statsToDistribute != 0)
 							{
-								StatManager::GetInstance()->UpdateChar03M(1);
+								StatManager::GetInstance()->UpdateChar03M(StatManager::GetInstance()->GetChar03().m_motivation + 1);
 								m_statsToDistribute--;
 								return true;
 							}
@@ -645,7 +645,7 @@ bool Results::ButtonMouseCollision()
 							cout << "Minus button";
 							if ((StatManager::GetInstance()->GetChar03().m_motivation - 1) >= StatManager::GetInstance()->GetChar03().m_originMotivation)
 							{
-								StatManager::GetInstance()->UpdateChar03M(-1);
+								StatManager::GetInstance()->UpdateChar03M(StatManager::GetInstance()->GetChar03().m_motivation - 1);
 								m_statsToDistribute++;
 								return true;
 							}
@@ -662,7 +662,7 @@ bool Results::ButtonMouseCollision()
 							cout << "Plus button";
 							if ((StatManager::GetInstance()->GetChar03().m_frustration + 1) <= StatManager::GetInstance()->GetChar03().m_originFrustration)
 							{
-								StatManager::GetInstance()->UpdateChar03F(1);
+								StatManager::GetInstance()->UpdateChar03F(StatManager::GetInstance()->GetChar03().m_frustration + 1);
 								m_statsToDistribute++;
 								return true;
 							}
@@ -672,7 +672,7 @@ bool Results::ButtonMouseCollision()
 							cout << "Minus button";
 							if ((StatManager::GetInstance()->GetChar03().m_frustration - 1) >= 0.f && m_statsToDistribute != 0)
 							{
-								StatManager::GetInstance()->UpdateChar03F(-1);
+								StatManager::GetInstance()->UpdateChar03F(StatManager::GetInstance()->GetChar03().m_frustration - 1);
 								m_statsToDistribute--;
 								return true;
 							}
@@ -697,7 +697,7 @@ bool Results::ButtonMouseCollision()
 							cout << "Plus button";
 							if ((StatManager::GetInstance()->GetChar04().m_motivation + 1) <= 100.f && m_statsToDistribute != 0)
 							{
-								StatManager::GetInstance()->UpdateChar04M(1);
+								StatManager::GetInstance()->UpdateChar04M(StatManager::GetInstance()->GetChar04().m_motivation + 1);
 								m_statsToDistribute--;
 								return true;
 							}
@@ -711,7 +711,7 @@ bool Results::ButtonMouseCollision()
 							cout << "Minus button";
 							if ((StatManager::GetInstance()->GetChar04().m_motivation - 1) >= StatManager::GetInstance()->GetChar04().m_originMotivation)
 							{
-								StatManager::GetInstance()->UpdateChar04M(-1);
+								StatManager::GetInstance()->UpdateChar04M(StatManager::GetInstance()->GetChar04().m_motivation - 1);
 								m_statsToDistribute++;
 								return true;
 							}
@@ -728,7 +728,7 @@ bool Results::ButtonMouseCollision()
 							cout << "Plus button";
 							if ((StatManager::GetInstance()->GetChar04().m_frustration + 1) <= StatManager::GetInstance()->GetChar04().m_originFrustration)
 							{
-								StatManager::GetInstance()->UpdateChar04F(1);
+								StatManager::GetInstance()->UpdateChar04F(StatManager::GetInstance()->GetChar04().m_frustration + 1);
 								m_statsToDistribute++;
 								return true;
 							}
@@ -742,7 +742,7 @@ bool Results::ButtonMouseCollision()
 							cout << "Minus button ";
 							if ((StatManager::GetInstance()->GetChar04().m_frustration - 1) >= 0.f && m_statsToDistribute != 0)
 							{
-								StatManager::GetInstance()->UpdateChar04F(-1);
+								StatManager::GetInstance()->UpdateChar04F(StatManager::GetInstance()->GetChar04().m_frustration - 1);
 								m_statsToDistribute--;
 								return true;
 							}
@@ -797,6 +797,7 @@ void Results::RenderStats()
 
 	// CHAR 01
 	std::ostringstream s2;
+	s2.precision(2);
 	s2 << "Motivation";
 	modelStack.PushMatrix();
 	modelStack.Translate((r_quad01Pos.x + m_thirtytwothWorldWidth), (r_quad01Pos.y + m_twelfthWorldHeight + m_twentyfourthWorldHeight), 0.65f);

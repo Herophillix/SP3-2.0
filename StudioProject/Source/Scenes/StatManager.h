@@ -5,19 +5,7 @@
 #include <vector>
 #include "Mtx44.h"
 #include "../Utility.h"
-
-struct CharacterStats
-{
-	float m_frustration;
-	float m_motivation;
-	float m_originFrustration;
-	float m_originMotivation;
-
-
-	float m_rest;
-	float m_workDone;
-};
-
+#include "CharacterStats.h"
 
 class StatManager
 {
@@ -30,6 +18,11 @@ public:
 	CharacterStats GetChar04();
 	int GetDayNo();
 
+
+	CharacterStats m_char01;
+	CharacterStats m_char02;
+	CharacterStats m_char03;
+	CharacterStats m_char04;
 	// These functions ADD ON to the characters stats
 	void UpdateChar01M(float motivation);
 	void UpdateChar01F(float frustration);
@@ -58,11 +51,6 @@ public:
 private:
 	StatManager();
 	static StatManager* SM_Instance;
-
-	CharacterStats m_char01;
-	CharacterStats m_char02;
-	CharacterStats m_char03;
-	CharacterStats m_char04;
 	int m_DayNo;
 };
 

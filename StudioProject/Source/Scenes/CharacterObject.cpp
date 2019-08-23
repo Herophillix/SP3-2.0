@@ -6,10 +6,6 @@ int CharacterObject::m_Count = 0;
 
 CharacterObject::CharacterObject(CHARACTEROBJECT_TYPE typeValue)
 	:
-	motivation(100),
-	rest(100),
-	frustration(0),
-	workDone(0),
 	m_dLeftRight(false),
 	isMoving(false)
 {
@@ -44,45 +40,45 @@ void CharacterObject::setState(bool move)
 
 void CharacterObject::Update(double dt)
 {
-	if (frustration < 100 && resting == false)
+	if (Statistics.m_frustration < 100 && resting == false)
 	{
-		frustration += 5.8f / experience * 1 / m_Count * dt;
+		Statistics.m_frustration += 5.8f / Statistics.m_experience * 1 / m_Count * dt;
 	}
-	if(frustration > 0 && resting == true)
+	if(Statistics.m_frustration > 0 && resting == true)
 	{
-		frustration -= 5.8f / experience * 1 / m_Count * dt;
+		Statistics.m_frustration -= 5.8f / Statistics.m_experience * 1 / m_Count * dt;
 	}
-	if (frustration < 0.005f)
+	if (Statistics.m_frustration < 0.005f)
 	{
-		frustration = 0.005f;
+		Statistics.m_frustration = 0.005f;
 	}
-	if (rest > 0 && resting == false)
+	if (Statistics.m_rest > 0 && resting == false)
 	{
-		rest -= 0.5f  *  experience * dt / m_Count;
+		Statistics.m_rest -= 0.5f  *  Statistics.m_experience * dt / m_Count;
 	}
-	if (rest < 100 && resting == true)
+	if (Statistics.m_rest < 100 && resting == true)
 	{
-		rest += 0.5f  *  experience * dt / m_Count;
+		Statistics.m_rest += 0.5f  *  Statistics.m_experience * dt / m_Count;
 	}
-	if(rest < 0.005f)
+	if(Statistics.m_rest < 0.005f)
 	{
-		rest = 0.005f;
+		Statistics.m_rest = 0.005f;
 	}
-	if (motivation > 0 && resting == false)
+	if (Statistics.m_motivation > 0 && resting == false)
 	{
-		motivation -= 0.5f * experience * dt / m_Count;
+		Statistics.m_motivation -= 0.5f * Statistics.m_experience * dt / m_Count;
 	}
-	if (motivation < 100 && resting == true)
+	if (Statistics.m_motivation < 100 && resting == true)
 	{
-		motivation += 0.5f * experience * dt / m_Count;
+		Statistics.m_motivation += 0.5f * Statistics.m_experience * dt / m_Count;
 	}
-	if(rest < 0.00f)
+	if(Statistics.m_rest < 0.00f)
 	{
-		rest = 0.005f;
+		Statistics.m_rest = 0.005f;
 	}
-	if (workDone < 100 && resting == false)
+	if (Statistics.m_workDone < 100 && resting == false)
 	{
-		workDone += 0.50f / experience * motivation / rest *  dt / m_Count;
+		Statistics.m_workDone += 0.50f / Statistics.m_experience * Statistics.m_motivation / Statistics.m_rest *  dt / m_Count;
 	}
 }
 
