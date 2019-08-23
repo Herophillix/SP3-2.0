@@ -29,6 +29,7 @@ public:
 	float lifeTime;
 	float rotation;
 	float rotationSpeed;
+	float cooldown;
 
 	bool active;
 };

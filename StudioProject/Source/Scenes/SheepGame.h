@@ -1,5 +1,4 @@
 #pragma once
-
 #include "SceneBase.h"
 #include "SheepObject.h"
 #include "Results.h"
@@ -15,6 +14,7 @@ private:
 	Vector3 m_Gravity;
 	Vector3 mousePos;
 	float m_Timer;
+	int particleCount;
 	Vector3 pos;
 	SheepObject* tempwall;
 	SheepObject* EvilKingSheep;
@@ -34,6 +34,11 @@ private:
 	int MAX_PARTICLES;
 	int m_particleCount;
 
+
+	float Modifier;
+	bool isLeft;
+	float timer;
+	bool SheepkingHit;
 	float BossTimer;
 	float ManaRegen;
 	float transitionY;
@@ -41,6 +46,7 @@ private:
 	float Timer2;
 	float Timer3;
 
+	bool isInstructions;
 	bool Timer1Check;
 	bool Timer2Check;
 	bool Timer3Check;
@@ -66,6 +72,10 @@ public:
 	void renderCrossHair();
 	void renderEvilSheep();
 	void UpdateParticles(double dt);
+	void RenderInstructions();
+
+
+
 	Particles* getParticle();
 	void RenderParticles(Particles *particle);
 	void Pattern1(double dt);
