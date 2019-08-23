@@ -36,7 +36,9 @@ void SceneMole::Init()
 	Math::InitRNG();
 	//  ******************************* PROPS HERE  ******************************* //
 	t_hammerIdle = LoadTGA("Image//Hammer.tga");
-	t_hammerHit = LoadTGA("Image//BGTest.tga");
+	t_hammerHit = LoadTGA("Image//Hammer_hit.tga");
+	t_hammerIdle_frost = LoadTGA("Image//Hammer_Frost.tga");
+	t_hammerHit_frost = LoadTGA("Image//Hammer_hit_frost.tga");
 
 	meshList[GEO_HAMMER] = MeshBuilder::GenerateQuad("hammer", Color(1, 1, 1), 1.f);
 	meshList[GEO_HAMMER]->textureID = t_hammerIdle;
@@ -52,6 +54,7 @@ void SceneMole::Init()
 	meshList[GEO_TEXT]->textureID = LoadTGA("Image//calibri.tga");
 
 	meshList[GEO_MOLESTATS] = MeshBuilder::GenerateQuad("ui", Color(0, 0, 0), 1.f);
+
 
 	//meshList[GEO_MOLERESULTS] = MeshBuilder::GenerateQuad("results", Color(0, 0, 0), 1.f);
 
@@ -80,12 +83,89 @@ void SceneMole::Init()
 	meshList[GEO_MOLE_INSTRUCT] = MeshBuilder::GenerateQuad("instructions_mole", Color(1, 1, 1), 1.f);
 	meshList[GEO_MOLE_INSTRUCT]->textureID = LoadTGA("Image//Mole_Instructions.tga");
 
+	//  ******************************* SPRITE ANIMATIONS HERE  ******************************* //
+
+	meshList[GEO_MOLE_EXPLOSION] = MeshBuilder::GenerateSpriteAnimation("epxlode", 8, 10);
+	meshList[GEO_MOLE_EXPLOSION]->textureID = LoadTGA("Image//Mole_explode.tga");
+	meshList[GEO_MOLE_EXPLOSION2] = MeshBuilder::GenerateSpriteAnimation("epxlode2", 8, 10);
+	meshList[GEO_MOLE_EXPLOSION2]->textureID = LoadTGA("Image//Mole_explode.tga");
+	meshList[GEO_MOLE_EXPLOSION3] = MeshBuilder::GenerateSpriteAnimation("epxlode3", 8, 10);
+	meshList[GEO_MOLE_EXPLOSION3]->textureID = LoadTGA("Image//Mole_explode.tga");
+	meshList[GEO_MOLE_EXPLOSION4] = MeshBuilder::GenerateSpriteAnimation("epxlode4", 8, 10);
+	meshList[GEO_MOLE_EXPLOSION4]->textureID = LoadTGA("Image//Mole_explode.tga");
+	meshList[GEO_MOLE_EXPLOSION5] = MeshBuilder::GenerateSpriteAnimation("epxlode5", 8, 10);
+	meshList[GEO_MOLE_EXPLOSION5]->textureID = LoadTGA("Image//Mole_explode.tga");
+	meshList[GEO_MOLE_EXPLOSION6] = MeshBuilder::GenerateSpriteAnimation("epxlode6", 8, 10);
+	meshList[GEO_MOLE_EXPLOSION6]->textureID = LoadTGA("Image//Mole_explode.tga");
+	meshList[GEO_MOLE_EXPLOSION7] = MeshBuilder::GenerateSpriteAnimation("epxlode7", 8, 10);
+	meshList[GEO_MOLE_EXPLOSION7]->textureID = LoadTGA("Image//Mole_explode.tga");
+	meshList[GEO_MOLE_EXPLOSION8] = MeshBuilder::GenerateSpriteAnimation("epxlode8", 8, 10);
+	meshList[GEO_MOLE_EXPLOSION8]->textureID = LoadTGA("Image//Mole_explode.tga");
+	explode = dynamic_cast<SpriteAnimation *> (meshList[GEO_MOLE_EXPLOSION]);
+	if (explode)
+	{
+		explode->m_anim = new Animation();
+		explode->m_anim->Set(0, 80, 0, 1.f, false);
+	}
+	explode2 = dynamic_cast<SpriteAnimation *> (meshList[GEO_MOLE_EXPLOSION2]);
+	if (explode2)
+	{
+		explode2->m_anim = new Animation();
+		explode2->m_anim->Set(0, 80, 0, 1.f, false);
+	}
+	explode3 = dynamic_cast<SpriteAnimation *> (meshList[GEO_MOLE_EXPLOSION3]);
+	if (explode3)
+	{
+		explode3->m_anim = new Animation();
+		explode3->m_anim->Set(0, 80, 0, 1.f, false);
+	}
+	explode4 = dynamic_cast<SpriteAnimation *> (meshList[GEO_MOLE_EXPLOSION4]);
+	if (explode4)
+	{
+		explode4->m_anim = new Animation();
+		explode4->m_anim->Set(0, 80, 0, 1.f, false);
+	}
+	explode5 = dynamic_cast<SpriteAnimation *> (meshList[GEO_MOLE_EXPLOSION5]);
+	if (explode5)
+	{
+		explode5->m_anim = new Animation();
+		explode5->m_anim->Set(0, 80, 0, 1.f, false);
+	}
+	explode6 = dynamic_cast<SpriteAnimation *> (meshList[GEO_MOLE_EXPLOSION6]);
+	if (explode6)
+	{
+		explode6->m_anim = new Animation();
+		explode6->m_anim->Set(0, 80, 0, 1.f, false);
+	}
+	explode7 = dynamic_cast<SpriteAnimation *> (meshList[GEO_MOLE_EXPLOSION7]);
+	if (explode7)
+	{
+		explode7->m_anim = new Animation();
+		explode7->m_anim->Set(0, 80, 0, 1.f, false);
+	}
+	explode8 = dynamic_cast<SpriteAnimation *> (meshList[GEO_MOLE_EXPLOSION8]);
+	if (explode8)
+	{
+		explode8->m_anim = new Animation();
+		explode8->m_anim->Set(0, 80, 0, 1.f, false);
+	}
+	exList.push_back(explode);
+	exList.push_back(explode2);
+	exList.push_back(explode3);
+	exList.push_back(explode4);
+	exList.push_back(explode5);
+	exList.push_back(explode6);
+	exList.push_back(explode7);
+	exList.push_back(explode8);
+	for (unsigned int i = 0; i < exList.size(); i++)
+	{
+		exList[i]->active = false;
+	}
+
+	//  ******************************* PARTICLES HERE  ******************************* //
 	meshList[GEO_MOLE_SMOKE_PARTICLE] = MeshBuilder::GenerateQuad("smoke", Color(1,1,1), 1.f);
 	meshList[GEO_MOLE_SMOKE_PARTICLE]->textureID = LoadTGA("Image//Mole_smoke.tga");
 
-	//  ******************************* SPRITE ANIMATIONS HERE  ******************************* //
-
-	//  ******************************* PARTICLES HERE  ******************************* //
 	Mtx44 projection;
 	projection.SetToOrtho(0, m_worldWidth, 0, m_worldHeight, -10, 10);
 	projectionStack.LoadMatrix(projection);
@@ -196,7 +276,7 @@ void SceneMole::Init()
 	m_score = 0;
 	m_hitCounter = 0;
 	m_frostTimer = 10.f;
-	m_gameTimer = 90.f;
+	m_gameTimer = 30.f;
 	m_gameOver = false;
 	m_frostOn = false;
 	m_instructions = true;
@@ -321,7 +401,14 @@ void SceneMole::Update(double dt)
 		{
 			bSpaceButtonState = true;
 			std::cout << "SPACE DOWN" << endl;
-			meshList[GEO_HAMMER]->textureID = t_hammerHit;
+			if (m_frostOn)
+			{
+				meshList[GEO_HAMMER]->textureID = t_hammerHit_frost;
+			}
+			else
+			{
+				meshList[GEO_HAMMER]->textureID = t_hammerHit;
+			}
 			if (HammerCollisionCheck())
 			{
 				// sfx
@@ -339,7 +426,14 @@ void SceneMole::Update(double dt)
 		{
 			bSpaceButtonState = false;
 			std::cout << "SPACE UP" << endl;
-			meshList[GEO_HAMMER]->textureID = t_hammerIdle;
+			if (m_frostOn)
+			{
+				meshList[GEO_HAMMER]->textureID = t_hammerIdle_frost;
+			}
+			else
+			{
+				meshList[GEO_HAMMER]->textureID = t_hammerIdle;
+			}
 		}
 
 		if (m_hitCounter >= 10 && m_hitCounter <= 19)
@@ -361,6 +455,7 @@ void SceneMole::Update(double dt)
 
 		UpdateMoles(dt);
 		UpdateParticles(dt);
+		UpdateAnimations(dt);
 
 		if (m_multiplier == 2)
 		{
@@ -495,24 +590,29 @@ void SceneMole::RenderParticles(Particles *particle)
 
 void SceneMole::RenderAnimation()
 {
-	modelStack.PushMatrix();
-	modelStack.Translate(20, 50, 0);
-	modelStack.Rotate(Math::RadianToDegree(atan2(camera.position.x - 0, camera.position.z - 0)), 0, 1, 0);
+	for (unsigned int i = 0; i < exList.size(); i++)
+	{
+		if (exList[i]->m_anim->animActive)
+		{
+			modelStack.PushMatrix();
+			modelStack.Translate(m_hammerPosList[i].x, m_hammerPosList[i].y, 0);
+			modelStack.Scale(25, 25, 20);
+			RenderMesh(meshList[GEO_MOLE_EXPLOSION + (SceneBase::GEOMETRY_TYPE)m_hammerPosIndex], false);
+			modelStack.PopMatrix();
 
-	modelStack.Scale(10, 10, 10);
+		}
+	}
+}
 
-	RenderMesh(meshList[GEO_SPRITE_ANIMATION], false);
-	modelStack.PopMatrix();
-
-	modelStack.PushMatrix();
-	modelStack.Translate(100, 50, 0);
-	modelStack.Rotate(Math::RadianToDegree(atan2(camera.position.x - 0, camera.position.z - 0)), 0, 1, 0);
-
-	modelStack.Scale(10, 10, 10);
-
-	RenderMesh(meshList[GEO_HAMMER_SPRITE], false);
-	modelStack.PopMatrix();
-	//std::cout << "WOKRING" << std::endl;
+void SceneMole::UpdateAnimations(double dt)
+{
+	for (unsigned int i = 0; i < exList.size(); i++)
+	{
+		if (exList[i]->m_anim->animActive)
+		{
+			exList[i]->Update(dt);
+		}
+	}
 }
 
 void SceneMole::Render()
@@ -568,6 +668,7 @@ void SceneMole::Render()
 				RenderParticles(m_particleList[i]);
 			}
 		}
+		RenderAnimation();
 		RenderGO(m_Hammer);
 	}
 	if (m_gameOver)
@@ -742,11 +843,11 @@ void SceneMole::UpdateMoles(double dt)
 				m_moleListTotal[randMole]->mole_lifeTime = 10.5f;
 				// do rng stuff here for mole type
 				int randMoleType = Math::RandIntMinMax(0, 99);
-				m_moleListTotal[randMole]->type = (MoleObject::MOLEOBJECT_TYPE)(moleTypeRNG[randMoleType]);
+				m_moleListTotal[randMole]->type = MoleObject::GO_MOLE_BOMB;//(MoleObject::MOLEOBJECT_TYPE)(moleTypeRNG[randMoleType]);
 				break;
 			}
 		}
-		if (m_gameTimer > 45.f)
+		if (m_gameTimer > 15.f)
 			m_popUpTimer = Math::RandFloatMinMax(0.5f, 1.f);
 		else
 			m_popUpTimer = Math::RandFloatMinMax(0.3f, 0.6f);
@@ -873,7 +974,7 @@ void SceneMole::RenderUI()
 
 void SceneMole::GameEndCalculations() // Setting the stats and other stuff
 {
-	if (m_score >= 200000)
+	if (m_score >= 100000)
 	{
 		m_grade = 'S';
 		StatManager::GetInstance()->UpdateChar01F(-20);
@@ -886,23 +987,23 @@ void SceneMole::GameEndCalculations() // Setting the stats and other stuff
 		StatManager::GetInstance()->UpdateChar04M(20);
 		Results::getInstance()->InitStatsToDist(35);
 	}
-	else if (m_score >= 100000 && m_score < 200000)
+	else if (m_score >= 70000 && m_score < 100000)
 	{
 		m_grade = 'A';
 		Results::getInstance()->InitStatsToDist(25);
 
 	}
-	else if (m_score >= 80000 && m_score < 100000)
+	else if (m_score >= 60000 && m_score < 70000)
 	{
 		m_grade = 'B';
 		Results::getInstance()->InitStatsToDist(20);
 	}
-	else if (m_score >= 50000 && m_score < 80000)
+	else if (m_score >= 40000 && m_score < 50000)
 	{
 		m_grade = 'C';
 		Results::getInstance()->InitStatsToDist(15);
 	}
-	else if (m_score >= 20000 && m_score < 50000)
+	else if (m_score >= 10000 && m_score < 40000)
 	{
 		m_grade = 'D';
 		Results::getInstance()->InitStatsToDist(10);
@@ -1077,11 +1178,15 @@ bool SceneMole::HammerCollisionCheck()
 						addToScore += m_moleListTotal[i]->mole_lifeTime * 100 * m_multiplier * 5.f;
 						break;
 					case MoleObject::GO_MOLE_BOMB:
+					{
 						m_score /= 2;
 						m_hitCounter = 0;
+						exList[m_hammerPosIndex]->m_anim->Set(0, 80, 0, 2.f, true);
 						break;
+					}
 					case MoleObject::GO_MOLE_FROST:
 						m_frostOn = true;
+						addToScore = 0;
 						m_score -= m_score / 5;
 						m_hitCounter = 0;
 						break;
@@ -1090,28 +1195,33 @@ bool SceneMole::HammerCollisionCheck()
 					}
 					if (m_frostOn)
 					{
-						m_score += addToScore / 2;
+						addToScore /= 2;
+						m_score += addToScore;
 					}
 					else
 					{
 						m_score += addToScore;
 					}
 					cout << addToScore << endl;
-					for (int i = 0; i < 50; i++)
+					if (m_moleListTotal[i]->type != MoleObject::GO_MOLE_BOMB && m_moleListTotal[i]->type != MoleObject::GO_MOLE_FROST)
 					{
-						if (m_particleCount < MAX_PARTICLE)
+						for (int i = 0; i < 50; i++)
 						{
-							Particles* temp = getParticle();
-							temp->type = ParticleObject_TYPE::P_MOLE_SMOKE;
-							temp->pos = m_Hammer->pos;
-							temp->pos.y -= 5.f;
-							temp->lifeTime = 1.f;
-							temp->scale.Set(3, 3, 3);
-							temp->rotation = Math::RandFloatMinMax(45.f, 135.f);
-							temp->rotationSpeed = Math::RandFloatMinMax(110.f, 220.f);
-							temp->vel.Set(Math::RandFloatMinMax(-15.f, 15.f), Math::RandFloatMinMax(-15.f, 15.f), 0);
-							temp->active = true;
+							if (m_particleCount < MAX_PARTICLE)
+							{
+								Particles* temp = getParticle();
+								temp->type = ParticleObject_TYPE::P_MOLE_SMOKE;
+								temp->pos = m_Hammer->pos;
+								temp->pos.y -= 5.f;
+								temp->lifeTime = 1.f;
+								temp->scale.Set(3, 3, 3);
+								temp->rotation = Math::RandFloatMinMax(45.f, 135.f);
+								temp->rotationSpeed = Math::RandFloatMinMax(110.f, 220.f);
+								temp->vel.Set(Math::RandFloatMinMax(-15.f, 15.f), Math::RandFloatMinMax(-15.f, 15.f), 0);
+								temp->active = true;
+							}
 						}
+
 					}
 					//m_moleListTotal[i]->mole_lifeTime = 0.f;
 					return true;

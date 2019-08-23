@@ -28,7 +28,7 @@ public:
 	CharacterStats GetChar02();
 	CharacterStats GetChar03();
 	CharacterStats GetChar04();
-
+	int GetDayNo();
 
 	// These functions ADD ON to the characters stats
 	void UpdateChar01M(float motivation);
@@ -39,6 +39,18 @@ public:
 	void UpdateChar03F(float frustration);
 	void UpdateChar04M(float motivation);
 	void UpdateChar04F(float frustration);
+
+	void UpdateChar01R(float rest);
+	void UpdateChar02R(float rest);
+	void UpdateChar03R(float rest);
+	void UpdateChar04R(float rest);
+
+	void UpdateChar01WD(float workDone);
+	void UpdateChar02WD(float workDone);
+	void UpdateChar03WD(float workDone);
+	void UpdateChar04WD(float workDone);
+
+	void UpdateDay(int day);
 
 	void SetCharsOriginalValues();
 	void ResetValues();
