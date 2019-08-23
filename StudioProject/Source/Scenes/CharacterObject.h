@@ -1,6 +1,7 @@
 #pragma once
 
 #include "GameObject.h"
+#include "ItemObject.h"
 
 class CharacterObject : public GameObject
 {
@@ -40,5 +41,7 @@ public:
 	~CharacterObject();
 
 	void Update(double dt);
-	void UpdateMovement(double dt);
+	void UpdateMovement(double dt, float m_worldWidth, float m_worldHeight);
+	bool CheckCollision(ItemObject * go2);
+	ItemObject* currentItem;
 };

@@ -37,8 +37,8 @@ void SceneTank::Init()
 	meshList[GEO_TANK_HEAD_3]->textureID = LoadTGA("Image//Tank_Head3.tga");
 	meshList[GEO_TANK_HEAD_4] = MeshBuilder::GenerateQuad("Head 2", Color(1, 1, 1), 2.5f);
 	meshList[GEO_TANK_HEAD_4]->textureID = LoadTGA("Image//Tank_Head4.tga");
-	meshList[GEO_TANK_BORDER] = MeshBuilder::GenerateQuad("Border", Color(1, 1, 1), 3.5f);
-	meshList[GEO_TANK_BORDER]->textureID = LoadTGA("Image//Border.tga");
+	meshList[GEO_BORDER] = MeshBuilder::GenerateQuad("Border", Color(1, 1, 1), 3.5f);
+	meshList[GEO_BORDER]->textureID = LoadTGA("Image//Border.tga");
 	meshList[GEO_TANK_FORMATION_1] = MeshBuilder::GenerateQuad("Formation 1", Color(1, 1, 1), 1.f);
 	meshList[GEO_TANK_FORMATION_1]->textureID = LoadTGA("Image//Tank_Formation_1.tga");
 	meshList[GEO_TANK_FORMATION_2] = MeshBuilder::GenerateQuad("Formation 2", Color(1, 1, 1), 1.f);
@@ -1409,7 +1409,7 @@ void SceneTank::RenderGame()
 	modelStack.PushMatrix();
 	modelStack.Translate(m_worldWidth * 0.6f, m_worldHeight * 0.125f, 0);
 	modelStack.Scale(10, 10, 1);
-	RenderMesh(meshList[GEO_TANK_BORDER], false);
+	RenderMesh(meshList[GEO_BORDER], false);
 	if (TankObject::currentTank == Tank[0])
 	{
 		RenderMesh(meshList[GEO_TANK_HEAD_1], false);
@@ -1441,7 +1441,7 @@ void SceneTank::RenderGame()
 	RenderMesh(meshList[GEO_ARROW], false);
 	modelStack.PopMatrix();
 	modelStack.Scale(10, 10, 1);
-	RenderMesh(meshList[GEO_TANK_BORDER], false);
+	RenderMesh(meshList[GEO_BORDER], false);
 	modelStack.PopMatrix();
 
 	//On screen text
@@ -1514,7 +1514,7 @@ void SceneTank::RenderMenu()
 		}
 		default:
 		{
-			RenderMesh(meshList[GEO_TANK_BORDER], false);
+			RenderMesh(meshList[GEO_BORDER], false);
 			break;
 		}
 		}

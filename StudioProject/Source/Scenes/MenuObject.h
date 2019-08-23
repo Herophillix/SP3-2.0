@@ -20,6 +20,8 @@ public:
 		M_STENCIL_PLUS,
 		M_STENCIL_MINUS,
 		M_BACK,
+
+		M_USE_ITEM,
 		M_TOTAL
 	};
 
