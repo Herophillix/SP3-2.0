@@ -157,10 +157,6 @@ void SceneMole::Init()
 	exList.push_back(explode6);
 	exList.push_back(explode7);
 	exList.push_back(explode8);
-	for (unsigned int i = 0; i < exList.size(); i++)
-	{
-		exList[i]->active = false;
-	}
 
 	//  ******************************* PARTICLES HERE  ******************************* //
 	meshList[GEO_MOLE_SMOKE_PARTICLE] = MeshBuilder::GenerateQuad("smoke", Color(1,1,1), 1.f);
@@ -597,7 +593,7 @@ void SceneMole::RenderAnimation()
 			modelStack.PushMatrix();
 			modelStack.Translate(m_hammerPosList[i].x, m_hammerPosList[i].y, 0);
 			modelStack.Scale(25, 25, 20);
-			RenderMesh(meshList[GEO_MOLE_EXPLOSION + (SceneBase::GEOMETRY_TYPE)m_hammerPosIndex], false);
+			RenderMesh(meshList[GEO_MOLE_EXPLOSION + (SceneBase::GEOMETRY_TYPE)i], false);
 			modelStack.PopMatrix();
 
 		}
