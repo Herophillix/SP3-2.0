@@ -248,6 +248,11 @@ void SceneTank::Init()
 
 void SceneTank::Update(double dt)
 {
+	if (StatManager::GetInstance()->GetBool_Game(3))
+	{
+		Reset();
+		StatManager::GetInstance()->SetBool_Tank(false);
+	}
 	SceneBase::Update(dt);
 	elapsedTime += dt;
 	//Calculating aspect ratio
@@ -555,6 +560,7 @@ void SceneTank::UpdateMenu(double dt)
 		{
 			m_menuList[i]->changed = false;
 			SceneState = S_GAME;
+			StatManager::GetInstance()->SetPrevGame(3);
 			switch (m_menuList[i]->type)
 			{
 			case MenuObject::M_FORMATION_1:

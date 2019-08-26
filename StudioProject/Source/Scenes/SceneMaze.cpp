@@ -118,6 +118,11 @@ void SceneMaze::Init()
 
 void SceneMaze::Update(double dt)
 {
+	if (StatManager::GetInstance()->GetBool_Game(1))
+	{
+		// Reset Function
+		StatManager::GetInstance()->SetBool_Maze(false);
+	}
 	SceneBase::Update(dt);
 	//Calculating aspect ratio
 	// James 13/8/2019
@@ -305,6 +310,7 @@ void SceneMaze::UpdateMenu(double dt)
 			{
 				SceneState = S_GAME; 
 				Ball->pos = Vector3(m_worldWidth * 0.5f, m_worldHeight * 0.5f, 0);
+				StatManager::GetInstance()->SetPrevGame(1);
 				break;
 			}
 			case MenuObject::M_STENCIL_PLUS:

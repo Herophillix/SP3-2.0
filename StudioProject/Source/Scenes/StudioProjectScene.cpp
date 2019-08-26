@@ -194,6 +194,29 @@ void StudioProjectScene::Init()
 }
 void StudioProjectScene::Update(double dt)
 {
+	if (!StatManager::GetInstance()->GetBool_Game(StatManager::GetInstance()->GetPrevGame()))
+	{
+		switch (StatManager::GetInstance()->GetPrevGame())
+		{
+		case 1:
+			StatManager::GetInstance()->SetBool_Maze(true);
+			break;
+		case 2:
+			StatManager::GetInstance()->SetBool_Mole(true);
+			break;
+		case 3:
+			StatManager::GetInstance()->SetBool_Tank(true);
+			break;
+		case 4:
+			StatManager::GetInstance()->SetBool_Frogger(true);
+			break;
+		case 5:
+			StatManager::GetInstance()->SetBool_Sheep(true);
+			break;
+		default:
+			break;
+		}
+	}
 	SceneBase::Update(dt);
 
 	if (changescene)

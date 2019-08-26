@@ -302,6 +302,11 @@ void SceneMole::Init()
 
 void SceneMole::Update(double dt)
 {
+	if (StatManager::GetInstance()->GetBool_Game(2))
+	{
+		ResetVars();
+		StatManager::GetInstance()->SetBool_Mole(false);
+	}
 	SceneBase::Update(dt);
 	// RESULT SCREEN STUFF
 	if (m_gameOver)
@@ -477,6 +482,7 @@ void SceneMole::Update(double dt)
 		{
 			bSpaceButtonState = true;
 			std::cout << "SPACE DOWN" << endl;
+			StatManager::GetInstance()->SetPrevGame(2);
 		}
 		else if (bSpaceButtonState && !Application::IsKeyPressed(VK_SPACE))
 		{

@@ -267,6 +267,11 @@ void SheepGame::reset()
 
 void SheepGame::Update(double dt)
 {
+	if (StatManager::GetInstance()->GetBool_Game(5))
+	{
+		reset();
+		StatManager::GetInstance()->SetBool_Sheep(false);
+	}
 	SceneBase::Update(dt);
 			if (gameOver)
 			{
@@ -728,6 +733,7 @@ void SheepGame::Update(double dt)
 		{
 			isInstructions = false;
 			blKeyboardState = true;
+			StatManager::GetInstance()->SetPrevGame(5);
 		}
 	}
 }
