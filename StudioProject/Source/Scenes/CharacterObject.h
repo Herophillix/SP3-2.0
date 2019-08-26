@@ -14,6 +14,7 @@ public:
 		GO_QUAD,
 		GO_SPRITE_TEST,
 		GO_TELEVISION,
+		GO_COMPUTER,
 		GO_CHAR01,
 		GO_CHAR02,
 		GO_CHAR03,
@@ -25,6 +26,8 @@ public:
 
 	CharacterStats Statistics;
 	bool resting;
+	bool WorkingHard;
+	bool asleep;
 	bool giveUp;
 	bool m_dLeftRight;
 	bool isMoving;

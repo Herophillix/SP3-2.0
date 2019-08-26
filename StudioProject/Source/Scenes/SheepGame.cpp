@@ -64,17 +64,17 @@ void SheepGame::Init()
 	meshList[GEO_LIGHTNING] = MeshBuilder::GenerateQuad("Lightning", Color(1, 1, 1), 1.f);
 	meshList[GEO_LIGHTNING]->textureID = LoadTGA("Image//LightningBolt.tga");
 
-	meshList[GEO_SPRITE_ANIMATION] = MeshBuilder::GenerateSpriteAnimation("test", 1, 4);
-	meshList[GEO_SPRITE_ANIMATION]->textureID = LoadTGA("Image//Idle_anim.tga");
+	meshList[GEO_CHARACTER04_IDLE_RIGHT] = MeshBuilder::GenerateSpriteAnimation("c04_idle_right", 1, 4);
+	meshList[GEO_CHARACTER04_IDLE_RIGHT]->textureID = LoadTGA("Image//CharacterSprites//Idle//wizzard_idle_anim_right.tga");
 
-	meshList[GEO_WALKLEFT] = MeshBuilder::GenerateSpriteAnimation("char1walkleft", 1, 4);
-	meshList[GEO_WALKLEFT]->textureID = LoadTGA("Image//Walk_animLeft.tga");
+	meshList[GEO_CHARACTER04_IDLE_LEFT] = MeshBuilder::GenerateSpriteAnimation("c04_idle_left", 1, 4);
+	meshList[GEO_CHARACTER04_IDLE_LEFT]->textureID = LoadTGA("Image//CharacterSprites//Idle//wizzard_idle_anim_left.tga");
 
-	meshList[GEO_WALKRIGHT] = MeshBuilder::GenerateSpriteAnimation("char1walkright", 1, 4);
-	meshList[GEO_WALKRIGHT]->textureID = LoadTGA("Image//Walk_animRight.tga");
+	meshList[GEO_CHARACTER04_MOVE_LEFT] = MeshBuilder::GenerateSpriteAnimation("c04_move_left", 1, 4);
+	meshList[GEO_CHARACTER04_MOVE_LEFT]->textureID = LoadTGA("Image//CharacterSprites//Move//wizzard_run_anim_left.tga");
 
-	meshList[GEO_SPRITE_TEST2] = MeshBuilder::GenerateSpriteAnimation("test2", 1, 6);
-	meshList[GEO_SPRITE_TEST2]->textureID = LoadTGA("Image//Idle_anim2.tga");
+	meshList[GEO_CHARACTER04_MOVE_RIGHT] = MeshBuilder::GenerateSpriteAnimation("c04_move_right", 1, 4);
+	meshList[GEO_CHARACTER04_MOVE_RIGHT]->textureID = LoadTGA("Image//CharacterSprites//Move//wizzard_run_anim_right.tga");
 
 	meshList[GEO_MANABAR] = MeshBuilder::GenerateQuad("Manabar", Color(0, 0, 1), 1.f);
 	meshList[GEO_LIFEBAR] = MeshBuilder::GenerateQuad("Lifebar", Color(1, 0, 0), 1.f);
@@ -184,35 +184,38 @@ void SheepGame::Init()
 		Trace[i]->scale.Set(5, 5, 1);
 	}
 
-	SpriteAnimation *sa = dynamic_cast<SpriteAnimation *>(meshList[GEO_SPRITE_ANIMATION]);
-	if (sa)
+	SpriteAnimation *C04IL = dynamic_cast<SpriteAnimation *>(meshList[GEO_CHARACTER04_IDLE_LEFT]);
+	if (C04IL)
 	{
-		sa->m_anim = new Animation();
-		sa->m_anim->Set(0, 4, 0, 1.f, true);
-	}
-	SpriteAnimation *sa2 = dynamic_cast<SpriteAnimation *>(meshList[GEO_SPRITE_TEST2]);
-	if (sa2)
-	{
-		sa2->m_anim = new Animation();
-		sa2->m_anim->Set(0, 6, 0, 2.f, true);
+		C04IL->m_anim = new Animation();
+		C04IL->m_anim->Set(0, 3, 0, 1.f, true);
 	}
 
-	SpriteAnimation *walkLeft = dynamic_cast<SpriteAnimation *>(meshList[GEO_WALKLEFT]);
-	if (walkLeft)
+	SpriteAnimation *C04IR = dynamic_cast<SpriteAnimation *>(meshList[GEO_CHARACTER04_IDLE_RIGHT]);
+	if (C04IR)
 	{
-		walkLeft->m_anim = new Animation();
-		walkLeft->m_anim->Set(0, 4, 0, 1.f, true);
+		C04IR->m_anim = new Animation();
+		C04IR->m_anim->Set(0, 3, 0, 1.f, true);
 	}
-	SpriteAnimation *walkRight = dynamic_cast<SpriteAnimation *>(meshList[GEO_WALKRIGHT]);
-	if (walkRight)
+
+	SpriteAnimation *C04ML = dynamic_cast<SpriteAnimation *>(meshList[GEO_CHARACTER04_MOVE_LEFT]);
+	if (C04ML)
 	{
-		walkRight->m_anim = new Animation();
-		walkRight->m_anim->Set(0, 4, 0, 1.f, true);
+		C04ML->m_anim = new Animation();
+		C04ML->m_anim->Set(0, 3, 0, 1.f, true);
 	}
+
+	SpriteAnimation *C04MR = dynamic_cast<SpriteAnimation *>(meshList[GEO_CHARACTER04_MOVE_RIGHT]);
+	if (C04MR)
+	{
+		C04MR->m_anim = new Animation();
+		C04MR->m_anim->Set(0, 3, 0, 1.f, true);
+	}
+
 	player = new SheepObject(SheepObject::E_PLAYER);
 	player->active = true;
 	player->pos.Set(0, 18, 0);
-	player->scale.Set(10, 10, 10);
+	player->scale.Set(10, 16, 1);
 	player->cooldown = 2.f;
 	player->vel.Set(0, 0, 0);
 	player->health = 3;
@@ -1531,13 +1534,13 @@ void SheepGame::RenderGO(SheepObject * go)
 			if (go->getDirection() == true)
 			{
 				modelStack.Scale(go->scale.x, go->scale.y, go->scale.z);
-				RenderMesh(meshList[GEO_WALKLEFT], false);
+				RenderMesh(meshList[GEO_CHARACTER04_MOVE_LEFT], false);
 				modelStack.PopMatrix();
 			}
 			else
 			{
 				modelStack.Scale(go->scale.x, go->scale.y, go->scale.z);
-				RenderMesh(meshList[GEO_WALKRIGHT], false);
+				RenderMesh(meshList[GEO_CHARACTER04_MOVE_RIGHT], false);
 				modelStack.PopMatrix();
 			}
 			break;
@@ -1546,12 +1549,20 @@ void SheepGame::RenderGO(SheepObject * go)
 		{
 			modelStack.PushMatrix();
 			modelStack.Translate(go->pos.x, go->pos.y, go->pos.z);
-			modelStack.Scale(go->scale.x, go->scale.y, go->scale.z);
-			RenderMesh(meshList[GEO_SPRITE_TEST2], false);
-			modelStack.PopMatrix();
+			if (go->getDirection() == true)
+			{
+				modelStack.Scale(go->scale.x, go->scale.y, go->scale.z);
+				RenderMesh(meshList[GEO_CHARACTER04_IDLE_LEFT], false);
+				modelStack.PopMatrix();
+			}
+			else
+			{
+				modelStack.Scale(go->scale.x, go->scale.y, go->scale.z);
+				RenderMesh(meshList[GEO_CHARACTER04_IDLE_RIGHT], false);
+				modelStack.PopMatrix();
+			}
 			break;
 		}
-	}
 	case SheepObject::E_LINUX:
 	{
 		modelStack.PushMatrix();
@@ -1599,27 +1610,9 @@ void SheepGame::RenderGO(SheepObject * go)
 		modelStack.PopMatrix();
 		break;
 	}
-	/* case SheepObject::E_WALL:
-	{
-		modelStack.PushMatrix();
-		modelStack.Translate(go->pos);
-		modelStack.Rotate(Math::RadianToDegree(atan2(go->normal.y, go->normal.x)), 0, 0, 1);
-		modelStack.Scale(go->scale);
-		RenderMesh(meshList[GEO_WALL], false);
-		modelStack.PopMatrix();
-		break;
-	}*/
-	//case SheepObject::E_EYES:
-	//{
-	//	modelStack.PushMatrix();
-	//	modelStack.Translate(go->pos);
-	//	modelStack.Rotate(Math::RadianToDegree(atan2(go->normal.y, go->normal.x)), 0, 0, 1);
-	//	modelStack.Scale(go->scale);
-	//	RenderMesh(meshList[GEO_WALL], false);
-	//	modelStack.PopMatrix();
-	//}
 	default:
 		break;
+	}
 	}
 }
 
