@@ -3,7 +3,7 @@
 #include "SceneBase.h"
 #include "GameObject.h"
 #include "../Application.h"
-
+#include "../SoundEngine.h"
 
 class MainMenuObject : public GameObject
 {
@@ -49,7 +49,7 @@ private:
 
 	float m_worldWidth;
 	float m_worldHeight;
-	
+	CSoundEngine soundSystem;
 	float m_halfWorldWidth;
 	float m_halfWorldHeight;
 

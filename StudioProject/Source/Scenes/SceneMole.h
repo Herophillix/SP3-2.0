@@ -6,6 +6,7 @@
 #include "GameObject.h"
 #include "MoleObject.h"
 #include "ResultObject.h"
+#include "../SoundEngine.h"
 #include "Results.h"
 #include <vector>
 class SceneMole : public SceneBase
@@ -74,6 +75,9 @@ private:
 
 	// Hammer stuff
 	MoleObject* m_Hammer;
+
+	//Sound
+	CSoundEngine soundSystem;
 
 	// --Textures for the hammer
 	unsigned int t_hammerIdle;

@@ -179,9 +179,6 @@ void SceneFrog::UpdateRock(double dt)
 				rock->Frog_vel += Vector3(0, m_grav.y, 0)* (float)dt;
 				rock->pos += rock->Frog_vel * (float)dt;
 			}
-			if (rock->type == FrogObject::GO_COIN)
-			{
-			}
 			if (rock->pos.y <= 0)
 			{
 				rock->Frog_vel.SetZero();

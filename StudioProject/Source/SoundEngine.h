@@ -24,7 +24,9 @@ public:
 
 	// Get the handler to the sound engine
 	ISoundEngine* GetSoundEngine(void);
-
+	void playSheepMusic();
+	void playWaMoleMusic();
+	void playMainMusic();
 	// Add a sound to this library
 	void AddSound(const std::string& _soundIndex, const std::string& _soundSource);
 	// Get a sound from this map 

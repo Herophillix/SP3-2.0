@@ -101,6 +101,12 @@ void SceneMole::Init()
 	meshList[GEO_MOLE_EXPLOSION7]->textureID = LoadTGA("Image//Mole_explode.tga");
 	meshList[GEO_MOLE_EXPLOSION8] = MeshBuilder::GenerateSpriteAnimation("epxlode8", 8, 10);
 	meshList[GEO_MOLE_EXPLOSION8]->textureID = LoadTGA("Image//Mole_explode.tga");
+
+	//Sounds
+	soundSystem.AddSound("whack", "Sounds//Hammer_Whack.wav");
+	soundSystem.playWaMoleMusic();
+
+
 	explode = dynamic_cast<SpriteAnimation *> (meshList[GEO_MOLE_EXPLOSION]);
 	if (explode)
 	{
@@ -408,6 +414,7 @@ void SceneMole::Update(double dt)
 			if (HammerCollisionCheck())
 			{
 				// sfx
+				soundSystem.PlayASound("whack");
 				cout << "hit" << endl;
 				m_hitCounter++;
 			}

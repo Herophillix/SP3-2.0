@@ -108,6 +108,25 @@ bool CSoundEngine::RemoveSound(const std::string& _soundIndex)
 	}
 	return false;
 }
+//Play 2d Music
+void CSoundEngine::playSheepMusic()
+{
+	ISound* soundGame = theSoundEngine->play2D("Sounds//Dreams.mp3", true, false, false, ESM_AUTO_DETECT, true);
+	soundGame->setVolume(0.60f);
+	soundGame->drop();
+}
+void CSoundEngine::playWaMoleMusic()
+{
+	ISound* soundGame = theSoundEngine->play2D("Sounds//WhackTheme.mp3", true, false, false, ESM_AUTO_DETECT, true);
+	soundGame->setVolume(0.80f);
+	soundGame->drop();
+}
+void CSoundEngine::playMainMusic()
+{
+	ISound* soundGame = theSoundEngine->play2D("Sounds//MainTheme.mp3", true, false, false, ESM_AUTO_DETECT, true);
+	soundGame->setVolume(0.80f);
+	soundGame->drop();
+}
 
 // Play a sound from this map
 void CSoundEngine::PlayASound(const std::string& _soundIndex)

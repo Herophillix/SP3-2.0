@@ -125,6 +125,13 @@ void SheepGame::Init()
 	m_particleCount = 0;
 	MAX_PARTICLES = 10;
 
+
+	//Sound
+	SoundSystem.AddSound("Fireball_Cast", "Sounds//Fireball_Cast.wav");
+	SoundSystem.AddSound("FIreball_Explosion", "Sounds//Fireball_Explosion.wav");
+	SoundSystem.AddSound("Lightning_Bolt", "Sounds//Lightning_Bolt.wav");
+	SoundSystem.AddSound("Sheep", "Sounds//Sheep.mp3");
+
 	Mtx44 projection;
 	projection.SetToOrtho(0, m_worldWidth, 0, m_worldHeight, -10, 10);
 	projectionStack.LoadMatrix(projection);
@@ -331,6 +338,7 @@ void SheepGame::Update(double dt)
 					int h = Application::GetWindowHeight();
 					if (!player->onCooldown)
 					{
+						SoundSystem.PlayASound("Fireball_Cast");
 						SheepObject *Fireball = FetchGO();
 						Fireball->type = SheepObject::E_FIREBALL;
 						Fireball->pos.Set(player->pos.x, player->pos.y, 0);
@@ -351,12 +359,14 @@ void SheepGame::Update(double dt)
 				}
 				else if (bRButtonState && !Application::IsMousePressed(1))
 				{
+					
 					isFiring = false;
 					bRButtonState = false;
 					std::cout << "RBUTTON UP" << std::endl;
 				}
 				if (m_Timer < 0)
 				{
+					SoundSystem.PlayASound("Sheep");
 					SheepObject* Sheep = FetchGO();
 					Sheep->type = SheepObject::E_SHEEPFLIPPED;
 					Sheep->scale.Set(10, 10, 10);
@@ -378,6 +388,7 @@ void SheepGame::Update(double dt)
 				}
 				if (isFiring == true && player->Mana > 0 && fireRate <= 0)
 				{
+					SoundSystem.PlayASound("Lightning_Bolt");
 					SheepObject *LightningBolt = FetchGO();
 					LightningBolt->type = SheepObject::E_LIGHTNING;
 					LightningBolt->pos.Set(player->pos.x, player->pos.y, 0);
@@ -548,6 +559,7 @@ void SheepGame::Update(double dt)
 								{
 									if (CollisionCheck(go, go2))
 									{
+										SoundSystem.PlayASound("Fireball_Explosion");
 										go->active = false;
 										go2->active = false;
 										Particles* particle = getParticle();

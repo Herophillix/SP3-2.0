@@ -2,6 +2,7 @@
 #include "SceneBase.h"
 #include "SheepObject.h"
 #include "Results.h"
+#include "..\SoundEngine.h"
 #include "StatManager.h"
 
 class SheepGame : public SceneBase
@@ -22,6 +23,7 @@ private:
 	SheepObject* Warning;
 	SheepObject* Warning2;
 	SheepObject* Warning3;
+	CSoundEngine SoundSystem;
 	std::vector<Particles* > m_particleList;
 	int points;
 	bool isFiring;
@@ -33,7 +35,7 @@ private:
 	bool statsGain;
 	int MAX_PARTICLES;
 	int m_particleCount;
-
+	
 
 	float Modifier;
 	bool isLeft;
