@@ -46,6 +46,7 @@ void resize_callback(GLFWwindow* window, int w, int h)
 	glViewport(0, 0, w, h);
 }
 
+bool Application::Quit = false;
 
 bool Application::IsKeyPressed(unsigned short key)
 {
@@ -70,7 +71,7 @@ int Application::GetWindowHeight()
 
 Application::Application()
 {
-	currentScene = SCENESHEEP;
+	currentScene = SCENEMAINMENU;
 }
 
 Application::~Application()
@@ -99,7 +100,7 @@ void Application::Init()
 	// glfwGetPrimaryMonitor()
 	m_width = 1920;
 	m_height = 1080;
-	
+
 	m_window = glfwCreateWindow(m_width, m_height, "Studio Project 3", NULL, NULL);
 	//If the window couldn't be created
 	if (!m_window)
@@ -150,10 +151,8 @@ void Application::Run()
 	}
 	Scene* currentscene = thisScene[currentScene];
 	m_timer.startTimer();    // Start timer to calculate how long it takes to render this frame
-	while (!glfwWindowShouldClose(m_window) && !IsKeyPressed(VK_ESCAPE))
+	while (!glfwWindowShouldClose(m_window) && !IsKeyPressed(VK_ESCAPE) && !Application::Quit)
 	{
- 		thisScene[currentScene]->Update(m_timer.getElapsedTime());
-		//thisScene[currentScene]->Render();
 		thisScene[currentScene]->Update(m_timer.getElapsedTime());
 		thisScene[currentScene]->Render();
 		//Swap buffers

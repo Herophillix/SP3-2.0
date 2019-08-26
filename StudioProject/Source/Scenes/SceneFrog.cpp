@@ -240,12 +240,18 @@ bool SceneFrog::CheckCollision(FrogObject* go, FrogObject* go2)
 
 void SceneFrog::Update(double dt)
 {
+	if (StatManager::GetInstance()->GetBool_Game(4))
+	{
+		Reset();
+		StatManager::GetInstance()->SetBool_Frogger(false);
+	}
 	SceneBase::Update(dt);
 	if (m_instructions)
 	{
 		instructionTimer -= dt;
 		if (instructionTimer <= 0)
 		{
+			StatManager::GetInstance()->SetPrevGame(4);
 			m_instructions = false;
 		}
 	}

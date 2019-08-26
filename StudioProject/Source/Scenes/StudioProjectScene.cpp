@@ -63,6 +63,43 @@ void StudioProjectScene::Init()
 	meshList[GEO_MAIN_CONTINUE]->textureID = LoadTGA("Image//Main_Continue.tga");
 
 
+	// CHARACTER SPRITE ANIMATIONS
+	meshList[GEO_CHARACTER01_IDLE_LEFT] = MeshBuilder::GenerateSpriteAnimation("c01_idle_left", 1, 4);
+	meshList[GEO_CHARACTER01_IDLE_LEFT]->textureID = LoadTGA("Image//CharacterSprites//Idle//knight_idle_anim_left.tga");
+	meshList[GEO_CHARACTER02_IDLE_LEFT] = MeshBuilder::GenerateSpriteAnimation("c02_idle_left", 1, 4);
+	meshList[GEO_CHARACTER02_IDLE_LEFT]->textureID = LoadTGA("Image//CharacterSprites//Idle//elf_idle_anim_left.tga");
+	meshList[GEO_CHARACTER03_IDLE_LEFT] = MeshBuilder::GenerateSpriteAnimation("c03_idle_left", 1, 4);
+	meshList[GEO_CHARACTER03_IDLE_LEFT]->textureID = LoadTGA("Image//CharacterSprites//Idle//necromancer_idle_anim_left.tga");
+	meshList[GEO_CHARACTER04_IDLE_LEFT] = MeshBuilder::GenerateSpriteAnimation("c04_idle_left", 1, 4);
+	meshList[GEO_CHARACTER04_IDLE_LEFT]->textureID = LoadTGA("Image//CharacterSprites//Idle//wizzard_idle_anim_left.tga");
+
+	meshList[GEO_CHARACTER01_MOVE_LEFT] = MeshBuilder::GenerateSpriteAnimation("c01_move_left", 1, 4);
+	meshList[GEO_CHARACTER01_MOVE_LEFT]->textureID = LoadTGA("Image//CharacterSprites//Move//knight_run_anim_left.tga");
+	meshList[GEO_CHARACTER02_MOVE_LEFT] = MeshBuilder::GenerateSpriteAnimation("c02_move_left", 1, 4);
+	meshList[GEO_CHARACTER02_MOVE_LEFT]->textureID = LoadTGA("Image//CharacterSprites//Move//elf_run_anim_left.tga");
+	meshList[GEO_CHARACTER03_MOVE_LEFT] = MeshBuilder::GenerateSpriteAnimation("c03_move_left", 1, 4);
+	meshList[GEO_CHARACTER03_MOVE_LEFT]->textureID = LoadTGA("Image//CharacterSprites//Move//necromancer_run_anim_left.tga");
+	meshList[GEO_CHARACTER04_MOVE_LEFT] = MeshBuilder::GenerateSpriteAnimation("c04_move_left", 1, 4);
+	meshList[GEO_CHARACTER04_MOVE_LEFT]->textureID = LoadTGA("Image//CharacterSprites//Move//wizzard_run_anim_left.tga");
+
+	meshList[GEO_CHARACTER01_IDLE_RIGHT] = MeshBuilder::GenerateSpriteAnimation("c01_idle_right", 1, 4);
+	meshList[GEO_CHARACTER01_IDLE_RIGHT]->textureID = LoadTGA("Image//CharacterSprites//Idle//knight_idle_anim_right.tga");
+	meshList[GEO_CHARACTER02_IDLE_RIGHT] = MeshBuilder::GenerateSpriteAnimation("c02_idle_right", 1, 4);
+	meshList[GEO_CHARACTER02_IDLE_RIGHT]->textureID = LoadTGA("Image//CharacterSprites//Idle//elf_idle_anim_right.tga");
+	meshList[GEO_CHARACTER03_IDLE_RIGHT] = MeshBuilder::GenerateSpriteAnimation("c03_idle_right", 1, 4);
+	meshList[GEO_CHARACTER03_IDLE_RIGHT]->textureID = LoadTGA("Image//CharacterSprites//Idle//necromancer_idle_anim_right.tga");
+	meshList[GEO_CHARACTER04_IDLE_RIGHT] = MeshBuilder::GenerateSpriteAnimation("c04_idle_right", 1, 4);
+	meshList[GEO_CHARACTER04_IDLE_RIGHT]->textureID = LoadTGA("Image//CharacterSprites//Idle//wizzard_idle_anim_right.tga");
+
+	meshList[GEO_CHARACTER01_MOVE_RIGHT] = MeshBuilder::GenerateSpriteAnimation("c01_move_right", 1, 4);
+	meshList[GEO_CHARACTER01_MOVE_RIGHT]->textureID = LoadTGA("Image//CharacterSprites//Move//knight_run_anim_right.tga");
+	meshList[GEO_CHARACTER02_MOVE_RIGHT] = MeshBuilder::GenerateSpriteAnimation("c02_move_right", 1, 4);
+	meshList[GEO_CHARACTER02_MOVE_RIGHT]->textureID = LoadTGA("Image//CharacterSprites//Move//elf_run_anim_right.tga");
+	meshList[GEO_CHARACTER03_MOVE_RIGHT] = MeshBuilder::GenerateSpriteAnimation("c03_move_right", 1, 4);
+	meshList[GEO_CHARACTER03_MOVE_RIGHT]->textureID = LoadTGA("Image//CharacterSprites//Move//necromancer_run_anim_right.tga");
+	meshList[GEO_CHARACTER04_MOVE_RIGHT] = MeshBuilder::GenerateSpriteAnimation("c04_move_right", 1, 4);
+	meshList[GEO_CHARACTER04_MOVE_RIGHT]->textureID = LoadTGA("Image//CharacterSprites//Move//wizzard_run_anim_right.tga");
+
 	Mtx44 projection;
 	projection.SetToOrtho(0, m_worldWidth, 0, m_worldHeight, -10, 10);
 	projectionStack.LoadMatrix(projection);
@@ -117,6 +154,109 @@ void StudioProjectScene::Init()
 		walkRight->m_anim->Set(0, 4, 0, 1.f, true);
 	}
 
+	// IDLE LEFT
+	SpriteAnimation *C01IL = dynamic_cast<SpriteAnimation *>(meshList[GEO_CHARACTER01_IDLE_LEFT]);
+	if (C01IL)
+	{
+		C01IL->m_anim = new Animation();
+		C01IL->m_anim->Set(0, 3, 0, 1.f, true);
+	}
+	SpriteAnimation *C02IL = dynamic_cast<SpriteAnimation *>(meshList[GEO_CHARACTER02_IDLE_LEFT]);
+	if (C02IL)
+	{
+		C02IL->m_anim = new Animation();
+		C02IL->m_anim->Set(0, 3, 0, 1.f, true);
+	}
+	SpriteAnimation *C03IL = dynamic_cast<SpriteAnimation *>(meshList[GEO_CHARACTER03_IDLE_LEFT]);
+	if (C03IL)
+	{
+		C03IL->m_anim = new Animation();
+		C03IL->m_anim->Set(0, 3, 0, 1.f, true);
+	}
+	SpriteAnimation *C04IL = dynamic_cast<SpriteAnimation *>(meshList[GEO_CHARACTER04_IDLE_LEFT]);
+	if (C04IL)
+	{
+		C04IL->m_anim = new Animation();
+		C04IL->m_anim->Set(0, 3, 0, 1.f, true);
+	}
+
+	// IDLE RIGHT
+	SpriteAnimation *C01IR = dynamic_cast<SpriteAnimation *>(meshList[GEO_CHARACTER01_IDLE_RIGHT]);
+	if (C01IR)
+	{
+		C01IR->m_anim = new Animation();
+		C01IR->m_anim->Set(0, 3, 0, 1.f, true);
+	}
+	SpriteAnimation *C02IR = dynamic_cast<SpriteAnimation *>(meshList[GEO_CHARACTER02_IDLE_RIGHT]);
+	if (C02IR)
+	{
+		C02IR->m_anim = new Animation();
+		C02IR->m_anim->Set(0, 3, 0, 1.f, true);
+	}
+	SpriteAnimation *C03IR = dynamic_cast<SpriteAnimation *>(meshList[GEO_CHARACTER03_IDLE_RIGHT]);
+	if (C03IR)
+	{
+		C03IR->m_anim = new Animation();
+		C03IR->m_anim->Set(0, 3, 0, 1.f, true);
+	}
+	SpriteAnimation *C04IR = dynamic_cast<SpriteAnimation *>(meshList[GEO_CHARACTER04_IDLE_RIGHT]);
+	if (C04IR)
+	{
+		C04IR->m_anim = new Animation();
+		C04IR->m_anim->Set(0, 3, 0, 1.f, true);
+	}
+
+	// MOVE LEFT
+	SpriteAnimation *C01ML = dynamic_cast<SpriteAnimation *>(meshList[GEO_CHARACTER01_MOVE_LEFT]);
+	if (C01ML)
+	{
+		C01ML->m_anim = new Animation();
+		C01ML->m_anim->Set(0, 3, 0, 1.f, true);
+	}
+	SpriteAnimation *C02ML = dynamic_cast<SpriteAnimation *>(meshList[GEO_CHARACTER02_MOVE_LEFT]);
+	if (C02ML)
+	{
+		C02ML->m_anim = new Animation();
+		C02ML->m_anim->Set(0, 3, 0, 1.f, true);
+	}
+	SpriteAnimation *C03ML = dynamic_cast<SpriteAnimation *>(meshList[GEO_CHARACTER03_MOVE_LEFT]);
+	if (C03ML)
+	{
+		C03ML->m_anim = new Animation();
+		C03ML->m_anim->Set(0, 3, 0, 1.f, true);
+	}
+	SpriteAnimation *C04ML = dynamic_cast<SpriteAnimation *>(meshList[GEO_CHARACTER04_MOVE_LEFT]);
+	if (C04ML)
+	{
+		C04ML->m_anim = new Animation();
+		C04ML->m_anim->Set(0, 3, 0, 1.f, true);
+	}
+
+	// MOVE RIGHT
+	SpriteAnimation *C01MR = dynamic_cast<SpriteAnimation *>(meshList[GEO_CHARACTER01_MOVE_RIGHT]);
+	if (C01MR)
+	{
+		C01MR->m_anim = new Animation();
+		C01MR->m_anim->Set(0, 3, 0, 1.f, true);
+	}
+	SpriteAnimation *C02MR = dynamic_cast<SpriteAnimation *>(meshList[GEO_CHARACTER02_MOVE_RIGHT]);
+	if (C02MR)
+	{
+		C02MR->m_anim = new Animation();
+		C02MR->m_anim->Set(0, 3, 0, 1.f, true);
+	}
+	SpriteAnimation *C03MR = dynamic_cast<SpriteAnimation *>(meshList[GEO_CHARACTER03_MOVE_RIGHT]);
+	if (C03MR)
+	{
+		C03MR->m_anim = new Animation();
+		C03MR->m_anim->Set(0, 3, 0, 1.f, true);
+	}
+	SpriteAnimation *C04MR = dynamic_cast<SpriteAnimation *>(meshList[GEO_CHARACTER04_MOVE_RIGHT]);
+	if (C04MR)
+	{
+		C04MR->m_anim = new Animation();
+		C04MR->m_anim->Set(0, 3, 0, 1.f, true);
+	}
 	color = 1.0f;
 
 
@@ -144,13 +284,36 @@ void StudioProjectScene::Init()
 	prevlevel = 0;
 	currentlevel = 0;
 	SceneState = S_GAME;
-	
+
 	Continue = new MenuObject(MenuObject::M_CONTINUE, Vector3(40, 40, 1));
 	Continue->pos = Vector3(m_worldWidth * 0.9f, m_worldHeight * 0.1f, 0);
 	Continue->active = true;
 }
 void StudioProjectScene::Update(double dt)
 {
+	if (!StatManager::GetInstance()->GetBool_Game(StatManager::GetInstance()->GetPrevGame()))
+	{
+		switch (StatManager::GetInstance()->GetPrevGame())
+		{
+		case 1:
+			StatManager::GetInstance()->SetBool_Maze(true);
+			break;
+		case 2:
+			StatManager::GetInstance()->SetBool_Mole(true);
+			break;
+		case 3:
+			StatManager::GetInstance()->SetBool_Tank(true);
+			break;
+		case 4:
+			StatManager::GetInstance()->SetBool_Frogger(true);
+			break;
+		case 5:
+			StatManager::GetInstance()->SetBool_Sheep(true);
+			break;
+		default:
+			break;
+		}
+	}
 	SceneBase::Update(dt);
 
 	//Calculating aspect ratio
@@ -369,6 +532,110 @@ void StudioProjectScene::UpdateGame(double dt)
 		walkLeft->Update(dt);
 		walkLeft->m_anim->animActive = true;
 
+	}
+
+	// IDLE LEFT
+	SpriteAnimation *C01IL = dynamic_cast<SpriteAnimation *>(meshList[GEO_CHARACTER01_IDLE_LEFT]);
+	if (C01IL)
+	{
+		C01IL->Update(dt);
+		C01IL->m_anim->animActive = true;
+	}
+	SpriteAnimation *C02IL = dynamic_cast<SpriteAnimation *>(meshList[GEO_CHARACTER02_IDLE_LEFT]);
+	if (C02IL)
+	{
+		C02IL->Update(dt);
+		C02IL->m_anim->animActive = true;;
+	}
+	SpriteAnimation *C03IL = dynamic_cast<SpriteAnimation *>(meshList[GEO_CHARACTER03_IDLE_LEFT]);
+	if (C03IL)
+	{
+		C03IL->Update(dt);
+		C03IL->m_anim->animActive = true;
+	}
+	SpriteAnimation *C04IL = dynamic_cast<SpriteAnimation *>(meshList[GEO_CHARACTER04_IDLE_LEFT]);
+	if (C04IL)
+	{
+		C04IL->Update(dt);
+		C04IL->m_anim->animActive = true;
+	}
+
+	// IDLE RIGHT
+	SpriteAnimation *C01IR = dynamic_cast<SpriteAnimation *>(meshList[GEO_CHARACTER01_IDLE_RIGHT]);
+	if (C01IR)
+	{
+		C01IR->Update(dt);
+		C01IR->m_anim->animActive = true;
+	}
+	SpriteAnimation *C02IR = dynamic_cast<SpriteAnimation *>(meshList[GEO_CHARACTER02_IDLE_RIGHT]);
+	if (C02IR)
+	{
+		C02IR->Update(dt);
+		C02IR->m_anim->animActive = true;
+	}
+	SpriteAnimation *C03IR = dynamic_cast<SpriteAnimation *>(meshList[GEO_CHARACTER03_IDLE_RIGHT]);
+	if (C03IR)
+	{
+		C03IR->Update(dt);
+		C03IR->m_anim->animActive = true;
+	}
+	SpriteAnimation *C04IR = dynamic_cast<SpriteAnimation *>(meshList[GEO_CHARACTER04_IDLE_RIGHT]);
+	if (C04IR)
+	{
+		C04IR->Update(dt);
+		C04IR->m_anim->animActive = true;
+	}
+
+	// MOVE LEFT
+	SpriteAnimation *C01ML = dynamic_cast<SpriteAnimation *>(meshList[GEO_CHARACTER01_MOVE_LEFT]);
+	if (C01ML)
+	{
+		C01ML->Update(dt);
+		C01ML->m_anim->animActive = true;
+	}
+	SpriteAnimation *C02ML = dynamic_cast<SpriteAnimation *>(meshList[GEO_CHARACTER02_MOVE_LEFT]);
+	if (C02ML)
+	{
+		C02ML->Update(dt);
+		C02ML->m_anim->animActive = true;
+	}
+	SpriteAnimation *C03ML = dynamic_cast<SpriteAnimation *>(meshList[GEO_CHARACTER03_MOVE_LEFT]);
+	if (C03ML)
+	{
+		C03ML->Update(dt);
+		C03ML->m_anim->animActive = true;
+	}
+	SpriteAnimation *C04ML = dynamic_cast<SpriteAnimation *>(meshList[GEO_CHARACTER04_MOVE_LEFT]);
+	if (C04ML)
+	{
+		C04ML->Update(dt);
+		C04ML->m_anim->animActive = true;
+	}
+
+	// MOVE RIGHT
+	SpriteAnimation *C01MR = dynamic_cast<SpriteAnimation *>(meshList[GEO_CHARACTER01_MOVE_RIGHT]);
+	if (C01MR)
+	{
+		C01MR->Update(dt);
+		C01MR->m_anim->animActive = true;
+	}
+	SpriteAnimation *C02MR = dynamic_cast<SpriteAnimation *>(meshList[GEO_CHARACTER02_MOVE_RIGHT]);
+	if (C02MR)
+	{
+		C02MR->Update(dt);
+		C02MR->m_anim->animActive = true;
+	}
+	SpriteAnimation *C03MR = dynamic_cast<SpriteAnimation *>(meshList[GEO_CHARACTER03_MOVE_RIGHT]);
+	if (C03MR)
+	{
+		C03MR->Update(dt);
+		C03MR->m_anim->animActive = true;
+	}
+	SpriteAnimation *C04MR = dynamic_cast<SpriteAnimation *>(meshList[GEO_CHARACTER04_MOVE_RIGHT]);
+	if (C04MR)
+	{
+		C04MR->Update(dt);
+		C04MR->m_anim->animActive = true;
 	}
 
 	for (std::vector<GameObject *>::iterator it = m_goList.begin(); it != m_goList.end(); ++it)
@@ -743,6 +1010,154 @@ void StudioProjectScene::RenderCharObj(CharacterObject * go)
 			modelStack.Scale(go->scale.x, go->scale.y, go->scale.z);
 			RenderMesh(meshList[GEO_SPRITE_TEST2], false);
 			modelStack.PopMatrix();
+			break;
+		}
+	case CharacterObject::GO_CHAR01:
+		if (go->getState() == true)
+		{
+			modelStack.PushMatrix();
+			modelStack.Translate(go->pos.x, go->pos.y, go->pos.z);
+			if (go->getDirection() == true)
+			{
+				modelStack.Scale(go->scale.x, go->scale.y, go->scale.z);
+				RenderMesh(meshList[GEO_CHARACTER01_MOVE_LEFT], false);
+				modelStack.PopMatrix();
+			}
+			else
+			{
+				modelStack.Scale(go->scale.x, go->scale.y, go->scale.z);
+				RenderMesh(meshList[GEO_CHARACTER01_MOVE_RIGHT], false);
+				modelStack.PopMatrix();
+			}
+			break;
+		}
+		else if (!go->getState())
+		{
+			modelStack.PushMatrix();
+			modelStack.Translate(go->pos.x, go->pos.y, go->pos.z);
+			if (go->getDirection() == true)
+			{
+				modelStack.Scale(go->scale.x, go->scale.y, go->scale.z);
+				RenderMesh(meshList[GEO_CHARACTER01_IDLE_LEFT], false);
+				modelStack.PopMatrix();
+			}
+			else
+			{
+				modelStack.Scale(go->scale.x, go->scale.y, go->scale.z);
+				RenderMesh(meshList[GEO_CHARACTER01_IDLE_RIGHT], false);
+				modelStack.PopMatrix();
+			}
+			break;
+		}
+	case CharacterObject::GO_CHAR02:
+		if (go->getState() == true)
+		{
+			modelStack.PushMatrix();
+			modelStack.Translate(go->pos.x, go->pos.y, go->pos.z);
+			if (go->getDirection() == true)
+			{
+				modelStack.Scale(go->scale.x, go->scale.y, go->scale.z);
+				RenderMesh(meshList[GEO_CHARACTER02_MOVE_LEFT], false);
+				modelStack.PopMatrix();
+			}
+			else
+			{
+				modelStack.Scale(go->scale.x, go->scale.y, go->scale.z);
+				RenderMesh(meshList[GEO_CHARACTER02_MOVE_RIGHT], false);
+				modelStack.PopMatrix();
+			}
+			break;
+		}
+		else if (!go->getState())
+		{
+			modelStack.PushMatrix();
+			modelStack.Translate(go->pos.x, go->pos.y, go->pos.z);
+			if (go->getDirection() == true)
+			{
+				modelStack.Scale(go->scale.x, go->scale.y, go->scale.z);
+				RenderMesh(meshList[GEO_CHARACTER02_IDLE_LEFT], false);
+				modelStack.PopMatrix();
+			}
+			else
+			{
+				modelStack.Scale(go->scale.x, go->scale.y, go->scale.z);
+				RenderMesh(meshList[GEO_CHARACTER02_IDLE_RIGHT], false);
+				modelStack.PopMatrix();
+			}
+			break;
+		}
+	case CharacterObject::GO_CHAR03:
+		if (go->getState() == true)
+		{
+			modelStack.PushMatrix();
+			modelStack.Translate(go->pos.x, go->pos.y, go->pos.z);
+			if (go->getDirection() == true)
+			{
+				modelStack.Scale(go->scale.x, go->scale.y, go->scale.z);
+				RenderMesh(meshList[GEO_CHARACTER03_MOVE_LEFT], false);
+				modelStack.PopMatrix();
+			}
+			else
+			{
+				modelStack.Scale(go->scale.x, go->scale.y, go->scale.z);
+				RenderMesh(meshList[GEO_CHARACTER03_MOVE_RIGHT], false);
+				modelStack.PopMatrix();
+			}
+			break;
+		}
+		else if (!go->getState())
+		{
+			modelStack.PushMatrix();
+			modelStack.Translate(go->pos.x, go->pos.y, go->pos.z);
+			if (go->getDirection() == true)
+			{
+				modelStack.Scale(go->scale.x, go->scale.y, go->scale.z);
+				RenderMesh(meshList[GEO_CHARACTER03_IDLE_LEFT], false);
+				modelStack.PopMatrix();
+			}
+			else
+			{
+				modelStack.Scale(go->scale.x, go->scale.y, go->scale.z);
+				RenderMesh(meshList[GEO_CHARACTER03_IDLE_RIGHT], false);
+				modelStack.PopMatrix();
+			}
+			break;
+		}
+	case CharacterObject::GO_CHAR04:
+		if (go->getState() == true)
+		{
+			modelStack.PushMatrix();
+			modelStack.Translate(go->pos.x, go->pos.y, go->pos.z);
+			if (go->getDirection() == true)
+			{
+				modelStack.Scale(go->scale.x, go->scale.y, go->scale.z);
+				RenderMesh(meshList[GEO_CHARACTER04_MOVE_LEFT], false);
+				modelStack.PopMatrix();
+			}
+			else
+			{
+				modelStack.Scale(go->scale.x, go->scale.y, go->scale.z);
+				RenderMesh(meshList[GEO_CHARACTER04_MOVE_RIGHT], false);
+				modelStack.PopMatrix();
+			}
+			break;
+		}
+		else if (!go->getState())
+		{
+			modelStack.PushMatrix();
+			modelStack.Translate(go->pos.x, go->pos.y, go->pos.z);
+			if (go->getDirection() == true)
+			{
+				modelStack.Scale(go->scale.x, go->scale.y, go->scale.z);
+				RenderMesh(meshList[GEO_CHARACTER04_IDLE_LEFT], false);
+				modelStack.PopMatrix();
+			}
+			else
+			{
+				modelStack.Scale(go->scale.x, go->scale.y, go->scale.z);
+				RenderMesh(meshList[GEO_CHARACTER04_IDLE_RIGHT], false);
+				modelStack.PopMatrix();
+			}
 			break;
 		}
 	case CharacterObject::GO_TELEVISION:

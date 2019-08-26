@@ -48,10 +48,29 @@ public:
 	void SetCharsOriginalValues();
 	void ResetValues();
 
+	void SetBool_Mole(bool set);
+	void SetBool_Maze(bool set);
+	void SetBool_Tank(bool set);
+	void SetBool_Sheep(bool set);
+	void SetBool_Frogger(bool set);
+
+	bool GetBool_Game(int gameID);
+
+	void SetPrevGame(int gameID);
+	int GetPrevGame();
+
 private:
 	StatManager();
 	static StatManager* SM_Instance;
 	int m_DayNo;
+	int m_prevGame;
+
+	// Meaning if they are good to be reseted
+	bool m_resetMaze;		// 1
+	bool m_resetMole;		// 2
+	bool m_resetTank;		// 3
+	bool m_resetFrogger;	// 4
+	bool m_resetSheep;		// 5
 };
 
 

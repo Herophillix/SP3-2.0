@@ -37,6 +37,12 @@ StatManager::StatManager()
 	m_char03.m_originFrustration = 0;
 	m_char04.m_originFrustration = 0;
 
+	m_resetMole = false;
+	m_resetMaze = false;
+	m_resetTank = false;
+	m_resetSheep = false;
+	m_resetFrogger = false;
+
 }
 
 CharacterStats StatManager::GetChar01()
@@ -249,6 +255,65 @@ void StatManager::ResetValues()
 
 	m_char04.m_motivation = m_char04.m_originMotivation;
 	m_char04.m_frustration = m_char04.m_originFrustration;
+}
+
+void StatManager::SetBool_Mole(bool set)
+{
+	m_resetMole = set;
+}
+
+void StatManager::SetBool_Maze(bool set)
+{
+	m_resetMaze = set;
+}
+
+void StatManager::SetBool_Tank(bool set)
+{
+	m_resetTank = set;
+}
+
+void StatManager::SetBool_Sheep(bool set)
+{
+	m_resetSheep = set;
+}
+
+void StatManager::SetBool_Frogger(bool set)
+{
+	m_resetFrogger = set;
+}
+
+bool StatManager::GetBool_Game(int gameID)
+{
+	switch (gameID)
+	{
+	case 1:
+		return m_resetMaze;
+		break;
+	case 2:
+		return m_resetMole;
+		break;
+	case 3:
+		return m_resetTank;
+		break;
+	case 4:
+		return m_resetFrogger;
+		break;
+	case 5:
+		return m_resetSheep;
+		break;
+	default:
+		break;
+	}
+}
+
+void StatManager::SetPrevGame(int gameID)
+{
+	m_prevGame = gameID;
+}
+
+int StatManager::GetPrevGame()
+{
+	return m_prevGame;
 }
 
 void StatManager::UpdateChar01WD(float workDone)
