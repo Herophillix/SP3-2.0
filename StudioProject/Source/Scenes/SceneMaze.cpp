@@ -177,6 +177,18 @@ void SceneMaze::UpdateGame(double dt)
 			SceneState = S_GAMEOVER;
 		}
 	}
+	else
+	{
+		elapsedTime += dt;
+		if (score > 0)
+		{
+			score -= dt * 100 / 3.f * (1 + (stencilsize - 1) * 0.125f);
+		}
+		else
+		{
+			endGame = true;
+		}
+	}
 	tempwall->pos = Vector3(m_worldWidth*0.5, 0, 0);
 	tempwall->scale.Set(5, m_worldWidth, 1);
 
@@ -254,15 +266,6 @@ void SceneMaze::UpdateGame(double dt)
 		}
 	}
 	// End James 13/8/2019
-	elapsedTime += dt;
-	if (score > 0)
-	{
-		score -= dt * 100 / 3.f * (1 + (stencilsize - 1) * 0.125f);
-	}
-	else
-	{
-		score = 0;
-	}
 }
 
 void SceneMaze::UpdateGameOver(double dt)
@@ -540,7 +543,7 @@ void SceneMaze::RenderGame()
 
 void SceneMaze::RenderGameOver()
 {
-	Results::getInstance()->RenderResults(0, 'A');
+	Results::getInstance()->RenderResults(score, grade);
 }
 
 void SceneMaze::Exit()

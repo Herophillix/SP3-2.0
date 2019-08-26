@@ -153,7 +153,7 @@ void Application::Run()
 	while (!glfwWindowShouldClose(m_window) && !IsKeyPressed(VK_ESCAPE))
 	{
  		thisScene[currentScene]->Update(m_timer.getElapsedTime());
-		thisScene[currentScene]->Render();
+		//thisScene[currentScene]->Render();
 		thisScene[currentScene]->Update(m_timer.getElapsedTime());
 		thisScene[currentScene]->Render();
 		//Swap buffers
