@@ -232,7 +232,7 @@
       <Filter>GameObjects\Header</Filter>
     </ClInclude>
     <ClInclude Include="Source\Scenes\Screen.h">
-      <Filter>Scenes</Filter>
+      <Filter>Scenes\Header</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

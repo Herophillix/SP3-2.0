@@ -48,12 +48,22 @@ class StudioProjectScene : public SceneBase
 	//	NUM_GEOMETRY
 	//};
 public:
+	enum SCENESTATE
+	{
+		S_GAME,
+		S_LEVELTRANSITION
+	};
+
 	StudioProjectScene();
 	~StudioProjectScene();
 
 	virtual void Init();
 	virtual void Update(double dt);
+	void UpdateGame(double dt);
+	void UpdateLevelTransition(double dt);
 	virtual void Render();
+	void RenderGame();
+	void RenderLevelTransition();
 	virtual void Exit();
 
 	void RenderCharObj(CharacterObject *go);
@@ -99,6 +109,12 @@ private:
 	Vector3 StatsArea;
 
 	Screen* ScreenSplit[4];
+
+	int phase;
+	int prevlevel;
+	int currentlevel;
+	int SceneState;
+	MenuObject* Continue;
 };
 
 #endif // !STUDIOPROJECT_SCENE_H

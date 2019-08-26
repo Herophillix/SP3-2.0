@@ -179,6 +179,7 @@ public:
 		// MAIN
 		GEO_MAIN_USE,
 		GEO_MAIN_STOP,
+		GEO_MAIN_CONTINUE,
 		// Animations
 		GEO_HAMMER_SPRITE,
 		

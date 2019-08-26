@@ -29,7 +29,7 @@ void StudioProjectScene::Init()
 	//Variables here
 	m_speed = 1.f;
 	Math::InitRNG();
-	m_eventTimer = Math::RandFloatMinMax(20.0f, 40.f);
+	m_eventTimer = 10;//Math::RandFloatMinMax(20.0f, 40.f);
 	b_transitioning = false;
 
 	meshList[GEO_QUAD] = MeshBuilder::GenerateQuad("test", Color(1, 1, 1), 1.f);
@@ -59,6 +59,8 @@ void StudioProjectScene::Init()
 	meshList[GEO_MAIN_USE]->textureID = LoadTGA("Image//Main_Use.tga");
 	meshList[GEO_MAIN_STOP] = MeshBuilder::GenerateQuad("Stop", Color(1, 1, 1), 1.f);
 	meshList[GEO_MAIN_STOP]->textureID = LoadTGA("Image//Main_Stop.tga");
+	meshList[GEO_MAIN_CONTINUE] = MeshBuilder::GenerateQuad("Continue", Color(1, 1, 1), 1.f);
+	meshList[GEO_MAIN_CONTINUE]->textureID = LoadTGA("Image//Main_Continue.tga");
 
 
 	Mtx44 projection;
@@ -191,21 +193,113 @@ void StudioProjectScene::Init()
 	meshList[GEO_CHARFOURMOTIVE] = MeshBuilder::GenerateQuad("CharThreeMotivation", Color(1, 1, 0),1.f);
 	meshList[GEO_CHARFOURREST] = MeshBuilder::GenerateQuad("CharThreeRest", Color(1, 0, 1), 1.f);
 	meshList[GEO_CHARFOURWD] = MeshBuilder::GenerateQuad("CharFourWorkDone", Color(0, 1, 1),1.f);
+
+	phase = 4;
+	prevlevel = 0;
+	currentlevel = 0;
+	SceneState = S_GAME;
+
+	Continue = new MenuObject(MenuObject::M_CONTINUE, Vector3(40, 40, 1));
+	Continue->pos = Vector3(m_worldWidth * 0.9f, m_worldHeight * 0.1f, 0);
+	Continue->active = true;
 }
 void StudioProjectScene::Update(double dt)
 {
 	SceneBase::Update(dt);
 
-	ScreenSplit[0]->UseItem->pos.Set(m_worldWidth * 0.45f, m_worldHeight * 0.55f, 0);
-	ScreenSplit[1]->UseItem->pos.Set(m_worldWidth * 0.95f, m_worldHeight * 0.55f, 0);
-	ScreenSplit[2]->UseItem->pos.Set(m_worldWidth * 0.45f, m_worldHeight * 0.05f, 0);
-	ScreenSplit[3]->UseItem->pos.Set(m_worldWidth * 0.95f, m_worldHeight * 0.05f, 0);
+	//Calculating aspect ratio
+	m_worldHeight = 200.f;
+	m_worldWidth = m_worldHeight * (float)Application::GetWindowWidth() / Application::GetWindowHeight();
 
 	double x, y;
 	Application::GetCursorPos(&x, &y);
 	int w = Application::GetWindowWidth();
 	int h = Application::GetWindowHeight();
 	v_mousepos = Vector3(static_cast<float>(x) / (w / m_worldWidth), (h - static_cast<float>(y)) / (h / m_worldHeight), 0.0f);
+
+	m_eventTimer -= dt;
+
+	switch (SceneState)
+	{
+	case S_GAME:
+	{
+		UpdateGame(dt);
+		break;
+	}
+	case S_LEVELTRANSITION:
+	{
+		UpdateLevelTransition(dt);
+		break;
+	}
+	default:
+	{
+		break;
+	}
+	}
+
+	if (m_eventTimer < 0)
+	{
+		if (color >= 0)
+		{
+			color -= dt;
+		}
+	}
+	if (m_eventTimer < -2)
+	{
+		phase++;
+		switch (phase)
+		{
+		case 1:
+		{
+			m_eventTimer = 10.f;
+			break;
+		}
+		case 5:
+		{
+			SceneState = S_LEVELTRANSITION;
+			phase = 0;
+			break;
+		}
+		default:
+		{
+			prevlevel = currentlevel;
+			currentlevel = Math::RandIntMinMax(1, 5);
+			while (currentlevel == prevlevel)
+			{
+				currentlevel = Math::RandIntMinMax(1, 5);
+			}
+			Application::setScene(currentlevel);
+			m_eventTimer = Math::RandFloatMinMax(20.0f, 40.f);
+			break;
+		}
+		}
+		/*if (phase == 0)
+		{
+			m_eventTimer = Math::RandFloatMinMax(20.0f, 40.f);
+		}
+		if (phase >= 4)
+		{
+			SceneState = S_LEVELTRANSITION;
+			phase = 0;
+		}
+		else
+		{
+			
+		}*/
+	}
+	UpdateParticles(dt);
+	//cout << "Event Timer : " << m_eventTimer << endl;
+}
+
+void StudioProjectScene::UpdateGame(double dt)
+{
+	ScreenSplit[0]->UseItem->pos.Set(m_worldWidth * 0.45f, m_worldHeight * 0.55f, 0);
+	ScreenSplit[1]->UseItem->pos.Set(m_worldWidth * 0.95f, m_worldHeight * 0.55f, 0);
+	ScreenSplit[2]->UseItem->pos.Set(m_worldWidth * 0.45f, m_worldHeight * 0.05f, 0);
+	ScreenSplit[3]->UseItem->pos.Set(m_worldWidth * 0.95f, m_worldHeight * 0.05f, 0);
+
+	int w = Application::GetWindowWidth();
+	int h = Application::GetWindowHeight();
 	//cout << v_mousepos << endl;
 	rel_mousepos = v_mousepos;
 	if (v_mousepos.x <= m_worldWidth * 0.5f)
@@ -300,7 +394,7 @@ void StudioProjectScene::Update(double dt)
 
 	for (int i = 0; i < 4; ++i)
 	{
-		ScreenSplit[i]->Update(dt,v_mousepos, rel_mousepos, Vector3(10,10,1));
+		ScreenSplit[i]->Update(dt, v_mousepos, rel_mousepos, Vector3(10, 10, 1));
 	}
 	//charOne->Update(dt);
 	//Television->Update(rel_mousepos, Vector3(10, 10, 1));
@@ -332,106 +426,106 @@ void StudioProjectScene::Update(double dt)
 	//meshList[GEO_CHARFOURWD] = MeshBuilder::GenerateBar("CharFourWorkDone", Color(0, 1, 1), charFour->workDone / 2, 1.f);
 
 	currentChar->UpdateMovement(dt, m_worldWidth, m_worldHeight);
-		/*float dist = fabs(currentChar->pos.x - Television->pos.x);
-		if (dist <= currentChar->scale.x + Television->scale.x)
+	/*float dist = fabs(currentChar->pos.x - Television->pos.x);
+	if (dist <= currentChar->scale.x + Television->scale.x)
+	{
+		if (Application::IsKeyPressed(VK_SPACE))
 		{
-			if (Application::IsKeyPressed(VK_SPACE))
-			{
-				charOne->resting = true;
-				cout << "resting 1" << endl;
-			}
+			charOne->resting = true;
+			cout << "resting 1" << endl;
 		}
-		if (dist > currentChar->scale.x + Television->scale.x)
+	}
+	if (dist > currentChar->scale.x + Television->scale.x)
+	{
+		cout << "unrest 1" << endl;
+		charOne->resting = false;
+	}
+	float dist2 = currentChar->pos.x - Television2->pos.x;
+	if (dist2 <= currentChar->scale.x + Television2->scale.x)
+	{
+		if (Application::IsKeyPressed(VK_SPACE))
 		{
-			cout << "unrest 1" << endl;
-			charOne->resting = false;
+			charOne->resting = true;
+			cout << "resting 1" << endl;
 		}
-		float dist2 = currentChar->pos.x - Television2->pos.x;
-		if (dist2 <= currentChar->scale.x + Television2->scale.x)
+	}
+	if (dist2 > currentChar->scale.x + Television2->scale.x)
+	{
+		cout << "unrest 1" << endl;
+		charOne->resting = false;
+	}
+	float dist3 = currentChar->pos.x - Television3->pos.x;
+	if (dist3 <= currentChar->scale.x + Television3->scale.x)
+	{
+		if (Application::IsKeyPressed(VK_SPACE))
 		{
-			if (Application::IsKeyPressed(VK_SPACE))
-			{
-				charOne->resting = true;
-				cout << "resting 1" << endl;
-			}
+			charOne->resting = true;
+			cout << "resting 1" << endl;
 		}
-		if (dist2 > currentChar->scale.x + Television2->scale.x)
+	}
+	if (dist3 > currentChar->scale.x + Television3->scale.x)
+	{
+		cout << "unrest 1" << endl;
+		charOne->resting = false;
+	}
+	float dist4 = currentChar->pos.x - Television4->pos.x;
+	if (dist4 <= currentChar->scale.x + Television4->scale.x)
+	{
+		if (Application::IsKeyPressed(VK_SPACE))
 		{
-			cout << "unrest 1" << endl;
-			charOne->resting = false;
+			charOne->resting = true;
+			cout << "resting 1" << endl;
 		}
-		float dist3 = currentChar->pos.x - Television3->pos.x;
-		if (dist3 <= currentChar->scale.x + Television3->scale.x)
-		{
-			if (Application::IsKeyPressed(VK_SPACE))
-			{
-				charOne->resting = true;
-				cout << "resting 1" << endl;
-			}
-		}
-		if (dist3 > currentChar->scale.x + Television3->scale.x)
-		{
-			cout << "unrest 1" << endl;
-			charOne->resting = false;
-		}		
-		float dist4 = currentChar->pos.x - Television4->pos.x;
-		if (dist4 <= currentChar->scale.x + Television4->scale.x)
-		{
-			if (Application::IsKeyPressed(VK_SPACE))
-			{
-				charOne->resting = true;
-				cout << "resting 1" << endl;
-			}
-		}
-		if (dist4  > currentChar->scale.x + Television4->scale.x)
-		{
-			cout << "unrest 1" << endl;
-			charOne->resting = false;
-		}*/
+	}
+	if (dist4  > currentChar->scale.x + Television4->scale.x)
+	{
+		cout << "unrest 1" << endl;
+		charOne->resting = false;
+	}*/
 
-		//float dist2 = charTwo->pos.x - Television2->pos.x;
-		//if (dist2 <= charTwo->scale.x + Television2->scale.x)
-		//{
-		//	if (Application::IsKeyPressed(VK_SPACE))
-		//	{
-		//		charTwo->resting = true;
-		//		cout << "resting 2" << endl;
-		//		//cout << "Frustration : " << charTwo->frustration << endl;
-		//	}
-		//}
-		//if (dist2 > charTwo->scale.x + Television2->scale.x)
-		//{
-		//	cout << charTwo->frustration << endl;
-		//	charTwo->resting = false;
-		//	//cout << "Frustration : " << charTwo->frustration << endl;
-		//}
+	//float dist2 = charTwo->pos.x - Television2->pos.x;
+	//if (dist2 <= charTwo->scale.x + Television2->scale.x)
+	//{
+	//	if (Application::IsKeyPressed(VK_SPACE))
+	//	{
+	//		charTwo->resting = true;
+	//		cout << "resting 2" << endl;
+	//		//cout << "Frustration : " << charTwo->frustration << endl;
+	//	}
+	//}
+	//if (dist2 > charTwo->scale.x + Television2->scale.x)
+	//{
+	//	cout << charTwo->frustration << endl;
+	//	charTwo->resting = false;
+	//	//cout << "Frustration : " << charTwo->frustration << endl;
+	//}
 
-		//float dist3 = charThree->pos.x - Television3->pos.x;
-		//if (dist3 <= charThree->scale.x + Television3->scale.x)
-		//{
-		//	if(Application::IsKeyPressed(VK_SPACE))
-		//	{
+	//float dist3 = charThree->pos.x - Television3->pos.x;
+	//if (dist3 <= charThree->scale.x + Television3->scale.x)
+	//{
+	//	if(Application::IsKeyPressed(VK_SPACE))
+	//	{
 
-		//		charThree->resting = true;
-		//	}
-		//}
-		//if (dist3 > charThree->scale.x + Television3->scale.x)
-		//{
-		//	charThree->resting = false;
-		//}
+	//		charThree->resting = true;
+	//	}
+	//}
+	//if (dist3 > charThree->scale.x + Television3->scale.x)
+	//{
+	//	charThree->resting = false;
+	//}
 
-		//float dist4 = charFour->pos.x - Television4->pos.x;
-		//if (dist4 <= charFour->scale.x + Television4->scale.x)
-		//{
-		//	if (Application::IsKeyPressed(VK_SPACE))
-		//	{
-		//		charFour->resting = true;
-		//	}
-		//}
-		//if (dist4 > charFour->scale.x + Television4->scale.x)
-		//{
-		//	charFour->resting = false;
-		//}
+	//float dist4 = charFour->pos.x - Television4->pos.x;
+	//if (dist4 <= charFour->scale.x + Television4->scale.x)
+	//{
+	//	if (Application::IsKeyPressed(VK_SPACE))
+	//	{
+	//		charFour->resting = true;
+	//	}
+	//}
+	//if (dist4 > charFour->scale.x + Television4->scale.x)
+	//{
+	//	charFour->resting = false;
+	//}
 
 	SpriteAnimation *sa = dynamic_cast<SpriteAnimation*>(meshList[GEO_SPRITE_ANIMATION]);
 	if (sa)
@@ -480,23 +574,19 @@ void StudioProjectScene::Update(double dt)
 		}
 	}
 
-
-	if (m_eventTimer < 0)
-	{
-		if (color >= 0)
-		{
-			color -= dt;
-		}
-	}
-	if (m_eventTimer < -2)
-	{
-		Application::setScene(Math::RandIntMinMax(1, 5));
-		m_eventTimer = Math::RandFloatMinMax(20.0f, 40.f);
-	}
-	UpdateParticles(dt);
-	m_eventTimer -= dt;
-	//cout << "Event Timer : " << m_eventTimer << endl;
 }
+
+void StudioProjectScene::UpdateLevelTransition(double dt)
+{
+	Continue->Update(v_mousepos);
+	if (Continue->changed)
+	{
+		m_eventTimer = -0.01;
+		SceneState = S_GAME;
+		phase = 0;
+	}
+}
+
 Particles* StudioProjectScene::getParticle()
 {
 	for (std::vector<Particles *>::iterator it = m_particleList.begin(); it != m_particleList.end();++it)
@@ -519,6 +609,7 @@ Particles* StudioProjectScene::getParticle()
 	m_particleList[m_particleList.size() - 1]->active = true;
 	return m_particleList[m_particleList.size() - 1];
 }
+
 void StudioProjectScene::UpdateParticles(double dt)
 {
 	if (m_particleCount < MAX_PARTICLE)
@@ -610,103 +701,162 @@ void StudioProjectScene::RenderArrow()
 
 void StudioProjectScene::Render()
 {
+	switch (SceneState)
+	{
+	case S_GAME:
+	{
+		RenderGame();
+		break;
+	}
+	case S_LEVELTRANSITION:
+	{
+		RenderLevelTransition();
+		break;
+	}
+	default:
+	{
+		break;
+	}
+	}
+	modelStack.PushMatrix();
+	modelStack.Translate(v_mousepos);
+	modelStack.Scale(10, 10, 1);
+	if (mousepressed)
+	{
+		RenderMesh(meshList[GEO_TANK_CURSOR], false);
+	}
+	else
+	{
+		RenderMesh(meshList[GEO_TANK_CURSOR_ALTERNATE], false);
+	}
+	modelStack.PopMatrix();
+	std::ostringstream ss;
+	ss.precision(3);
+	ss << rel_mousepos;
+	RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(0, 1, 0), 3, 1, 1);
 
-	// Multiple viewports
-	//{
-		// Character Rooms
-		if (m_eventTimer > 0)
+	ss.str("");
+	ss << v_mousepos;
+	RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(0, 1, 0), 3, 1, 4);
+	// End of Multiple viewports
+}
+
+void StudioProjectScene::RenderGame()
+{
+	if (m_eventTimer > 0)
+	{
+		glEnable(GL_SCISSOR_TEST);
+		glViewport(0, StatsArea.y + GameArea.y + StatsArea.y, GameArea.x, GameArea.y);
+		glScissor(0, StatsArea.y + GameArea.y + StatsArea.y, GameArea.x, GameArea.y);
+
+		RenderScreen(ScreenSplit[0]);
+		//RenderCharacter1(); // TOP LEFT
+
+		glViewport(GameArea.x, StatsArea.y + GameArea.y + StatsArea.y, GameArea.x, GameArea.y);
+		glScissor(GameArea.x, StatsArea.y + GameArea.y + StatsArea.y, GameArea.x, GameArea.y);
+
+		RenderScreen(ScreenSplit[1]);
+		//RenderCharacter2(); // TOP RIGHT
+
+		glViewport(0, StatsArea.y, GameArea.x, GameArea.y);
+		glScissor(0, StatsArea.y, GameArea.x, GameArea.y);
+
+		RenderScreen(ScreenSplit[2]);
+		//RenderCharacter3();
+
+		glViewport(GameArea.x, StatsArea.y, GameArea.x, GameArea.y);
+		glScissor(GameArea.x, StatsArea.y, GameArea.x, GameArea.y);
+
+		RenderScreen(ScreenSplit[3]);
+		//RenderCharacter4();
+
+		// Statistics
+		glViewport(0, StatsArea.y + GameArea.y, StatsArea.x, StatsArea.y);
+		glScissor(0, StatsArea.y + GameArea.y, StatsArea.x, StatsArea.y);
+
+		RenderStats(ScreenSplit[0]->Character);
+		//RenderStats1();
+
+		glViewport(StatsArea.x, StatsArea.y + GameArea.y, StatsArea.x, StatsArea.y);
+		glScissor(StatsArea.x, StatsArea.y + GameArea.y, StatsArea.x, StatsArea.y);
+
+		RenderStats(ScreenSplit[1]->Character);
+		//RenderStats2();
+
+		glViewport(0, 0, StatsArea.x, StatsArea.y);
+		glScissor(0, 0, StatsArea.x, StatsArea.y);
+
+		RenderStats(ScreenSplit[2]->Character);
+		//RenderStats3();
+
+		glViewport(StatsArea.x, 0, StatsArea.x, StatsArea.y);
+		glScissor(StatsArea.x, 0, StatsArea.x, StatsArea.y);
+
+		RenderStats(ScreenSplit[3]->Character);
+		//RenderStats4();
+		glDisable(GL_SCISSOR_TEST);
+
+		//}
+		glViewport(0, 0, 1920, 1080);
+
+		// Projection matrix : Orthographic Projection
+		Mtx44 projection;
+		projection.SetToOrtho(0, m_worldWidth, 0, m_worldHeight, -10, 10);
+		projectionStack.LoadMatrix(projection);
+
+		// viewTest1 matrix
+		viewStack.LoadIdentity();
+		viewStack.LookAt(
+			camera.position.x, camera.position.y, camera.position.z,
+			camera.target.x, camera.target.y, camera.target.z,
+			camera.up.x, camera.up.y, camera.up.z
+		);
+
+		for (int i = 0; i < 4; ++i)
 		{
-			glEnable(GL_SCISSOR_TEST);
-			glViewport(0, StatsArea.y + GameArea.y + StatsArea.y, GameArea.x, GameArea.y);
-			glScissor(0, StatsArea.y + GameArea.y + StatsArea.y, GameArea.x, GameArea.y);
-
-			RenderScreen(ScreenSplit[0]);
-			//RenderCharacter1(); // TOP LEFT
-
-			glViewport(GameArea.x, StatsArea.y + GameArea.y + StatsArea.y, GameArea.x, GameArea.y);
-			glScissor(GameArea.x, StatsArea.y + GameArea.y + StatsArea.y, GameArea.x, GameArea.y);
-
-			RenderScreen(ScreenSplit[1]);
-			//RenderCharacter2(); // TOP RIGHT
-
-			glViewport(0, StatsArea.y, GameArea.x, GameArea.y);
-			glScissor(0, StatsArea.y, GameArea.x, GameArea.y);
-
-			RenderScreen(ScreenSplit[2]);
-			//RenderCharacter3();
-
-			glViewport(GameArea.x, StatsArea.y, GameArea.x, GameArea.y);
-			glScissor(GameArea.x, StatsArea.y, GameArea.x, GameArea.y);
-
-			RenderScreen(ScreenSplit[3]);
-			//RenderCharacter4();
-
-			// Statistics
-			glViewport(0, StatsArea.y + GameArea.y, StatsArea.x, StatsArea.y);
-			glScissor(0, StatsArea.y + GameArea.y, StatsArea.x, StatsArea.y);
-
-			RenderStats(ScreenSplit[0]->Character);
-			//RenderStats1();
-
-			glViewport(StatsArea.x, StatsArea.y + GameArea.y, StatsArea.x, StatsArea.y);
-			glScissor(StatsArea.x, StatsArea.y + GameArea.y, StatsArea.x, StatsArea.y);
-
-			RenderStats(ScreenSplit[1]->Character);
-			//RenderStats2();
-
-			glViewport(0, 0, StatsArea.x, StatsArea.y);
-			glScissor(0, 0, StatsArea.x, StatsArea.y);
-
-			RenderStats(ScreenSplit[2]->Character);
-			//RenderStats3();
-
-			glViewport(StatsArea.x, 0, StatsArea.x, StatsArea.y);
-			glScissor(StatsArea.x, 0, StatsArea.x, StatsArea.y);
-
-			RenderStats(ScreenSplit[3]->Character);
-			//RenderStats4();
-			glDisable(GL_SCISSOR_TEST);
-
+			RenderMenu(ScreenSplit[i]);
 		}
-		else
+		// Model matrix : an identity matrix (model will be at the origin)
+		modelStack.LoadIdentity();
+	}
+	else
+	{
+		glViewport(0, 0, 1920, 1080);
+		glClearColor(color, color, color, 1.0f);
+		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+		// Projection matrix : Orthographic Projection
+		Mtx44 projection;
+		projection.SetToOrtho(0, m_worldWidth, 0, m_worldHeight, -10, 10);
+		projectionStack.LoadMatrix(projection);
+
+		// viewTest1 matrix
+		viewStack.LoadIdentity();
+		viewStack.LookAt(
+			camera.position.x, camera.position.y, camera.position.z,
+			camera.target.x, camera.target.y, camera.target.z,
+			camera.up.x, camera.up.y, camera.up.z
+		);
+		// Model matrix : an identity matrix (model will be at the origin)
+		modelStack.LoadIdentity();
+
+		//Particles
+		for (std::vector<Particles *>::iterator it = m_particleList.begin(); it != m_particleList.end(); ++it)
 		{
-			glViewport(0, 0, 1920, 1080);
-			glClearColor(color, color, color, 1.0f);
-			glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-			//Calculating aspect ratio
-			m_worldHeight = 200.f;
-			m_worldWidth = m_worldHeight * (float)Application::GetWindowWidth() / Application::GetWindowHeight();
-
-			// Projection matrix : Orthographic Projection
-			Mtx44 projection;
-			projection.SetToOrtho(0, m_worldWidth, 0, m_worldHeight, -10, 10);
-			projectionStack.LoadMatrix(projection);
-
-			// viewTest1 matrix
-			viewStack.LoadIdentity();
-			viewStack.LookAt(
-				camera.position.x, camera.position.y, camera.position.z,
-				camera.target.x, camera.target.y, camera.target.z,
-				camera.up.x, camera.up.y, camera.up.z
-			);
-			// Model matrix : an identity matrix (model will be at the origin)
-			modelStack.LoadIdentity();
-
-			//Particles
-			for (std::vector<Particles *>::iterator it = m_particleList.begin(); it != m_particleList.end();++it)
+			Particles *particle = (Particles *)*it;
+			if (particle->active)
 			{
-				Particles *particle = (Particles *)*it;
-				if (particle->active)
-				{
-					RenderParticles(particle);
-				}
+				RenderParticles(particle);
 			}
 		}
-	//}
+	}
+}
+
+void StudioProjectScene::RenderLevelTransition()
+{
 	glViewport(0, 0, 1920, 1080);
-	//Calculating aspect ratio
-	m_worldHeight = 200.f;
-	m_worldWidth = m_worldHeight * (float)Application::GetWindowWidth() / Application::GetWindowHeight();
+	glClearColor(0, 0, 0, 0.f);
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 	// Projection matrix : Orthographic Projection
 	Mtx44 projection;
@@ -720,35 +870,24 @@ void StudioProjectScene::Render()
 		camera.target.x, camera.target.y, camera.target.z,
 		camera.up.x, camera.up.y, camera.up.z
 	);
-
-	for (int i = 0; i < 4; ++i)
-	{
-		RenderMenu(ScreenSplit[i]);
-	}
 	// Model matrix : an identity matrix (model will be at the origin)
 	modelStack.LoadIdentity();
-	modelStack.PushMatrix();
-	modelStack.Translate(v_mousepos);
-	modelStack.Scale(10, 10, 1);
-	if (mousepressed)
-	{
-		RenderMesh(meshList[GEO_TANK_CURSOR], false);
-	}
-	else
-	{
-		RenderMesh(meshList[GEO_TANK_CURSOR_ALTERNATE], false);
-	}
-	modelStack.PopMatrix();
 
-	std::ostringstream ss;
+	modelStack.PushMatrix();
+	modelStack.Translate(Continue->pos);
+	modelStack.Scale(Continue->scale);
+	RenderMesh(meshList[GEO_MAIN_CONTINUE], false);
+	modelStack.PopMatrix(); 
+	
+	/*std::ostringstream ss;
 	ss.precision(3);
-	ss << rel_mousepos;
+	ss << "Work Done:";
+	for (int i = 0; i < )
 	RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(0, 1, 0), 3, 1, 1);
 
 	ss.str("");
 	ss << v_mousepos;
-	RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(0, 1, 0), 3, 1, 4);
-	// End of Multiple viewports
+	RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(0, 1, 0), 3, 1, 4);*/
 }
 
 void StudioProjectScene::RenderCharObj(CharacterObject * go)
