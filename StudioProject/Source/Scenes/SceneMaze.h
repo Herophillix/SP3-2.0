@@ -5,6 +5,7 @@
 #include "PhysicsObject.h"
 #include "MenuObject.h"
 #include "../Minigames/Maze/MazeGenerator.h"
+#include "../SoundEngine.h"
 #include "Results.h"
 #include <vector>
 
@@ -23,6 +24,7 @@ public:
 	void RenderMenu();
 	void RenderGame();
 	void RenderGameOver();
+	void Reset();
 	virtual void Exit();
 
 
@@ -75,6 +77,8 @@ private:
 	int stencilsize;
 	bool mousepressed;
 	double endGametime;
+
+	CSoundEngine soundSystem;
 };
 
 #endif // !STUDIOPROJECT_SCENE_H
