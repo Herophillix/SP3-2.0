@@ -24,7 +24,8 @@ SheepGame::SheepGame() :
 	SheepkingHit(false),
 	Modifier(0),
 	timer(0.3f),
-	isInstructions(true)
+	isInstructions(true),
+	playMusic(false)
 {
 
 }
@@ -131,7 +132,6 @@ void SheepGame::Init()
 	SoundSystem.AddSound("FIreball_Explosion", "Sounds//Fireball_Explosion.wav");
 	SoundSystem.AddSound("Lightning_Bolt", "Sounds//Lightning_Bolt.wav");
 	SoundSystem.AddSound("Sheep", "Sounds//Sheep.mp3");
-
 	Mtx44 projection;
 	projection.SetToOrtho(0, m_worldWidth, 0, m_worldHeight, -10, 10);
 	projectionStack.LoadMatrix(projection);
@@ -279,6 +279,7 @@ void SheepGame::Update(double dt)
 			{
 				Results::getInstance()->UpdateVars(dt);
 				player->active = false;
+				SoundSystem.stopSheep();
 				if (!statsGain)
 				{
 					GameEndCalculations();
@@ -320,7 +321,7 @@ void SheepGame::Update(double dt)
 			mousePos = Vector3(static_cast<float>(x) / (w / m_worldWidth), (h - static_cast<float>(y)) / (h / m_worldHeight), 0.0f);
 			if (!isInstructions)
 			{
-
+				
 			if (!gameOver)
 			{
 				if (!bLButtonState && Application::IsMousePressed(0))
@@ -739,9 +740,16 @@ void SheepGame::Update(double dt)
 		if (!blKeyboardState && Application::IsKeyPressed(VK_SPACE))
 		{
 			isInstructions = false;
+			playMusic = true;
 			blKeyboardState = true;
 		}
 	}
+	if (playMusic)
+	{
+		SoundSystem.playSheepMusic();
+		playMusic = false;
+	}
+
 }
 Particles* SheepGame::getParticle()
 {

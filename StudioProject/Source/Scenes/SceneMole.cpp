@@ -104,7 +104,6 @@ void SceneMole::Init()
 
 	//Sounds
 	soundSystem.AddSound("whack", "Sounds//Hammer_Whack.wav");
-	soundSystem.playWaMoleMusic();
 
 
 	explode = dynamic_cast<SpriteAnimation *> (meshList[GEO_MOLE_EXPLOSION]);
@@ -272,7 +271,7 @@ void SceneMole::Init()
 	m_frontScale.Set(198, 36, 1);
 	m_midScale.Set(198, 36, 1);
 	m_backScale.Set(198, 36, 1);
-
+	playMusic = false;
 	m_popUpTimer = Math::RandFloatMinMax(0.5f, 1.5f);
 	m_multiplier = 1;
 	m_score = 0;
@@ -361,18 +360,6 @@ void SceneMole::Update(double dt)
 		m_frostTimer = 10.f;
 		m_frostOn = false;
 	}
-	//static bool bRButtonState = false;
-	//if (!bRButtonState && Application::IsMousePressed(1))
-	//{
-	//	bRButtonState = true;
-	//	std::cout << "RBUTTON DOWN" << std::endl;
-	//}
-	//else if (bRButtonState && !Application::IsMousePressed(1))
-	//{
-	//	bRButtonState = false;
-	//	std::cout << "RBUTTON UP" << std::endl;
-	//}
-
 
 	// ****************************** MOVEMENT CONTROLS ****************************** //
 	if (!m_instructions & !m_gameOver)
@@ -489,8 +476,14 @@ void SceneMole::Update(double dt)
 		{
 			bSpaceButtonState = false;
 			m_instructions = false;
+			playMusic = true;
 			std::cout << "SPACE UP" << endl;
 		}
+	}
+	if (playMusic)
+	{
+		soundSystem.playWaMoleMusic();
+		playMusic = false;
 	}
 }
 

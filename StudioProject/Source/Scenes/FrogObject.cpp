@@ -123,6 +123,7 @@ void FrogObject::CollisionResponse(FrogObject* go, FrogObject* go2, double dt)
 		{
 			go->hp -= 1;
 			go->setInvincible(true);
+			go->pos.y -= 3;
 			timerInvincibility = 0;
 		//	go->FrogInvincibilityFrame(go, dt);
 		}

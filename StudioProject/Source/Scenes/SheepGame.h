@@ -35,7 +35,7 @@ private:
 	bool statsGain;
 	int MAX_PARTICLES;
 	int m_particleCount;
-	
+	bool playMusic;
 
 	float Modifier;
 	bool isLeft;

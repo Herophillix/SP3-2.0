@@ -8,52 +8,17 @@
 #include "MenuObject.h"
 #include "Screen.h"
 #include <vector>
+#include "../SoundEngine.h"
 
 class StudioProjectScene : public SceneBase
 {
-	//enum GEOMETRY_TYPE
-	//{
-	//	GEO_BACKGROUND,
-	//	GEO_CUBE,
-	//	GEO_QUAD,
-	//	// GEOs for stats
-	//	GEO_CHARONEFRUST,
-	//	GEO_CHARONEMOTIVE,
-	//	GEO_CHARONEREST,
-	//	GEO_CHARONEWD,
-
-	//	GEO_CHARTWOFRUST,
-	//	GEO_CHARTWOMOTIVE,
-	//	GEO_CHARTWOREST,
-	//	GEO_CHARTWOWD,
-
-	//	GEO_CHARTHREEFRUST,
-	//	GEO_CHARTHREEMOTIVE,
-	//	GEO_CHARTHREEREST,
-	//	GEO_CHARTHREEWD,
-
-	//	GEO_CHARFOURFRUST,
-	//	GEO_CHARFOURMOTIVE,
-	//	GEO_CHARFOURREST,
-	//	GEO_CHARFOURWD,
-	//	//Props
-	//	GEO_TELEVISION,
-	//	//end
-	//	GEO_PARTICLE_TEST,
-	//	GEO_SPRITE_ANIMATION,
-	//	GEO_SPRITE_TEST2,
-	//	GEO_FROG_JUMP,
-	//	GEO_WALKRIGHT,
-	//	GEO_WALKLEFT,
-	//	GEO_ARROW,
-	//	NUM_GEOMETRY
-	//};
 public:
 	enum SCENESTATE
 	{
 		S_GAME,
 		S_LEVELTRANSITION
 	};
+
 
 	StudioProjectScene();
 	~StudioProjectScene();
@@ -84,10 +49,13 @@ public:
 	Vector3 vel;
 	Vector3 pos;
 private:
+	CSoundEngine soundSystem;
 	std::vector<GameObject *> m_goList;
 	std::vector<Particles* > m_particleList;
 	float m_speed;
 	float m_worldWidth;
+	bool playMusic;
+	float mTimer;
 	float m_worldHeight;
 	int m_Count;
 	float m_eventTimer;

@@ -111,21 +111,33 @@ bool CSoundEngine::RemoveSound(const std::string& _soundIndex)
 //Play 2d Music
 void CSoundEngine::playSheepMusic()
 {
-	ISound* soundGame = theSoundEngine->play2D("Sounds//Dreams.mp3", true, false, false, ESM_AUTO_DETECT, true);
+	soundGame = theSoundEngine->play2D("Sounds//Dreams.mp3", true, false, false, ESM_AUTO_DETECT, true);
 	soundGame->setVolume(0.60f);
 	soundGame->drop();
 }
 void CSoundEngine::playWaMoleMusic()
 {
-	ISound* soundGame = theSoundEngine->play2D("Sounds//WhackTheme.mp3", true, false, false, ESM_AUTO_DETECT, true);
-	soundGame->setVolume(0.80f);
-	soundGame->drop();
+	soundGame2 = theSoundEngine->play2D("Sounds//WhackTheme.mp3", true, false, false, ESM_AUTO_DETECT, true);
+	soundGame2->setVolume(0.80f);
+	soundGame2->drop();
 }
 void CSoundEngine::playMainMusic()
 {
-	ISound* soundGame = theSoundEngine->play2D("Sounds//MainTheme.mp3", true, false, false, ESM_AUTO_DETECT, true);
-	soundGame->setVolume(0.80f);
-	soundGame->drop();
+	soundGame3 = theSoundEngine->play2D("Sounds//MainTheme.mp3", true, false, false, ESM_AUTO_DETECT, true);
+	soundGame3->setVolume(0.80f);
+	soundGame3->drop();
+}
+void CSoundEngine::stopSheep()
+{
+	theSoundEngine->stopAllSounds();
+}
+void CSoundEngine::stopMoleMusic()
+{
+	soundGame2->stop();
+}
+void CSoundEngine::stopMainMusic()
+{
+	soundGame3->stop();
 }
 
 // Play a sound from this map

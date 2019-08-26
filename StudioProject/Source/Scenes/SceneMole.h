@@ -56,7 +56,7 @@ private:
 	float m_eightWorldWidth;
 
 	float m_sixthWorldHeight;
-
+	bool playMusic;
 	Vector3 m_Gravity;
 	int m_particleCount;
 	int MAX_PARTICLE;

@@ -25,13 +25,13 @@ void StudioProjectScene::Init()
 	m_worldWidthDiv8 = (m_worldWidth / 4) / 2;
 	GameArea.Set(960, 440, 0);
 	StatsArea.Set(960, 100, 0);
-
+	mTimer = 2.f;
 	//Variables here
 	m_speed = 1.f;
 	Math::InitRNG();
 	m_eventTimer = 10;//Math::RandFloatMinMax(20.0f, 40.f);
 	b_transitioning = false;
-
+	playMusic = false;
 	meshList[GEO_QUAD] = MeshBuilder::GenerateQuad("test", Color(1, 1, 1), 1.f);
 	meshList[GEO_BACKGROUND] = MeshBuilder::GenerateQuad("testbg", Color(1, 1, 1), 1);
 	meshList[GEO_BACKGROUND]->textureID = LoadTGA("Image//BGTest.tga");
@@ -66,7 +66,7 @@ void StudioProjectScene::Init()
 	Mtx44 projection;
 	projection.SetToOrtho(0, m_worldWidth, 0, m_worldHeight, -10, 10);
 	projectionStack.LoadMatrix(projection);
-
+	soundSystem.AddSound("mainMusic", "Sounds//MainTheme.mp3");
 	//Particles
 	m_particleCount = 0;
 	MAX_PARTICLE = 2000;
@@ -144,7 +144,7 @@ void StudioProjectScene::Init()
 	prevlevel = 0;
 	currentlevel = 0;
 	SceneState = S_GAME;
-
+	
 	Continue = new MenuObject(MenuObject::M_CONTINUE, Vector3(40, 40, 1));
 	Continue->pos = Vector3(m_worldWidth * 0.9f, m_worldHeight * 0.1f, 0);
 	Continue->active = true;
@@ -174,6 +174,7 @@ void StudioProjectScene::Update(double dt)
 	}
 	case S_LEVELTRANSITION:
 	{
+		soundSystem.stopSheep();
 		UpdateLevelTransition(dt);
 		break;
 	}
@@ -216,22 +217,11 @@ void StudioProjectScene::Update(double dt)
 			}
 			Application::setScene(currentlevel);
 			m_eventTimer = Math::RandFloatMinMax(20.0f, 40.f);
+			mTimer = 2.f;
 			break;
 		}
 		}
-		/*if (phase == 0)
-		{
-			m_eventTimer = Math::RandFloatMinMax(20.0f, 40.f);
-		}
-		if (phase >= 4)
-		{
-			SceneState = S_LEVELTRANSITION;
-			phase = 0;
-		}
-		else
-		{
 
-		}*/
 	}
 	UpdateParticles(dt);
 	//cout << "Event Timer : " << m_eventTimer << endl;
@@ -380,13 +370,6 @@ void StudioProjectScene::UpdateGame(double dt)
 		walkLeft->m_anim->animActive = true;
 
 	}
-	SpriteAnimation *Frog_Jump = dynamic_cast<SpriteAnimation*>(meshList[GEO_FROG_JUMP]);
-	if (Frog_Jump)
-	{
-		Frog_Jump->Update(dt);
-		Frog_Jump->m_anim->animActive = true;
-
-	}
 
 	for (std::vector<GameObject *>::iterator it = m_goList.begin(); it != m_goList.end(); ++it)
 	{
@@ -396,7 +379,17 @@ void StudioProjectScene::UpdateGame(double dt)
 
 		}
 	}
-
+	mTimer -= dt;
+	if (mTimer < 0 && playMusic == false)
+	{
+		playMusic = true;
+	}
+	if (playMusic == true)
+	{
+		soundSystem.playMainMusic();
+		playMusic = false;
+		mTimer = 99999999999.f;
+	}
 }
 
 void StudioProjectScene::UpdateLevelTransition(double dt)
