@@ -33,7 +33,7 @@ public:
 		SCENEMAINMENU,
 		TOTALSCENES,
 	};
-
+	static bool Quit;
 private:
 	Application();
 	~Application();

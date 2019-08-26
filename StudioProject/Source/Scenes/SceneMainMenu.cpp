@@ -202,7 +202,7 @@ void MainMenu::ButtonCollision(MainMenuObject::MAINMENU_OBJECTTYPE type)
 	switch (type)
 	{
 	case MainMenuObject::GO_NEWGAME:
-		Application::setScene(2);
+		Application::setScene(0);
 		// scene change
 		break;
 	case MainMenuObject::GO_INSTRUCTIONS:
@@ -212,6 +212,7 @@ void MainMenu::ButtonCollision(MainMenuObject::MAINMENU_OBJECTTYPE type)
 		// scene change
 		break;
 	case MainMenuObject::GO_EXIT:
+		Application::Quit = true;
 		break;
 	default:
 		break;
