@@ -71,7 +71,7 @@ int Application::GetWindowHeight()
 
 Application::Application()
 {
-	currentScene = SCENETANK;
+	currentScene = SCENEMAINMENU;
 }
 
 Application::~Application()

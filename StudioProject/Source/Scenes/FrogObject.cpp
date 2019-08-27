@@ -125,11 +125,6 @@ void FrogObject::setSide(bool leftTrue)
 }
 
 // FUNCTIONS
-Vector3 FrogObject::getNormal()
-{
-	return normal;
-}
-
 void FrogObject::plusCoin(FrogObject* frog)
 {
 	frog->coinLeft += 1;
