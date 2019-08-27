@@ -27,6 +27,9 @@ void SceneTank::Init()
 	// End James 13/8/2019
 	m_worldWidth = m_worldHeight * (float)Application::GetWindowWidth() / Application::GetWindowHeight();
 
+	musicplayed = false;
+	musicplay = false;
+
 	meshList[GEO_ARROW] = MeshBuilder::GenerateQuad("arrow", Color(1, 1, 1), 1.f);
 	meshList[GEO_ARROW]->textureID = LoadTGA("Image//Arrow.tga");
 	meshList[GEO_TANK_HEAD_1] = MeshBuilder::GenerateQuad("Head 1", Color(1, 1, 1), 2.5f);
@@ -51,8 +54,28 @@ void SceneTank::Init()
 	meshList[GEO_TANK_FORMATION_5]->textureID = LoadTGA("Image//Tank_Formation_5.tga");
 	meshList[GEO_TANK_FORMATION_6] = MeshBuilder::GenerateQuad("Formation 6", Color(1, 1, 1), 1.f);
 	meshList[GEO_TANK_FORMATION_6]->textureID = LoadTGA("Image//Tank_Formation_6.tga");
-	meshList[GEO_CROSSHAIR] = MeshBuilder::GenerateQuad("CrossHair", Color(1, 1, 1), 1.f);
-	meshList[GEO_CROSSHAIR]->textureID = LoadTGA("Image//Crosshair.tga");
+	meshList[GEO_TANK_CURSOR] = MeshBuilder::GenerateQuad("Cursor", Color(1, 1, 1), 1.f);
+	meshList[GEO_TANK_CURSOR]->textureID = LoadTGA("Image//Tank_Cursor.tga");
+	meshList[GEO_TANK_CURSOR_ALTERNATE] = MeshBuilder::GenerateQuad("Cursor	Alternate", Color(1, 1, 1), 1.f);
+	meshList[GEO_TANK_CURSOR_ALTERNATE]->textureID = LoadTGA("Image//Tank_Cursor_Alternate.tga");
+	meshList[GEO_TANK_HOW_TO_PLAY] = MeshBuilder::GenerateQuad("Cursor	Alternate", Color(1, 1, 1), 1.f);
+	meshList[GEO_TANK_HOW_TO_PLAY]->textureID = LoadTGA("Image//Tank_How_To_Play.tga");
+	meshList[GEO_TANK_SELECT_FORMATION] = MeshBuilder::GenerateQuad("Cursor	Alternate", Color(1, 1, 1), 1.f);
+	meshList[GEO_TANK_SELECT_FORMATION]->textureID = LoadTGA("Image//Tank_Select_Formation.tga");
+	meshList[GEO_TANK_BALL_1] = MeshBuilder::GenerateQuad("Ball 1", Color(1, 1, 1), 2.f);
+	meshList[GEO_TANK_BALL_1]->textureID = LoadTGA("Image//Ball.tga");
+	meshList[GEO_TANK_BALL_2] = MeshBuilder::GenerateQuad("Ball 2", Color(1, 1, 1), 2.f);
+	meshList[GEO_TANK_BALL_2]->textureID = LoadTGA("Image//Ball_2.tga");
+	meshList[GEO_TANK_BALL_3] = MeshBuilder::GenerateQuad("Ball 3", Color(1, 1, 1), 2.f);
+	meshList[GEO_TANK_BALL_3]->textureID = LoadTGA("Image//Ball_3.tga");
+	meshList[GEO_TANK_BALL_4] = MeshBuilder::GenerateQuad("Ball 4", Color(1, 1, 1), 2.f);
+	meshList[GEO_TANK_BALL_4]->textureID = LoadTGA("Image//Ball_4.tga");
+	meshList[GEO_TANK_BALL_5] = MeshBuilder::GenerateQuad("Ball 5", Color(1, 1, 1), 2.f);
+	meshList[GEO_TANK_BALL_5]->textureID = LoadTGA("Image//Ball_5.tga");
+	meshList[GEO_TANK_INSTRUCTIONS] = MeshBuilder::GenerateQuad("Instructions", Color(1, 1, 1), 1.f);
+	meshList[GEO_TANK_INSTRUCTIONS]->textureID = LoadTGA("Image//Tank_Instructions.tga");
+	meshList[GEO_TANK_BACK] = MeshBuilder::GenerateQuad("Back", Color(1, 1, 1), 1.f);
+	meshList[GEO_TANK_BACK]->textureID = LoadTGA("Image//Tank_Back.tga");
 
 	//Physics code here
 	m_speed = 1.f;
@@ -168,14 +191,6 @@ void SceneTank::Init()
 			TankObject::EnemyTankCount++;
 		}
 	}
-	
-	for (int i = 0; i < TankObject::MaxTank; ++i)
-	{
-		for (int k = i + 1; k < TankObject::MaxTank; ++k)
-		{
-			CheckCollisionTank(Tank[k], Tank[i]);
-		}
-	}
 
 	Ball = FetchGO();
 	Ball->type = PhysicsObject::GO_BALL;
@@ -193,9 +208,9 @@ void SceneTank::Init()
 	TankChange = false;
 	delaytime = 0.0;
 
-	for (int i = 0; i < 6; ++i)
+	for (int i = 0; i < 7; ++i)
 	{
-		MenuObject* temp = new MenuObject(MenuObject::M_NONE, Vector3(60, 60, 1));
+		MenuObject* temp = new MenuObject(MenuObject::M_NONE, Vector3(55, 55, 1));
 		temp->active = true;
 		m_menuList.push_back(temp);
 	}
@@ -217,19 +232,34 @@ void SceneTank::Init()
 	m_menuList[5]->pos = Vector3(m_worldWidth * 0.875f, m_worldHeight * 0.25f, 0);
 	m_menuList[5]->type = MenuObject::M_FORMATION_6;
 
+	m_menuList[6]->pos = Vector3(m_worldWidth* 0.125f, m_worldHeight* 0.25f, 0);
+	m_menuList[6]->type = MenuObject::M_HOW_TO_PLAY;
+
+	back = new MenuObject(MenuObject::M_BACK, Vector3(55, 55, 1));
+	back->active = true;
+	back->pos = Vector3(m_worldWidth* 0.125f, m_worldHeight* 0.25f, 0);
+
 	SceneState = S_MENU;
 	turn = 0;
 	velocity = 0;
 
-	gameover = false;
 	statgained = false;
 	grade = 'F';
+
+	mousepressed = false;
+
+	soundSystem.AddSound("Hit", "Sounds//Hammer_Whack.wav");
 }
 
 void SceneTank::Update(double dt)
 {
+	if (StatManager::GetInstance()->GetBool_Game(3))
+	{
+		Reset();
+		StatManager::GetInstance()->SetBool_Tank(false);
+	}
 	SceneBase::Update(dt);
-
+	elapsedTime += dt;
 	//Calculating aspect ratio
 	// James 13/8/2019
 	m_worldHeight = 200.f;
@@ -242,11 +272,40 @@ void SceneTank::Update(double dt)
 	int h = Application::GetWindowHeight();
 	v_mousepos = Vector3(static_cast<float>(x) / (w / m_worldWidth), (h - static_cast<float>(y)) / (h / m_worldHeight), 0.0f);
 
+	static bool bLButtonState = false;
+	if (!bLButtonState && Application::IsMousePressed(0))
+	{
+		bLButtonState = true;
+		std::cout << "LBUTTON DOWN" << std::endl;
+		mousepressed = true;
+	}
+	else if (bLButtonState && !Application::IsMousePressed(0))
+	{
+		bLButtonState = false;
+		mousepressed = false;
+	}
+	static bool bRButtonState = false;
+	if (!bRButtonState && Application::IsMousePressed(1))
+	{
+		bRButtonState = true;
+		std::cout << "LBUTTON DOWN" << std::endl;
+		mousepressed = true;
+	}
+	else if (bRButtonState && !Application::IsMousePressed(1))
+	{
+		bRButtonState = false;
+		SceneState = S_GAMEOVER;
+	}
 	switch (SceneState)
 	{
 	case S_MENU:
 	{
 		UpdateMenu(dt);
+		break;
+	}
+	case S_INSTRUCTIONS:
+	{
+		UpdateInstructions(dt);
 		break;
 	}
 	case S_GAME:
@@ -256,28 +315,7 @@ void SceneTank::Update(double dt)
 	}
 	case S_GAMEOVER:
 	{
-		Results::getInstance()->UpdateVars(dt);
-		if (!statgained)
-		{
-			GameEndCalculations();
-			StatManager::GetInstance()->SetCharsOriginalValues();
-			statgained = true;
-		}
-		static bool bLButtonState = false;
-		if (!bLButtonState && Application::IsMousePressed(0))
-		{
-			bLButtonState = true;
-			std::cout << "LBUTTON DOWN" << std::endl;
-			if (Results::getInstance()->ButtonMouseCollision())
-			{
-				cout << "hit" << endl;
-			}
-		}
-		else if (bLButtonState && !Application::IsMousePressed(0))
-		{
-			bLButtonState = false;
-			std::cout << "LBUTTON UP" << std::endl;
-		}
+		UpdateGameOver(dt);
 		break;
 	}
 	default:
@@ -285,6 +323,32 @@ void SceneTank::Update(double dt)
 		cout << "No Scene State" << endl;
 		break;
 	}
+	}
+}
+
+void SceneTank::UpdateGameOver(double dt)
+{
+	Results::getInstance()->UpdateVars(dt);
+	if (!statgained)
+	{
+		GameEndCalculations();
+		StatManager::GetInstance()->SetCharsOriginalValues();
+		statgained = true;
+	}
+	static bool bLButtonState = false;
+	if (!bLButtonState && Application::IsMousePressed(0))
+	{
+		bLButtonState = true;
+		std::cout << "LBUTTON DOWN" << std::endl;
+		if (Results::getInstance()->ButtonMouseCollision())
+		{
+			cout << "hit" << endl;
+		}
+	}
+	else if (bLButtonState && !Application::IsMousePressed(0))
+	{
+		bLButtonState = false;
+		std::cout << "LBUTTON UP" << std::endl;
 	}
 }
 
@@ -405,15 +469,6 @@ void SceneTank::UpdateGame(double dt)
 	{
 		bRButtonState = false;
 		std::cout << "RBUTTON UP" << std::endl;
-
-		// James 13/8/2019
-		PhysicsObject *temp = FetchGO();
-		temp->type = PhysicsObject::GO_PILLAR;
-		temp->pos = v_mousepos;
-		temp->scale.Set(5, 5, 1);
-		temp->normal.Set(1, 0, 0);
-		// End James 13/8/2019
-
 	}
 
 	static bool bFState = false;
@@ -484,7 +539,8 @@ void SceneTank::UpdateGame(double dt)
 					{
 						if (go == Ball)
 						{
-							if (++ballcollisionnum > 5)
+							soundSystem.PlayASound("Hit");
+							if (++ballcollisionnum > 4)
 							{
 								go->active = false;
 								ballcollisionnum = 0;
@@ -513,7 +569,15 @@ void SceneTank::UpdateMenu(double dt)
 		m_menuList[i]->Update(v_mousepos);
 		if (m_menuList[i]->changed)
 		{
+			m_menuList[i]->changed = false;
 			SceneState = S_GAME;
+			musicplay = true;
+			if (musicplay == true && musicplayed == false)
+			{
+				soundSystem.playSheepMusic();
+				musicplayed = true;
+			}
+			StatManager::GetInstance()->SetPrevGame(3);
 			switch (m_menuList[i]->type)
 			{
 			case MenuObject::M_FORMATION_1:
@@ -648,6 +712,10 @@ void SceneTank::UpdateMenu(double dt)
 				}
 				break;
 			}
+			case MenuObject::M_HOW_TO_PLAY:
+			{
+				SceneState = S_INSTRUCTIONS;
+			}
 			}
 			ChangeAIPosition();
 			for (int i = 0; i < TankObject::MaxTank; ++i)
@@ -659,6 +727,16 @@ void SceneTank::UpdateMenu(double dt)
 			TankObject::previousTank = Tank[0];
 			return;
 		}
+	}
+}
+
+void SceneTank::UpdateInstructions(double dt)
+{
+	back->Update(v_mousepos);
+	if (back->changed)
+	{
+		SceneState = S_MENU;
+		back->changed = false;
 	}
 }
 
@@ -1257,6 +1335,11 @@ void SceneTank::Render()
 		RenderMenu();
 		break;
 	}
+	case S_INSTRUCTIONS:
+	{
+		RenderInstructions();
+		break;
+	}
 	case S_GAME:
 	{
 		RenderGame();
@@ -1264,7 +1347,7 @@ void SceneTank::Render()
 	}
 	case S_GAMEOVER:
 	{
-		Results::getInstance()->RenderResults(score, grade);
+		RenderGameOver();
 		break;
 	}
 	default:
@@ -1276,11 +1359,26 @@ void SceneTank::Render()
 	}
 	}
 
-	modelStack.PushMatrix();
-	modelStack.Translate(v_mousepos);
-	modelStack.Scale(10, 10, 1);
-	RenderMesh(meshList[GEO_CROSSHAIR], false);
-	modelStack.PopMatrix();
+	if (SceneState != S_GAMEOVER)
+	{
+		modelStack.PushMatrix();
+		modelStack.Translate(v_mousepos);
+		modelStack.Scale(10, 10, 1);
+		if (mousepressed)
+		{
+			RenderMesh(meshList[GEO_TANK_CURSOR], false);
+		}
+		else
+		{
+			RenderMesh(meshList[GEO_TANK_CURSOR_ALTERNATE], false);
+		}
+		modelStack.PopMatrix();
+	}
+}
+
+void SceneTank::RenderGameOver()
+{
+	Results::getInstance()->RenderResults(score, grade);
 }
 
 void SceneTank::RenderGame()
@@ -1437,6 +1535,11 @@ void SceneTank::RenderMenu()
 			RenderMesh(meshList[GEO_TANK_FORMATION_6], false);
 			break;
 		}
+		case MenuObject::M_HOW_TO_PLAY:
+		{
+			RenderMesh(meshList[GEO_TANK_HOW_TO_PLAY], false);
+			break;
+		}
 		default:
 		{
 			RenderMesh(meshList[GEO_BORDER], false);
@@ -1445,6 +1548,26 @@ void SceneTank::RenderMenu()
 		}
 		modelStack.PopMatrix();
 	}
+	modelStack.PushMatrix();
+	modelStack.Translate(m_worldWidth*0.125f, m_worldHeight*0.75f,0);
+	modelStack.Scale(80,40,1);
+	RenderMesh(meshList[GEO_TANK_SELECT_FORMATION], false);
+	modelStack.PopMatrix();
+}
+
+void SceneTank::RenderInstructions()
+{
+	modelStack.PushMatrix();
+	modelStack.Translate(m_worldWidth * 0.625f, m_worldHeight * 0.5f, 0);
+	modelStack.Scale(180, 180, 1);
+	RenderMesh(meshList[GEO_TANK_INSTRUCTIONS], false);
+	modelStack.PopMatrix();
+
+	modelStack.PushMatrix();
+	modelStack.Translate(back->pos);
+	modelStack.Scale(back->scale);
+	RenderMesh(meshList[GEO_TANK_BACK], false);
+	modelStack.PopMatrix();
 }
 
 void SceneTank::Exit()
@@ -1483,7 +1606,15 @@ void SceneTank::RenderGO(PhysicsObject * go)
 		modelStack.PushMatrix();
 		modelStack.Translate(go->pos);
 		modelStack.Scale(go->scale);
-		RenderMesh(meshList[GEO_BALL], false);
+		if (go == Ball)
+		{
+			modelStack.Rotate(elapsedTime * 90, 0, 0, 1);
+			RenderMesh(meshList[GEO_TANK_BALL_1 + ballcollisionnum], false);
+		}
+		else
+		{
+			RenderMesh(meshList[GEO_BALL], false);
+		}
 		modelStack.PopMatrix();
 		break;
 	}
@@ -1602,20 +1733,69 @@ void SceneTank::DeactivateStencil()
 	glDisable(GL_STENCIL_TEST);
 }
 // End James 15/8/2019
+
+void SceneTank::Reset()
+{
+	for (int i = 0; i < TankObject::MaxTank; ++i)
+	{
+		Tank[i]->ActivateTank();
+		Tank[i]->Ball = nullptr;
+		soundSystem.stopAllMusic();
+		musicplayed = false;
+		musicplay = false;
+		switch (i)
+		{
+		case 0:
+			Tank[i]->pos.Set(m_worldWidth* 0.375f, m_worldHeight* 0.71875f, 0);
+			break;
+		case 1:
+			Tank[i]->pos.Set(m_worldWidth* 0.875f, m_worldHeight* 0.71875f, 0);
+			break;
+		case 2:
+			Tank[i]->pos.Set(m_worldWidth* 0.375f, m_worldHeight* 0.53125f, 0);
+			break;
+		case 3:
+			Tank[i]->pos.Set(m_worldWidth* 0.875f, m_worldHeight* 0.53125f, 0);
+			break;
+		case 4:
+			Tank[i]->pos.Set(m_worldWidth* 0.125f, m_worldHeight* 0.8125f, 0);
+			break;
+		case 5:
+			Tank[i]->pos.Set(m_worldWidth* 0.625f, m_worldHeight* 0.8125f, 0);
+			break;
+		case 6:
+			Tank[i]->pos.Set(m_worldWidth* 0.125f, m_worldHeight* 0.4375f, 0);
+			break;
+		case 7:
+			Tank[i]->pos.Set(m_worldWidth* 0.625f, m_worldHeight* 0.4375f, 0);
+			break;
+		default:
+			Tank[i]->pos.Set(m_worldWidth* 0.9f, m_worldHeight* 0.9f, 0);
+			break;
+		}
+	}
+	TankObject::currentTank = Tank[0];
+	TankObject::previousTank = Tank[0];
+	score = 0;
+	SceneState = S_MENU;
+	elapsedTime = 0.0;
+	turn = 1;
+}
+
 void SceneTank::GameEndCalculations() // Setting the stats and other stuff
 {
 	score += 500 * (16 - turn);
 	if (score >= 6000)
 	{
 		grade = 'S';
-		StatManager::GetInstance()->UpdateChar01F(-20);
-		StatManager::GetInstance()->UpdateChar01M(20);
-		StatManager::GetInstance()->UpdateChar02F(-20);
-		StatManager::GetInstance()->UpdateChar02M(20);
-		StatManager::GetInstance()->UpdateChar03F(-20);
-		StatManager::GetInstance()->UpdateChar03M(20);
-		StatManager::GetInstance()->UpdateChar04F(-20);
-		StatManager::GetInstance()->UpdateChar04M(20);
+		StatManager::GetInstance()->UpdateChar01F(StatManager::GetInstance()->GetChar01().m_frustration -20);
+		StatManager::GetInstance()->UpdateChar01M(StatManager::GetInstance()->GetChar01().m_motivation +20);
+		StatManager::GetInstance()->UpdateChar02F(StatManager::GetInstance()->GetChar02().m_frustration -20);
+		StatManager::GetInstance()->UpdateChar02M(StatManager::GetInstance()->GetChar02().m_motivation + 20);
+		StatManager::GetInstance()->UpdateChar03F(StatManager::GetInstance()->GetChar03().m_frustration -20);
+		StatManager::GetInstance()->UpdateChar03M(StatManager::GetInstance()->GetChar03().m_motivation + 20);
+		StatManager::GetInstance()->UpdateChar04F(StatManager::GetInstance()->GetChar04().m_frustration -20);
+		StatManager::GetInstance()->UpdateChar04M(StatManager::GetInstance()->GetChar04().m_motivation + 20);
 		Results::getInstance()->InitStatsToDist(35);
 	}
 	else if (score >= 5000 && score < 6000)
@@ -1642,14 +1822,14 @@ void SceneTank::GameEndCalculations() // Setting the stats and other stuff
 	else
 	{
 		grade = 'F';
-		StatManager::GetInstance()->UpdateChar01F(10);
-		StatManager::GetInstance()->UpdateChar01M(-10);
-		StatManager::GetInstance()->UpdateChar02F(10);
-		StatManager::GetInstance()->UpdateChar02M(-10);
-		StatManager::GetInstance()->UpdateChar03F(10);
-		StatManager::GetInstance()->UpdateChar03M(-10);
-		StatManager::GetInstance()->UpdateChar04F(10);
-		StatManager::GetInstance()->UpdateChar04M(-10);
+		StatManager::GetInstance()->UpdateChar01F(StatManager::GetInstance()->GetChar01().m_frustration + 10);
+		StatManager::GetInstance()->UpdateChar01M(StatManager::GetInstance()->GetChar01().m_motivation -10);
+		StatManager::GetInstance()->UpdateChar02F(StatManager::GetInstance()->GetChar02().m_frustration + 10);
+		StatManager::GetInstance()->UpdateChar02M(StatManager::GetInstance()->GetChar02().m_motivation -10);
+		StatManager::GetInstance()->UpdateChar03F(StatManager::GetInstance()->GetChar03().m_frustration + 10);
+		StatManager::GetInstance()->UpdateChar03M(StatManager::GetInstance()->GetChar03().m_motivation -10);
+		StatManager::GetInstance()->UpdateChar04F(StatManager::GetInstance()->GetChar04().m_frustration + 10);
+		StatManager::GetInstance()->UpdateChar04M(StatManager::GetInstance()->GetChar04().m_motivation -10);
 	}
 
 }

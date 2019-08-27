@@ -36,7 +36,9 @@ void SceneMole::Init()
 	Math::InitRNG();
 	//  ******************************* PROPS HERE  ******************************* //
 	t_hammerIdle = LoadTGA("Image//Hammer.tga");
-	t_hammerHit = LoadTGA("Image//BGTest.tga");
+	t_hammerHit = LoadTGA("Image//Hammer_hit.tga");
+	t_hammerIdle_frost = LoadTGA("Image//Hammer_Frost.tga");
+	t_hammerHit_frost = LoadTGA("Image//Hammer_hit_frost.tga");
 
 	meshList[GEO_HAMMER] = MeshBuilder::GenerateQuad("hammer", Color(1, 1, 1), 1.f);
 	meshList[GEO_HAMMER]->textureID = t_hammerIdle;
@@ -52,6 +54,7 @@ void SceneMole::Init()
 	meshList[GEO_TEXT]->textureID = LoadTGA("Image//calibri.tga");
 
 	meshList[GEO_MOLESTATS] = MeshBuilder::GenerateQuad("ui", Color(0, 0, 0), 1.f);
+
 
 	//meshList[GEO_MOLERESULTS] = MeshBuilder::GenerateQuad("results", Color(0, 0, 0), 1.f);
 
@@ -77,9 +80,93 @@ void SceneMole::Init()
 	meshList[GEO_GAMEFONT] = MeshBuilder::GenerateText("kzone", 16, 16);
 	meshList[GEO_GAMEFONT]->textureID = LoadTGA("Image//KidsZone.tga");
 
+	meshList[GEO_MOLE_INSTRUCT] = MeshBuilder::GenerateQuad("instructions_mole", Color(1, 1, 1), 1.f);
+	meshList[GEO_MOLE_INSTRUCT]->textureID = LoadTGA("Image//Mole_Instructions.tga");
+
 	//  ******************************* SPRITE ANIMATIONS HERE  ******************************* //
 
+	meshList[GEO_MOLE_EXPLOSION] = MeshBuilder::GenerateSpriteAnimation("epxlode", 8, 10);
+	meshList[GEO_MOLE_EXPLOSION]->textureID = LoadTGA("Image//Mole_explode.tga");
+	meshList[GEO_MOLE_EXPLOSION2] = MeshBuilder::GenerateSpriteAnimation("epxlode2", 8, 10);
+	meshList[GEO_MOLE_EXPLOSION2]->textureID = LoadTGA("Image//Mole_explode.tga");
+	meshList[GEO_MOLE_EXPLOSION3] = MeshBuilder::GenerateSpriteAnimation("epxlode3", 8, 10);
+	meshList[GEO_MOLE_EXPLOSION3]->textureID = LoadTGA("Image//Mole_explode.tga");
+	meshList[GEO_MOLE_EXPLOSION4] = MeshBuilder::GenerateSpriteAnimation("epxlode4", 8, 10);
+	meshList[GEO_MOLE_EXPLOSION4]->textureID = LoadTGA("Image//Mole_explode.tga");
+	meshList[GEO_MOLE_EXPLOSION5] = MeshBuilder::GenerateSpriteAnimation("epxlode5", 8, 10);
+	meshList[GEO_MOLE_EXPLOSION5]->textureID = LoadTGA("Image//Mole_explode.tga");
+	meshList[GEO_MOLE_EXPLOSION6] = MeshBuilder::GenerateSpriteAnimation("epxlode6", 8, 10);
+	meshList[GEO_MOLE_EXPLOSION6]->textureID = LoadTGA("Image//Mole_explode.tga");
+	meshList[GEO_MOLE_EXPLOSION7] = MeshBuilder::GenerateSpriteAnimation("epxlode7", 8, 10);
+	meshList[GEO_MOLE_EXPLOSION7]->textureID = LoadTGA("Image//Mole_explode.tga");
+	meshList[GEO_MOLE_EXPLOSION8] = MeshBuilder::GenerateSpriteAnimation("epxlode8", 8, 10);
+	meshList[GEO_MOLE_EXPLOSION8]->textureID = LoadTGA("Image//Mole_explode.tga");
+
+	//Sounds
+	soundSystem.AddSound("whack", "Sounds//Hammer_Whack.wav");
+
+
+	explode = dynamic_cast<SpriteAnimation *> (meshList[GEO_MOLE_EXPLOSION]);
+	if (explode)
+	{
+		explode->m_anim = new Animation();
+		explode->m_anim->Set(0, 80, 0, 1.f, false);
+	}
+	explode2 = dynamic_cast<SpriteAnimation *> (meshList[GEO_MOLE_EXPLOSION2]);
+	if (explode2)
+	{
+		explode2->m_anim = new Animation();
+		explode2->m_anim->Set(0, 80, 0, 1.f, false);
+	}
+	explode3 = dynamic_cast<SpriteAnimation *> (meshList[GEO_MOLE_EXPLOSION3]);
+	if (explode3)
+	{
+		explode3->m_anim = new Animation();
+		explode3->m_anim->Set(0, 80, 0, 1.f, false);
+	}
+	explode4 = dynamic_cast<SpriteAnimation *> (meshList[GEO_MOLE_EXPLOSION4]);
+	if (explode4)
+	{
+		explode4->m_anim = new Animation();
+		explode4->m_anim->Set(0, 80, 0, 1.f, false);
+	}
+	explode5 = dynamic_cast<SpriteAnimation *> (meshList[GEO_MOLE_EXPLOSION5]);
+	if (explode5)
+	{
+		explode5->m_anim = new Animation();
+		explode5->m_anim->Set(0, 80, 0, 1.f, false);
+	}
+	explode6 = dynamic_cast<SpriteAnimation *> (meshList[GEO_MOLE_EXPLOSION6]);
+	if (explode6)
+	{
+		explode6->m_anim = new Animation();
+		explode6->m_anim->Set(0, 80, 0, 1.f, false);
+	}
+	explode7 = dynamic_cast<SpriteAnimation *> (meshList[GEO_MOLE_EXPLOSION7]);
+	if (explode7)
+	{
+		explode7->m_anim = new Animation();
+		explode7->m_anim->Set(0, 80, 0, 1.f, false);
+	}
+	explode8 = dynamic_cast<SpriteAnimation *> (meshList[GEO_MOLE_EXPLOSION8]);
+	if (explode8)
+	{
+		explode8->m_anim = new Animation();
+		explode8->m_anim->Set(0, 80, 0, 1.f, false);
+	}
+	exList.push_back(explode);
+	exList.push_back(explode2);
+	exList.push_back(explode3);
+	exList.push_back(explode4);
+	exList.push_back(explode5);
+	exList.push_back(explode6);
+	exList.push_back(explode7);
+	exList.push_back(explode8);
+
 	//  ******************************* PARTICLES HERE  ******************************* //
+	meshList[GEO_MOLE_SMOKE_PARTICLE] = MeshBuilder::GenerateQuad("smoke", Color(1,1,1), 1.f);
+	meshList[GEO_MOLE_SMOKE_PARTICLE]->textureID = LoadTGA("Image//Mole_smoke.tga");
+
 	Mtx44 projection;
 	projection.SetToOrtho(0, m_worldWidth, 0, m_worldHeight, -10, 10);
 	projectionStack.LoadMatrix(projection);
@@ -184,17 +271,21 @@ void SceneMole::Init()
 	m_frontScale.Set(198, 36, 1);
 	m_midScale.Set(198, 36, 1);
 	m_backScale.Set(198, 36, 1);
-
+	playMusic = false;
 	m_popUpTimer = Math::RandFloatMinMax(0.5f, 1.5f);
 	m_multiplier = 1;
 	m_score = 0;
 	m_hitCounter = 0;
 	m_frostTimer = 10.f;
-	m_gameTimer = 2.f;
+	m_gameTimer = 30.f;
 	m_gameOver = false;
 	m_frostOn = false;
+	m_instructions = true;
 
 	multiplier.Set(1, 1, 1);
+
+	m_particleCount = 0;
+	MAX_PARTICLE = 1000;
 
 	// ******************************* INIT HAMMER THINGS HERE ******************************* //
 	m_Hammer = FetchGO();
@@ -216,6 +307,11 @@ void SceneMole::Init()
 
 void SceneMole::Update(double dt)
 {
+	if (StatManager::GetInstance()->GetBool_Game(2))
+	{
+		ResetVars();
+		StatManager::GetInstance()->SetBool_Mole(false);
+	}
 	SceneBase::Update(dt);
 	// RESULT SCREEN STUFF
 	if (m_gameOver)
@@ -248,17 +344,14 @@ void SceneMole::Update(double dt)
 	}
 
 	// GAME TIMER
-	if (!m_gameOver)
+	if (!m_gameOver && !m_instructions)
 		m_gameTimer -= dt;
 	if (m_gameTimer <= 0)
 	{
 		m_gameTimer = 0.f;
+		
 		m_gameOver = true;
 	}
-	if (m_gameTimer < 0)
-	{
-		m_gameOver = true;
-	} 
 	// FROST DEBUFF
 	if (m_frostOn)
 	{
@@ -269,102 +362,131 @@ void SceneMole::Update(double dt)
 		m_frostTimer = 10.f;
 		m_frostOn = false;
 	}
-	//static bool bRButtonState = false;
-	//if (!bRButtonState && Application::IsMousePressed(1))
-	//{
-	//	bRButtonState = true;
-	//	std::cout << "RBUTTON DOWN" << std::endl;
-	//}
-	//else if (bRButtonState && !Application::IsMousePressed(1))
-	//{
-	//	bRButtonState = false;
-	//	std::cout << "RBUTTON UP" << std::endl;
-	//}
-
 
 	// ****************************** MOVEMENT CONTROLS ****************************** //
-	m_hammerMoveBT -= dt;
-	if (Application::IsKeyPressed('W') && m_hammerMoveBT <= 0.f)
+	if (!m_instructions & !m_gameOver)
 	{
-		UpdateHammerPos('W');
-		m_hammerMoveBT = 0.15f;
-	}
-	if (Application::IsKeyPressed('S') && m_hammerMoveBT <= 0.f)
-	{
-		UpdateHammerPos('S');
-		m_hammerMoveBT = 0.15f;
-	}
-	if (Application::IsKeyPressed('A') && m_hammerMoveBT <= 0.f)
-	{
-		UpdateHammerPos('A');
-		m_hammerMoveBT = 0.15f;
-	}
-	if (Application::IsKeyPressed('D') && m_hammerMoveBT <= 0.f)
-	{
-		UpdateHammerPos('D');
-		m_hammerMoveBT = 0.15f;
-	}
-	static bool bSpaceButtonState = false;
-	if (!bSpaceButtonState && Application::IsKeyPressed(VK_SPACE))
-	{
-		bSpaceButtonState = true;
-		std::cout << "SPACE DOWN" << endl;
-		meshList[GEO_HAMMER]->textureID = t_hammerHit;
-		if (HammerCollisionCheck())
+		m_hammerMoveBT -= dt;
+		if (Application::IsKeyPressed('W') && m_hammerMoveBT <= 0.f)
 		{
-			// sfx
-			cout << "hit" << endl;
-			m_hitCounter++;
+			UpdateHammerPos('W');
+			m_hammerMoveBT = 0.15f;
+		}
+		if (Application::IsKeyPressed('S') && m_hammerMoveBT <= 0.f)
+		{
+			UpdateHammerPos('S');
+			m_hammerMoveBT = 0.15f;
+		}
+		if (Application::IsKeyPressed('A') && m_hammerMoveBT <= 0.f)
+		{
+			UpdateHammerPos('A');
+			m_hammerMoveBT = 0.15f;
+		}
+		if (Application::IsKeyPressed('D') && m_hammerMoveBT <= 0.f)
+		{
+			UpdateHammerPos('D');
+			m_hammerMoveBT = 0.15f;
+		}
+		static bool bSpaceButtonState = false;
+		if (!bSpaceButtonState && Application::IsKeyPressed(VK_SPACE))
+		{
+			bSpaceButtonState = true;
+			std::cout << "SPACE DOWN" << endl;
+			if (m_frostOn)
+			{
+				meshList[GEO_HAMMER]->textureID = t_hammerHit_frost;
+			}
+			else
+			{
+				meshList[GEO_HAMMER]->textureID = t_hammerHit;
+			}
+			if (HammerCollisionCheck())
+			{
+				// sfx
+				soundSystem.PlayASound("whack");
+				cout << "hit" << endl;
+				m_hitCounter++;
+			}
+			else
+			{
+				// sfx
+				cout << "miss" << endl;
+				m_hitCounter = 0;
+			}
+		}
+		else if (bSpaceButtonState && !Application::IsKeyPressed(VK_SPACE))
+		{
+			bSpaceButtonState = false;
+			std::cout << "SPACE UP" << endl;
+			if (m_frostOn)
+			{
+				meshList[GEO_HAMMER]->textureID = t_hammerIdle_frost;
+			}
+			else
+			{
+				meshList[GEO_HAMMER]->textureID = t_hammerIdle;
+			}
+		}
+
+		if (m_hitCounter >= 10 && m_hitCounter <= 19)
+		{
+			m_multiplier = 2;
+		}
+		else if (m_hitCounter >= 20 && m_hitCounter <= 29)
+		{
+			m_multiplier = 4;
+		}
+		else if (m_hitCounter >= 30)
+		{
+			m_multiplier = 8;
 		}
 		else
 		{
-			// sfx
-			cout << "miss" << endl;
-			m_hitCounter = 0;
+			m_multiplier = 1;
+		}
+
+		UpdateMoles(dt);
+		UpdateParticles(dt);
+		UpdateAnimations(dt);
+
+		if (m_multiplier == 2)
+		{
+			multiplier.Set(0.941f, 0.969f, 0.157f);
+		}
+		else if (m_multiplier == 4)
+		{
+			multiplier.Set(0.969f, 0.604f, 0.157f);
+		}
+		else if (m_multiplier == 8)
+		{
+			multiplier.Set(1, 0.141f, 0.141f);
+		}
+		else
+		{
+			multiplier.Set(1, 1, 1);
 		}
 	}
-	else if (bSpaceButtonState && !Application::IsKeyPressed(VK_SPACE))
-	{
-		bSpaceButtonState = false;
-		std::cout << "SPACE UP" << endl;
-		meshList[GEO_HAMMER]->textureID = t_hammerIdle;
-	}
-
-	if (m_hitCounter >= 10 && m_hitCounter <= 19)
-	{
-		m_multiplier = 2;
-	}
-	else if (m_hitCounter >= 20 && m_hitCounter <= 29)
-	{
-		m_multiplier = 4;
-	}
-	else if (m_hitCounter >= 30)
-	{
-		m_multiplier = 8;
-	}
 	else
 	{
-		m_multiplier = 1;
+		static bool bSpaceButtonState = false;
+		if (!bSpaceButtonState && Application::IsKeyPressed(VK_SPACE))
+		{
+			bSpaceButtonState = true;
+			std::cout << "SPACE DOWN" << endl;
+			StatManager::GetInstance()->SetPrevGame(2);
+		}
+		else if (bSpaceButtonState && !Application::IsKeyPressed(VK_SPACE))
+		{
+			bSpaceButtonState = false;
+			m_instructions = false;
+			playMusic = true;
+			std::cout << "SPACE UP" << endl;
+		}
 	}
-
-	UpdateMoles(dt);
-	UpdateParticles(dt);
-
-	if (m_multiplier == 2)
+	if (playMusic)
 	{
-		multiplier.Set(0.941f, 0.969f, 0.157f);
-	}
-	else if (m_multiplier == 4)
-	{
-		multiplier.Set(0.969f, 0.604f, 0.157f);
-	}
-	else if (m_multiplier == 8)
-	{
-		multiplier.Set(1, 0.141f, 0.141f);
-	}
-	else
-	{
-		multiplier.Set(1, 1, 1);
+		soundSystem.playWaMoleMusic();
+		playMusic = false;
 	}
 }
 
@@ -394,16 +516,16 @@ Particles* SceneMole::getParticle()
 
 void SceneMole::UpdateParticles(double dt)
 {
-	if (m_particleCount < MAX_PARTICLE)
-	{
-		Particles* particle = getParticle();
-		particle->type = ParticleObject_TYPE::P_ParticleTest;
-		particle->scale.Set(2, 2, 2);
-		particle->vel.Set(Math::RandFloatMinMax(0, 0.2f), Math::RandFloatMinMax(0, 0.2f), 0.0f);
-		//particle->rotationSpeed = Math::RandFloatMinMax(20.f, 40.f);
-		particle->pos.Set(Math::RandFloatMinMax(0, m_worldWidth), 0, 0);
-		particle->lifeTime = 4.4f;
-	}
+	//if (m_particleCount < MAX_PARTICLE)
+	//{
+	//	Particles* particle = getParticle();
+	//	particle->type = ParticleObject_TYPE::P_ParticleTest;
+	//	particle->scale.Set(2, 2, 2);
+	//	particle->vel.Set(Math::RandFloatMinMax(0, 0.2f), Math::RandFloatMinMax(0, 0.2f), 0.0f);
+	//	//particle->rotationSpeed = Math::RandFloatMinMax(20.f, 40.f);
+	//	particle->pos.Set(Math::RandFloatMinMax(0, m_worldWidth), 0, 0);
+	//	particle->lifeTime = 4.4f;
+	//}
 	for (std::vector<Particles *>::iterator it = m_particleList.begin(); it != m_particleList.end(); ++it)
 	{
 		Particles *particle = (Particles *)*it;
@@ -412,6 +534,14 @@ void SceneMole::UpdateParticles(double dt)
 			if (particle->type == ParticleObject_TYPE::P_ParticleTest)
 			{
 				particle->vel += Vector3(0, -m_Gravity.y, 0)* (float)dt;
+				particle->pos += particle->vel * (float)dt;
+				particle->rotation += particle->rotationSpeed * (float)dt;
+				particle->lifeTime -= dt;
+			}
+			if (particle->type == ParticleObject_TYPE::P_MOLE_SMOKE)
+			{
+				particle->vel *= 0.99f;
+				particle->scale *= 0.99f;
 				particle->pos += particle->vel * (float)dt;
 				particle->rotation += particle->rotationSpeed * (float)dt;
 				particle->lifeTime -= dt;
@@ -442,6 +572,14 @@ void SceneMole::RenderParticles(Particles *particle)
 		RenderMesh(meshList[GEO_PARTICLE_TEST], false);
 		modelStack.PopMatrix();
 		break;
+	case ParticleObject_TYPE::P_MOLE_SMOKE:
+		modelStack.PushMatrix();
+		modelStack.Translate(particle->pos.x, particle->pos.y, particle->pos.z);
+		modelStack.Rotate(particle->rotation, 0, 0, 1);
+		modelStack.Scale(particle->scale.x, particle->scale.y, particle->scale.z);
+		RenderMesh(meshList[GEO_MOLE_SMOKE_PARTICLE], false);
+		modelStack.PopMatrix();
+		break;
 	default:
 		cout << "Found NULL Particle" << endl;
 		break;
@@ -451,24 +589,29 @@ void SceneMole::RenderParticles(Particles *particle)
 
 void SceneMole::RenderAnimation()
 {
-	modelStack.PushMatrix();
-	modelStack.Translate(20, 50, 0);
-	modelStack.Rotate(Math::RadianToDegree(atan2(camera.position.x - 0, camera.position.z - 0)), 0, 1, 0);
+	for (unsigned int i = 0; i < exList.size(); i++)
+	{
+		if (exList[i]->m_anim->animActive)
+		{
+			modelStack.PushMatrix();
+			modelStack.Translate(m_hammerPosList[i].x, m_hammerPosList[i].y, 0);
+			modelStack.Scale(25, 25, 20);
+			RenderMesh(meshList[GEO_MOLE_EXPLOSION + (SceneBase::GEOMETRY_TYPE)i], false);
+			modelStack.PopMatrix();
 
-	modelStack.Scale(10, 10, 10);
+		}
+	}
+}
 
-	RenderMesh(meshList[GEO_SPRITE_ANIMATION], false);
-	modelStack.PopMatrix();
-
-	modelStack.PushMatrix();
-	modelStack.Translate(100, 50, 0);
-	modelStack.Rotate(Math::RadianToDegree(atan2(camera.position.x - 0, camera.position.z - 0)), 0, 1, 0);
-
-	modelStack.Scale(10, 10, 10);
-
-	RenderMesh(meshList[GEO_HAMMER_SPRITE], false);
-	modelStack.PopMatrix();
-	//std::cout << "WOKRING" << std::endl;
+void SceneMole::UpdateAnimations(double dt)
+{
+	for (unsigned int i = 0; i < exList.size(); i++)
+	{
+		if (exList[i]->m_anim->animActive)
+		{
+			exList[i]->Update(dt);
+		}
+	}
 }
 
 void SceneMole::Render()
@@ -498,16 +641,39 @@ void SceneMole::Render()
 	);
 	// Model matrix : an identity matrix (model will be at the origin)
 	modelStack.LoadIdentity();
+	if (m_instructions)
+	{
+		modelStack.PushMatrix();
+		modelStack.Translate(m_halfWorldWidth, m_halfWorldHeight, 0);
+		modelStack.Scale(70, 70, 1);
+		RenderMesh(meshList[GEO_MOLE_INSTRUCT], false);
+		modelStack.PopMatrix();
 
-	if (!m_gameOver)
+		modelStack.PushMatrix();
+		modelStack.Translate(m_halfWorldWidth - m_eightWorldWidth, m_sixthWorldHeight / 2, 0);
+		modelStack.Scale(3, 3, 3);
+		RenderText(meshList[GEO_GAMEFONT], "Hit Space to Start", Color(1, 1, 1));
+		modelStack.PopMatrix();
+	}
+
+	if (!m_gameOver && !m_instructions)
 	{
 		RenderMachine();
-		RenderGO(m_Hammer);
 		RenderUI();
+		for (unsigned int i = 0; i < m_particleList.size(); i++)
+		{
+			if (m_particleList[i]->active)
+			{
+				RenderParticles(m_particleList[i]);
+			}
+		}
+		RenderAnimation();
+		RenderGO(m_Hammer);
 	}
 	if (m_gameOver)
 	{
 		Results::getInstance()->RenderResults(m_score, m_grade);
+		soundSystem.stopAllMusic();
 		//RenderResults();
 	}
 
@@ -677,11 +843,11 @@ void SceneMole::UpdateMoles(double dt)
 				m_moleListTotal[randMole]->mole_lifeTime = 10.5f;
 				// do rng stuff here for mole type
 				int randMoleType = Math::RandIntMinMax(0, 99);
-				m_moleListTotal[randMole]->type = (MoleObject::MOLEOBJECT_TYPE)(moleTypeRNG[randMoleType]);
+				m_moleListTotal[randMole]->type = MoleObject::GO_MOLE_BOMB;//(MoleObject::MOLEOBJECT_TYPE)(moleTypeRNG[randMoleType]);
 				break;
 			}
 		}
-		if (m_gameTimer > 45.f)
+		if (m_gameTimer > 15.f)
 			m_popUpTimer = Math::RandFloatMinMax(0.5f, 1.f);
 		else
 			m_popUpTimer = Math::RandFloatMinMax(0.3f, 0.6f);
@@ -782,7 +948,7 @@ void SceneMole::RenderUI()
 
 	ss.clear();
 	ss.str("");
-	ss.precision(3);
+	ss.precision(2);
 	ss << "Time Left: " << m_gameTimer;
 	RenderTextOnScreen(meshList[GEO_GAMEFONT], ss.str(), Color(1, 1, 1), 3, 18, 2);
 
@@ -808,36 +974,36 @@ void SceneMole::RenderUI()
 
 void SceneMole::GameEndCalculations() // Setting the stats and other stuff
 {
-	if (m_score >= 200000)
+	if (m_score >= 100000)
 	{
 		m_grade = 'S';
-		StatManager::GetInstance()->UpdateChar01F(-20);
-		StatManager::GetInstance()->UpdateChar01M(20);
-		StatManager::GetInstance()->UpdateChar02F(-20);
-		StatManager::GetInstance()->UpdateChar02M(20);
-		StatManager::GetInstance()->UpdateChar03F(-20);
-		StatManager::GetInstance()->UpdateChar03M(20);
-		StatManager::GetInstance()->UpdateChar04F(-20);
-		StatManager::GetInstance()->UpdateChar04M(20);
+		StatManager::GetInstance()->UpdateChar01F(StatManager::GetInstance()->GetChar01().m_frustration -20);
+		StatManager::GetInstance()->UpdateChar01M(StatManager::GetInstance()->GetChar01().m_motivation + 20);
+		StatManager::GetInstance()->UpdateChar02F(StatManager::GetInstance()->GetChar02().m_frustration -20);
+		StatManager::GetInstance()->UpdateChar02M(StatManager::GetInstance()->GetChar02().m_motivation + 20);
+		StatManager::GetInstance()->UpdateChar03F(StatManager::GetInstance()->GetChar03().m_frustration -20);
+		StatManager::GetInstance()->UpdateChar03M(StatManager::GetInstance()->GetChar03().m_motivation +20);
+		StatManager::GetInstance()->UpdateChar04F(StatManager::GetInstance()->GetChar04().m_frustration -20);
+		StatManager::GetInstance()->UpdateChar04M(StatManager::GetInstance()->GetChar04().m_motivation + 20);
 		Results::getInstance()->InitStatsToDist(35);
 	}
-	else if (m_score >= 100000 && m_score < 200000)
+	else if (m_score >= 70000 && m_score < 100000)
 	{
 		m_grade = 'A';
 		Results::getInstance()->InitStatsToDist(25);
 
 	}
-	else if (m_score >= 80000 && m_score < 100000)
+	else if (m_score >= 60000 && m_score < 70000)
 	{
 		m_grade = 'B';
 		Results::getInstance()->InitStatsToDist(20);
 	}
-	else if (m_score >= 50000 && m_score < 80000)
+	else if (m_score >= 40000 && m_score < 50000)
 	{
 		m_grade = 'C';
 		Results::getInstance()->InitStatsToDist(15);
 	}
-	else if (m_score >= 20000 && m_score < 50000)
+	else if (m_score >= 10000 && m_score < 40000)
 	{
 		m_grade = 'D';
 		Results::getInstance()->InitStatsToDist(10);
@@ -845,14 +1011,14 @@ void SceneMole::GameEndCalculations() // Setting the stats and other stuff
 	else
 	{
 		m_grade = 'F';
-		StatManager::GetInstance()->UpdateChar01F(10);
-		StatManager::GetInstance()->UpdateChar01M(-10);
-		StatManager::GetInstance()->UpdateChar02F(10);
-		StatManager::GetInstance()->UpdateChar02M(-10);
-		StatManager::GetInstance()->UpdateChar03F(10);
-		StatManager::GetInstance()->UpdateChar03M(-10);
-		StatManager::GetInstance()->UpdateChar04F(10);
-		StatManager::GetInstance()->UpdateChar04M(-10);
+		StatManager::GetInstance()->UpdateChar01F(StatManager::GetInstance()->GetChar01().m_frustration + 10);
+		StatManager::GetInstance()->UpdateChar01M(StatManager::GetInstance()->GetChar01().m_motivation -10);
+		StatManager::GetInstance()->UpdateChar02F(StatManager::GetInstance()->GetChar02().m_frustration + 10);
+		StatManager::GetInstance()->UpdateChar02M(StatManager::GetInstance()->GetChar02().m_motivation -10);
+		StatManager::GetInstance()->UpdateChar03F(StatManager::GetInstance()->GetChar03().m_frustration +10);
+		StatManager::GetInstance()->UpdateChar03M(StatManager::GetInstance()->GetChar03().m_motivation -10);
+		StatManager::GetInstance()->UpdateChar04F(StatManager::GetInstance()->GetChar04().m_frustration + 10);
+		StatManager::GetInstance()->UpdateChar04M(StatManager::GetInstance()->GetChar01().m_motivation -10);
 	}
 
 }
@@ -867,6 +1033,7 @@ void SceneMole::ResetVars()
 	m_gameTimer = 90.f;
 	m_gameOver = false;
 	m_frostOn = false;
+	m_instructions = true;
 
 	multiplier.Set(1, 1, 1);
 	m_hammerPosIndex = 0;
@@ -1011,11 +1178,15 @@ bool SceneMole::HammerCollisionCheck()
 						addToScore += m_moleListTotal[i]->mole_lifeTime * 100 * m_multiplier * 5.f;
 						break;
 					case MoleObject::GO_MOLE_BOMB:
+					{
 						m_score /= 2;
 						m_hitCounter = 0;
+						exList[m_hammerPosIndex]->m_anim->Set(0, 80, 0, 2.f, true);
 						break;
+					}
 					case MoleObject::GO_MOLE_FROST:
 						m_frostOn = true;
+						addToScore = 0;
 						m_score -= m_score / 5;
 						m_hitCounter = 0;
 						break;
@@ -1024,13 +1195,34 @@ bool SceneMole::HammerCollisionCheck()
 					}
 					if (m_frostOn)
 					{
-						m_score += addToScore / 2;
+						addToScore /= 2;
+						m_score += addToScore;
 					}
 					else
 					{
 						m_score += addToScore;
 					}
 					cout << addToScore << endl;
+					if (m_moleListTotal[i]->type != MoleObject::GO_MOLE_BOMB && m_moleListTotal[i]->type != MoleObject::GO_MOLE_FROST)
+					{
+						for (int i = 0; i < 50; i++)
+						{
+							if (m_particleCount < MAX_PARTICLE)
+							{
+								Particles* temp = getParticle();
+								temp->type = ParticleObject_TYPE::P_MOLE_SMOKE;
+								temp->pos = m_Hammer->pos;
+								temp->pos.y -= 5.f;
+								temp->lifeTime = 1.f;
+								temp->scale.Set(3, 3, 3);
+								temp->rotation = Math::RandFloatMinMax(45.f, 135.f);
+								temp->rotationSpeed = Math::RandFloatMinMax(110.f, 220.f);
+								temp->vel.Set(Math::RandFloatMinMax(-15.f, 15.f), Math::RandFloatMinMax(-15.f, 15.f), 0);
+								temp->active = true;
+							}
+						}
+
+					}
 					//m_moleListTotal[i]->mole_lifeTime = 0.f;
 					return true;
 				}

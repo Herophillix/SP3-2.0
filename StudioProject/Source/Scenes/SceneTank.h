@@ -7,6 +7,7 @@
 #include "MenuObject.h"
 #include "Results.h"
 #include "StatManager.h"
+#include "../SoundEngine.h"
 #include <vector>
 
 using namespace std;
@@ -29,10 +30,15 @@ public:
 	virtual void Update(double dt);
 	void UpdateMenu(double dt);
 	void UpdateGame(double dt);
+	void UpdateInstructions(double dt);
+	void UpdateGameOver(double dt);
 	void UpdateRayTracing(double dt);
 	virtual void Render();
 	void RenderMenu();
 	void RenderGame();
+	void RenderInstructions();
+	void RenderGameOver();
+	void Reset();
 	virtual void Exit();
 
 	void RenderGO(PhysicsObject *go);
@@ -79,6 +85,8 @@ private:
 	// End James 15/8/2019	
 
 	bool endGame;
+	bool musicplay;
+	bool musicplayed;
 	double elapsedTime;
 
 	// James 16/8/2019
@@ -95,9 +103,13 @@ private:
 	int SceneState;
 	int turn;
 	float velocity;
-	bool gameover;
 	char grade;
 	bool statgained;
+	bool mousepressed;
+
+	CSoundEngine soundSystem;
+
+	MenuObject* back;
 };
 
 #endif // !STUDIOPROJECT_SCENE_H

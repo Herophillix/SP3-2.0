@@ -24,15 +24,16 @@ public:
 
 	enum SceneType
 	{
-		SCENEMAIN,
+		SCENEMAIN = 0,
 		SCENEMAZE,
 		SCENEMOLE,
 		SCENETANK,
 		SCENEFROG,
 		SCENESHEEP,
+		SCENEMAINMENU,
 		TOTALSCENES,
 	};
-
+	static bool Quit;
 private:
 	Application();
 	~Application();

@@ -26,7 +26,7 @@ void MenuObject::Update(Vector3 v_mousepos)
 		{
 			bLButtonState = true;
 			std::cout << "LBUTTON DOWN" << std::endl;
-			changed = true;
+			changed = changed ? false : true;
 		}
 		else if (bLButtonState && !Application::IsMousePressed(0))
 		{

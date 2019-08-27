@@ -3,98 +3,70 @@
 
 #include "SceneBase.h"
 #include "CharacterObject.h"
+#include "StatManager.h"
+#include "ItemObject.h"
+#include "MenuObject.h"
+#include "Screen.h"
 #include <vector>
+#include "../SoundEngine.h"
 
 class StudioProjectScene : public SceneBase
 {
-	enum GEOMETRY_TYPE
-	{
-		GEO_BACKGROUND,
-		GEO_CUBE,
-		GEO_QUAD,
-		// GEOs for stats
-		GEO_CHARONEFRUST,
-		GEO_CHARONEMOTIVE,
-		GEO_CHARONEREST,
-		GEO_CHARONEWD,
-
-		GEO_CHARTWOFRUST,
-		GEO_CHARTWOMOTIVE,
-		GEO_CHARTWOREST,
-		GEO_CHARTWOWD,
-
-		GEO_CHARTHREEFRUST,
-		GEO_CHARTHREEMOTIVE,
-		GEO_CHARTHREEREST,
-		GEO_CHARTHREEWD,
-
-		GEO_CHARFOURFRUST,
-		GEO_CHARFOURMOTIVE,
-		GEO_CHARFOURREST,
-		GEO_CHARFOURWD,
-		//Props
-		GEO_TELEVISION,
-		//end
-		GEO_PARTICLE_TEST,
-		GEO_SPRITE_ANIMATION,
-		GEO_SPRITE_TEST2,
-		GEO_FROG_JUMP,
-		GEO_WALKRIGHT,
-		GEO_WALKLEFT,
-		GEO_ARROW,
-		NUM_GEOMETRY
-	};
 public:
+	enum SCENESTATE
+	{
+		S_GAME,
+		S_LEVELTRANSITION,
+		S_GAMEOVER,
+	};
+
+
 	StudioProjectScene();
 	~StudioProjectScene();
 
 	virtual void Init();
 	virtual void Update(double dt);
+	void UpdateGame(double dt);
+	void UpdateLevelTransition(double dt);
+	void UpdateLoseScreen(double dt);
 	virtual void Render();
+	void RenderGame();
+	void RenderLevelTransition();
+	void RenderLoseScreen();
+	void reset();
 	virtual void Exit();
 
-	void RenderGO(CharacterObject *go);
+	void RenderCharObj(CharacterObject *go);
+	void RenderItemObj(ItemObject * go);
 	Particles* getParticle();
 	void UpdateParticles(double dt);
 	void RenderParticles(Particles *particle);
 	void RenderAnimation();
-	CharacterObject* FetchGO();
+	GameObject* FetchGO();
 
 	void RenderBG();
-	void RenderCharacter1();
-	void RenderCharacter2();
-	void RenderCharacter3();
-	void RenderCharacter4();
-	void RenderStats1();
-	void RenderStats2();
-	void RenderStats3();
-	void RenderStats4();
 	void RenderArrow();
-
+	void RenderScreen(Screen* ScreenSplit);
+	void RenderStats(CharacterObject* Character);
+	void RenderMenu(Screen* ScreenSplit);
 
 	Vector3 vel;
 	Vector3 pos;
-
 private:
-	std::vector<CharacterObject *> m_goList;
+	CSoundEngine soundSystem;
+	std::vector<GameObject *> m_goList;
 	std::vector<Particles* > m_particleList;
 	float m_speed;
 	float m_worldWidth;
+	bool playMusic;
+	float mTimer;
 	float m_worldHeight;
 	int m_Count;
 	float m_eventTimer;
 	float color;
 	bool b_transitioning;
-	CharacterObject *charOne;
-	CharacterObject *charTwo;
-	CharacterObject *charThree;
-	CharacterObject *charFour;
 	CharacterObject *prevChar;
 	CharacterObject *currentChar;
-	CharacterObject *Television;
-	CharacterObject *Television2;
-	CharacterObject *Television3;
-	CharacterObject *Television4;
 	//Particles Variable
 	int m_particleCount;
 	int MAX_PARTICLE;
@@ -102,13 +74,20 @@ private:
 
 	float m_worldWidthDiv8;
 
-	//Mesh* meshList[NUM_GEOMETRY];
+	Vector3 v_mousepos;
+	Vector3 rel_mousepos;
+	bool mousepressed = false;
 
-	// Testing Stuff
-	GameObject* TestCube1;
-	GameObject* TestCube2;
-	GameObject* TestCube3;
-	GameObject* TestCube4;
+	Vector3 GameArea;
+	Vector3 StatsArea;
+
+	Screen* ScreenSplit[4];
+
+	int phase;
+	int prevlevel;
+	int currentlevel;
+	int SceneState;
+	MenuObject* Continue;
 };
 
 #endif // !STUDIOPROJECT_SCENE_H

@@ -197,9 +197,6 @@ void SceneFrog::UpdateRock(double dt)
 				rock->Frog_vel += Vector3(0, m_grav.y, 0)* (float)dt;
 				rock->pos += rock->Frog_vel * (float)dt;
 			}
-			if (rock->type == FrogObject::GO_COIN)
-			{
-			}
 			if (rock->pos.y <= 0)
 			{
 				rock->Frog_vel.SetZero();
@@ -261,12 +258,18 @@ bool SceneFrog::CheckCollision(FrogObject* go, FrogObject* go2)
 
 void SceneFrog::Update(double dt)
 {
+	if (StatManager::GetInstance()->GetBool_Game(4))
+	{
+		Reset();
+		StatManager::GetInstance()->SetBool_Frogger(false);
+	}
 	SceneBase::Update(dt);
 	if (m_instructions)
 	{
 		instructionTimer -= dt;
 		if (instructionTimer <= 0)
 		{
+			StatManager::GetInstance()->SetPrevGame(4);
 			m_instructions = false;
 		}
 	}
@@ -706,14 +709,14 @@ void SceneFrog::GameEndCalculations()
 	if (Frog->getScore() >= 2000)
 	{
 		m_grade = 'S';
-		StatManager::GetInstance()->UpdateChar01F(-20);
-		StatManager::GetInstance()->UpdateChar01M(20);
-		StatManager::GetInstance()->UpdateChar02F(-20);
-		StatManager::GetInstance()->UpdateChar02M(20);
-		StatManager::GetInstance()->UpdateChar03F(-20);
-		StatManager::GetInstance()->UpdateChar03M(20);
-		StatManager::GetInstance()->UpdateChar04F(-20);
-		StatManager::GetInstance()->UpdateChar04M(20);
+		StatManager::GetInstance()->UpdateChar01F(StatManager::GetInstance()->GetChar01().m_frustration -20);
+		StatManager::GetInstance()->UpdateChar01M(StatManager::GetInstance()->GetChar01().m_motivation + 20);
+		StatManager::GetInstance()->UpdateChar02F(StatManager::GetInstance()->GetChar02().m_frustration -20);
+		StatManager::GetInstance()->UpdateChar02M(StatManager::GetInstance()->GetChar02().m_motivation + 20);
+		StatManager::GetInstance()->UpdateChar03F(StatManager::GetInstance()->GetChar03().m_frustration -20);
+		StatManager::GetInstance()->UpdateChar03M(StatManager::GetInstance()->GetChar03().m_motivation+ 20);
+		StatManager::GetInstance()->UpdateChar04F(StatManager::GetInstance()->GetChar04().m_frustration -20);
+		StatManager::GetInstance()->UpdateChar04M(StatManager::GetInstance()->GetChar04().m_motivation +20);
 		Results::getInstance()->InitStatsToDist(35);
 	}
 	else if (Frog->getScore() >= 1500 && Frog->getScore() < 2000)

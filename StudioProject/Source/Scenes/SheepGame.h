@@ -1,8 +1,8 @@
 #pragma once
-
 #include "SceneBase.h"
 #include "SheepObject.h"
 #include "Results.h"
+#include "..\SoundEngine.h"
 #include "StatManager.h"
 
 class SheepGame : public SceneBase
@@ -15,6 +15,7 @@ private:
 	Vector3 m_Gravity;
 	Vector3 mousePos;
 	float m_Timer;
+	int particleCount;
 	Vector3 pos;
 	SheepObject* tempwall;
 	SheepObject* EvilKingSheep;
@@ -22,17 +23,32 @@ private:
 	SheepObject* Warning;
 	SheepObject* Warning2;
 	SheepObject* Warning3;
+	CSoundEngine SoundSystem;
+	std::vector<Particles* > m_particleList;
 	int points;
+	bool isFiring;
+	float fireRate;
 	bool pointGain;
 	bool Transition;
 	bool EvilKing;
 	bool gameOver;
 	bool statsGain;
+	int MAX_PARTICLES;
+	int m_particleCount;
+	bool playMusic;
+
+	float Modifier;
+	bool isLeft;
+	float timer;
+	bool SheepkingHit;
 	float BossTimer;
+	float ManaRegen;
 	float transitionY;
 	float Timer1;
 	float Timer2;
 	float Timer3;
+
+	bool isInstructions;
 	bool Timer1Check;
 	bool Timer2Check;
 	bool Timer3Check;
@@ -42,6 +58,7 @@ private:
 	bool patternDone;
 	bool startPhase;
 	int rndNum;
+
 	const int TraceSize = 30;
 	SheepObject *Trace[30];
 public:
@@ -56,6 +73,13 @@ public:
 	void renderLives();
 	void renderCrossHair();
 	void renderEvilSheep();
+	void UpdateParticles(double dt);
+	void RenderInstructions();
+
+
+
+	Particles* getParticle();
+	void RenderParticles(Particles *particle);
 	void Pattern1(double dt);
 	void Pattern2(double dt);
 	void Pattern3(double dt);

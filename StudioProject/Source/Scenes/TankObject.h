@@ -16,6 +16,7 @@ public:
 	void CollisionResponse(PhysicsObject* go, double dt);
 	void Update(double dt, float m_worldWidth = 0.f, float m_worldHeight = 0.f);
 	void Init(vector<PhysicsObject*>* m_goList);
+	void ActivateTank();
 	void DeactivateTank();
 
 	static const int MaxTank = 8;

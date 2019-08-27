@@ -16,12 +16,12 @@ void MazeObject::Update(double dt, float m_worldWidth, float m_worldHeight)
 	angle_normal_prev = angle_normal;
 	if ((level == MazeObject::G_ZERO || level == MazeObject::G_TWO))
 	{
-		if (Application::IsKeyPressed('X'))
+		if (Application::IsKeyPressed('A'))
 		{
 			angle_normal += tempvel * static_cast<float>(dt);
 			angle_offset += tempvel * static_cast<float>(dt);
 		}
-		else if (Application::IsKeyPressed(VK_OEM_PERIOD))
+		else if (Application::IsKeyPressed('D'))
 		{
 			angle_normal -= tempvel * static_cast<float>(dt);
 			angle_offset -= tempvel * static_cast<float>(dt);
@@ -34,12 +34,12 @@ void MazeObject::Update(double dt, float m_worldWidth, float m_worldHeight)
 	}
 	else
 	{
-		if (Application::IsKeyPressed('C'))
+		if (Application::IsKeyPressed('S'))
 		{
 			angle_normal += tempvel * static_cast<float>(dt);
 			angle_offset += tempvel * static_cast<float>(dt);
 		}
-		else if (Application::IsKeyPressed(VK_OEM_COMMA))
+		else if (Application::IsKeyPressed('W'))
 		{
 			angle_normal -= tempvel * static_cast<float>(dt);
 			angle_offset -= tempvel * static_cast<float>(dt);

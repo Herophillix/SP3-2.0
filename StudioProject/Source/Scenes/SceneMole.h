@@ -6,6 +6,7 @@
 #include "GameObject.h"
 #include "MoleObject.h"
 #include "ResultObject.h"
+#include "../SoundEngine.h"
 #include "Results.h"
 #include <vector>
 class SceneMole : public SceneBase
@@ -24,6 +25,7 @@ public:
 	void UpdateParticles(double dt);
 	void RenderParticles(Particles *particle);
 	void RenderAnimation();
+	void UpdateAnimations(double dt);
 	MoleObject* FetchGO();
 
 	// Game Functions
@@ -54,7 +56,7 @@ private:
 	float m_eightWorldWidth;
 
 	float m_sixthWorldHeight;
-
+	bool playMusic;
 	Vector3 m_Gravity;
 	int m_particleCount;
 	int MAX_PARTICLE;
@@ -68,14 +70,20 @@ private:
 	float m_frostTimer;
 	bool m_frostOn;   
 	bool m_gameOver;
+	bool m_instructions;
 	char m_grade;
 
 	// Hammer stuff
 	MoleObject* m_Hammer;
 
+	//Sound
+	CSoundEngine soundSystem;
+
 	// --Textures for the hammer
 	unsigned int t_hammerIdle;
 	unsigned int t_hammerHit;
+	unsigned int t_hammerIdle_frost;
+	unsigned int t_hammerHit_frost;
 
 	// --Positions for the hammer
 	std::vector<Vector3> m_hammerPosList;
@@ -88,7 +96,15 @@ private:
 	std::vector<MoleObject *> m_moleListTotal;
 	float m_popUpTimer; // timer for a random mole to pop up
 	int moleTypeRNG[100];
-
+	SpriteAnimation* explode;
+	SpriteAnimation* explode2;
+	SpriteAnimation* explode3;
+	SpriteAnimation* explode4;
+	SpriteAnimation* explode5;
+	SpriteAnimation* explode6;
+	SpriteAnimation* explode7;
+	SpriteAnimation* explode8;
+	vector<SpriteAnimation*> exList;
 	// Machine Stuff
 	Vector3 m_frontScale;
 	Vector3 m_midScale;

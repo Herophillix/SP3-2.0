@@ -126,6 +126,7 @@ void FrogObject::CollisionResponse(FrogObject* go, FrogObject* go2, double dt)
 		{
 			go->hp -= 1;
 			go->setInvincible(true);
+			go->pos.y -= 3;
 			timerInvincibility = 0;
 			SoundSystem.PlayASound("rock");
 		//	go->FrogInvincibilityFrame(go, dt);

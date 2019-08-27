@@ -8,6 +8,10 @@ using namespace std;
 enum ParticleObject_TYPE
 {
 	P_ParticleTest,
+	P_MOLE_SMOKE,
+	P_HAM,
+	P_ELECTROCUTE,
+	P_ELECTROCUTER,
 	P_TOTAL,
 };
 
@@ -18,13 +22,14 @@ public:
 	~Particles();
 
 	ParticleObject_TYPE type;
-	
+
 	Vector3 pos;
 	Vector3 vel;
 	Vector3 scale;
 	float lifeTime;
 	float rotation;
 	float rotationSpeed;
+	float cooldown;
 
 	bool active;
 };

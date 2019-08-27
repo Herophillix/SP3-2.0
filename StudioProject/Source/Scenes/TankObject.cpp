@@ -95,6 +95,27 @@ void TankObject::DeactivateTank()
 	//--TankCount;
 }
 
+void TankObject::ActivateTank()
+{
+	fuel = 100;
+	health = 2;
+	if (!active)
+	{
+		active = true;
+		LeftBorder->active = true;
+		RightBorder->active = true;
+		Head->active = true;
+		if (isPlayer)
+		{
+			++PlayerTankCount;
+		}
+		else
+		{
+			++EnemyTankCount;
+		}
+	}
+}
+
 void TankObject::CollisionResponse(PhysicsObject* go, double dt)
 {
 	PhysicsObject* go2 = this;

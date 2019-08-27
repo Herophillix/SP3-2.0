@@ -18,6 +18,7 @@
 #include "../Source/Scenes/SceneTank.h"
 #include "../Source/Scenes/Results.h"
 #include "../Source/Scenes/SheepGame.h"
+#include "../Source/Scenes/SceneMainMenu.h"
 GLFWwindow* m_window;
 const unsigned char FPS = 60; // FPS of this game
 const unsigned int frameTime = 1000 / FPS; // time for each frame
@@ -45,6 +46,7 @@ void resize_callback(GLFWwindow* window, int w, int h)
 	glViewport(0, 0, w, h);
 }
 
+bool Application::Quit = false;
 
 bool Application::IsKeyPressed(unsigned short key)
 {
@@ -69,7 +71,7 @@ int Application::GetWindowHeight()
 
 Application::Application()
 {
-	currentScene = SCENEMAIN;
+	currentScene = SCENEMAINMENU;
 }
 
 Application::~Application()
@@ -98,10 +100,8 @@ void Application::Init()
 	// glfwGetPrimaryMonitor()
 	m_width = 1920;
 	m_height = 1080;
-	//m_window = glfwCreateWindow(m_width, m_height, "Studio Project 3", glfwGetPrimaryMonitor(), NULL);
-	//glfwGetPrimaryMonitor()
-	m_window = glfwCreateWindow(m_width, m_height, "Studio Project 3", glfwGetPrimaryMonitor(), NULL);
-	//m_window = glfwCreateWindow(m_width, m_height, "Studio Project 3", NULL, NULL);
+
+	m_window = glfwCreateWindow(m_width, m_height, "Studio Project 3", NULL, NULL);
 	//If the window couldn't be created
 	if (!m_window)
 	{
@@ -116,7 +116,7 @@ void Application::Init()
 	//Sets the key callback
 	//glfwSetKeyCallback(m_window, key_callback);
 	glfwSetWindowSizeCallback(m_window, resize_callback);
-	glfwSetInputMode(m_window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+	glfwSetInputMode(m_window, GLFW_CURSOR, GLFW_CURSOR_HIDDEN);
 	glewExperimental = true; // Needed for core profile
 	//Initialize GLEW
 	GLenum err = glewInit();
@@ -127,6 +127,7 @@ void Application::Init()
 		fprintf(stderr, "Error: %s\n", glewGetErrorString(err));
 		//return -1;
 	}
+
 }
 
 void Application::Run()
@@ -139,6 +140,7 @@ void Application::Run()
 	thisScene[SCENETANK] = new SceneTank;
 	thisScene[SCENEFROG] = new SceneFrog;
 	thisScene[SCENESHEEP] = new SheepGame;
+	thisScene[SCENEMAINMENU] = new MainMenu;
 
 	for (int i = 0; i < TOTALSCENES; ++i)
 	{
@@ -149,10 +151,8 @@ void Application::Run()
 	}
 	Scene* currentscene = thisScene[currentScene];
 	m_timer.startTimer();    // Start timer to calculate how long it takes to render this frame
-	while (!glfwWindowShouldClose(m_window) && !IsKeyPressed(VK_ESCAPE))
+	while (!glfwWindowShouldClose(m_window) && !IsKeyPressed(VK_ESCAPE) && !Application::Quit)
 	{
- 		thisScene[currentScene]->Update(m_timer.getElapsedTime());
-		thisScene[currentScene]->Render();
 		thisScene[currentScene]->Update(m_timer.getElapsedTime());
 		thisScene[currentScene]->Render();
 		//Swap buffers

@@ -24,6 +24,15 @@ public:
 
 	// Get the handler to the sound engine
 	ISoundEngine* GetSoundEngine(void);
+	ISound* soundGame;
+	ISound* soundGame2;
+	ISound* soundGame3;
+	void playSheepMusic();
+	void playWaMoleMusic();
+	void playMainMusic();
+	void stopAllMusic();
+	void stopMoleMusic();
+	void stopMainMusic();
 
 	// Add a sound to this library
 	void AddSound(const std::string& _soundIndex, const std::string& _soundSource);

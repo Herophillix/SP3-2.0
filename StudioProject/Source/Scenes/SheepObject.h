@@ -7,6 +7,7 @@ public:
 	bool onCooldown;
 	float health;
 	float cooldown;
+	float Mana;
 	float spreadAngle;
 	enum sheepGameType
 	{
@@ -19,11 +20,13 @@ public:
 		E_EYES,
 		E_FIREBALL,
 		E_TRACE,
+		E_LIGHTNING,
 		E_WARNING,
 		E_TOTAL
 	};
 	bool m_dLeftRight;
 	bool isMoving;
+	float mouseAngle;
 	bool getDirection();
 	void setDirection(bool leftTrue);
 	bool getState();

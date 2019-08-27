@@ -20,379 +20,321 @@ void StudioProjectScene::Init()
 	SceneBase::Init();
 
 	//Calculating aspect ratio
-	m_worldHeight = 100.f;
+	m_worldHeight = 200.f;
 	m_worldWidth = m_worldHeight * (float)Application::GetWindowWidth() / Application::GetWindowHeight();
 	m_worldWidthDiv8 = (m_worldWidth / 4) / 2;
-
+	GameArea.Set(960, 440, 0);
+	StatsArea.Set(960, 100, 0);
+	mTimer = 2.f;
 	//Variables here
 	m_speed = 1.f;
 	Math::InitRNG();
 	m_eventTimer = Math::RandFloatMinMax(20.0f, 40.f);
 	b_transitioning = false;
-
+	playMusic = false;
 	meshList[GEO_QUAD] = MeshBuilder::GenerateQuad("test", Color(1, 1, 1), 1.f);
-	meshList[GEO_BACKGROUND] = MeshBuilder::GenerateQuad("testbg", Color(1, 1, 1), 1);
-	meshList[GEO_BACKGROUND]->textureID = LoadTGA("Image//BGTest.tga");
+	meshList[GEO_BACKGROUND] = MeshBuilder::GenerateQuad("Background", Color(1, 1, 1), 1);
+	meshList[GEO_BACKGROUND]->textureID = LoadTGA("Image//BackGround.tga");
 	meshList[GEO_PARTICLE_TEST] = MeshBuilder::GenerateQuad("testParticle", Color(1, 1, 1), 1.f);
 	meshList[GEO_PARTICLE_TEST]->textureID = LoadTGA("Image//balloon.tga");
 	meshList[GEO_ARROW] = MeshBuilder::GenerateQuad("arrow", Color(1, 1, 1), 1.f);
 	meshList[GEO_ARROW]->textureID = LoadTGA("Image//Arrow.tga");
-	meshList[GEO_SPRITE_ANIMATION] = MeshBuilder::GenerateSpriteAnimation("test", 1, 4);
-	meshList[GEO_SPRITE_ANIMATION]->textureID = LoadTGA("Image//Idle_anim.tga");
-	meshList[GEO_WALKLEFT] = MeshBuilder::GenerateSpriteAnimation("char1walkleft", 1, 4);
-	meshList[GEO_WALKLEFT]->textureID = LoadTGA("Image//Walk_animLeft2.tga");
-	meshList[GEO_WALKRIGHT] = MeshBuilder::GenerateSpriteAnimation("char1walkright", 1, 4);
-	meshList[GEO_WALKRIGHT]->textureID = LoadTGA("Image//Walk_animRight2.tga");
-	meshList[GEO_SPRITE_TEST2] = MeshBuilder::GenerateSpriteAnimation("test2", 1, 6);
-	meshList[GEO_SPRITE_TEST2]->textureID = LoadTGA("Image//Idle_anim2.tga");
 	meshList[GEO_TELEVISION] = MeshBuilder::GenerateQuad("Television", Color(1, 1, 1), 1.f);
-	meshList[GEO_TELEVISION]->textureID = LoadTGA("Image//Television.tga");
+	meshList[GEO_TELEVISION]->textureID = LoadTGA("Image//Item_TV.tga");
+	meshList[GEO_COMPUTER] = MeshBuilder::GenerateQuad("Computer", Color(1, 1, 1), 1.f);
+	meshList[GEO_COMPUTER]->textureID = LoadTGA("Image//Item_Comp.tga");
+	meshList[GEO_SLEEPBOX] = MeshBuilder::GenerateQuad("SleepingBox", Color(1, 1, 1), 1.f);
+	meshList[GEO_SLEEPBOX]->textureID = LoadTGA("Image//Item_Box.tga");
+	meshList[GEO_BORDER] = MeshBuilder::GenerateQuad("Border", Color(1, 1, 1), 1.f);
+	meshList[GEO_BORDER]->textureID = LoadTGA("Image//Border.tga");
+	meshList[GEO_TANK_CURSOR] = MeshBuilder::GenerateQuad("Cursor", Color(1, 1, 1), 1.f);
+	meshList[GEO_TANK_CURSOR]->textureID = LoadTGA("Image//Tank_Cursor.tga");
+	meshList[GEO_TANK_CURSOR_ALTERNATE] = MeshBuilder::GenerateQuad("Cursor	Alternate", Color(1, 1, 1), 1.f);
+	meshList[GEO_TANK_CURSOR_ALTERNATE]->textureID = LoadTGA("Image//Tank_Cursor_Alternate.tga");
+	meshList[GEO_MAIN_USE] = MeshBuilder::GenerateQuad("Use", Color(1, 1, 1), 1.f);
+	meshList[GEO_MAIN_USE]->textureID = LoadTGA("Image//Main_Use.tga");
+	meshList[GEO_MAIN_STOP] = MeshBuilder::GenerateQuad("Stop", Color(1, 1, 1), 1.f);
+	meshList[GEO_MAIN_STOP]->textureID = LoadTGA("Image//Main_Stop.tga");
+	meshList[GEO_MAIN_CONTINUE] = MeshBuilder::GenerateQuad("Continue", Color(1, 1, 1), 1.f);
+	meshList[GEO_MAIN_CONTINUE]->textureID = LoadTGA("Image//Main_Continue.tga");
+	meshList[GEO_LOSESCREEN] = MeshBuilder::GenerateQuad("LoseScreen", Color(1, 1, 1), 1.f);
+	meshList[GEO_LOSESCREEN]->textureID = LoadTGA("Image//Lose_Screen.tga");
 
+	// CHARACTER SPRITE ANIMATIONS
+	meshList[GEO_CHARACTER01_IDLE_LEFT] = MeshBuilder::GenerateSpriteAnimation("c01_idle_left", 1, 4);
+	meshList[GEO_CHARACTER01_IDLE_LEFT]->textureID = LoadTGA("Image//CharacterSprites//Idle//knight_idle_anim_left.tga");
+	meshList[GEO_CHARACTER02_IDLE_LEFT] = MeshBuilder::GenerateSpriteAnimation("c02_idle_left", 1, 4);
+	meshList[GEO_CHARACTER02_IDLE_LEFT]->textureID = LoadTGA("Image//CharacterSprites//Idle//elf_idle_anim_left.tga");
+	meshList[GEO_CHARACTER03_IDLE_LEFT] = MeshBuilder::GenerateSpriteAnimation("c03_idle_left", 1, 4);
+	meshList[GEO_CHARACTER03_IDLE_LEFT]->textureID = LoadTGA("Image//CharacterSprites//Idle//necromancer_idle_anim_left.tga");
+	meshList[GEO_CHARACTER04_IDLE_LEFT] = MeshBuilder::GenerateSpriteAnimation("c04_idle_left", 1, 4);
+	meshList[GEO_CHARACTER04_IDLE_LEFT]->textureID = LoadTGA("Image//CharacterSprites//Idle//wizzard_idle_anim_left.tga");
+
+	meshList[GEO_CHARACTER01_MOVE_LEFT] = MeshBuilder::GenerateSpriteAnimation("c01_move_left", 1, 4);
+	meshList[GEO_CHARACTER01_MOVE_LEFT]->textureID = LoadTGA("Image//CharacterSprites//Move//knight_run_anim_left.tga");
+	meshList[GEO_CHARACTER02_MOVE_LEFT] = MeshBuilder::GenerateSpriteAnimation("c02_move_left", 1, 4);
+	meshList[GEO_CHARACTER02_MOVE_LEFT]->textureID = LoadTGA("Image//CharacterSprites//Move//elf_run_anim_left.tga");
+	meshList[GEO_CHARACTER03_MOVE_LEFT] = MeshBuilder::GenerateSpriteAnimation("c03_move_left", 1, 4);
+	meshList[GEO_CHARACTER03_MOVE_LEFT]->textureID = LoadTGA("Image//CharacterSprites//Move//necromancer_run_anim_left.tga");
+	meshList[GEO_CHARACTER04_MOVE_LEFT] = MeshBuilder::GenerateSpriteAnimation("c04_move_left", 1, 4);
+	meshList[GEO_CHARACTER04_MOVE_LEFT]->textureID = LoadTGA("Image//CharacterSprites//Move//wizzard_run_anim_left.tga");
+
+	meshList[GEO_CHARACTER01_IDLE_RIGHT] = MeshBuilder::GenerateSpriteAnimation("c01_idle_right", 1, 4);
+	meshList[GEO_CHARACTER01_IDLE_RIGHT]->textureID = LoadTGA("Image//CharacterSprites//Idle//knight_idle_anim_right.tga");
+	meshList[GEO_CHARACTER02_IDLE_RIGHT] = MeshBuilder::GenerateSpriteAnimation("c02_idle_right", 1, 4);
+	meshList[GEO_CHARACTER02_IDLE_RIGHT]->textureID = LoadTGA("Image//CharacterSprites//Idle//elf_idle_anim_right.tga");
+	meshList[GEO_CHARACTER03_IDLE_RIGHT] = MeshBuilder::GenerateSpriteAnimation("c03_idle_right", 1, 4);
+	meshList[GEO_CHARACTER03_IDLE_RIGHT]->textureID = LoadTGA("Image//CharacterSprites//Idle//necromancer_idle_anim_right.tga");
+	meshList[GEO_CHARACTER04_IDLE_RIGHT] = MeshBuilder::GenerateSpriteAnimation("c04_idle_right", 1, 4);
+	meshList[GEO_CHARACTER04_IDLE_RIGHT]->textureID = LoadTGA("Image//CharacterSprites//Idle//wizzard_idle_anim_right.tga");
+
+	meshList[GEO_CHARACTER01_MOVE_RIGHT] = MeshBuilder::GenerateSpriteAnimation("c01_move_right", 1, 4);
+	meshList[GEO_CHARACTER01_MOVE_RIGHT]->textureID = LoadTGA("Image//CharacterSprites//Move//knight_run_anim_right.tga");
+	meshList[GEO_CHARACTER02_MOVE_RIGHT] = MeshBuilder::GenerateSpriteAnimation("c02_move_right", 1, 4);
+	meshList[GEO_CHARACTER02_MOVE_RIGHT]->textureID = LoadTGA("Image//CharacterSprites//Move//elf_run_anim_right.tga");
+	meshList[GEO_CHARACTER03_MOVE_RIGHT] = MeshBuilder::GenerateSpriteAnimation("c03_move_right", 1, 4);
+	meshList[GEO_CHARACTER03_MOVE_RIGHT]->textureID = LoadTGA("Image//CharacterSprites//Move//necromancer_run_anim_right.tga");
+	meshList[GEO_CHARACTER04_MOVE_RIGHT] = MeshBuilder::GenerateSpriteAnimation("c04_move_right", 1, 4);
+	meshList[GEO_CHARACTER04_MOVE_RIGHT]->textureID = LoadTGA("Image//CharacterSprites//Move//wizzard_run_anim_right.tga");
 
 	Mtx44 projection;
 	projection.SetToOrtho(0, m_worldWidth, 0, m_worldHeight, -10, 10);
 	projectionStack.LoadMatrix(projection);
-
 	//Particles
 	m_particleCount = 0;
 	MAX_PARTICLE = 2000;
+	soundSystem.Init();
 	m_Gravity.Set(0, -9.8, 0);
+	soundSystem.playMainMusic();
 	m_Count = 4;
 	for (unsigned i = 0; i < 10;++i)
 	{
 		Particles *particle = new Particles(ParticleObject_TYPE::P_ParticleTest);
 		m_particleList.push_back(particle);
 	}
-	// Initialize Character
-	charOne = new CharacterObject(CharacterObject::GO_SPRITE_TEST);
-	charOne->giveUp = false;
-	charOne->experience = Math::RandFloatMinMax(1.f, 2.f);
-	charOne->pos.Set(m_worldWidth / 4 - m_worldWidthDiv8, m_worldHeight / 2 - 30, 5);
-	charOne->scale = Vector3(30, 30, 30);
-	charOne->resting = false;
-	charOne->active = true;
 
-	charTwo = new CharacterObject(CharacterObject::GO_SPRITE_TEST);
-	charTwo->giveUp = false;
-	charTwo->experience = Math::RandFloatMinMax(1.f, 2.f);
-	charTwo->pos.Set(m_worldWidth / 4 - m_worldWidthDiv8, m_worldHeight / 2 - 30, 5);
-	charTwo->scale = Vector3(30, 30, 30);
-	charTwo->resting = false;
-	charTwo->active = true;
-
-	charThree = new CharacterObject(CharacterObject::GO_SPRITE_TEST);
-	charThree->giveUp = false;
-	charThree->experience = Math::RandFloatMinMax(1.f, 1.5f);
-	charThree->pos.Set(m_worldWidth / 4 - m_worldWidthDiv8, m_worldHeight / 2 - 30, 5);
-	charThree->scale = Vector3(30, 30, 30);
-	charThree->resting = false;
-	charThree->active = true;
-
-	charFour = new CharacterObject(CharacterObject::GO_SPRITE_TEST);
-	charFour->giveUp = false;
-	charFour->experience = Math::RandFloatMinMax(1.f, 1.5f);
-	charFour->pos.Set(m_worldWidth / 4 - m_worldWidthDiv8, m_worldHeight / 2 - 30, 5);
-	charFour->scale = Vector3(30, 30, 30);
-	charFour->resting = false;
-	charFour->active = true;
-
-	currentChar = charOne;
-
-	Television = new CharacterObject(CharacterObject::GO_TELEVISION);
-	Television->pos.Set(m_worldWidth / 4 - m_worldWidthDiv8- 10, m_worldHeight / 2 - 30, 5);
-	Television->scale = Vector3(30, 25, 30);
-	Television->active = true;
-
-	Television2 = new CharacterObject(CharacterObject::GO_TELEVISION);
-	Television2->pos.Set(m_worldWidth / 4 - m_worldWidthDiv8 - 10, m_worldHeight / 2 - 30, 5);
-	Television2->scale = Vector3(30, 25, 30);
-	Television2->active = true;
-
-	Television3 = new CharacterObject(CharacterObject::GO_TELEVISION);
-	Television3->pos.Set(m_worldWidth / 4 - m_worldWidthDiv8 - 10, m_worldHeight / 2 - 30, 5);
-	Television3->scale = Vector3(30, 25, 30);
-	Television3->active = true;
-
-	Television4 = new CharacterObject(CharacterObject::GO_TELEVISION);
-	Television4->pos.Set(m_worldWidth / 4 - m_worldWidthDiv8 - 10, m_worldHeight / 2 - 30, 5);
-	Television4->scale = Vector3(30, 25, 30);
-	Television4->active = true;
-	
-	SpriteAnimation *sa = dynamic_cast<SpriteAnimation *>(meshList[GEO_SPRITE_ANIMATION]);
-	if (sa)
+	for (int i = 0; i < 4; ++i)
 	{
-		sa->m_anim = new Animation();
-		sa->m_anim->Set(0, 4, 0, 1.f, true);
-	}
-	SpriteAnimation *sa2 = dynamic_cast<SpriteAnimation *>(meshList[GEO_SPRITE_TEST2]);
-	if (sa2)
-	{
-		sa2->m_anim = new Animation();
-		sa2->m_anim->Set(0, 6, 0, 2.f, true);
+		ScreenSplit[i] = new Screen(static_cast<Screen::SCREEN_AREA>(i));
+		ScreenSplit[i]->Init(m_worldWidth, m_worldHeight);
 	}
 
-	SpriteAnimation *walkLeft = dynamic_cast<SpriteAnimation *>(meshList[GEO_WALKLEFT]);
-	if (walkLeft)
+	ScreenSplit[0]->UseItem->pos.Set(m_worldWidth * 0.45f, m_worldHeight * 0.55f, 0);
+	ScreenSplit[1]->UseItem->pos.Set(m_worldWidth * 0.95f, m_worldHeight * 0.55f, 0);
+	ScreenSplit[2]->UseItem->pos.Set(m_worldWidth * 0.45f, m_worldHeight * 0.05f, 0);
+	ScreenSplit[3]->UseItem->pos.Set(m_worldWidth * 0.95f, m_worldHeight * 0.05f, 0);
+
+	ScreenSplit[0]->Character->type = CharacterObject::GO_CHAR01;
+	ScreenSplit[1]->Character->type = CharacterObject::GO_CHAR02;
+	ScreenSplit[2]->Character->type = CharacterObject::GO_CHAR03;
+	ScreenSplit[3]->Character->type = CharacterObject::GO_CHAR04;
+
+	currentChar = ScreenSplit[0]->Character;
+
+	// IDLE LEFT
+	SpriteAnimation *C01IL = dynamic_cast<SpriteAnimation *>(meshList[GEO_CHARACTER01_IDLE_LEFT]);
+	if (C01IL)
 	{
-		walkLeft->m_anim = new Animation();
-		walkLeft->m_anim->Set(0, 4, 0, 1.f, true);
+		C01IL->m_anim = new Animation();
+		C01IL->m_anim->Set(0, 3, 0, 1.f, true);
 	}
-	SpriteAnimation *walkRight = dynamic_cast<SpriteAnimation *>(meshList[GEO_WALKRIGHT]);
-	if (walkRight)
+	SpriteAnimation *C02IL = dynamic_cast<SpriteAnimation *>(meshList[GEO_CHARACTER02_IDLE_LEFT]);
+	if (C02IL)
 	{
-		walkRight->m_anim = new Animation();
-		walkRight->m_anim->Set(0, 4, 0, 1.f, true);
+		C02IL->m_anim = new Animation();
+		C02IL->m_anim->Set(0, 3, 0, 1.f, true);
+	}
+	SpriteAnimation *C03IL = dynamic_cast<SpriteAnimation *>(meshList[GEO_CHARACTER03_IDLE_LEFT]);
+	if (C03IL)
+	{
+		C03IL->m_anim = new Animation();
+		C03IL->m_anim->Set(0, 3, 0, 1.f, true);
+	}
+	SpriteAnimation *C04IL = dynamic_cast<SpriteAnimation *>(meshList[GEO_CHARACTER04_IDLE_LEFT]);
+	if (C04IL)
+	{
+		C04IL->m_anim = new Animation();
+		C04IL->m_anim->Set(0, 3, 0, 1.f, true);
 	}
 
+	// IDLE RIGHT
+	SpriteAnimation *C01IR = dynamic_cast<SpriteAnimation *>(meshList[GEO_CHARACTER01_IDLE_RIGHT]);
+	if (C01IR)
+	{
+		C01IR->m_anim = new Animation();
+		C01IR->m_anim->Set(0, 3, 0, 1.f, true);
+	}
+	SpriteAnimation *C02IR = dynamic_cast<SpriteAnimation *>(meshList[GEO_CHARACTER02_IDLE_RIGHT]);
+	if (C02IR)
+	{
+		C02IR->m_anim = new Animation();
+		C02IR->m_anim->Set(0, 3, 0, 1.f, true);
+	}
+	SpriteAnimation *C03IR = dynamic_cast<SpriteAnimation *>(meshList[GEO_CHARACTER03_IDLE_RIGHT]);
+	if (C03IR)
+	{
+		C03IR->m_anim = new Animation();
+		C03IR->m_anim->Set(0, 3, 0, 1.f, true);
+	}
+	SpriteAnimation *C04IR = dynamic_cast<SpriteAnimation *>(meshList[GEO_CHARACTER04_IDLE_RIGHT]);
+	if (C04IR)
+	{
+		C04IR->m_anim = new Animation();
+		C04IR->m_anim->Set(0, 3, 0, 1.f, true);
+	}
+
+	// MOVE LEFT
+	SpriteAnimation *C01ML = dynamic_cast<SpriteAnimation *>(meshList[GEO_CHARACTER01_MOVE_LEFT]);
+	if (C01ML)
+	{
+		C01ML->m_anim = new Animation();
+		C01ML->m_anim->Set(0, 3, 0, 1.f, true);
+	}
+	SpriteAnimation *C02ML = dynamic_cast<SpriteAnimation *>(meshList[GEO_CHARACTER02_MOVE_LEFT]);
+	if (C02ML)
+	{
+		C02ML->m_anim = new Animation();
+		C02ML->m_anim->Set(0, 3, 0, 1.f, true);
+	}
+	SpriteAnimation *C03ML = dynamic_cast<SpriteAnimation *>(meshList[GEO_CHARACTER03_MOVE_LEFT]);
+	if (C03ML)
+	{
+		C03ML->m_anim = new Animation();
+		C03ML->m_anim->Set(0, 3, 0, 1.f, true);
+	}
+	SpriteAnimation *C04ML = dynamic_cast<SpriteAnimation *>(meshList[GEO_CHARACTER04_MOVE_LEFT]);
+	if (C04ML)
+	{
+		C04ML->m_anim = new Animation();
+		C04ML->m_anim->Set(0, 3, 0, 1.f, true);
+	}
+
+	// MOVE RIGHT
+	SpriteAnimation *C01MR = dynamic_cast<SpriteAnimation *>(meshList[GEO_CHARACTER01_MOVE_RIGHT]);
+	if (C01MR)
+	{
+		C01MR->m_anim = new Animation();
+		C01MR->m_anim->Set(0, 3, 0, 1.f, true);
+	}
+	SpriteAnimation *C02MR = dynamic_cast<SpriteAnimation *>(meshList[GEO_CHARACTER02_MOVE_RIGHT]);
+	if (C02MR)
+	{
+		C02MR->m_anim = new Animation();
+		C02MR->m_anim->Set(0, 3, 0, 1.f, true);
+	}
+	SpriteAnimation *C03MR = dynamic_cast<SpriteAnimation *>(meshList[GEO_CHARACTER03_MOVE_RIGHT]);
+	if (C03MR)
+	{
+		C03MR->m_anim = new Animation();
+		C03MR->m_anim->Set(0, 3, 0, 1.f, true);
+	}
+	SpriteAnimation *C04MR = dynamic_cast<SpriteAnimation *>(meshList[GEO_CHARACTER04_MOVE_RIGHT]);
+	if (C04MR)
+	{
+		C04MR->m_anim = new Animation();
+		C04MR->m_anim->Set(0, 3, 0, 1.f, true);
+	}
 	color = 1.0f;
 
 
-	meshList[GEO_CHARONEFRUST] = MeshBuilder::GenerateBar("charOneFrustration", Color(1, 0, 0), charOne->frustration / 2, 1.f);
-	meshList[GEO_CHARONEMOTIVE] = MeshBuilder::GenerateBar("CharOneMotivation", Color(1, 1, 0), charOne->motivation / 2, 1.f);
-	meshList[GEO_CHARONEREST] = MeshBuilder::GenerateBar("CharOneRest", Color(1, 0, 1), charOne->rest / 2, 1.f);
-	meshList[GEO_CHARONEWD] = MeshBuilder::GenerateBar("CharOneWorkDone", Color(0, 1, 1), charOne->workDone / 2, 1.f);
+	meshList[GEO_CHARONEFRUST] = MeshBuilder::GenerateQuad("charOneFrustration", Color(1, 0, 0), 1.f);
+	meshList[GEO_CHARONEMOTIVE] = MeshBuilder::GenerateQuad("CharOneMotivation", Color(1, 1, 0), 1.f);
+	meshList[GEO_CHARONEREST] = MeshBuilder::GenerateQuad("CharOneRest", Color(1, 0, 1), 1.f);
+	meshList[GEO_CHARONEWD] = MeshBuilder::GenerateQuad("CharOneWorkDone", Color(0, 1, 1),1.f);
 
-	meshList[GEO_CHARTWOFRUST] = MeshBuilder::GenerateBar("charTwoFrustration", Color(1, 0, 0), charTwo->frustration / 2, 1.f);
-	meshList[GEO_CHARTWOMOTIVE] = MeshBuilder::GenerateBar("CharTwoMotivation", Color(1, 1, 0), charTwo->motivation / 2, 1.f);
-	meshList[GEO_CHARTWOREST] = MeshBuilder::GenerateBar("CharTwoRest", Color(1, 0, 1), charTwo->rest / 2, 1.f);
-	meshList[GEO_CHARTWOWD] = MeshBuilder::GenerateBar("CharTwoWorkDone", Color(0, 1, 1), charTwo->workDone / 2, 1.f);
+	meshList[GEO_CHARTWOFRUST] = MeshBuilder::GenerateQuad("charTwoFrustration", Color(1, 0, 0), 1.f);
+	meshList[GEO_CHARTWOMOTIVE] = MeshBuilder::GenerateQuad("CharTwoMotivation", Color(1, 1, 0),1.f);
+	meshList[GEO_CHARTWOREST] = MeshBuilder::GenerateQuad("CharTwoRest", Color(1, 0, 1),1.f);
+	meshList[GEO_CHARTWOWD] = MeshBuilder::GenerateQuad("CharTwoWorkDone", Color(0, 1, 1),1.f);
 
-	meshList[GEO_CHARTHREEFRUST] = MeshBuilder::GenerateBar("charThreeFrustration", Color(1, 0, 0), charThree->frustration / 2, 1.f);
-	meshList[GEO_CHARTHREEMOTIVE] = MeshBuilder::GenerateBar("CharThreeMotivation", Color(1, 1, 0), charThree->motivation / 2, 1.f);
-	meshList[GEO_CHARTHREEREST] = MeshBuilder::GenerateBar("CharThreeRest", Color(1, 0, 1), charThree->rest / 2, 1.f);
-	meshList[GEO_CHARTHREEWD] = MeshBuilder::GenerateBar("CharThreeWorkDone", Color(0, 1, 1), charThree->workDone / 2, 1.f);
+	meshList[GEO_CHARTHREEFRUST] = MeshBuilder::GenerateQuad("charThreeFrustration", Color(1, 0, 0),1.f);
+	meshList[GEO_CHARTHREEMOTIVE] = MeshBuilder::GenerateQuad("CharThreeMotivation", Color(1, 1, 0),1.f);
+	meshList[GEO_CHARTHREEREST] = MeshBuilder::GenerateQuad("CharThreeRest", Color(1, 0, 1),1.f);
+	meshList[GEO_CHARTHREEWD] = MeshBuilder::GenerateQuad("CharThreeWorkDone", Color(0, 1, 1),1.f);
 
-	meshList[GEO_CHARFOURFRUST] = MeshBuilder::GenerateBar("charThreeFrustration", Color(1, 0, 0), charFour->frustration / 2, 1.f);
-	meshList[GEO_CHARFOURMOTIVE] = MeshBuilder::GenerateBar("CharThreeMotivation", Color(1, 1, 0), charFour->motivation / 2, 1.f);
-	meshList[GEO_CHARFOURREST] = MeshBuilder::GenerateBar("CharThreeRest", Color(1, 0, 1), charFour->rest / 2, 1.f);
-	meshList[GEO_CHARFOURWD] = MeshBuilder::GenerateBar("CharFourWorkDone", Color(0, 1, 1), charFour->workDone / 2, 1.f);
+	meshList[GEO_CHARFOURFRUST] = MeshBuilder::GenerateQuad("charThreeFrustration", Color(1, 0, 0),1.f);
+	meshList[GEO_CHARFOURMOTIVE] = MeshBuilder::GenerateQuad("CharThreeMotivation", Color(1, 1, 0),1.f);
+	meshList[GEO_CHARFOURREST] = MeshBuilder::GenerateQuad("CharThreeRest", Color(1, 0, 1), 1.f);
+	meshList[GEO_CHARFOURWD] = MeshBuilder::GenerateQuad("CharFourWorkDone", Color(0, 1, 1),1.f);
+
+	phase = 4;
+	prevlevel = 0;
+	currentlevel = 0;
+	SceneState = S_GAME;
+
+	Continue = new MenuObject(MenuObject::M_CONTINUE, Vector3(40, 40, 1));
+	Continue->pos = Vector3(m_worldWidth * 0.9f, m_worldHeight * 0.1f, 0);
+	Continue->active = true;
 }
 void StudioProjectScene::Update(double dt)
 {
+	if (!StatManager::GetInstance()->GetBool_Game(StatManager::GetInstance()->GetPrevGame()))
+	{
+		switch (StatManager::GetInstance()->GetPrevGame())
+		{
+		case 1:
+			StatManager::GetInstance()->SetBool_Maze(true);
+			break;
+		case 2:
+			StatManager::GetInstance()->SetBool_Mole(true);
+			break;
+		case 3:
+			StatManager::GetInstance()->SetBool_Tank(true);
+			break;
+		case 4:
+			StatManager::GetInstance()->SetBool_Frogger(true);
+			break;
+		case 5:
+			StatManager::GetInstance()->SetBool_Sheep(true);
+			break;
+		default:
+			break;
+		}
+	}
 	SceneBase::Update(dt);
 
-	static bool bLButtonState = false;
-	if (!bLButtonState && Application::IsMousePressed(0))
+	//Calculating aspect ratio
+	m_worldHeight = 200.f;
+	m_worldWidth = m_worldHeight * (float)Application::GetWindowWidth() / Application::GetWindowHeight();
+
+	double x, y;
+	Application::GetCursorPos(&x, &y);
+	int w = Application::GetWindowWidth();
+	int h = Application::GetWindowHeight();
+	v_mousepos = Vector3(static_cast<float>(x) / (w / m_worldWidth), (h - static_cast<float>(y)) / (h / m_worldHeight), 0.0f);
+
+	m_eventTimer -= dt;
+
+	//Losing Condition
+
+
+
+	/////
+
+
+	switch (SceneState)
 	{
-		bLButtonState = true;
-		std::cout << "LBUTTON DOWN" << std::endl;
-	}
-	else if (bLButtonState && !Application::IsMousePressed(0))
+	case S_GAME:
 	{
-		bLButtonState = false;
-		std::cout << "LBUTTON UP" << std::endl;
+		UpdateGame(dt);
+		break;
 	}
-	static bool bRButtonState = false;
-	if (!bRButtonState && Application::IsMousePressed(1))
+	case S_LEVELTRANSITION:
 	{
-		bRButtonState = true;
-		std::cout << "RBUTTON DOWN" << std::endl;
+		//soundSystem.stopAllMusic();
+		UpdateLevelTransition(dt);
+		break;
 	}
-	else if (bRButtonState && !Application::IsMousePressed(1))
+	case S_GAMEOVER:
 	{
-		bRButtonState = false;
-		std::cout << "RBUTTON UP" << std::endl;
+		UpdateLoseScreen(dt);
+		break;
 	}
-
-	if (Application::IsKeyPressed(VK_F1))
+	default:
 	{
-		prevChar = currentChar;
-		prevChar->setState(false);
-		currentChar = charOne;
+		break;
 	}
-	if (Application::IsKeyPressed(VK_F2))
-	{
-		prevChar = currentChar;
-		prevChar->setState(false);
-		currentChar = charTwo;
 	}
-	if (Application::IsKeyPressed(VK_F3))
-	{
-		prevChar = currentChar;
-		prevChar->setState(false);
-		currentChar = charThree;
-	}
-	if (Application::IsKeyPressed(VK_F4))
-	{
-		prevChar = currentChar;
-		prevChar->setState(false);
-		currentChar = charFour;
-	}
-
-	charOne->Update(dt);
-	meshList[GEO_CHARONEFRUST] = MeshBuilder::GenerateBar("charOneFrustration", Color(1, 0, 0), charOne->frustration / 2, 1.f);
-	meshList[GEO_CHARONEMOTIVE] = MeshBuilder::GenerateBar("CharOneMotivation", Color(1, 1, 0), charOne->motivation / 2, 1.f);
-	meshList[GEO_CHARONEREST] = MeshBuilder::GenerateBar("CharOneRest", Color(1, 0, 1), charOne->rest / 2, 1.f);
-	meshList[GEO_CHARONEWD] = MeshBuilder::GenerateBar("CharOneWorkDone", Color(0, 1, 1), charOne->workDone / 2, 1.f);
-
-	charTwo->Update(dt);
-	meshList[GEO_CHARTWOFRUST] = MeshBuilder::GenerateBar("charTwoFrustration", Color(1, 0, 0), charTwo->frustration / 2, 1.f);
-	meshList[GEO_CHARTWOMOTIVE] = MeshBuilder::GenerateBar("CharTwoMotivation", Color(1, 1, 0), charTwo->motivation / 2, 1.f);
-	meshList[GEO_CHARTWOREST] = MeshBuilder::GenerateBar("CharTwoRest", Color(1, 0, 1), charTwo->rest / 2, 1.f);
-	meshList[GEO_CHARTWOWD] = MeshBuilder::GenerateBar("CharTwoWorkDone", Color(0, 1, 1), charTwo->workDone / 2, 1.f);
-
-	charThree->Update(dt);
-	meshList[GEO_CHARTHREEFRUST] = MeshBuilder::GenerateBar("charThreeFrustration", Color(1, 0, 0), charThree->frustration / 2, 1.f);
-	meshList[GEO_CHARTHREEMOTIVE] = MeshBuilder::GenerateBar("CharThreeMotivation", Color(1, 1, 0), charThree->motivation / 2, 1.f);
-	meshList[GEO_CHARTHREEREST] = MeshBuilder::GenerateBar("CharThreeRest", Color(1, 0, 1), charThree->rest / 2, 1.f);
-	meshList[GEO_CHARTHREEWD] = MeshBuilder::GenerateBar("CharThreeWorkDone", Color(0, 1, 1), charThree->workDone / 2, 1.f);
-
-
-	charFour->Update(dt);
-	meshList[GEO_CHARFOURFRUST] = MeshBuilder::GenerateBar("charThreeFrustration", Color(1, 0, 0), charFour->frustration / 2, 1.f);
-	meshList[GEO_CHARFOURMOTIVE] = MeshBuilder::GenerateBar("CharThreeMotivation", Color(1, 1, 0), charFour->motivation / 2, 1.f);
-	meshList[GEO_CHARFOURREST] = MeshBuilder::GenerateBar("CharThreeRest", Color(1, 0, 1), charFour->rest / 2, 1.f);
-	meshList[GEO_CHARFOURWD] = MeshBuilder::GenerateBar("CharFourWorkDone", Color(0, 1, 1), charFour->workDone / 2, 1.f);
-
-	currentChar->UpdateMovement(dt);
-		float dist = currentChar->pos.x - Television->pos.x;
-		if (dist <= currentChar->scale.x + Television->scale.x)
-		{
-			if (Application::IsKeyPressed(VK_SPACE))
-			{
-				charOne->resting = true;
-				cout << "resting 1" << endl;
-			}
-		}
-		if (dist > currentChar->scale.x + Television->scale.x)
-		{
-			cout << "unrest 1" << endl;
-			charOne->resting = false;
-		}
-		float dist2 = currentChar->pos.x - Television2->pos.x;
-		if (dist2 <= currentChar->scale.x + Television2->scale.x)
-		{
-			if (Application::IsKeyPressed(VK_SPACE))
-			{
-				charOne->resting = true;
-				cout << "resting 1" << endl;
-			}
-		}
-		if (dist2 > currentChar->scale.x + Television2->scale.x)
-		{
-			cout << "unrest 1" << endl;
-			charOne->resting = false;
-		}
-		float dist3 = currentChar->pos.x - Television3->pos.x;
-		if (dist3 <= currentChar->scale.x + Television3->scale.x)
-		{
-			if (Application::IsKeyPressed(VK_SPACE))
-			{
-				charOne->resting = true;
-				cout << "resting 1" << endl;
-			}
-		}
-		if (dist3 > currentChar->scale.x + Television3->scale.x)
-		{
-			cout << "unrest 1" << endl;
-			charOne->resting = false;
-		}		
-		float dist4 = currentChar->pos.x - Television4->pos.x;
-		if (dist4 <= currentChar->scale.x + Television4->scale.x)
-		{
-			if (Application::IsKeyPressed(VK_SPACE))
-			{
-				charOne->resting = true;
-				cout << "resting 1" << endl;
-			}
-		}
-		if (dist4  > currentChar->scale.x + Television4->scale.x)
-		{
-			cout << "unrest 1" << endl;
-			charOne->resting = false;
-		}
-
-		//float dist2 = charTwo->pos.x - Television2->pos.x;
-		//if (dist2 <= charTwo->scale.x + Television2->scale.x)
-		//{
-		//	if (Application::IsKeyPressed(VK_SPACE))
-		//	{
-		//		charTwo->resting = true;
-		//		cout << "resting 2" << endl;
-		//		//cout << "Frustration : " << charTwo->frustration << endl;
-		//	}
-		//}
-		//if (dist2 > charTwo->scale.x + Television2->scale.x)
-		//{
-		//	cout << charTwo->frustration << endl;
-		//	charTwo->resting = false;
-		//	//cout << "Frustration : " << charTwo->frustration << endl;
-		//}
-
-		//float dist3 = charThree->pos.x - Television3->pos.x;
-		//if (dist3 <= charThree->scale.x + Television3->scale.x)
-		//{
-		//	if(Application::IsKeyPressed(VK_SPACE))
-		//	{
-
-		//		charThree->resting = true;
-		//	}
-		//}
-		//if (dist3 > charThree->scale.x + Television3->scale.x)
-		//{
-		//	charThree->resting = false;
-		//}
-
-		//float dist4 = charFour->pos.x - Television4->pos.x;
-		//if (dist4 <= charFour->scale.x + Television4->scale.x)
-		//{
-		//	if (Application::IsKeyPressed(VK_SPACE))
-		//	{
-		//		charFour->resting = true;
-		//	}
-		//}
-		//if (dist4 > charFour->scale.x + Television4->scale.x)
-		//{
-		//	charFour->resting = false;
-		//}
-
-	SpriteAnimation *sa = dynamic_cast<SpriteAnimation*>(meshList[GEO_SPRITE_ANIMATION]);
-	if (sa)
-	{
-		sa->Update(dt);
-		sa->m_anim->animActive = true;
-
-	}
-
-	SpriteAnimation *sa2 = dynamic_cast<SpriteAnimation*>(meshList[GEO_SPRITE_TEST2]);
-	if (sa2)
-	{
-		sa2->Update(dt);
-		sa2->m_anim->animActive = true;
-
-	}
-
-	SpriteAnimation *walkRight = dynamic_cast<SpriteAnimation*>(meshList[GEO_WALKRIGHT]);
-	if (walkRight)
-	{
-		walkRight->Update(dt);
-		walkRight->m_anim->animActive = true;
-
-	}
-	SpriteAnimation *walkLeft = dynamic_cast<SpriteAnimation*>(meshList[GEO_WALKLEFT]);
-	if (walkLeft)
-	{
-		walkLeft->Update(dt);
-		walkLeft->m_anim->animActive = true;
-
-	}
-	SpriteAnimation *Frog_Jump = dynamic_cast<SpriteAnimation*>(meshList[GEO_FROG_JUMP]);
-	if (Frog_Jump)
-	{
-		Frog_Jump->Update(dt);
-		Frog_Jump->m_anim->animActive = true;
-
-	}
-
-	for (std::vector<CharacterObject *>::iterator it = m_goList.begin(); it != m_goList.end(); ++it)
-	{
-		CharacterObject *go = (CharacterObject *)*it;
-		if (go->active)
-		{
-
-		}
-	}
-
 
 	if (m_eventTimer < 0)
 	{
@@ -403,13 +345,316 @@ void StudioProjectScene::Update(double dt)
 	}
 	if (m_eventTimer < -2)
 	{
-		Application::setScene(Math::RandIntMinMax(1, 5));
-		m_eventTimer = Math::RandFloatMinMax(20.0f, 40.f);
+		phase++;
+		switch (phase)
+		{
+		case 1:
+		{
+			m_eventTimer = 10.f;
+			break;
+		}
+		case 5:
+		{
+			SceneState = S_LEVELTRANSITION;
+			phase = 0;
+			mTimer = 2.f;
+			break;
+		}
+		default:
+		{
+			prevlevel = currentlevel;
+			currentlevel = Math::RandIntMinMax(1, 5);
+			while (currentlevel == prevlevel)
+			{
+				currentlevel = Math::RandIntMinMax(1, 5);
+			}
+			//soundSystem.stopAllMusic();
+			Application::setScene(currentlevel);
+			m_eventTimer = Math::RandFloatMinMax(20.0f, 40.f);
+
+			break;
+		}
+		}
+
 	}
 	UpdateParticles(dt);
-	m_eventTimer -= dt;
 	//cout << "Event Timer : " << m_eventTimer << endl;
 }
+
+void StudioProjectScene::UpdateGame(double dt)
+{
+	ScreenSplit[0]->UseItem->pos.Set(m_worldWidth * 0.45f, m_worldHeight * 0.55f, 0);
+	ScreenSplit[1]->UseItem->pos.Set(m_worldWidth * 0.95f, m_worldHeight * 0.55f, 0);
+	ScreenSplit[2]->UseItem->pos.Set(m_worldWidth * 0.45f, m_worldHeight * 0.05f, 0);
+	ScreenSplit[3]->UseItem->pos.Set(m_worldWidth * 0.95f, m_worldHeight * 0.05f, 0);
+
+	int w = Application::GetWindowWidth();
+	int h = Application::GetWindowHeight();
+	//cout << v_mousepos << endl;
+	rel_mousepos = v_mousepos;
+	if (v_mousepos.x <= m_worldWidth * 0.5f)
+	{
+		rel_mousepos.x = v_mousepos.x * 2;
+		if (v_mousepos.y <= m_worldHeight * 0.5f && v_mousepos.y >= StatsArea.y / h * m_worldHeight)
+		{
+			rel_mousepos.y = (v_mousepos.y - StatsArea.y / h * m_worldHeight) * m_worldHeight / ((m_worldHeight / 2) - StatsArea.y / h * m_worldHeight);
+			ItemObject::CurrentScreenID = ItemObject::BotL;
+		}
+		else if (v_mousepos.y > m_worldHeight * 0.5f + StatsArea.y / h * m_worldHeight && v_mousepos.y < m_worldHeight)
+		{
+			rel_mousepos.y = (v_mousepos.y - m_worldHeight * 0.5f - StatsArea.y / h * m_worldHeight) * m_worldHeight / ((m_worldHeight / 2) - StatsArea.y / h * m_worldHeight);
+			ItemObject::CurrentScreenID = ItemObject::UpL;
+		}
+	}
+	else
+	{
+		rel_mousepos.x = (v_mousepos.x - m_worldWidth * 0.5f) * 2;
+		if (v_mousepos.y <= m_worldHeight * 0.5f && v_mousepos.y >= StatsArea.y / h * m_worldHeight)
+		{
+			rel_mousepos.y = (v_mousepos.y - StatsArea.y / h * m_worldHeight) * m_worldHeight / ((m_worldHeight / 2) - StatsArea.y / h * m_worldHeight);
+			ItemObject::CurrentScreenID = ItemObject::BotR;
+		}
+		else if (v_mousepos.y > m_worldHeight * 0.5f + StatsArea.y / h * m_worldHeight && v_mousepos.y < m_worldHeight)
+		{
+			rel_mousepos.y = (v_mousepos.y - m_worldHeight * 0.5f - StatsArea.y / h * m_worldHeight) * m_worldHeight / ((m_worldHeight / 2) - StatsArea.y / h * m_worldHeight);
+			ItemObject::CurrentScreenID = ItemObject::UpR;
+		}
+	}
+	if (m_Count == 0)
+	{
+
+	}
+
+	static bool bLButtonState = false;
+	if (!bLButtonState && Application::IsMousePressed(0))
+	{
+		bLButtonState = true;
+		std::cout << "LBUTTON DOWN" << std::endl;
+		mousepressed = true;
+	}
+	else if (bLButtonState && !Application::IsMousePressed(0))
+	{
+		bLButtonState = false;
+		mousepressed = false;
+	}
+
+
+	if (Application::IsKeyPressed(VK_F1))
+	{
+		prevChar = currentChar;
+		prevChar->setState(false);
+		currentChar = ScreenSplit[0]->Character;
+	}
+	if (Application::IsKeyPressed(VK_F2))
+	{
+		prevChar = currentChar;
+		prevChar->setState(false);
+		currentChar = ScreenSplit[1]->Character;
+	}
+	if (Application::IsKeyPressed(VK_F3))
+	{
+		prevChar = currentChar;
+		prevChar->setState(false);
+		currentChar = ScreenSplit[2]->Character;
+	}
+	if (Application::IsKeyPressed(VK_F4))
+	{
+		prevChar = currentChar;
+		prevChar->setState(false);
+		currentChar = ScreenSplit[3]->Character;
+	}
+
+	for (int i = 0; i < 4; ++i)
+	{
+		ScreenSplit[i]->Update(dt,v_mousepos, rel_mousepos, Vector3(10,10,1));
+		switch (i)
+		{
+		case 0:
+		{
+			StatManager::GetInstance()->m_char01 = ScreenSplit[i]->Character->Statistics;
+			break;
+		}
+		case 1:
+		{
+			StatManager::GetInstance()->m_char02 = ScreenSplit[i]->Character->Statistics;
+			break;
+		}
+		case 2:
+		{
+			StatManager::GetInstance()->m_char03 = ScreenSplit[i]->Character->Statistics;
+			break;
+		}
+		case 3:
+		{
+			StatManager::GetInstance()->m_char04 = ScreenSplit[i]->Character->Statistics;
+			break;
+		}
+		default:
+			break;
+		}
+	}
+
+	currentChar->UpdateMovement(dt, m_worldWidth, m_worldHeight);
+
+	// IDLE LEFT
+	SpriteAnimation *C01IL = dynamic_cast<SpriteAnimation *>(meshList[GEO_CHARACTER01_IDLE_LEFT]);
+	if (C01IL)
+	{
+		C01IL->Update(dt);
+		C01IL->m_anim->animActive = true;
+	}
+	SpriteAnimation *C02IL = dynamic_cast<SpriteAnimation *>(meshList[GEO_CHARACTER02_IDLE_LEFT]);
+	if (C02IL)
+	{
+		C02IL->Update(dt);
+		C02IL->m_anim->animActive = true;;
+	}
+	SpriteAnimation *C03IL = dynamic_cast<SpriteAnimation *>(meshList[GEO_CHARACTER03_IDLE_LEFT]);
+	if (C03IL)
+	{
+		C03IL->Update(dt);
+		C03IL->m_anim->animActive = true;
+	}
+	SpriteAnimation *C04IL = dynamic_cast<SpriteAnimation *>(meshList[GEO_CHARACTER04_IDLE_LEFT]);
+	if (C04IL)
+	{
+		C04IL->Update(dt);
+		C04IL->m_anim->animActive = true;
+	}
+
+	// IDLE RIGHT
+	SpriteAnimation *C01IR = dynamic_cast<SpriteAnimation *>(meshList[GEO_CHARACTER01_IDLE_RIGHT]);
+	if (C01IR)
+	{
+		C01IR->Update(dt);
+		C01IR->m_anim->animActive = true;
+	}
+	SpriteAnimation *C02IR = dynamic_cast<SpriteAnimation *>(meshList[GEO_CHARACTER02_IDLE_RIGHT]);
+	if (C02IR)
+	{
+		C02IR->Update(dt);
+		C02IR->m_anim->animActive = true;
+	}
+	SpriteAnimation *C03IR = dynamic_cast<SpriteAnimation *>(meshList[GEO_CHARACTER03_IDLE_RIGHT]);
+	if (C03IR)
+	{
+		C03IR->Update(dt);
+		C03IR->m_anim->animActive = true;
+	}
+	SpriteAnimation *C04IR = dynamic_cast<SpriteAnimation *>(meshList[GEO_CHARACTER04_IDLE_RIGHT]);
+	if (C04IR)
+	{
+		C04IR->Update(dt);
+		C04IR->m_anim->animActive = true;
+	}
+
+	// MOVE LEFT
+	SpriteAnimation *C01ML = dynamic_cast<SpriteAnimation *>(meshList[GEO_CHARACTER01_MOVE_LEFT]);
+	if (C01ML)
+	{
+		C01ML->Update(dt);
+		C01ML->m_anim->animActive = true;
+	}
+	SpriteAnimation *C02ML = dynamic_cast<SpriteAnimation *>(meshList[GEO_CHARACTER02_MOVE_LEFT]);
+	if (C02ML)
+	{
+		C02ML->Update(dt);
+		C02ML->m_anim->animActive = true;
+	}
+	SpriteAnimation *C03ML = dynamic_cast<SpriteAnimation *>(meshList[GEO_CHARACTER03_MOVE_LEFT]);
+	if (C03ML)
+	{
+		C03ML->Update(dt);
+		C03ML->m_anim->animActive = true;
+	}
+	SpriteAnimation *C04ML = dynamic_cast<SpriteAnimation *>(meshList[GEO_CHARACTER04_MOVE_LEFT]);
+	if (C04ML)
+	{
+		C04ML->Update(dt);
+		C04ML->m_anim->animActive = true;
+	}
+
+	// MOVE RIGHT
+	SpriteAnimation *C01MR = dynamic_cast<SpriteAnimation *>(meshList[GEO_CHARACTER01_MOVE_RIGHT]);
+	if (C01MR)
+	{
+		C01MR->Update(dt);
+		C01MR->m_anim->animActive = true;
+	}
+	SpriteAnimation *C02MR = dynamic_cast<SpriteAnimation *>(meshList[GEO_CHARACTER02_MOVE_RIGHT]);
+	if (C02MR)
+	{
+		C02MR->Update(dt);
+		C02MR->m_anim->animActive = true;
+	}
+	SpriteAnimation *C03MR = dynamic_cast<SpriteAnimation *>(meshList[GEO_CHARACTER03_MOVE_RIGHT]);
+	if (C03MR)
+	{
+		C03MR->Update(dt);
+		C03MR->m_anim->animActive = true;
+	}
+	SpriteAnimation *C04MR = dynamic_cast<SpriteAnimation *>(meshList[GEO_CHARACTER04_MOVE_RIGHT]);
+	if (C04MR)
+	{
+		C04MR->Update(dt);
+		C04MR->m_anim->animActive = true;
+	}
+
+	for (std::vector<GameObject *>::iterator it = m_goList.begin(); it != m_goList.end(); ++it)
+	{
+		GameObject *go = (GameObject *)*it;
+		if (go->active)
+		{
+
+		}
+	}
+	mTimer -= dt;
+	if (mTimer < 0 && playMusic == false)
+	{
+		playMusic = true;
+	}
+}
+
+void StudioProjectScene::UpdateLoseScreen(double dt)
+{
+	if (Application::IsKeyPressed(VK_SPACE))
+	{
+		Application::setScene(6);
+		reset();
+	}
+}
+
+void StudioProjectScene::reset()
+{
+	m_speed = 1.f;
+	m_speed = 1.f;
+	m_eventTimer = Math::RandFloatMinMax(20.0f, 40.f);
+	b_transitioning = false;
+	playMusic = false;
+	ScreenSplit[0]->Character->reset();
+	ScreenSplit[1]->Character->reset();
+	ScreenSplit[2]->Character->reset();
+	ScreenSplit[3]->Character->reset();
+	currentChar = ScreenSplit[0]->Character;
+	phase = 4;
+	prevlevel = 0;
+	currentlevel = 0;
+	SceneState = S_GAME;
+
+	Continue->pos = Vector3(m_worldWidth * 0.9f, m_worldHeight * 0.1f, 0);
+	Continue->active = true;
+}
+void StudioProjectScene::UpdateLevelTransition(double dt)
+{
+	Continue->Update(v_mousepos);
+	if (Continue->changed)
+	{
+		m_eventTimer = -0.01;
+		SceneState = S_GAME;
+		phase = 0;
+	}
+}
+
 Particles* StudioProjectScene::getParticle()
 {
 	for (std::vector<Particles *>::iterator it = m_particleList.begin(); it != m_particleList.end();++it)
@@ -432,6 +677,7 @@ Particles* StudioProjectScene::getParticle()
 	m_particleList[m_particleList.size() - 1]->active = true;
 	return m_particleList[m_particleList.size() - 1];
 }
+
 void StudioProjectScene::UpdateParticles(double dt)
 {
 	if (m_particleCount < MAX_PARTICLE)
@@ -442,7 +688,7 @@ void StudioProjectScene::UpdateParticles(double dt)
 		particle->vel.Set(Math::RandFloatMinMax(0,0.2f), Math::RandFloatMinMax(0,0.2f), 0.0f);
 		//particle->rotationSpeed = Math::RandFloatMinMax(20.f, 40.f);
 		particle->pos.Set(Math::RandFloatMinMax(0, m_worldWidth), 0, 0);
-		particle->lifeTime = 4.4f;
+		particle->lifeTime = 8.8f;
 	}
 	for (std::vector<Particles *>::iterator it = m_particleList.begin(); it != m_particleList.end();++it)
 	{
@@ -523,97 +769,238 @@ void StudioProjectScene::RenderArrow()
 
 void StudioProjectScene::Render()
 {
+	switch (SceneState)
+	{
+	case S_GAME:
+	{
+		RenderGame();
+		break;
+	}
+	case S_LEVELTRANSITION:
+	{
+		RenderLevelTransition();
+		break;
+	}
+	default:
+	{
+		RenderLoseScreen();
+		break;
+	}
+	}
+	modelStack.PushMatrix();
+	modelStack.Translate(v_mousepos);
+	modelStack.Scale(10, 10, 1);
+	if (mousepressed)
+	{
+		RenderMesh(meshList[GEO_TANK_CURSOR], false);
+	}
+	else
+	{
+		RenderMesh(meshList[GEO_TANK_CURSOR_ALTERNATE], false);
+	}
+	modelStack.PopMatrix();
+	std::ostringstream ss;
+	ss.precision(3);
+	ss << rel_mousepos;
+	RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(0, 1, 0), 3, 1, 1);
 
-	// Multiple viewports
-	//{
-		// Character Rooms
-		if (m_eventTimer > 0)
-		{
-			glEnable(GL_SCISSOR_TEST);
-			glViewport(0, 640, 990, 440);
-			glScissor(0, 640, 990, 440);
-
-			RenderCharacter1(); // TOP LEFT
-
-
-			glViewport(990, 640, 990, 440);
-			glScissor(990, 640, 990, 440);
-
-			RenderCharacter2(); // TOP RIGHT
-
-			glViewport(0, 100, 990, 440);
-			glScissor(0, 100, 990, 440);
-
-			RenderCharacter3();
-
-			glViewport(990, 100, 990, 440);
-			glScissor(990, 100, 990, 440);
-
-			RenderCharacter4();
-
-			// Statistics
-			glViewport(0, 540, 990, 100);
-			glScissor(0, 540, 990, 100);
-
-			RenderStats1();
-
-			glViewport(990, 540, 990, 100);
-			glScissor(990, 540, 990, 100);
-
-			RenderStats2();
-
-			glViewport(0, 0, 990, 100);
-			glScissor(0, 0, 990, 100);
-
-			RenderStats3();
-
-			glViewport(990, 0, 990, 100);
-			glScissor(990, 0, 990, 100);
-
-			RenderStats4();
-			glDisable(GL_SCISSOR_TEST);
-
-		}
-		else
-		{
-			glViewport(0, 0, 1980, 1080);
-			glClearColor(color, color, color, 1.0f);
-			glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-			//Calculating aspect ratio
-			m_worldHeight = 100.f;
-			m_worldWidth = m_worldHeight * (float)Application::GetWindowWidth() / Application::GetWindowHeight();
-
-			// Projection matrix : Orthographic Projection
-			Mtx44 projection;
-			projection.SetToOrtho(0, m_worldWidth, 0, m_worldHeight, -10, 10);
-			projectionStack.LoadMatrix(projection);
-
-			// viewTest1 matrix
-			viewStack.LoadIdentity();
-			viewStack.LookAt(
-				camera.position.x, camera.position.y, camera.position.z,
-				camera.target.x, camera.target.y, camera.target.z,
-				camera.up.x, camera.up.y, camera.up.z
-			);
-			// Model matrix : an identity matrix (model will be at the origin)
-			modelStack.LoadIdentity();
-
-			//Particles
-			for (std::vector<Particles *>::iterator it = m_particleList.begin(); it != m_particleList.end();++it)
-			{
-				Particles *particle = (Particles *)*it;
-				if (particle->active)
-				{
-					RenderParticles(particle);
-				}
-			}
-		}
-	//}
-
+	ss.str("");
+	ss << v_mousepos;
+	RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(0, 1, 0), 3, 1, 4);
 	// End of Multiple viewports
 }
 
-void StudioProjectScene::RenderGO(CharacterObject * go)
+void StudioProjectScene::RenderGame()
+{
+	if (m_eventTimer > 0)
+	{
+		glEnable(GL_SCISSOR_TEST);
+		glViewport(0, StatsArea.y + GameArea.y + StatsArea.y, GameArea.x, GameArea.y);
+		glScissor(0, StatsArea.y + GameArea.y + StatsArea.y, GameArea.x, GameArea.y);
+
+		RenderScreen(ScreenSplit[0]);
+		//RenderCharacter1(); // TOP LEFT
+
+		glViewport(GameArea.x, StatsArea.y + GameArea.y + StatsArea.y, GameArea.x, GameArea.y);
+		glScissor(GameArea.x, StatsArea.y + GameArea.y + StatsArea.y, GameArea.x, GameArea.y);
+
+		RenderScreen(ScreenSplit[1]);
+		//RenderCharacter2(); // TOP RIGHT
+
+		glViewport(0, StatsArea.y, GameArea.x, GameArea.y);
+		glScissor(0, StatsArea.y, GameArea.x, GameArea.y);
+
+		RenderScreen(ScreenSplit[2]);
+		//RenderCharacter3();
+
+		glViewport(GameArea.x, StatsArea.y, GameArea.x, GameArea.y);
+		glScissor(GameArea.x, StatsArea.y, GameArea.x, GameArea.y);
+
+		RenderScreen(ScreenSplit[3]);
+		//RenderCharacter4();
+
+		// Statistics
+		glViewport(0, StatsArea.y + GameArea.y, StatsArea.x, StatsArea.y);
+		glScissor(0, StatsArea.y + GameArea.y, StatsArea.x, StatsArea.y);
+
+		RenderStats(ScreenSplit[0]->Character);
+		//RenderStats1();
+
+		glViewport(StatsArea.x, StatsArea.y + GameArea.y, StatsArea.x, StatsArea.y);
+		glScissor(StatsArea.x, StatsArea.y + GameArea.y, StatsArea.x, StatsArea.y);
+
+		RenderStats(ScreenSplit[1]->Character);
+		//RenderStats2();
+
+		glViewport(0, 0, StatsArea.x, StatsArea.y);
+		glScissor(0, 0, StatsArea.x, StatsArea.y);
+
+		RenderStats(ScreenSplit[2]->Character);
+		//RenderStats3();
+
+		glViewport(StatsArea.x, 0, StatsArea.x, StatsArea.y);
+		glScissor(StatsArea.x, 0, StatsArea.x, StatsArea.y);
+
+		RenderStats(ScreenSplit[3]->Character);
+		//RenderStats4();
+		glDisable(GL_SCISSOR_TEST);
+
+		//}
+		glViewport(0, 0, 1920, 1080);
+
+		// Projection matrix : Orthographic Projection
+		Mtx44 projection;
+		projection.SetToOrtho(0, m_worldWidth, 0, m_worldHeight, -10, 10);
+		projectionStack.LoadMatrix(projection);
+
+		// viewTest1 matrix
+		viewStack.LoadIdentity();
+		viewStack.LookAt(
+			camera.position.x, camera.position.y, camera.position.z,
+			camera.target.x, camera.target.y, camera.target.z,
+			camera.up.x, camera.up.y, camera.up.z
+		);
+
+		for (int i = 0; i < 4; ++i)
+		{
+			RenderMenu(ScreenSplit[i]);
+		}
+	}
+	else
+	{
+		glViewport(0, 0, 1920, 1080);
+		glClearColor(color, color, color, 1.0f);
+		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+		// Projection matrix : Orthographic Projection
+		Mtx44 projection;
+		projection.SetToOrtho(0, m_worldWidth, 0, m_worldHeight, -10, 10);
+		projectionStack.LoadMatrix(projection);
+
+		// viewTest1 matrix
+		viewStack.LoadIdentity();
+		viewStack.LookAt(
+			camera.position.x, camera.position.y, camera.position.z,
+			camera.target.x, camera.target.y, camera.target.z,
+			camera.up.x, camera.up.y, camera.up.z
+		);
+		// Model matrix : an identity matrix (model will be at the origin)
+		modelStack.LoadIdentity();
+
+		//Particles
+		for (std::vector<Particles *>::iterator it = m_particleList.begin(); it != m_particleList.end(); ++it)
+		{
+			Particles *particle = (Particles *)*it;
+			if (particle->active)
+			{
+				RenderParticles(particle);
+			}
+		}
+	}
+}
+
+void StudioProjectScene::RenderLoseScreen()
+{
+	glViewport(0, 0, 1920, 1080);
+	glClearColor(0, 0, 0, 0.f);
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+	// Projection matrix : Orthographic Projection
+	Mtx44 projection;
+	projection.SetToOrtho(0, m_worldWidth, 0, m_worldHeight, -10, 10);
+	projectionStack.LoadMatrix(projection);
+
+	// viewTest1 matrix
+	viewStack.LoadIdentity();
+	viewStack.LookAt(
+		camera.position.x, camera.position.y, camera.position.z,
+		camera.target.x, camera.target.y, camera.target.z,
+		camera.up.x, camera.up.y, camera.up.z
+	);
+	// Model matrix : an identity matrix (model will be at the origin)
+	modelStack.LoadIdentity();
+
+	modelStack.PushMatrix();
+	modelStack.Translate(m_worldWidth / 2, m_worldHeight / 2, 0);
+	modelStack.Scale(m_worldWidth, m_worldWidth, 0);
+	RenderMesh(meshList[GEO_LOSESCREEN], false);
+	modelStack.PopMatrix();
+}
+void StudioProjectScene::RenderLevelTransition()
+{
+	glViewport(0, 0, 1920, 1080);
+	glClearColor(0, 0, 0, 0.f);
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+	// Projection matrix : Orthographic Projection
+	Mtx44 projection;
+	projection.SetToOrtho(0, m_worldWidth, 0, m_worldHeight, -10, 10);
+	projectionStack.LoadMatrix(projection);
+
+	// viewTest1 matrix
+	viewStack.LoadIdentity();
+	viewStack.LookAt(
+		camera.position.x, camera.position.y, camera.position.z,
+		camera.target.x, camera.target.y, camera.target.z,
+		camera.up.x, camera.up.y, camera.up.z
+	);
+	// Model matrix : an identity matrix (model will be at the origin)
+	modelStack.LoadIdentity();
+
+	modelStack.PushMatrix();
+	modelStack.Translate(Continue->pos);
+	modelStack.Scale(Continue->scale);
+	RenderMesh(meshList[GEO_MAIN_CONTINUE], false);
+	modelStack.PopMatrix();
+
+	std::ostringstream ss;
+	ss.precision(3);
+	ss << "Work Done:";
+	RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(0, 1, 0), 3, 1, 33);
+
+	ss.str("");
+	int value = (ScreenSplit[0]->Character->Statistics.m_workDone
+		+ ScreenSplit[1]->Character->Statistics.m_workDone
+		+ ScreenSplit[2]->Character->Statistics.m_workDone
+		+ ScreenSplit[3]->Character->Statistics.m_workDone) / 4;
+	/*value = value + 10 / 2;
+	value -= value % 10;*/
+	int add = 0;
+	for (int i = 0; i < value; i += 5)
+	{
+		ss << "@";
+		add += 3;
+	}
+	RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(0, 1, 0), 3, 1, 30);
+	ss.str("");
+	for (int i = 0; i < 100 - value; i += 5)
+	{
+		ss << "@";
+	}
+	RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(1, 0, 0), 3, 1 + add, 30);
+}
+
+void StudioProjectScene::RenderCharObj(CharacterObject * go)
 {
 	switch (go->type)
 	{
@@ -624,7 +1011,7 @@ void StudioProjectScene::RenderGO(CharacterObject * go)
 		RenderMesh(meshList[GEO_QUAD], false);
 		modelStack.PopMatrix();
 		break;
-	case CharacterObject::GO_SPRITE_TEST:
+	case CharacterObject::GO_CHAR01:
 		if (go->getState() == true)
 		{
 			modelStack.PushMatrix();
@@ -632,13 +1019,13 @@ void StudioProjectScene::RenderGO(CharacterObject * go)
 			if (go->getDirection() == true)
 			{
 				modelStack.Scale(go->scale.x, go->scale.y, go->scale.z);
-				RenderMesh(meshList[GEO_WALKLEFT], false);
+				RenderMesh(meshList[GEO_CHARACTER01_MOVE_LEFT], false);
 				modelStack.PopMatrix();
 			}
 			else
 			{
 				modelStack.Scale(go->scale.x, go->scale.y, go->scale.z);
-				RenderMesh(meshList[GEO_WALKRIGHT], false);
+				RenderMesh(meshList[GEO_CHARACTER01_MOVE_RIGHT], false);
 				modelStack.PopMatrix();
 			}
 			break;
@@ -647,9 +1034,129 @@ void StudioProjectScene::RenderGO(CharacterObject * go)
 		{
 			modelStack.PushMatrix();
 			modelStack.Translate(go->pos.x, go->pos.y, go->pos.z);
-			modelStack.Scale(go->scale.x, go->scale.y, go->scale.z);
-			RenderMesh(meshList[GEO_SPRITE_TEST2], false);
-			modelStack.PopMatrix();
+			if (go->getDirection() == true)
+			{
+				modelStack.Scale(go->scale.x, go->scale.y, go->scale.z);
+				RenderMesh(meshList[GEO_CHARACTER01_IDLE_LEFT], false);
+				modelStack.PopMatrix();
+			}
+			else
+			{
+				modelStack.Scale(go->scale.x, go->scale.y, go->scale.z);
+				RenderMesh(meshList[GEO_CHARACTER01_IDLE_RIGHT], false);
+				modelStack.PopMatrix();
+			}
+			break;
+		}
+	case CharacterObject::GO_CHAR02:
+		if (go->getState() == true)
+		{
+			modelStack.PushMatrix();
+			modelStack.Translate(go->pos.x, go->pos.y, go->pos.z);
+			if (go->getDirection() == true)
+			{
+				modelStack.Scale(go->scale.x, go->scale.y, go->scale.z);
+				RenderMesh(meshList[GEO_CHARACTER02_MOVE_LEFT], false);
+				modelStack.PopMatrix();
+			}
+			else
+			{
+				modelStack.Scale(go->scale.x, go->scale.y, go->scale.z);
+				RenderMesh(meshList[GEO_CHARACTER02_MOVE_RIGHT], false);
+				modelStack.PopMatrix();
+			}
+			break;
+		}
+		else if (!go->getState())
+		{
+			modelStack.PushMatrix();
+			modelStack.Translate(go->pos.x, go->pos.y, go->pos.z);
+			if (go->getDirection() == true)
+			{
+				modelStack.Scale(go->scale.x, go->scale.y, go->scale.z);
+				RenderMesh(meshList[GEO_CHARACTER02_IDLE_LEFT], false);
+				modelStack.PopMatrix();
+			}
+			else
+			{
+				modelStack.Scale(go->scale.x, go->scale.y, go->scale.z);
+				RenderMesh(meshList[GEO_CHARACTER02_IDLE_RIGHT], false);
+				modelStack.PopMatrix();
+			}
+			break;
+		}
+	case CharacterObject::GO_CHAR03:
+		if (go->getState() == true)
+		{
+			modelStack.PushMatrix();
+			modelStack.Translate(go->pos.x, go->pos.y, go->pos.z);
+			if (go->getDirection() == true)
+			{
+				modelStack.Scale(go->scale.x, go->scale.y, go->scale.z);
+				RenderMesh(meshList[GEO_CHARACTER03_MOVE_LEFT], false);
+				modelStack.PopMatrix();
+			}
+			else
+			{
+				modelStack.Scale(go->scale.x, go->scale.y, go->scale.z);
+				RenderMesh(meshList[GEO_CHARACTER03_MOVE_RIGHT], false);
+				modelStack.PopMatrix();
+			}
+			break;
+		}
+		else if (!go->getState())
+		{
+			modelStack.PushMatrix();
+			modelStack.Translate(go->pos.x, go->pos.y, go->pos.z);
+			if (go->getDirection() == true)
+			{
+				modelStack.Scale(go->scale.x, go->scale.y, go->scale.z);
+				RenderMesh(meshList[GEO_CHARACTER03_IDLE_LEFT], false);
+				modelStack.PopMatrix();
+			}
+			else
+			{
+				modelStack.Scale(go->scale.x, go->scale.y, go->scale.z);
+				RenderMesh(meshList[GEO_CHARACTER03_IDLE_RIGHT], false);
+				modelStack.PopMatrix();
+			}
+			break;
+		}
+	case CharacterObject::GO_CHAR04:
+		if (go->getState() == true)
+		{
+			modelStack.PushMatrix();
+			modelStack.Translate(go->pos.x, go->pos.y, go->pos.z);
+			if (go->getDirection() == true)
+			{
+				modelStack.Scale(go->scale.x, go->scale.y, go->scale.z);
+				RenderMesh(meshList[GEO_CHARACTER04_MOVE_LEFT], false);
+				modelStack.PopMatrix();
+			}
+			else
+			{
+				modelStack.Scale(go->scale.x, go->scale.y, go->scale.z);
+				RenderMesh(meshList[GEO_CHARACTER04_MOVE_RIGHT], false);
+				modelStack.PopMatrix();
+			}
+			break;
+		}
+		else if (!go->getState())
+		{
+			modelStack.PushMatrix();
+			modelStack.Translate(go->pos.x, go->pos.y, go->pos.z);
+			if (go->getDirection() == true)
+			{
+				modelStack.Scale(go->scale.x, go->scale.y, go->scale.z);
+				RenderMesh(meshList[GEO_CHARACTER04_IDLE_LEFT], false);
+				modelStack.PopMatrix();
+			}
+			else
+			{
+				modelStack.Scale(go->scale.x, go->scale.y, go->scale.z);
+				RenderMesh(meshList[GEO_CHARACTER04_IDLE_RIGHT], false);
+				modelStack.PopMatrix();
+			}
 			break;
 		}
 	case CharacterObject::GO_TELEVISION:
@@ -660,12 +1167,77 @@ void StudioProjectScene::RenderGO(CharacterObject * go)
 		modelStack.PopMatrix();
 		break;
 
+	case CharacterObject::GO_COMPUTER:
+		modelStack.PushMatrix();
+		modelStack.Translate(go->pos.x, go->pos.y, go->pos.z);
+		modelStack.Scale(go->scale.x, go->scale.y, go->scale.z);
+		RenderMesh(meshList[GEO_COMPUTER], false);
+		modelStack.PopMatrix();
+		break;
+
 	default:
 		break;
 	}
 }
 
-CharacterObject * StudioProjectScene::FetchGO()
+void StudioProjectScene::RenderItemObj(ItemObject * go)
+{
+	switch (go->type)
+	{
+	case ItemObject::I_TELEVISION:
+		modelStack.PushMatrix();
+		modelStack.Translate(go->pos);
+		modelStack.PushMatrix();
+		modelStack.Scale(go->scale);
+		RenderMesh(meshList[GEO_TELEVISION], false);
+		modelStack.PopMatrix();
+		if (go->bounded)
+		{
+			modelStack.PushMatrix();
+			modelStack.Scale(go->scale * 1.1f);
+			RenderMesh(meshList[GEO_BORDER], false);
+			modelStack.PopMatrix();
+		}
+		modelStack.PopMatrix();
+		break;
+	case ItemObject::I_COMPUTER:
+		modelStack.PushMatrix();
+		modelStack.Translate(go->pos);
+		modelStack.PushMatrix();
+		modelStack.Scale(go->scale);
+		RenderMesh(meshList[GEO_COMPUTER], false);
+		modelStack.PopMatrix();
+		if (go->bounded)
+		{
+			modelStack.PushMatrix();
+			modelStack.Scale(go->scale * 1.1f);
+			RenderMesh(meshList[GEO_BORDER], false);
+			modelStack.PopMatrix();
+		}
+		modelStack.PopMatrix();
+		break;
+	case ItemObject::I_BOX:
+		modelStack.PushMatrix();
+		modelStack.Translate(go->pos);
+		modelStack.PushMatrix();
+		modelStack.Scale(go->scale);
+		RenderMesh(meshList[GEO_SLEEPBOX], false);
+		modelStack.PopMatrix();
+		if (go->bounded)
+		{
+			modelStack.PushMatrix();
+			modelStack.Scale(go->scale * 1.1f);
+			RenderMesh(meshList[GEO_BORDER], false);
+			modelStack.PopMatrix();
+		}
+		modelStack.PopMatrix();
+		break;
+	default:
+		break;
+	}
+}
+
+GameObject * StudioProjectScene::FetchGO()
 {
 	for (int i = 0; i < m_goList.size(); i++)
 	{
@@ -678,7 +1250,7 @@ CharacterObject * StudioProjectScene::FetchGO()
 
 	for (int i = 0; i < 20; ++i)
 	{
-		m_goList.push_back(new CharacterObject(CharacterObject::GO_NONE));
+		m_goList.push_back(new GameObject);
 	}
 	m_goList[m_goList.size() - 1]->active = true;
 	return m_goList[m_goList.size() - 1];
@@ -705,373 +1277,111 @@ void StudioProjectScene::Exit()
 void StudioProjectScene::RenderBG()
 {
 	modelStack.PushMatrix();
-	modelStack.Translate(m_worldWidth / 2, m_worldHeight / 2, 0);
-	modelStack.Scale(198, 108, 1);
+	modelStack.Translate(m_worldWidth * 0.5f, m_worldHeight * 0.5f, 0);
+	modelStack.Scale(Application::GetWindowWidth() / 6, Application::GetWindowHeight() / 6, 1);
 	RenderMesh(meshList[GEO_BACKGROUND], false);
 	modelStack.PopMatrix();
 }
 
-void StudioProjectScene::RenderCharacter1()
+void StudioProjectScene::RenderScreen(Screen* ScreenSplit)
 {
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-	//Calculating aspect ratio
-	m_worldHeight = 100.f;
-	m_worldWidth = m_worldHeight * (float)Application::GetWindowWidth() / Application::GetWindowHeight();
-
-	// Projection matrix : Orthographic Projection
-	Mtx44 projection;
-	projection.SetToOrtho(0, m_worldWidth, 0, m_worldHeight, -10, 10);
-	projectionStack.LoadMatrix(projection);
-
-	// viewTest1 matrix
-	viewStack.LoadIdentity();
-	viewStack.LookAt(
-		camera.position.x, camera.position.y, camera.position.z,
-		camera.target.x, camera.target.y, camera.target.z,
-		camera.up.x, camera.up.y, camera.up.z
-	);
-	// Model matrix : an identity matrix (model will be at the origin)
-	modelStack.LoadIdentity();
 
 	// BackGround
 	RenderBG();
 
 	// Props
-
-
-	if (currentChar == charOne)
+	if (currentChar == ScreenSplit->Character)
 	{
 		RenderArrow();
 	}
-
-
-
-	//// Character
-	if (Television->active)
+	for (int i = 0; i < ScreenSplit->m_itemList.size(); ++i)
 	{
-		RenderGO(Television);
-	}
-	if (charOne->active)
-		RenderGO(charOne);
-}
-
-void StudioProjectScene::RenderCharacter2()
-{
-	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-	//Calculating aspect ratio
-	m_worldHeight = 100.f;
-	m_worldWidth = m_worldHeight * (float)Application::GetWindowWidth() / Application::GetWindowHeight();
-
-	// Projection matrix : Orthographic Projection
-	Mtx44 projection;
-	projection.SetToOrtho(0, m_worldWidth, 0, m_worldHeight, -10, 10);
-	projectionStack.LoadMatrix(projection);
-
-	// viewTest1 matrix
-	viewStack.LoadIdentity();
-	viewStack.LookAt(
-		camera.position.x, camera.position.y, camera.position.z,
-		camera.target.x, camera.target.y, camera.target.z,
-		camera.up.x, camera.up.y, camera.up.z
-	);
-	// Model matrix : an identity matrix (model will be at the origin)
-	modelStack.LoadIdentity();
-
-	// BackGround
-	RenderBG();
-
-	// Props
-	if (currentChar == charTwo)
-	{
-		RenderArrow();
-	}
-	if (Television2->active)
-	{
-		RenderGO(Television2);
+		if (ScreenSplit->m_itemList[i]->active)
+		{
+			RenderItemObj(ScreenSplit->m_itemList[i]);
+		}
 	}
 	// Character
-	if (charTwo->active)
-		RenderGO(charTwo);
+	if (ScreenSplit->Character->active)
+		RenderCharObj(ScreenSplit->Character);
 }
 
-void StudioProjectScene::RenderCharacter3()
+void StudioProjectScene::RenderStats(CharacterObject* Character)
 {
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-	//Calculating aspect ratio
-	m_worldHeight = 100.f;
-	m_worldWidth = m_worldHeight * (float)Application::GetWindowWidth() / Application::GetWindowHeight();
 
-	// Projection matrix : Orthographic Projection
-	Mtx44 projection;
-	projection.SetToOrtho(0, m_worldWidth, 0, m_worldHeight, -10, 10);
-	projectionStack.LoadMatrix(projection);
-
-	// viewTest1 matrix
-	viewStack.LoadIdentity();
-	viewStack.LookAt(
-		camera.position.x, camera.position.y, camera.position.z,
-		camera.target.x, camera.target.y, camera.target.z,
-		camera.up.x, camera.up.y, camera.up.z
-	);
-	// Model matrix : an identity matrix (model will be at the origin)
-	modelStack.LoadIdentity();
-
-	// BackGround
-	RenderBG();
-
-	// Props
-	if (currentChar == charThree)
-	{
-		RenderArrow();
-	}
-	if (Television3->active)
-	{
-		RenderGO(Television3);
-	}
-	// Character
-	if (charThree->active)
-	RenderGO(charThree);
-}
-
-void StudioProjectScene::RenderCharacter4()
-{
-	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-	//Calculating aspect ratio
-	m_worldHeight = 100.f;
-	m_worldWidth = m_worldHeight * (float)Application::GetWindowWidth() / Application::GetWindowHeight();
-
-	// Projection matrix : Orthographic Projection
-	Mtx44 projection;
-	projection.SetToOrtho(0, m_worldWidth, 0, m_worldHeight, -10, 10);
-	projectionStack.LoadMatrix(projection);
-
-	// viewTest1 matrix
-	viewStack.LoadIdentity();
-	viewStack.LookAt(
-		camera.position.x, camera.position.y, camera.position.z,
-		camera.target.x, camera.target.y, camera.target.z,
-		camera.up.x, camera.up.y, camera.up.z
-	);
-	// Model matrix : an identity matrix (model will be at the origin)
-	modelStack.LoadIdentity();
-
-	// BackGround
-	RenderBG();
-
-	// Props
-	if (currentChar == charFour)
-	{
-		RenderArrow();
-	}
-	if (Television4->active)
-	{
-		RenderGO(Television4);
-	}
-	// Character
-	if (charFour->active)
-	RenderGO(charFour);
-}
-
-void StudioProjectScene::RenderStats1()
-{
-	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-	//Calculating aspect ratio
-	m_worldHeight = 100.f;
-	m_worldWidth = m_worldHeight * (float)Application::GetWindowWidth() / Application::GetWindowHeight();
-
-	// Projection matrix : Orthographic Projection
-	Mtx44 projection;
-	projection.SetToOrtho(0, m_worldWidth, 0, m_worldHeight, -10, 10);
-	projectionStack.LoadMatrix(projection);
-
-	// viewTest1 matrix
-	viewStack.LoadIdentity();
-	viewStack.LookAt(
-		camera.position.x, camera.position.y, camera.position.z,
-		camera.target.x, camera.target.y, camera.target.z,
-		camera.up.x, camera.up.y, camera.up.z
-	);
-	// Model matrix : an identity matrix (model will be at the origin)
-	modelStack.LoadIdentity();
-
-	// BackGround
-
-	// RenderStats here
 	modelStack.PushMatrix();
-	modelStack.Translate(m_worldWidthDiv8 + 10 , m_worldHeight / 2, 0);
-	modelStack.Scale(5, 10, 1);
+	modelStack.Translate(m_worldWidthDiv8 + 10 + Character->Statistics.m_frustration / 2, m_worldHeight / 2 + 15, 0);
+	modelStack.Scale(Character->Statistics.m_frustration, 25, 1);
 	RenderMesh(meshList[GEO_CHARONEFRUST], false);
 	modelStack.PopMatrix();
 
 	modelStack.PushMatrix();
-	modelStack.Translate(m_worldWidthDiv8 + 15, m_worldHeight / 2 + 15, 0);
-	modelStack.Scale(5, 10, 1);
+	modelStack.Translate(m_worldWidthDiv8 + 15 + Character->Statistics.m_motivation / 2, m_worldHeight / 2 + 60, 0);
+	modelStack.Scale(Character->Statistics.m_motivation, 25, 1);
 	RenderMesh(meshList[GEO_CHARONEMOTIVE], false);
 	modelStack.PopMatrix();
 
 	modelStack.PushMatrix();
-	modelStack.Translate(m_worldWidthDiv8 + 5, m_worldHeight / 2 - 15 , 0);
-	modelStack.Scale(5, 10, 1);
+	modelStack.Translate(m_worldWidthDiv8 + 5 + Character->Statistics.m_rest / 2, m_worldHeight / 2 - 30, 0);
+	modelStack.Scale(Character->Statistics.m_rest, 25, 1);
 	RenderMesh(meshList[GEO_CHARONEREST], false);
 	modelStack.PopMatrix();
 
 	modelStack.PushMatrix();
-	modelStack.Translate(m_worldWidthDiv8, m_worldHeight / 2 - 30, 0);
-	modelStack.Scale(5, 10, 1);
+	modelStack.Translate(m_worldWidthDiv8 + Character->Statistics.m_workDone / 2, m_worldHeight / 2 - 75, 0);
+	modelStack.Scale(Character->Statistics.m_workDone, 25, 1);
 	RenderMesh(meshList[GEO_CHARONEWD], false);
 	modelStack.PopMatrix();
 }
 
-void StudioProjectScene::RenderStats2()
+void StudioProjectScene::RenderMenu(Screen* ScreenSplit)
 {
-	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-	//Calculating aspect ratio
-	m_worldHeight = 100.f;
-	m_worldWidth = m_worldHeight * (float)Application::GetWindowWidth() / Application::GetWindowHeight();
-
-	// Projection matrix : Orthographic Projection
-	Mtx44 projection;
-	projection.SetToOrtho(0, m_worldWidth, 0, m_worldHeight, -10, 10);
-	projectionStack.LoadMatrix(projection);
-
-	// viewTest1 matrix
-	viewStack.LoadIdentity();
-	viewStack.LookAt(
-		camera.position.x, camera.position.y, camera.position.z,
-		camera.target.x, camera.target.y, camera.target.z,
-		camera.up.x, camera.up.y, camera.up.z
-	);
-	// Model matrix : an identity matrix (model will be at the origin)
-	modelStack.LoadIdentity();
-
-	// BackGround
-
-	// RenderStats here
 	modelStack.PushMatrix();
-	modelStack.Translate(m_worldWidthDiv8 + 15, m_worldHeight / 2 + 15, 0);
-	modelStack.Scale(5, 10, 1);
-	RenderMesh(meshList[GEO_CHARTWOMOTIVE], false);
+	modelStack.Translate(ScreenSplit->UseItem->pos);
+	modelStack.Scale(ScreenSplit->UseItem->scale);
+	if (ScreenSplit->Character->currentItem)
+	{
+		if (ScreenSplit->UseItem->changed)
+		{
+			RenderMesh(meshList[GEO_MAIN_STOP], false);
+		}
+		else
+		{
+			RenderMesh(meshList[GEO_MAIN_USE], false);
+		}
+	}
 	modelStack.PopMatrix();
-
 	modelStack.PushMatrix();
-	modelStack.Translate(m_worldWidthDiv8 + 10, m_worldHeight / 2, 0);
-	modelStack.Scale(5, 10, 1);
-	RenderMesh(meshList[GEO_CHARTWOFRUST], false);
+	modelStack.Translate(ScreenSplit->UseItem->pos.x - m_worldWidth * 0.05, ScreenSplit->UseItem->pos.y, ScreenSplit->UseItem->pos.z);
+	modelStack.PushMatrix();
+	modelStack.Scale(13, 13, 1);
+	if (ScreenSplit->Character->currentItem)
+	{
+		switch (ScreenSplit->Character->currentItem->type)
+		{
+		case ItemObject::I_TELEVISION:
+		{
+			RenderMesh(meshList[GEO_TELEVISION], false);
+			break;
+		}
+		case ItemObject::I_COMPUTER:
+		{
+			RenderMesh(meshList[GEO_COMPUTER], false);
+			break;
+		}
+		case ItemObject::I_BOX:
+		{
+			RenderMesh(meshList[GEO_SLEEPBOX], false);
+			break;
+		}
+		}
+	}
 	modelStack.PopMatrix();
-
 	modelStack.PushMatrix();
-	modelStack.Translate(m_worldWidthDiv8 + 5, m_worldHeight / 2 - 15, 0);
-	modelStack.Scale(5, 10, 1);
-	RenderMesh(meshList[GEO_CHARTWOREST], false);
+	modelStack.Scale(15, 15, 1);
+	RenderMesh(meshList[GEO_BORDER], false);
 	modelStack.PopMatrix();
-
-	modelStack.PushMatrix();
-	modelStack.Translate(m_worldWidthDiv8, m_worldHeight / 2 - 30, 0);
-	modelStack.Scale(5, 10, 1);
-	RenderMesh(meshList[GEO_CHARTWOWD], false);
-	modelStack.PopMatrix();
-}
-
-
-void StudioProjectScene::RenderStats3()
-{
-	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-	//Calculating aspect ratio
-	m_worldHeight = 100.f;
-	m_worldWidth = m_worldHeight * (float)Application::GetWindowWidth() / Application::GetWindowHeight();
-
-	// Projection matrix : Orthographic Projection
-	Mtx44 projection;
-	projection.SetToOrtho(0, m_worldWidth, 0, m_worldHeight, -10, 10);
-	projectionStack.LoadMatrix(projection);
-
-	// viewTest1 matrix
-	viewStack.LoadIdentity();
-	viewStack.LookAt(
-		camera.position.x, camera.position.y, camera.position.z,
-		camera.target.x, camera.target.y, camera.target.z,
-		camera.up.x, camera.up.y, camera.up.z
-	);
-	// Model matrix : an identity matrix (model will be at the origin)
-	modelStack.LoadIdentity();
-
-	// BackGround
-
-	// RenderStats here
-	modelStack.PushMatrix();
-	modelStack.Translate(m_worldWidthDiv8 + 15, m_worldHeight / 2 + 15, 0);
-	modelStack.Scale(5, 10, 1);
-	RenderMesh(meshList[GEO_CHARTHREEMOTIVE], false);
-	modelStack.PopMatrix();
-
-	modelStack.PushMatrix();
-	modelStack.Translate(m_worldWidthDiv8 + 10, m_worldHeight / 2, 0);
-	modelStack.Scale(5, 10, 1);
-	RenderMesh(meshList[GEO_CHARTHREEFRUST], false);
-	modelStack.PopMatrix();
-
-
-	modelStack.PushMatrix();
-	modelStack.Translate(m_worldWidthDiv8 + 5, m_worldHeight / 2 - 15, 0);
-	modelStack.Scale(5, 10, 1);
-	RenderMesh(meshList[GEO_CHARTHREEREST], false);
-	modelStack.PopMatrix();
-
-	modelStack.PushMatrix();
-	modelStack.Translate(m_worldWidthDiv8, m_worldHeight / 2 - 30, 0);
-	modelStack.Scale(5, 10, 1);
-	RenderMesh(meshList[GEO_CHARTHREEWD], false);
-	modelStack.PopMatrix();
-}
-
-
-void StudioProjectScene::RenderStats4()
-{
-	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-	//Calculating aspect ratio
-	m_worldHeight = 100.f;
-	m_worldWidth = m_worldHeight * (float)Application::GetWindowWidth() / Application::GetWindowHeight();
-
-	// Projection matrix : Orthographic Projection
-	Mtx44 projection;
-	projection.SetToOrtho(0, m_worldWidth, 0, m_worldHeight, -10, 10);
-	projectionStack.LoadMatrix(projection);
-
-	// viewTest1 matrix
-	viewStack.LoadIdentity();
-	viewStack.LookAt(
-		camera.position.x, camera.position.y, camera.position.z,
-		camera.target.x, camera.target.y, camera.target.z,
-		camera.up.x, camera.up.y, camera.up.z
-	);
-	// Model matrix : an identity matrix (model will be at the origin)
-	modelStack.LoadIdentity();
-
-	// BackGround
-
-	// RenderStats here
-
-	modelStack.PushMatrix();
-	modelStack.Translate(m_worldWidthDiv8 + 15, m_worldHeight / 2 + 15, 0);
-	modelStack.Scale(5, 10, 1);
-	RenderMesh(meshList[GEO_CHARFOURMOTIVE], false);
-	modelStack.PopMatrix();
-
-	modelStack.PushMatrix();
-	modelStack.Translate(m_worldWidthDiv8 + 10, m_worldHeight / 2, 0);
-	modelStack.Scale(5, 10, 1);
-	RenderMesh(meshList[GEO_CHARFOURFRUST], false);
-	modelStack.PopMatrix();
-
-	modelStack.PushMatrix();
-	modelStack.Translate(m_worldWidthDiv8 + 5, m_worldHeight / 2 - 15, 0);
-	modelStack.Scale(5, 10, 1);
-	RenderMesh(meshList[GEO_CHARFOURREST], false);
-	modelStack.PopMatrix();
-
-	modelStack.PushMatrix();
-	modelStack.Translate(m_worldWidthDiv8, m_worldHeight / 2 - 30, 0);
-	modelStack.Scale(5, 10, 1);
-	RenderMesh(meshList[GEO_CHARFOURWD], false);
 	modelStack.PopMatrix();
 }
