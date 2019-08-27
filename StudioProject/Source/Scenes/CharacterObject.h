@@ -34,6 +34,7 @@ public:
 	bool isMoving;
 
 	bool getDirection();
+	void reset();
 	void setDirection(bool leftTrue);
 	bool getState();
 	void setState(bool moving);

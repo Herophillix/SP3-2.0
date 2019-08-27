@@ -29,7 +29,7 @@ void StudioProjectScene::Init()
 	//Variables here
 	m_speed = 1.f;
 	Math::InitRNG();
-	m_eventTimer = 10;//Math::RandFloatMinMax(20.0f, 40.f);
+	m_eventTimer = Math::RandFloatMinMax(20.0f, 40.f);
 	b_transitioning = false;
 	playMusic = false;
 	meshList[GEO_QUAD] = MeshBuilder::GenerateQuad("test", Color(1, 1, 1), 1.f);
@@ -43,7 +43,7 @@ void StudioProjectScene::Init()
 	meshList[GEO_TELEVISION]->textureID = LoadTGA("Image//Item_TV.tga");
 	meshList[GEO_COMPUTER] = MeshBuilder::GenerateQuad("Computer", Color(1, 1, 1), 1.f);
 	meshList[GEO_COMPUTER]->textureID = LoadTGA("Image//Item_Comp.tga");
-	meshList[GEO_SLEEPBOX] = MeshBuilder::GenerateQuad("SleepingBox", Color(1, 1, 1), 1.f);
+	meshList[GEO_SLEEPBOX] = MeshBuilder::GenerateQuad("SleepingBox", Color(1, 1, 1), 1.f);l
 	meshList[GEO_SLEEPBOX]->textureID = LoadTGA("Image//Item_Box.tga");
 	meshList[GEO_BORDER] = MeshBuilder::GenerateQuad("Border", Color(1, 1, 1), 1.f);
 	meshList[GEO_BORDER]->textureID = LoadTGA("Image//Border.tga");
@@ -57,7 +57,8 @@ void StudioProjectScene::Init()
 	meshList[GEO_MAIN_STOP]->textureID = LoadTGA("Image//Main_Stop.tga");
 	meshList[GEO_MAIN_CONTINUE] = MeshBuilder::GenerateQuad("Continue", Color(1, 1, 1), 1.f);
 	meshList[GEO_MAIN_CONTINUE]->textureID = LoadTGA("Image//Main_Continue.tga");
-
+	meshList[GEO_LOSESCREEN] = MeshBuilder::GenerateQuad("LoseScreen", Color(1, 1, 1), 1.f);
+	meshList[GEO_LOSESCREEN]->textureID = LoadTGA("Image//Lose_Screen.tga");l
 
 	// CHARACTER SPRITE ANIMATIONS
 	meshList[GEO_CHARACTER01_IDLE_LEFT] = MeshBuilder::GenerateSpriteAnimation("c01_idle_left", 1, 4);
@@ -325,7 +326,7 @@ void StudioProjectScene::Update(double dt)
 	}
 	case S_GAMEOVER:
 	{
-
+		UpdateLoseScreen();
 		break;
 	}
 	default:
@@ -418,7 +419,10 @@ void StudioProjectScene::UpdateGame(double dt)
 			ItemObject::CurrentScreenID = ItemObject::UpR;
 		}
 	}
-
+	if (m_Count == 0)
+	{
+		
+	}
 
 	static bool bLButtonState = false;
 	if (!bLButtonState && Application::IsMousePressed(0))
@@ -616,6 +620,35 @@ void StudioProjectScene::UpdateGame(double dt)
 	}
 }
 
+void StudioProjectScene::UpdateLoseScreen(double dt)
+{
+	if (Application::IsKeyPressed(VK_SPACE))
+	{
+		Application::setScene(6);
+		reset();
+	}
+}
+
+void StudioProjectScene::reset()
+{
+	m_speed = 1.f;
+	m_speed = 1.f;
+	m_eventTimer = Math::RandFloatMinMax(20.0f, 40.f);
+	b_transitioning = false;
+	playMusic = false;
+	ScreenSplit[0]->Character->reset();
+	ScreenSplit[1]->Character->reset();
+	ScreenSplit[2]->Character->reset();
+	ScreenSplit[3]->Character->reset();
+	currentChar = ScreenSplit[0]->Character;
+	phase = 4;
+	prevlevel = 0;
+	currentlevel = 0;
+	SceneState = S_GAME;
+
+	Continue->pos = Vector3(m_worldWidth * 0.9f, m_worldHeight * 0.1f, 0);
+	Continue->active = true;
+}
 void StudioProjectScene::UpdateLevelTransition(double dt)
 {
 	Continue->Update(v_mousepos);
@@ -755,6 +788,7 @@ void StudioProjectScene::Render()
 	}
 	default:
 	{
+		RenderLoseScreen();
 		break;
 	}
 	}
@@ -890,6 +924,33 @@ void StudioProjectScene::RenderGame()
 	}
 }
 
+void StudioProjectScene::RenderLoseScreen()
+{
+	glViewport(0, 0, 1920, 1080);
+	glClearColor(0, 0, 0, 0.f);
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+	// Projection matrix : Orthographic Projection
+	Mtx44 projection;
+	projection.SetToOrtho(0, m_worldWidth, 0, m_worldHeight, -10, 10);
+	projectionStack.LoadMatrix(projection);
+
+	// viewTest1 matrix
+	viewStack.LoadIdentity();
+	viewStack.LookAt(
+		camera.position.x, camera.position.y, camera.position.z,
+		camera.target.x, camera.target.y, camera.target.z,
+		camera.up.x, camera.up.y, camera.up.z
+	);
+	// Model matrix : an identity matrix (model will be at the origin)
+	modelStack.LoadIdentity();
+
+	modelStack.PushMatrix();
+	modelStack.Translate(m_worldWidth / 2, m_worldHeight / 2, 0);
+	modelStack.Scale(m_worldWidth, m_worldWidth, 0);
+	RenderMesh(meshList[GEO_LOSESCREEN], false);
+	modelStack.PopMatrix();
+}
 void StudioProjectScene::RenderLevelTransition()
 {
 	glViewport(0, 0, 1920, 1080);
