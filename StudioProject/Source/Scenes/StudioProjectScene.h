@@ -18,6 +18,7 @@ public:
 		S_GAME,
 		S_LEVELTRANSITION,
 		S_GAMEOVER,
+		S_GAMEWIN,
 	};
 
 

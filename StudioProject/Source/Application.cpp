@@ -97,7 +97,6 @@ void Application::Init()
 	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE); //We don't want the old OpenGL
 
 	//Create a window and create its OpenGL context
-	// glfwGetPrimaryMonitor()
 	m_width = 1920;
 	m_height = 1080;
 
