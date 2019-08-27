@@ -126,7 +126,15 @@ void CharacterObject::Update(double dt)
 		counted = true;
 	}
 }
-
+void CharacterObject::reset()
+{
+	Statistics.m_frustration = 0.005f;
+	Statistics.m_motivation = 100.f;
+	Statistics.m_rest = 100.f;
+	Statistics.m_workDone = 0.0f;
+	giveUp = false;
+	m_Count = 4;
+}
 void CharacterObject::UpdateMovement(double dt, float m_worldWidth, float m_worldHeight)
 {
 	if (Application::IsKeyPressed('D') || Application::IsKeyPressed('A') || Application::IsKeyPressed('S') || Application::IsKeyPressed('W'))

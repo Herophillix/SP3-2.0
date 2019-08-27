@@ -28,9 +28,12 @@ public:
 	virtual void Update(double dt);
 	void UpdateGame(double dt);
 	void UpdateLevelTransition(double dt);
+	void UpdateLoseScreen(double dt);
 	virtual void Render();
 	void RenderGame();
 	void RenderLevelTransition();
+	void RenderLoseScreen();
+	void reset();
 	virtual void Exit();
 
 	void RenderCharObj(CharacterObject *go);
