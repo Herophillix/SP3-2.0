@@ -34,6 +34,7 @@ public:
 	void RenderGame();
 	void RenderLevelTransition();
 	void RenderLoseScreen();
+	void RenderWinScreen();
 	void reset();
 	virtual void Exit();
 

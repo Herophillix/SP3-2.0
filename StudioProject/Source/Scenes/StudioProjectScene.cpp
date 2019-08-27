@@ -59,6 +59,8 @@ void StudioProjectScene::Init()
 	meshList[GEO_MAIN_CONTINUE]->textureID = LoadTGA("Image//Main_Continue.tga");
 	meshList[GEO_LOSESCREEN] = MeshBuilder::GenerateQuad("LoseScreen", Color(1, 1, 1), 1.f);
 	meshList[GEO_LOSESCREEN]->textureID = LoadTGA("Image//Lose_Screen.tga");
+	meshList[GEO_WINSCREEN] = MeshBuilder::GenerateQuad("WinScreen", Color(1, 1, 1), 1.f);
+	meshList[GEO_WINSCREEN]->textureID = LoadTGA("Image//WinScreen.tga");
 
 	// CHARACTER SPRITE ANIMATIONS
 	meshList[GEO_CHARACTER01_IDLE_LEFT] = MeshBuilder::GenerateSpriteAnimation("c01_idle_left", 1, 4);
@@ -333,6 +335,11 @@ void StudioProjectScene::Update(double dt)
 		UpdateLoseScreen(dt);
 		break;
 	}
+	case S_GAMEWIN:
+	{
+		UpdateLoseScreen(dt);
+		break;
+	}
 	default:
 	{
 		break;
@@ -379,6 +386,10 @@ void StudioProjectScene::Update(double dt)
 		}
 		}
 
+	}
+	if (day == 5)
+	{
+		SceneState == S_GAMEWIN;
 	}
 	UpdateParticles(dt);
 	//cout << "Event Timer : " << m_eventTimer << endl;
@@ -769,6 +780,35 @@ void StudioProjectScene::RenderArrow()
 	RenderMesh(meshList[GEO_ARROW], false);
 	modelStack.PopMatrix();
 }
+void StudioProjectScene::RenderWinScreen()
+{
+	glViewport(0, 0, 1920, 1080);
+	glClearColor(0, 0, 0, 0.f);
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+	// Projection matrix : Orthographic Projection
+	Mtx44 projection;
+	projection.SetToOrtho(0, m_worldWidth, 0, m_worldHeight, -10, 10);
+	projectionStack.LoadMatrix(projection);
+
+	// viewTest1 matrix
+	viewStack.LoadIdentity();
+	viewStack.LookAt(
+		camera.position.x, camera.position.y, camera.position.z,
+		camera.target.x, camera.target.y, camera.target.z,
+		camera.up.x, camera.up.y, camera.up.z
+	);
+	// Model matrix : an identity matrix (model will be at the origin)
+	modelStack.LoadIdentity();
+
+	modelStack.PushMatrix();
+	modelStack.Translate(m_worldWidth / 2, m_worldHeight / 2, 0);
+	modelStack.Scale(m_worldWidth, m_worldWidth, 0);
+	RenderMesh(meshList[GEO_WINSCREEN], false);
+	modelStack.PopMatrix();
+
+
+}
 
 // ********************************************** DO NOT TOUCH RENDER ANYMORE *******************************************//
 
@@ -784,6 +824,11 @@ void StudioProjectScene::Render()
 	case S_LEVELTRANSITION:
 	{
 		RenderLevelTransition();
+		break;
+	}
+	case S_GAMEWIN:
+	{
+
 		break;
 	}
 	default:
