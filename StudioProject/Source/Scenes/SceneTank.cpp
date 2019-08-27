@@ -73,6 +73,8 @@ void SceneTank::Init()
 	meshList[GEO_TANK_INSTRUCTIONS]->textureID = LoadTGA("Image//Tank_Instructions.tga");
 	meshList[GEO_TANK_BACK] = MeshBuilder::GenerateQuad("Back", Color(1, 1, 1), 1.f);
 	meshList[GEO_TANK_BACK]->textureID = LoadTGA("Image//Tank_Back.tga");
+	meshList[GEO_TANK_RAIN] = MeshBuilder::GenerateQuad("Back", Color(1, 1, 1), 1.f);
+	meshList[GEO_TANK_RAIN]->textureID = LoadTGA("Image//Tank_Back.tga");
 
 	//Physics code here
 	m_speed = 1.f;
@@ -180,7 +182,7 @@ void SceneTank::Init()
 		Tank[i]->Init(m_goList);
 		if (i % 2  == 0)
 		{
-			Tank[i]->isPlayer = true;
+			Tank[i]->setIsPlayer(true);
 			TankObject::PlayerTankCount++;
 		}
 		else
@@ -245,8 +247,12 @@ void SceneTank::Init()
 
 	mousepressed = false;
 
-	soundSystem.AddSound("Hit", "Sounds//Hammer_Whack.wav");
+	soundSystem.AddSound("Tank_Shoot", "Sounds//Tank_Shoot.wav");
+	soundSystem.AddSound("Tank_Bounce", "Sounds//Tank_Bounce.wav");
 	soundSystem.playWaMoleMusic();
+
+	m_particleCount = 0;
+	Particlebuffertime = 0.0;
 }
 
 void SceneTank::Update(double dt)
@@ -351,6 +357,9 @@ void SceneTank::UpdateGame(double dt)
 	{
 		SceneState = S_GAMEOVER;
 	}
+
+	UpdateParticle(dt);
+
 	// James 14/8/2019
 	tempwall->pos = Vector3(m_worldWidth*0.5, m_worldHeight * 0.25f, 0);
 	tempwall->scale.Set(5, m_worldWidth, 1);
@@ -391,17 +400,17 @@ void SceneTank::UpdateGame(double dt)
 	//}
 
 	static bool bLButtonState = false;
-	if (!bLButtonState && Application::IsMousePressed(0) && !ballthrown && TankObject::currentTank->isPlayer)
+	if (!bLButtonState && Application::IsMousePressed(0) && !ballthrown && TankObject::currentTank->getIsPlayer())
 	{
 		bLButtonState = true;
 		std::cout << "LBUTTON DOWN" << std::endl;
 		// James 13/8/2019
 		Ghost->active = true;
-		Ghost->pos = TankObject::currentTank->Head->pos;
+		Ghost->pos = TankObject::currentTank->getHead()->pos;
 		OldPos = v_mousepos;
 		// End James 13/8/2019
 	}
-	else if (bLButtonState && !Application::IsMousePressed(0) && !ballthrown && TankObject::currentTank->isPlayer)
+	else if (bLButtonState && !Application::IsMousePressed(0) && !ballthrown && TankObject::currentTank->getIsPlayer())
 	{
 		bLButtonState = false;
 		std::cout << "LBUTTON UP" << std::endl;
@@ -414,10 +423,11 @@ void SceneTank::UpdateGame(double dt)
 			Ball->vel = OldPos - v_mousepos;
 			Ball->vel = Math::Clamp(Ball->vel.Length(), 0.f, 50.f) * Ball->vel.Normalized();
 			Ball->scale.Set(2, 2, 1);
-			TankObject::currentTank->Ball = Ball;
+			TankObject::currentTank->setBall(Ball);
 			ballthrown = true;
 			TankChange = true;
 			ballcollisionnum = 0;
+			soundSystem.PlayASound("Tank_Shoot");
 			// End James 13/8/2019
 			// James 15/8/2019
 			//	Ball = temp;
@@ -431,7 +441,7 @@ void SceneTank::UpdateGame(double dt)
 		if (TankObject::PlayerTankCount > 0 && TankChange)
 		{
 			++turn;
-			TankObject::currentTank->Ball = nullptr;
+			TankObject::currentTank->setBall(nullptr);
 			bool done = false;
 			while (!done)
 			{
@@ -443,7 +453,7 @@ void SceneTank::UpdateGame(double dt)
 				if (TankObject::currentTank->active)
 				{
 					done = true;
-					TankObject::currentTank->fuel = 100;
+					TankObject::currentTank->setFuel(100);
 					TankChange = false;
 					velocity = 0.f;
 				}
@@ -494,7 +504,7 @@ void SceneTank::UpdateGame(double dt)
 		{
 			CheckCollisionTank(TankObject::currentTank, Tank[i]);
 		}
-		if (Tank[i]->active && !Tank[i]->isPlayer && TankObject::currentTank == Tank[i] && !ballthrown)
+		if (Tank[i]->active && !Tank[i]->getIsPlayer() && TankObject::currentTank == Tank[i] && !ballthrown)
 		{
 			UpdateAI(Tank[i], dt);
 		}
@@ -532,7 +542,7 @@ void SceneTank::UpdateGame(double dt)
 					{
 						if (go == Ball)
 						{
-							soundSystem.PlayASound("Hit");
+							soundSystem.PlayASound("Tank_Bounce");
 							if (++ballcollisionnum > 4)
 							{
 								go->active = false;
@@ -560,9 +570,9 @@ void SceneTank::UpdateMenu(double dt)
 	for (int i = 0; i < (int)m_menuList.size(); ++i)
 	{
 		m_menuList[i]->Update(v_mousepos);
-		if (m_menuList[i]->changed)
+		if (m_menuList[i]->getChanged())
 		{
-			m_menuList[i]->changed = false;
+			m_menuList[i]->setChanged(false);
 			SceneState = S_GAME;
 			switch (m_menuList[i]->type)
 			{
@@ -719,10 +729,10 @@ void SceneTank::UpdateMenu(double dt)
 void SceneTank::UpdateInstructions(double dt)
 {
 	back->Update(v_mousepos);
-	if (back->changed)
+	if (back->getChanged())
 	{
 		SceneState = S_MENU;
-		back->changed = false;
+		back->setChanged(false);
 	}
 }
 
@@ -885,7 +895,7 @@ void SceneTank::UpdateRayTracing(double dt)
 		temp.vel = Math::Clamp(temp.vel.Length(), 0.f, 50.f) * temp.vel.Normalized();
 		velocity = temp.vel.Length();
 		temp.type = PhysicsObject::GO_TRACE;
-		TankObject::currentTank->Ball = &temp;
+		TankObject::currentTank->setBall(&temp);
 		float time = 0.f;
 		int index = 0;
 		float accumulatedtime = 0.f;
@@ -920,19 +930,6 @@ void SceneTank::UpdateRayTracing(double dt)
 				index++;
 			}
 		}
-		//std::cout << time << std::endl;
-		//for (int i = 0; i < TraceSize; ++i)
-		//{
-		//	Trace[i]->active = true;
-		//	//Vector3 AddValue;
-		//	/*while (prevpos != Ghost->pos && abs(temppos.Length() - prevpos.Length()) < 2)
-		//	{
-		//	}*/
-		//	//tempvel += m_gravity * dt;
-		//	temppos += tempvel.Normalized() * dt * 750;
-		//	Trace[i]->pos = temppos;
-		//	//prevpos = temppos;
-		//}
 	}
 	else
 	{
@@ -955,16 +952,16 @@ void SceneTank::UpdateAI(TankObject* com, double dt)
 	Vector3 straightLine;
 	for (int i = 0; i < TankObject::MaxTank; ++i)
 	{
-		if (Tank[i]->active && Tank[i]->isPlayer)
+		if (Tank[i]->active && Tank[i]->getIsPlayer())
 		{
 			if (!found)
 			{
-				straightLine = Tank[i]->Head->pos - com->Head->pos;
+				straightLine = Tank[i]->getHead()->pos - com->getHead()->pos;
 				found = true;
 			}
 			else if (Math::RandIntMinMax(0, 10) > 5)
 			{
-				straightLine = Tank[i]->Head->pos - com->Head->pos;
+				straightLine = Tank[i]->getHead()->pos - com->getHead()->pos;
 			}
 		}
 	}
@@ -972,119 +969,69 @@ void SceneTank::UpdateAI(TankObject* com, double dt)
 	{
 		cout << "Random Ball" << endl;
 		Ball->active = true;
-		Ball->pos = com->Head->pos;
+		Ball->pos = com->getHead()->pos;
 		Ball->vel.x = cosf(Math::RandFloatMinMax(0.f, Math::PI));
 		Ball->vel.y = sinf(Math::RandFloatMinMax(0.f, Math::PI));
 		Ball->vel = Ball->vel * Math::RandFloatMinMax(1, 50);
 		Ball->scale.Set(2, 2, 1);
-		TankObject::currentTank->Ball = Ball;
+		TankObject::currentTank->setBall(Ball);
 		ballthrown = true;
 		TankChange = true;
 		ballcollisionnum = 0;
+		soundSystem.PlayASound("Tank_Shoot");
 	}
 	else
 	{
-		//float angle = Math::RadianToDegree(atan2(straightLine.y, straightLine.x));
-		//if (angle >= 90 && angle <= 270)
-		//{
-		//	angle = Math::Clamp(angle - 60.f, 100.f, 270.f);
-		//}
-		//else if (angle < 90)
-		//{
-		//	angle = Math::Clamp(angle - 60.f, 0.f, 80.f);
-		//}
-		//else if (angle > 270)
-		//{
-		//	angle = Math::Clamp(angle + 60.f, 270.f, 360.f);
-		//}
-		//// s = ut + 0.5at^2
-		//// 0.5at^2 + ut - s = 0
-		//// ax^2 + bx + c = 0
-		//// a = 0.5a 
-		//// b = u
-		//// c = -s
-		//Vector3 c = -(com->Head->pos + straightLine);
-		//Vector3 a = 0.5 * m_gravity;
-		//Vector3 b;
-		//for (int i = 1; i < 50; ++i)
-		//{
-		//	b = i * angle;
-		//	Vector3 time;
-		//	Vector3 discriminant = Vector3(b.x * b.x - 4 * a.x * c.x, b.y * b.y - 4 * a.y * c.y, 0);
-		//	if (discriminant.x <= 0 || discriminant.y <= 0)
-		//	{
-		//		continue;
-		//	}
-		//	time.x = -b.x - sqrt(discriminant.x) * (0.5 * a.x);
-		//	if (time.x <= 0)
-		//	{
-		//		time.x = -b.x + sqrt(discriminant.x) * (0.5 * a.x);
-		//		if (time.x <= 0)
-		//		{
-		//			continue;
-		//		}
-		//	}
-		//	else
-		//	{
-		//		if (time.x > -b.x + sqrt(discriminant.x) * (0.5 * a.x) && -b.x + sqrt(discriminant.x) * (0.5 * a.x) > 0)
-		//		{
-		//			time.x = -b.x + sqrt(discriminant.x) * (0.5 * a.x);
-		//		}
-		//	}
-		//	time.y = -b.y - sqrt(discriminant.y) * (0.5 * a.y);
-		//	if (time.y <= 0)
-		//	{
-		//		time.y = -b.y + sqrt(discriminant.y) * (0.5 * a.y);
-		//		if (time.y <= 0)
-		//		{
-		//			continue;
-		//		}
-		//	}
-		//	else
-		//	{
-		//		if (time.y > -b.y + sqrt(discriminant.y) * (0.5 * a.y) && -b.y + sqrt(discriminant.y) * (0.5 * a.y) > 0)
-		//		{
-		//			time.y = -b.y + sqrt(discriminant.y) * (0.5 * a.y);
-		//		}
-		//	}
-		//	if (fabs(time.x - time.y) <= Math::EPSILON)
-		//	{
-		//		Ball->active = true;
-		//		Ball->pos =	com->Head->pos;
-		//		Ball->vel = b;
-		//		Ball->scale.Set(2, 2, 1);
-		//		TankObject::currentTank->Ball = Ball;
-		//		ballthrown = true;
-		//		if (TankObject::TankCount > 0)
-		//		{
-		//			bool done = false;
-		//			while (!done)
-		//			{
-		//				// James 16/8/2019
-		//				TankObject::TankIndex = ++TankObject::TankIndex % TankObject::MaxTank;
-		//				TankObject::previousTank = TankObject::currentTank;
-		//				TankObject::currentTank = Tank[TankObject::TankIndex];
-		//				// End James 16/8/2019
-		//				if (TankObject::currentTank->active)
-		//				{
-		//					done = true;
-		//				}
-		//			}
-		//		}
-		//		ballcollisionnum = 0;
-		//		return;
-		//	}
-		//}
 		Ball->active = true;
-		Ball->pos = com->Head->pos;
+		Ball->pos = com->getHead()->pos;
 		float angle = atan2(straightLine.y, straightLine.x);
 		Vector3 direction = Vector3(cosf(angle + Math::DegreeToRadian(Math::RandFloatMinMax(-5, 5))), sinf(angle + Math::DegreeToRadian(Math::RandFloatMinMax(-5, 5))), 0);
 		Ball->vel = Math::Clamp(straightLine.Length(), 1.f, 50.f) * direction;
 		Ball->scale.Set(2, 2, 1);
-		TankObject::currentTank->Ball = Ball;
+		TankObject::currentTank->setBall(Ball);
 		ballthrown = true;
 		TankChange = true;
 		ballcollisionnum = 0;
+		soundSystem.PlayASound("Tank_Shoot");
+	}
+}
+
+void SceneTank::UpdateParticle(double dt)
+{
+	if (m_particleCount < 100 && Particlebuffertime > 0.1)
+	{
+		Particlebuffertime = 0.0;
+		Particles* go = GetParticle();
+		go->type = ParticleObject_TYPE::P_RAIN;
+		go->pos.Set(Math::RandFloatMinMax(0, m_worldWidth), Math::RandFloatMinMax(m_worldHeight * 0.95f, m_worldHeight * 0.98f), 0);
+		go->scale.Set(3, 3, 1);
+		go->vel.SetZero();
+		go->lifeTime = 10.0;
+	}
+	else
+	{
+		Particlebuffertime += dt;
+	}
+	for (int i = 0; i < (int)m_ParticleList.size(); ++i)
+	{
+		Particles* go = m_ParticleList[i];
+		if (go->active)
+		{
+			Vector3 m_gravity(0, -9.8f, 0);
+			go->vel += m_gravity * dt;
+			go->vel += TankObject::WindDirection * dt;
+			go->pos += go->vel * dt;
+			go->lifeTime -= dt;
+			if (go->lifeTime < 0 || 
+				go->pos.x > m_worldWidth || 
+				go->pos.x < 0 || 
+				go->pos.y > m_worldHeight || 
+				go->pos.y < m_worldHeight * 0.4f)
+			{
+				go->active = false;
+				m_particleCount--;
+			}
+		}
 	}
 }
 
@@ -1135,7 +1082,7 @@ bool SceneTank::Constrain(PhysicsObject* go)
 // James 13/8/2019
 bool SceneTank::CheckCollision(PhysicsObject* go, PhysicsObject* go2)
 {
-	if (go2 == TankObject::currentTank->Head)
+	if (go2 == TankObject::currentTank->getHead())
 	{
 		return false;
 	}
@@ -1257,7 +1204,9 @@ float SceneTank::CheckCollision2(PhysicsObject* go, PhysicsObject* go2)
 
 void SceneTank::CheckCollisionTank(TankObject* go, TankObject* go2)
 {
-	if ((go->pos - go2->pos).Length() < go->radius + go2->radius)
+	float radius1 = go->getRadius();
+	float radius2 = go2->getRadius();
+	if ((go->pos - go2->pos).Length() < radius1 + radius2)
 	{
 		cout << "Collide" << endl;
 		Constrain(go);
@@ -1265,23 +1214,23 @@ void SceneTank::CheckCollisionTank(TankObject* go, TankObject* go2)
 		{
 			if (go->UpBound || go->DownBound)
 			{
-				go->pos.x += (go->radius + go2->radius - (go->pos - go2->pos).Length()) * 1.01 * (go->pos - go2->pos).Normalized().x;
+				go->pos.x += (radius1 + radius2 - (go->pos - go2->pos).Length()) * 1.01 * (go->pos - go2->pos).Normalized().x;
 			}
 			if (go->LeftBound || go->RightBound)
 			{
-				go->pos.y += (go->radius + go2->radius - (go->pos - go2->pos).Length()) * 1.01 * (go->pos - go2->pos).Normalized().y;
+				go->pos.y += (radius1 + radius2 - (go->pos - go2->pos).Length()) * 1.01 * (go->pos - go2->pos).Normalized().y;
 			}
 		}
 		else
 		{
-			go->pos += (go->radius + go2->radius - (go->pos - go2->pos).Length()) * 1.01 * (go->pos - go2->pos).Normalized();
+			go->pos += (radius1 + radius2 - (go->pos - go2->pos).Length()) * 1.01 * (go->pos - go2->pos).Normalized();
 		}
 		/*if (go->LeftBound || go->RightBound)
 		{
 		}
 		else
 		{
-			go->pos += (go->radius + go2->radius - (go->pos - go2->pos).Length()) * 1.01 * (go->pos - go2->pos).Normalized();
+			go->pos += (radius1 + radius2 - (go->pos - go2->pos).Length()) * 1.01 * (go->pos - go2->pos).Normalized();
 		}*/
 	}
 }
@@ -1371,6 +1320,8 @@ void SceneTank::RenderGame()
 {
 	// James 13/8/2019
 
+	RenderParticle();
+
 	if (Ghost->active)
 	{
 		modelStack.PushMatrix();
@@ -1458,11 +1409,12 @@ void SceneTank::RenderGame()
 	RenderMesh(meshList[GEO_BORDER], false);
 	modelStack.PopMatrix();
 
+
 	//On screen text
 	std::ostringstream ss;
 	ss.precision(3);
 	ss << "F:";
-	for (int i = 0; i < TankObject::currentTank->fuel; i += 10)
+	for (int i = 0; i < TankObject::currentTank->getFuel(); i += 10)
 	{
 		ss << "@";
 	}
@@ -1479,6 +1431,23 @@ void SceneTank::RenderGame()
 	ss << "Score:" << score;
 	RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(0, 0, 1), 3, 1, 7);
 	// End James 14/8/2019
+}
+
+void SceneTank::RenderParticle()
+{
+	for (int i = 0; i < (int)m_ParticleList.size(); ++i)
+	{
+		Particles* go = m_ParticleList[i];
+		if (go->active)
+		{
+			modelStack.PushMatrix();
+			modelStack.Translate(go->pos);
+			modelStack.Rotate(Math::RadianToDegree(atan2(go->vel.y, go->vel.x)), 0, 0, 1);
+			modelStack.Scale(go->scale);
+			RenderMesh(meshList[GEO_TANK_RAIN], false);
+			modelStack.PopMatrix();
+		}
+	}
 }
 
 void SceneTank::RenderMenu()
@@ -1576,11 +1545,11 @@ void SceneTank::RenderGO(PhysicsObject * go)
 		if (go == Tank[i])
 		{
 			std::ostringstream ss;
-			for (int k = 0; k < Tank[i]->health; ++k)
+			for (int k = 0; k < Tank[i]->getHealth(); ++k)
 			{
 				ss << "@";
 			}
-			RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(1, 0, 0), 1, go->pos.x / m_worldWidth * 80 - 0.75, (go->pos.y + (go->scale.x + Tank[i]->Head->scale.x) * 1.5f) / m_worldHeight * 60);
+			RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(1, 0, 0), 1, go->pos.x / m_worldWidth * 80 - 0.75, (go->pos.y + (go->scale.x + Tank[i]->getHead()->scale.x) * 1.5f) / m_worldHeight * 60);
 			break;
 		}
 	}
@@ -1628,19 +1597,19 @@ void SceneTank::RenderGO(PhysicsObject * go)
 		modelStack.PushMatrix();
 		modelStack.Translate(go->pos);
 		modelStack.Scale(go->scale);
-		if (go == Tank[0]->Head)
+		if (go == Tank[0]->getHead())
 		{
 			RenderMesh(meshList[GEO_TANK_HEAD_1], false);
 		}
-		else if (go == Tank[2]->Head)
+		else if (go == Tank[2]->getHead())
 		{
 			RenderMesh(meshList[GEO_TANK_HEAD_2], false);
 		}
-		else if (go == Tank[4]->Head)
+		else if (go == Tank[4]->getHead())
 		{
 			RenderMesh(meshList[GEO_TANK_HEAD_3], false);
 		}
-		else if (go == Tank[6]->Head)
+		else if (go == Tank[6]->getHead())
 		{
 			RenderMesh(meshList[GEO_TANK_HEAD_4], false);
 		}
@@ -1675,6 +1644,26 @@ PhysicsObject * SceneTank::FetchGO()
 
 	(*m_goList)[m_goList->size() - 20]->active = true;
 	return (*m_goList)[m_goList->size() - 20];
+}
+
+Particles* SceneTank::GetParticle()
+{
+	for (int i = 0; i < (int)m_ParticleList.size(); ++i)
+	{
+		if (!m_ParticleList[i]->active)
+		{
+			m_ParticleList[i]->active = true;
+			return m_ParticleList[i];
+		}
+	}
+
+	for (int i = 0; i < 20; ++i)
+	{
+		m_ParticleList.push_back(new Particles(ParticleObject_TYPE::P_RAIN));
+	}
+
+	m_ParticleList[m_ParticleList.size() - 20]->active = true;
+	return m_ParticleList[m_ParticleList.size() - 20];
 }
 
 // James 15/8/2019
@@ -1725,7 +1714,7 @@ void SceneTank::Reset()
 	for (int i = 0; i < TankObject::MaxTank; ++i)
 	{
 		Tank[i]->ActivateTank();
-		Tank[i]->Ball = nullptr;
+		Tank[i]->setBall(nullptr);
 		switch (i)
 		{
 		case 0:

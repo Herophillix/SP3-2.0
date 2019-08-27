@@ -12,12 +12,14 @@ enum ParticleObject_TYPE
 	P_HAM,
 	P_ELECTROCUTE,
 	P_ELECTROCUTER,
+	P_RAIN,
 	P_TOTAL,
 };
 
 class Particles
 {
 public:
+
 	Particles(ParticleObject_TYPE = P_ParticleTest);
 	~Particles();
 

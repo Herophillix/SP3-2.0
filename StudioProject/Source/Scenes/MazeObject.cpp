@@ -2,12 +2,117 @@
 
 MazeObject::MazeObject()
 {
-
+	angle_normal = 0.f;
+	angle_normal_prev = 0.f;
+	angle_offset = 0.f;
+	level = 0;
 }
 
 MazeObject::~MazeObject()
 {
 
+}
+
+void MazeObject::setOffset(Vector3 input, bool additive)
+{
+	if (additive)
+	{
+		offset += input;
+	}
+	else
+	{
+		offset = input;
+	}
+}
+
+void MazeObject::setNormal_Position(Vector3 input, bool additive)
+{
+	if (additive)
+	{
+		normal_position += input;
+	}
+	else
+	{
+		normal_position = input;
+	}
+}
+
+void MazeObject::setAngle_Normal(float input, bool additive)
+{
+	if (additive)
+	{
+		angle_normal += input;
+	}
+	else
+	{
+		angle_normal = input;
+	}
+}
+
+void MazeObject::setAngle_Normal_Prev(float input, bool additive)
+{
+	if (additive)
+	{
+		angle_normal_prev += input;
+	}
+	else
+	{
+		angle_normal_prev = input;
+	}
+}
+
+void MazeObject::setAngle_Offset(float input, bool additive)
+{
+	if (additive)
+	{
+		angle_offset += input;
+	}
+	else
+	{
+		angle_offset = input;
+	}
+}
+
+void MazeObject::setLevel(int input, bool additive)
+{
+	if (additive)
+	{
+		level += input;
+	}
+	else
+	{
+		level = input;
+	}
+}
+
+Vector3 MazeObject::getOffset()
+{
+	return offset;
+}
+
+Vector3 MazeObject::getNormal_Position()
+{
+	return normal_position;
+}
+
+float MazeObject::getAngle_Normal()
+{
+	return angle_normal;
+}
+
+float MazeObject::getAngle_Normal_Prev()
+{
+	return angle_normal_prev;
+}
+
+float MazeObject::getAngle_Offset()
+{
+	return angle_offset;
+}
+
+int MazeObject::getLevel()
+{
+	return level;
 }
 
 void MazeObject::Update(double dt, float m_worldWidth, float m_worldHeight)
@@ -85,50 +190,11 @@ void MazeObject::CollisionResponse(PhysicsObject* go, double dt)
 
 		v1 = go->vel;
 		v2 = go2->vel;
-
-		/*finalkineticenergy = 0.5f * m1 * u1.LengthSquared() + 0.5f * m2 * u2.LengthSquared();
-		if (m_goList[GameObject::indextracked] == go || m_goList[GameObject::indextracked] == go2)
-		{
-			m_timerstarted = false;
-		}*/
 		break;
 	}
 	case PhysicsObject::GO_WALL:
 	{
-		//// BALL-WALL COLLISION
-		//Vector3 hyp = go2->pos - go->pos;
-		//Vector3 N = go2->normal;
-		//if (hyp.Dot(N) < 0)
-		//{
-		//	N = -N;
-		//}
-		//float radius = go->scale.x;
-		//Vector3 dis = -hyp;
-		//float projectionDepth = dis.Dot(-N) / dis.Length() * dis.Length();
-		//float depth = (go2->scale.x / 2 + radius) - projectionDepth;
-		//go->pos += depth * N;
 		go->vel = go->vel - 1.98 * go->vel.Dot(go2->normal) * go2->normal;
-		//if (go2->member == GameObject::M_WALL_NORMAL)
-		//{
-		//	go->vel *= 0.90f;
-		//}
-		//if (go2->member == GameObject::M_FLIPPER || go2->member == GameObject::M_WALL_ROTATE || go2->member == GameObject::M_WALL_MOVING)
-		//{
-		//	// PREVENTS THE BALL FROM FALLING THROUGH / ANGULAR MOMENTUM
-		//	Vector3 temp = go2->pos - go->pos;
-		//	Vector3 N = go2->normal;
-		//	if (temp.Dot(go2->normal) < 0)
-		//	{
-		//		N = -N;
-		//	}
-		//	Vector3 collisionloc = go->pos - Vector3(m_worldWidth * 0.7f, m_worldHeight * 0.5f, 0) + (go->scale.x / 2 + go2->scale.x) * N;
-		//	float distance = (collisionloc - go2->offset).Length();
-		//	//float velocity = 2 * Math::PI / * (fabs(go2->angle_normal - go2->angle_normal_prev) / dt)
-		//	go->vel += fabs(go2->angle_normal - go2->angle_normal_prev) * (1 / static_cast<float>(dt)) * -N * distance;
-		//}
-		//else if (go2->member >= GameObject::M_WALL_INNER && go2->member <= GameObject::M_WALL_OUTER)
-		//{
-		// PREVENTS THE BALL FROM CLIPPING THROUGH THE WALL
 		Vector3 temp = go2->pos - go->pos;
 		Vector3 N = go2->normal;
 		if (temp.Dot(go2->normal) < 0)
@@ -140,67 +206,14 @@ void MazeObject::CollisionResponse(PhysicsObject* go, double dt)
 		go->vel += fabs(go2->angle_normal - go2->angle_normal_prev) * (1 / static_cast<float>(dt)) * -N * distance;
 		if (go->vel.Length() > 0)
 		{
-			go->vel = Math::Clamp(go->vel.Length(), 0.f, 75.f) * go->vel.Normalized();
+			go->vel = Math::Clamp(go->vel.Length(), 0.f, 65.f) * go->vel.Normalized();
 		}
-		//}
-		//// DAMPENS THE VELOCITY
-		//if (m_goList[GameObject::indextracked] == go || m_goList[GameObject::indextracked] == go2)
-		//{
-		//	m_timerstarted = false;
-		//}
 		break;
 	}
 	case PhysicsObject::GO_PILLAR:
 	{
-		// BALL-PILLAR COLLISION
 		Vector3 N = (go2->pos - go->pos).Normalized();
-	//	switch (go2->member)
-	//	{
-	//	case GameObject::M_BUMPER:
-	//	{
-	//		go->vel = go->vel - 2.1f * go->vel.Dot(N) * N;
-	//		break;
-	//	}
-	//	case GameObject::M_BUMPER_POWER:
-	//	{
-	//		go2->prevcollide = go2->collide;
-	//		go2->collide = true;
-	//		go2->tracker = go;
-	//		break;
-	//	}
-	//	case GameObject::M_POWERUP_EXTRABALL:
-	//	{
-	//		go2->active = false;
-	//		GameObject* temp = FetchGO();
-	//		temp->type = GameObject::GO_BALL;
-	//		temp->pos.Set(m_worldWidth * 0.25f, m_worldHeight * 0.5f, 0);
-	//		temp->scale.Set(3, 3, 1);
-	//		temp->vel.SetZero();
-	//		go->buffertime = 0.f;
-	//		numball++;
-	//		break;
-	//	}
-	//	case GameObject::M_POWERUP_MULTIPLIERINCREASE:
-	//	{
-	//		if (multiplier < 3)
-	//		{
-	//			multiplier++;
-	//		}
-	//		go2->active = false;
-	//		break;
-	//	}
-	//	case GameObject::M_BUMPER_DISPOSABLE:
-	//	{
-	//		go->vel = go->vel - 2.1f * go->vel.Dot(N) * N;
-	//		go2->active = false;
-	//		break;
-	//	}
-	//	default:
-	//	{
 		go->vel = go->vel - 2 * go->vel.Dot(N) * N;
-	//		break;
-	//	}
-	//	}
 		break;
 	}
 	}

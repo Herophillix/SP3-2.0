@@ -36,7 +36,7 @@ void SubTankObject::Update(double dt, float m_worldWidth, float m_worldHeight)
 
 void SubTankObject::CollisionResponse(PhysicsObject* go, double dt)
 {
-	if (go == parent->Ball)
+	if (go == parent->getBall())
 	{
 		return;
 	}
@@ -50,12 +50,12 @@ void SubTankObject::CollisionResponse(PhysicsObject* go, double dt)
 			go->active = false;
 			if (go->type != PhysicsObject::GO_TRACE)
 			{
-				parent->health--;
-				if (!parent->isPlayer)
+				parent->setHealth(-1, true);
+				if (!parent->getIsPlayer())
 				{
 					SceneTank::score += 250;
 				}
-				parent->Ball = nullptr;
+				parent->setBall(nullptr);
 			}
 			break;
 		}

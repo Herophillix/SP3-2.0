@@ -1,7 +1,5 @@
 #include "SheepObject.h"
 
-
-
 SheepObject::SheepObject(sheepGameType typeValue)
 	:spreadAngle(0),
 	health(100),
@@ -32,6 +30,116 @@ bool SheepObject::getState()
 void SheepObject::setState(bool move)
 {
 	isMoving = move;
+}
+
+void SheepObject::setIsDown(bool input)
+{
+	isDown = input;
+}
+void SheepObject::setOnCoolDown(bool input)
+{
+	onCooldown = input;
+}
+void SheepObject::setHealth(int input, bool additive)
+{
+	if (additive)
+	{
+		health += input;
+	}
+	else
+	{
+		health = input;
+	}
+}
+void SheepObject::setCooldown(float input, bool additive)
+{
+	if (additive)
+	{
+		cooldown += input;
+	}
+	else
+	{
+		cooldown = input;
+	}
+}
+void SheepObject::setMana(float input, bool additive)
+{
+	if (additive)
+	{
+		Mana += input;
+	}
+	else
+	{
+		Mana = input;
+	}
+}
+void SheepObject::setSpreadAngle(float input, bool additive)
+{
+
+	if (additive)
+	{
+		spreadAngle += input;
+	}
+	else
+	{
+		spreadAngle = input;
+	}
+}
+void SheepObject::setM_dLeftRight(bool input)
+{
+	m_dLeftRight = input;
+}
+void SheepObject::setIsMoving(bool input)
+{
+	isMoving = input;
+}
+void SheepObject::setMouseAngle(float input, bool additive)
+{
+	if (additive)
+	{
+		mouseAngle += input;
+	}
+	else
+	{
+		mouseAngle = input;
+	}
+}
+
+bool SheepObject::getIsDown()
+{
+	return isDown;
+}
+bool SheepObject::getOnCooldown()
+{
+	return onCooldown;
+}
+int SheepObject::getHealth()
+{
+	return health;
+}
+float SheepObject::getCooldown()
+{
+	return cooldown;
+}
+float SheepObject::getMana()
+{
+	return Mana;
+}
+float SheepObject::getSpreadAngle()
+{
+	return spreadAngle;
+}
+bool SheepObject::getM_dLeftRight()
+{
+	return m_dLeftRight;
+}
+bool SheepObject::getIsMoving()
+{
+	return isMoving;
+}
+float SheepObject::getMouseAngle()
+{
+	return mouseAngle;
 }
 
 void SheepObject::UpdateMovement(double dt)

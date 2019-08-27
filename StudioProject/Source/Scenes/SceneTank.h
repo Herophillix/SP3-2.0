@@ -8,6 +8,7 @@
 #include "Results.h"
 #include "StatManager.h"
 #include "../SoundEngine.h"
+#include "../Rendering/Particles.h"
 #include <vector>
 
 using namespace std;
@@ -63,9 +64,15 @@ public:
 	void ChangeAIPosition();
 	void GameEndCalculations();
 	static int score;
+
+	Particles* GetParticle();
+	void RenderParticle();
+	void UpdateParticle(double dt);
+
 private:
 	std::vector<PhysicsObject *>* m_goList;
 	std::vector<MenuObject *> m_menuList;
+	std::vector<Particles*> m_ParticleList;
 	float m_speed;
 	float m_worldWidth;
 	float m_worldHeight;
@@ -104,6 +111,8 @@ private:
 	char grade;
 	bool statgained;
 	bool mousepressed;
+	int m_particleCount;
+	double Particlebuffertime;
 
 	CSoundEngine soundSystem;
 

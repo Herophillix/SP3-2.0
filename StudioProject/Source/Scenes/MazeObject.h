@@ -20,6 +20,21 @@ public:
 	void CollisionResponse(PhysicsObject* go, double dt);
 	void Update(double dt, float m_worldWidth = 0.f, float m_worldHeight = 0.f);
 
+	void setOffset(Vector3, bool additive = false);
+	void setNormal_Position(Vector3, bool additive = false);
+	void setAngle_Normal(float, bool additive = false);
+	void setAngle_Normal_Prev(float, bool additive = false);
+	void setAngle_Offset(float, bool additive = false);
+	void setLevel(int, bool additive = false);
+
+	Vector3 getOffset();
+	Vector3 getNormal_Position();
+	float getAngle_Normal();
+	float getAngle_Normal_Prev();
+	float getAngle_Offset();
+	int getLevel();
+
+private:
 	Vector3 offset;
 	Vector3 normal_position;
 

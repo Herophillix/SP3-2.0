@@ -66,24 +66,32 @@ void MazeGenerator::SetUp(string FileDirectory, vector<PhysicsObject*>* m_goList
 			cout << "NONE,   ";
 			break;
 		}
-		maze->angle_normal = Math::DegreeToRadian(stof(info[1]));
-		maze->normal.Set(cosf(maze->angle_normal), sinf(maze->angle_normal), 0);
+		maze->setAngle_Normal(Math::DegreeToRadian(stof(info[1])));
+		maze->normal.Set(cosf(maze->getAngle_Normal()), sinf(maze->getAngle_Normal()), 0);
+		//maze->angle_normal = Math::DegreeToRadian(stof(info[1]));
+		//maze->normal.Set(cosf(maze->angle_normal), sinf(maze->angle_normal), 0);
 
-		maze->offset.Set(stof(info[2]), stof(info[3]), stof(info[4]));
-		BiggestLength = (BiggestLength >= maze->offset.Length() ? BiggestLength : maze->offset.Length());
-		maze->normal_position = maze->offset.Normalized();
-		maze->angle_offset = atan2(maze->normal_position.y, maze->normal_position.x);
+		maze->setOffset(Vector3(stof(info[2]), stof(info[3]), stof(info[4])));
+		BiggestLength = (BiggestLength >= maze->getOffset().Length() ? BiggestLength : maze->getOffset().Length());
+		maze->setNormal_Position(maze->getOffset().Normalized());
+		maze->setAngle_Offset(atan2(maze->getNormal_Position().y, maze->getNormal_Position().x));
+		//maze->offset.Set(stof(info[2]), stof(info[3]), stof(info[4]));
+		//BiggestLength = (BiggestLength >= maze->offset.Length() ? BiggestLength : maze->offset.Length());
+		//maze->normal_position = maze->offset.Normalized();
+		//maze->angle_offset = atan2(maze->normal_position.y, maze->normal_position.x);
 
 		maze->scale.Set(stof(info[5]), stof(info[6]), stof(info[7]));
 
-		maze->level = stoi(info[8]);
+		maze->setLevel(stoi(info[8]));
+		//maze->level = stoi(info[8]);
 
 		maze->pos.x = m_worldWidth * 0.5f;
 		maze->pos.y = m_worldHeight * 0.5f;
-		maze->pos += maze->offset.Length() * maze->normal_position;
+		maze->pos += maze->getOffset().Length() * maze->getNormal_Position();
+		//maze->pos += maze->offset.Length() * maze->normal_position;
 
 		maze->active = true;
-		cout << "P: " << maze->pos << ", S: " << maze->scale << ", A: " << Math::RadianToDegree(maze->angle_normal) << ", O: " << Math::RadianToDegree(maze->angle_offset) << endl;
+		cout << "P: " << maze->pos << ", S: " << maze->scale << ", A: " << Math::RadianToDegree(maze->getAngle_Normal()) << ", O: " << Math::RadianToDegree(maze->getAngle_Offset()) << endl;
 		m_goList->push_back(maze);
 	}
 }

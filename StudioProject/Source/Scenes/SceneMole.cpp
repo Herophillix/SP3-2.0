@@ -695,42 +695,42 @@ void SceneMole::RenderGO(MoleObject * go)
 		break;
 	case MoleObject::GO_MOLE:
 		modelStack.PushMatrix();
-		modelStack.Translate(go->pos.x, go->pos.y + go->mole_yOffset, go->pos.z);
+		modelStack.Translate(go->pos.x, go->pos.y + go->getMole_yOffset(), go->pos.z);
 		modelStack.Scale(go->scale.x, go->scale.y, go->scale.z);
 		RenderMesh(meshList[GEO_MOLE], false);
 		modelStack.PopMatrix();
 		break;
 	case MoleObject::GO_MOLE_BRONZE:
 		modelStack.PushMatrix();
-		modelStack.Translate(go->pos.x, go->pos.y + go->mole_yOffset, go->pos.z);
+		modelStack.Translate(go->pos.x, go->pos.y + go->getMole_yOffset(), go->pos.z);
 		modelStack.Scale(go->scale.x, go->scale.y, go->scale.z);
 		RenderMesh(meshList[GEO_MOLE_BRONZE], false);
 		modelStack.PopMatrix();
 		break;
 	case MoleObject::GO_MOLE_SILVER:
 		modelStack.PushMatrix();
-		modelStack.Translate(go->pos.x, go->pos.y + go->mole_yOffset, go->pos.z);
+		modelStack.Translate(go->pos.x, go->pos.y + go->getMole_yOffset(), go->pos.z);
 		modelStack.Scale(go->scale.x, go->scale.y, go->scale.z);
 		RenderMesh(meshList[GEO_MOLE_SILVER], false);
 		modelStack.PopMatrix();
 		break;
 	case MoleObject::GO_MOLE_GOLD:
 		modelStack.PushMatrix();
-		modelStack.Translate(go->pos.x, go->pos.y + go->mole_yOffset, go->pos.z);
+		modelStack.Translate(go->pos.x, go->pos.y + go->getMole_yOffset(), go->pos.z);
 		modelStack.Scale(go->scale.x, go->scale.y, go->scale.z);
 		RenderMesh(meshList[GEO_MOLE_GOLD], false);
 		modelStack.PopMatrix();
 		break;
 	case MoleObject::GO_MOLE_BOMB:
 		modelStack.PushMatrix();
-		modelStack.Translate(go->pos.x, go->pos.y + go->mole_yOffset, go->pos.z);
+		modelStack.Translate(go->pos.x, go->pos.y + go->getMole_yOffset(), go->pos.z);
 		modelStack.Scale(go->scale.x, go->scale.y, go->scale.z);
 		RenderMesh(meshList[GEO_MOLE_BOMB], false);
 		modelStack.PopMatrix();
 		break;
 	case MoleObject::GO_MOLE_FROST:
 		modelStack.PushMatrix();
-		modelStack.Translate(go->pos.x, go->pos.y + go->mole_yOffset, go->pos.z);
+		modelStack.Translate(go->pos.x, go->pos.y + go->getMole_yOffset(), go->pos.z);
 		modelStack.Scale(go->scale.x, go->scale.y, go->scale.z);
 		RenderMesh(meshList[GEO_MOLE_FROST], false);
 		modelStack.PopMatrix();
@@ -842,8 +842,8 @@ void SceneMole::UpdateMoles(double dt)
 			if (!m_moleListTotal[randMole]->active)
 			{
 				m_moleListTotal[randMole]->active = true;
-				m_moleListTotal[randMole]->mole_goUp = true;
-				m_moleListTotal[randMole]->mole_lifeTime = 10.5f;
+				m_moleListTotal[randMole]->setMole_goUp(true);
+				m_moleListTotal[randMole]->setMole_lifeTime(10.5f);
 				// do rng stuff here for mole type
 				int randMoleType = Math::RandIntMinMax(0, 99);
 				m_moleListTotal[randMole]->type = MoleObject::GO_MOLE_BOMB;//(MoleObject::MOLEOBJECT_TYPE)(moleTypeRNG[randMoleType]);
@@ -861,11 +861,11 @@ void SceneMole::UpdateMoles(double dt)
 	{
 		if (m_moleListTotal[i]->active)
 		{
-			m_moleListTotal[i]->mole_lifeTime -= dt;
-			if (m_moleListTotal[i]->mole_lifeTime <= 0.f) // When fail to hit in time
+			m_moleListTotal[i]->setMole_lifeTime(-dt, true);
+			if (m_moleListTotal[i]->getMole_lifeTime() <= 0.f) // When fail to hit in time
 			{
 				m_moleListTotal[i]->active = false;
-				m_moleListTotal[i]->mole_hit = true;
+				m_moleListTotal[i]->setMole_hit(true);
 				if (m_moleListTotal[i]->type == MoleObject::GO_MOLE ||
 					m_moleListTotal[i]->type == MoleObject::GO_MOLE_BRONZE || 
 					m_moleListTotal[i]->type == MoleObject::GO_MOLE_SILVER || 
@@ -875,24 +875,24 @@ void SceneMole::UpdateMoles(double dt)
 				}
 			}
 			// 'Animation' for going up
-			if (m_moleListTotal[i]->mole_goUp)
+			if (m_moleListTotal[i]->getMole_goUp())
 			{
-				m_moleListTotal[i]->mole_yOffset += 0.5f;
-				if (m_moleListTotal[i]->mole_yOffset >= 25.f)
+				m_moleListTotal[i]->setMole_yOffset(0.5f, true);
+				if (m_moleListTotal[i]->getMole_yOffset() >= 25.f)
 				{
-					m_moleListTotal[i]->mole_yOffset = 25.f;
-					m_moleListTotal[i]->mole_goUp = false;
+					m_moleListTotal[i]->setMole_yOffset(25.f);
+					m_moleListTotal[i]->setMole_goUp(false);
 				}
 			}
 		}
 		// 'Animation' for going down
-		if (m_moleListTotal[i]->mole_hit)
+		if (m_moleListTotal[i]->getMole_hit())
 		{
-			m_moleListTotal[i]->mole_yOffset -= 0.5f;
-			if (m_moleListTotal[i]->mole_yOffset <= 0.f)
+			m_moleListTotal[i]->setMole_yOffset(-0.5f, true);
+			if (m_moleListTotal[i]->getMole_yOffset() <= 0.f)
 			{
-				m_moleListTotal[i]->mole_yOffset = 0.f;
-				m_moleListTotal[i]->mole_hit = false;
+				m_moleListTotal[i]->setMole_yOffset(0.f);
+				m_moleListTotal[i]->setMole_hit(false);
 			}
 		}
 	}
@@ -1157,28 +1157,28 @@ bool SceneMole::HammerCollisionCheck()
 		if (m_Hammer->pos.x > m_moleListTotal[i]->pos.x - (m_moleListTotal[i]->scale.x / 2) && 
 			m_Hammer->pos.x < m_moleListTotal[i]->pos.x + (m_moleListTotal[i]->scale.x / 2))
 		{
-			if (m_Hammer->pos.y < m_moleListTotal[i]->pos.y + (m_moleListTotal[i]->scale.y / 2) + m_moleListTotal[i]->mole_yOffset &&
-				m_Hammer->pos.y > m_moleListTotal[i]->pos.y - (m_moleListTotal[i]->scale.y / 2) + m_moleListTotal[i]->mole_yOffset)
+			if (m_Hammer->pos.y < m_moleListTotal[i]->pos.y + (m_moleListTotal[i]->scale.y / 2) + m_moleListTotal[i]->getMole_yOffset() &&
+				m_Hammer->pos.y > m_moleListTotal[i]->pos.y - (m_moleListTotal[i]->scale.y / 2) + m_moleListTotal[i]->getMole_yOffset())
 			{
 				if (m_moleListTotal[i]->active)
 				{
 					std::cout << "Hit Mole No: " << i << std::endl;
-					m_moleListTotal[i]->mole_hit = true;
+					m_moleListTotal[i]->setMole_hit(true);
 					m_moleListTotal[i]->active = false;
 					int addToScore = 0;
 					switch (m_moleListTotal[i]->type)
 					{
 					case MoleObject::GO_MOLE:
-						addToScore = m_moleListTotal[i]->mole_lifeTime * 100 * m_multiplier;
+						addToScore = m_moleListTotal[i]->getMole_lifeTime() * 100 * m_multiplier;
 						break;
 					case MoleObject::GO_MOLE_BRONZE:
-						addToScore += m_moleListTotal[i]->mole_lifeTime * 100 * m_multiplier * 1.5;
+						addToScore += m_moleListTotal[i]->getMole_lifeTime() * 100 * m_multiplier * 1.5;
 						break;
 					case MoleObject::GO_MOLE_SILVER:
-						addToScore += m_moleListTotal[i]->mole_lifeTime * 100 * m_multiplier * 2.f;
+						addToScore += m_moleListTotal[i]->getMole_lifeTime() * 100 * m_multiplier * 2.f;
 						break;
 					case MoleObject::GO_MOLE_GOLD:
-						addToScore += m_moleListTotal[i]->mole_lifeTime * 100 * m_multiplier * 5.f;
+						addToScore += m_moleListTotal[i]->getMole_lifeTime() * 100 * m_multiplier * 5.f;
 						break;
 					case MoleObject::GO_MOLE_BOMB:
 					{

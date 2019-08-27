@@ -26,6 +26,24 @@ public:
 	static TankObject* currentTank;
 	static TankObject* previousTank;
 
+	void setBall(PhysicsObject*);
+
+	void setHealth(int, bool additive = false);
+	void setIsPlayer(bool);
+	void setRadius(float, bool additive = false);
+	void setFuel(float, bool additive = false);
+
+	SubTankObject* getHead();
+	SubTankObject* getLeftBorder();
+	SubTankObject* getRightBorder();
+	PhysicsObject* getBall();
+
+	int getHealth();
+	bool getIsPlayer();
+	float getRadius();
+	float getFuel();
+
+private:
 	SubTankObject* Head;
 	SubTankObject* LeftBorder;
 	SubTankObject* RightBorder;
@@ -34,6 +52,5 @@ public:
 	int health;
 	bool isPlayer;
 	float radius;
-	Vector3 middlepos;
 	float fuel;
 };
