@@ -275,6 +275,23 @@ void SceneFrog::Update(double dt)
 		}
 		if (m_GameOver)
 		{
+			Results::getInstance()->UpdateVars(dt);
+
+			static bool bLButtonState = false;
+			if (!bLButtonState && Application::IsMousePressed(0))
+			{
+				bLButtonState = true;
+				std::cout << "LBUTTON DOWN" << std::endl;
+				if (Results::getInstance()->ButtonMouseCollision())
+				{
+					cout << "hit" << endl;
+				}
+			}
+			else if (bLButtonState && !Application::IsMousePressed(0))
+			{
+				bLButtonState = false;
+				std::cout << "LBUTTON UP" << std::endl;
+			}
 			if (!m_setOriginValues && !m_setStatsToDist)
 			{
 				score = Frog->getScore();
@@ -284,7 +301,15 @@ void SceneFrog::Update(double dt)
 				m_setStatsToDist = true;
 				m_setOriginValues = true;
 				Reset();
+				
 			}
+			//if (!statgained)
+			//{
+			//	GameEndCalculations();
+			//	StatManager::GetInstance()->SetCharsOriginalValues();
+			//	statgained = true;
+			//}
+			
 		}
 		if (timer <= 0)
 		{
