@@ -27,6 +27,9 @@ void SceneTank::Init()
 	// End James 13/8/2019
 	m_worldWidth = m_worldHeight * (float)Application::GetWindowWidth() / Application::GetWindowHeight();
 
+	musicplayed = false;
+	musicplay = false;
+
 	meshList[GEO_ARROW] = MeshBuilder::GenerateQuad("arrow", Color(1, 1, 1), 1.f);
 	meshList[GEO_ARROW]->textureID = LoadTGA("Image//Arrow.tga");
 	meshList[GEO_TANK_HEAD_1] = MeshBuilder::GenerateQuad("Head 1", Color(1, 1, 1), 2.5f);
@@ -246,7 +249,6 @@ void SceneTank::Init()
 	mousepressed = false;
 
 	soundSystem.AddSound("Hit", "Sounds//Hammer_Whack.wav");
-	soundSystem.playWaMoleMusic();
 }
 
 void SceneTank::Update(double dt)
@@ -569,6 +571,12 @@ void SceneTank::UpdateMenu(double dt)
 		{
 			m_menuList[i]->changed = false;
 			SceneState = S_GAME;
+			musicplay = true;
+			if (musicplay == true && musicplayed == false)
+			{
+				soundSystem.playSheepMusic();
+				musicplayed = true;
+			}
 			StatManager::GetInstance()->SetPrevGame(3);
 			switch (m_menuList[i]->type)
 			{
@@ -1732,6 +1740,9 @@ void SceneTank::Reset()
 	{
 		Tank[i]->ActivateTank();
 		Tank[i]->Ball = nullptr;
+		soundSystem.stopAllMusic();
+		musicplayed = false;
+		musicplay = false;
 		switch (i)
 		{
 		case 0:

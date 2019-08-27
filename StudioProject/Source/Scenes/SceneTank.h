@@ -85,6 +85,8 @@ private:
 	// End James 15/8/2019	
 
 	bool endGame;
+	bool musicplay;
+	bool musicplayed;
 	double elapsedTime;
 
 	// James 16/8/2019

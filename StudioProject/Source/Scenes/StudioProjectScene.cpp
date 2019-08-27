@@ -100,11 +100,12 @@ void StudioProjectScene::Init()
 	Mtx44 projection;
 	projection.SetToOrtho(0, m_worldWidth, 0, m_worldHeight, -10, 10);
 	projectionStack.LoadMatrix(projection);
-	soundSystem.AddSound("mainMusic", "Sounds//MainTheme.mp3");
 	//Particles
 	m_particleCount = 0;
 	MAX_PARTICLE = 2000;
+	soundSystem.Init();
 	m_Gravity.Set(0, -9.8, 0);
+	soundSystem.playMainMusic();
 	m_Count = 4;
 	for (unsigned i = 0; i < 10;++i)
 	{
@@ -305,7 +306,7 @@ void StudioProjectScene::Update(double dt)
 	m_eventTimer -= dt;
 
 	//Losing Condition
-	
+
 
 
 	/////
@@ -320,7 +321,7 @@ void StudioProjectScene::Update(double dt)
 	}
 	case S_LEVELTRANSITION:
 	{
-		soundSystem.stopAllMusic();
+		//soundSystem.stopAllMusic();
 		UpdateLevelTransition(dt);
 		break;
 	}
@@ -367,10 +368,10 @@ void StudioProjectScene::Update(double dt)
 			{
 				currentlevel = Math::RandIntMinMax(1, 5);
 			}
-			soundSystem.stopAllMusic();
+			//soundSystem.stopAllMusic();
 			Application::setScene(currentlevel);
 			m_eventTimer = Math::RandFloatMinMax(20.0f, 40.f);
-			
+
 			break;
 		}
 		}
@@ -421,7 +422,7 @@ void StudioProjectScene::UpdateGame(double dt)
 	}
 	if (m_Count == 0)
 	{
-		
+
 	}
 
 	static bool bLButtonState = false;
@@ -611,12 +612,6 @@ void StudioProjectScene::UpdateGame(double dt)
 	if (mTimer < 0 && playMusic == false)
 	{
 		playMusic = true;
-	}
-	if (playMusic == true)
-	{
-		soundSystem.playMainMusic();
-		playMusic = false;
-		mTimer = 99999999999.f;
 	}
 }
 
