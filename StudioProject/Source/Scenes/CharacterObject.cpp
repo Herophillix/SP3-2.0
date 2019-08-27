@@ -7,7 +7,8 @@ int CharacterObject::m_Count = 0;
 CharacterObject::CharacterObject(CHARACTEROBJECT_TYPE typeValue)
 	:
 	m_dLeftRight(false),
-	isMoving(false)
+	isMoving(false),
+	counted(false)
 {
 	type = typeValue;
 	m_Count++;
@@ -40,77 +41,89 @@ void CharacterObject::setState(bool move)
 
 void CharacterObject::Update(double dt)
 {
-	if (Statistics.m_frustration < 100 && resting == false)
+	if (!giveUp)
 	{
-		Statistics.m_frustration += 5.8f / Statistics.m_experience * 1 / m_Count * dt;
+		if (Statistics.m_frustration < 100 && resting == false)
+		{
+			Statistics.m_frustration += 5.8f / Statistics.m_experience * 1 / m_Count * dt;
+		}
+		if (Statistics.m_frustration > 0 && asleep == true)
+		{
+			Statistics.m_frustration -= 7.f / Statistics.m_experience * 1 / m_Count * dt;
+		}
+		if (Statistics.m_frustration > 0 && resting == true)
+		{
+			Statistics.m_frustration -= 5.8f / Statistics.m_experience * 1 / m_Count * dt;
+		}
+		if (Statistics.m_frustration < 100 && WorkingHard == true && resting == false)
+		{
+			Statistics.m_frustration += 10.5f / Statistics.m_experience * 1 / m_Count * dt;
+		}
+		if (Statistics.m_frustration < 0.005f)
+		{
+			Statistics.m_frustration = 0.005f;
+		}
+		if (Statistics.m_rest > 0 && resting == false && WorkingHard == false)
+		{
+			Statistics.m_rest -= 0.5f  *  Statistics.m_experience * dt / m_Count;
+		}
+		if (Statistics.m_rest < 100 && resting == true)
+		{
+			Statistics.m_rest += 0.1f  *  Statistics.m_experience * dt / m_Count;
+		}
+		if (Statistics.m_rest < 100 && WorkingHard == true)
+		{
+			Statistics.m_rest -= 1.f  *  Statistics.m_experience * dt / m_Count;
+		}
+		if (Statistics.m_rest < 100 && asleep == true)
+		{
+			Statistics.m_rest += 1.f  *  Statistics.m_experience * dt / m_Count;
+		}
+		if (Statistics.m_rest < 0.005f)
+		{
+			Statistics.m_rest = 0.005f;
+		}
+		if (Statistics.m_motivation > 0 && resting == false)
+		{
+			Statistics.m_motivation -= 0.5f * Statistics.m_experience * dt / m_Count;
+		}
+		if (Statistics.m_motivation < 100 && resting == true)
+		{
+			Statistics.m_motivation += 0.5f * Statistics.m_experience * dt / m_Count;
+		}
+		if (Statistics.m_motivation < 100 && resting == false && WorkingHard == true)
+		{
+			Statistics.m_motivation += 1.f * Statistics.m_experience * dt / m_Count;
+		}
+		if (Statistics.m_motivation < 0.00f)
+		{
+			Statistics.m_motivation = 0.0005f;
+		}
+		if (Statistics.m_rest < 0.00f)
+		{
+			Statistics.m_rest = 0.005f;
+		}
+		if (Statistics.m_workDone < 100 && resting == false && WorkingHard == false)
+		{
+			Statistics.m_workDone += 5.50f / Statistics.m_experience * Statistics.m_motivation / Statistics.m_rest *  dt / m_Count;
+		}
+		if (Statistics.m_workDone < 100 && WorkingHard == true && resting == false)
+		{
+			Statistics.m_workDone += 8.f / Statistics.m_experience * Statistics.m_motivation / Statistics.m_rest *  dt / m_Count;
+		}
+		if (Statistics.m_workDone < 100 && asleep == true)
+		{
+			Statistics.m_workDone += 0.0f;
+		}
+		if (Statistics.m_frustration >= 100 || Statistics.m_rest <= 0 || Statistics.m_motivation <= 0)
+		{
+			giveUp = true;
+		}
 	}
-	if (Statistics.m_frustration > 0 && asleep == true)
+	if (giveUp == true && counted == false)
 	{
-		Statistics.m_frustration -= 7.f / Statistics.m_experience * 1 / m_Count * dt;
-	}
-	if(Statistics.m_frustration > 0 && resting == true)
-	{
-		Statistics.m_frustration -= 5.8f / Statistics.m_experience * 1 / m_Count * dt;
-	}
-	if (Statistics.m_frustration < 100 && WorkingHard == true && resting == false)
-	{
-		Statistics.m_frustration += 10.5f / Statistics.m_experience * 1 / m_Count * dt;
-	}
-	if (Statistics.m_frustration < 0.005f)
-	{
-		Statistics.m_frustration = 0.005f;
-	}
-	if (Statistics.m_rest > 0 && resting == false && WorkingHard == false)
-	{
-		Statistics.m_rest -= 0.5f  *  Statistics.m_experience * dt / m_Count;
-	}
-	if (Statistics.m_rest < 100 && resting == true)
-	{
-		Statistics.m_rest += 0.1f  *  Statistics.m_experience * dt / m_Count;
-	}
-	if (Statistics.m_rest < 100 && WorkingHard == true)
-	{
-		Statistics.m_rest -= 1.f  *  Statistics.m_experience * dt / m_Count;
-	}
-	if (Statistics.m_rest < 100 && asleep == true)
-	{
-		Statistics.m_rest += 1.f  *  Statistics.m_experience * dt / m_Count;
-	}
-	if(Statistics.m_rest < 0.005f)
-	{
-		Statistics.m_rest = 0.005f;
-	}
-	if (Statistics.m_motivation > 0 && resting == false)
-	{
-		Statistics.m_motivation -= 0.5f * Statistics.m_experience * dt / m_Count;
-	}
-	if (Statistics.m_motivation < 100 && resting == true)
-	{
-		Statistics.m_motivation += 0.5f * Statistics.m_experience * dt / m_Count;
-	}
-	if (Statistics.m_motivation < 100 && resting == false && WorkingHard == true)
-	{
-		Statistics.m_motivation += 1.f * Statistics.m_experience * dt / m_Count;
-	}
-	if (Statistics.m_motivation < 0.00f)
-	{
-		Statistics.m_motivation = 0.0005f;
-	}
-	if(Statistics.m_rest < 0.00f)
-	{
-		Statistics.m_rest = 0.005f;
-	}
-	if (Statistics.m_workDone < 100 && resting == false && WorkingHard == false)
-	{
-		Statistics.m_workDone += 5.50f / Statistics.m_experience * Statistics.m_motivation / Statistics.m_rest *  dt / m_Count;
-	}
-	if (Statistics.m_workDone < 100 && WorkingHard == true && resting == false)
-	{
-		Statistics.m_workDone += 8.f / Statistics.m_experience * Statistics.m_motivation / Statistics.m_rest *  dt / m_Count;
-	}
-	if (Statistics.m_workDone < 100 && asleep == true)
-	{
-		Statistics.m_workDone += 0.0f;
+		m_Count -= 1;
+		counted = true;
 	}
 }
 

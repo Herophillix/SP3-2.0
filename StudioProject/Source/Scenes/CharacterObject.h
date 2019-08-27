@@ -29,6 +29,7 @@ public:
 	bool WorkingHard;
 	bool asleep;
 	bool giveUp;
+	bool counted;
 	bool m_dLeftRight;
 	bool isMoving;
 

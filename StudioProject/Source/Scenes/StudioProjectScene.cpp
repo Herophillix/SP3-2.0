@@ -303,6 +303,13 @@ void StudioProjectScene::Update(double dt)
 
 	m_eventTimer -= dt;
 
+	//Losing Condition
+	
+
+
+	/////
+
+
 	switch (SceneState)
 	{
 	case S_GAME:
