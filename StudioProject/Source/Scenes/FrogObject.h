@@ -2,7 +2,7 @@
 #define FROG_OBJECT_H
 
 #include "GameObject.h"
-
+#include "../SoundEngine.h"
 
 class FrogObject : public GameObject
 {
@@ -48,6 +48,8 @@ public:
 	void CollisionResponse(FrogObject *go, FrogObject* go2, double dt);
 	void FrogInvincibilityFrame(FrogObject *go, double dt);
 	void plusCoin(FrogObject* frog);
+	CSoundEngine SoundSystem;
+
 
 	Vector3 normal;
 	int hp;

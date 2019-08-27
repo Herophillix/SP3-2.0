@@ -14,6 +14,8 @@ FrogObject::FrogObject(FROGOBJECT_TYPE typevalue) :
 	
 {
 	type = typevalue;
+	SoundSystem.AddSound("Collected_coin", "Sounds//Frog_coin_collect.wav");
+	SoundSystem.AddSound("rock", "Sounds//Frog_rock_impact.wav");
 }
 
 FrogObject::~FrogObject()
@@ -125,6 +127,7 @@ void FrogObject::CollisionResponse(FrogObject* go, FrogObject* go2, double dt)
 			go->hp -= 1;
 			go->setInvincible(true);
 			timerInvincibility = 0;
+			SoundSystem.PlayASound("rock");
 		//	go->FrogInvincibilityFrame(go, dt);
 		}
 		else if (go->getInvincible())
@@ -140,6 +143,7 @@ void FrogObject::CollisionResponse(FrogObject* go, FrogObject* go2, double dt)
 	{
 		go->score += 100;
 		go->coinLeft -= 1;
+		SoundSystem.PlayASound("Collected_coin");
 		go2->active = false;
 		break;
 	}
