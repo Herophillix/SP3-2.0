@@ -4,7 +4,7 @@ FrogObject::FrogObject(FROGOBJECT_TYPE typevalue) :
 	Frog_pos(0, 10, 0),
 	Frog_jumpVel(0, 0, 0),
 	hp(3),
-	isMove(false),
+	isLeft(false),
 	isJump(false),
 	isInvincible(false),
 	timerInvincibility(0),
@@ -24,11 +24,6 @@ FrogObject::~FrogObject()
 bool FrogObject::getJump()
 {
 	return isJump;
-}
-
-bool FrogObject::getMove()
-{
-	return isMove;
 }
 
 int FrogObject::getHP()
@@ -51,16 +46,16 @@ int FrogObject::getCoin()
 	return coinLeft;
 }
 
+bool FrogObject::getSide()
+{
+	return isLeft;
+}
+
 // SETS
 
 void FrogObject::setJump(bool jump)
 {
 	isJump = jump;
-}
-
-void FrogObject::setMove(bool move)
-{
-	isMove = move;
 }
 
 void FrogObject::setHP(int health)
@@ -82,6 +77,12 @@ void FrogObject::setScore(int sco)
 {
 	score = sco;
 }
+
+void FrogObject::setSide(bool leftTrue)
+{
+	isLeft = leftTrue;
+}
+
 // FUNCTIONS
 
 void FrogObject::plusCoin(FrogObject* frog)

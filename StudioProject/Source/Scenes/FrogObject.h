@@ -33,6 +33,7 @@ public:
 	void setInvincible(bool invin);
 	void setCoin(int coins);
 	void setScore(int score);
+	void setSide(bool leftTrue);
 	// GET
 	bool getJump();
 	bool getMove();
@@ -40,6 +41,7 @@ public:
 	bool getInvincible();
 	int getScore();
 	int getCoin();
+	bool getSide();
 
 
 	// Functions
@@ -54,7 +56,7 @@ public:
 
 private:
 	bool isJump;
-	bool isMove;
+	bool isLeft;
 	bool isInvincible;
 	int coinLeft;
 	int score;
