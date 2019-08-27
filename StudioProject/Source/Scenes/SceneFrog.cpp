@@ -41,8 +41,11 @@ void SceneFrog::Init()
 	//  ******************************* PROPS HERE  ******************************* //
 
 
-	meshList[GEO_FROG] = MeshBuilder::GenerateQuad("frog", Color(1, 1, 1), 2.f);
-	//meshList[GEO_FROG]->textureID = LoadTGA("Image//balloon.tga");
+	meshList[GEO_FROG_LEFT] = MeshBuilder::GenerateSpriteAnimation("frog", 1, 4);
+	meshList[GEO_FROG_LEFT]->textureID = LoadTGA("Image//CharacterSprites//Idle//knight_idle_anim_left.tga");
+	meshList[GEO_FROG_RIGHT] = MeshBuilder::GenerateSpriteAnimation("frogRight", 1, 4);
+	meshList[GEO_FROG_RIGHT]->textureID = LoadTGA("Image//CharacterSprites//Idle//knight_idle_anim_right.tga");
+
 	meshList[GEO_FROG_MAP] = MeshBuilder::GenerateQuad("map", Color(1, 1, 1), 1.f);
 	meshList[GEO_FROG_MAP]->textureID = LoadTGA("Image//Frog_Background.tga");
 	meshList[GEO_FROG_BORDER] = MeshBuilder::GenerateQuad("border", Color(0, 1, 1), 1.f);
@@ -61,9 +64,24 @@ void SceneFrog::Init()
 
 	//  ******************************* SPRITE ANIMATIONS HERE  ******************************* //
 
+	SpriteAnimation *walkLeft = dynamic_cast<SpriteAnimation *>(meshList[GEO_FROG_LEFT]);
+	if (walkLeft)
+	{
+		walkLeft->m_anim = new Animation();
+		walkLeft->m_anim->Set(0, 4, 0, 1.f, true);
+	}
+	SpriteAnimation *walkRight = dynamic_cast<SpriteAnimation *>(meshList[GEO_FROG_RIGHT]);
+	if (walkRight)
+	{
+		walkRight->m_anim = new Animation();
+		walkRight->m_anim->Set(0, 4, 0, 1.f, true);
+	}
 
 
 	//  ******************************* PARTICLES HERE  ******************************* //
+
+
+
 	Mtx44 projection;
 	projection.SetToOrtho(0, m_worldWidth, 0, m_worldHeight, -10, 10);
 	projectionStack.LoadMatrix(projection);
@@ -90,7 +108,7 @@ void SceneFrog::Init()
 
 	hp = Frog->getHP();
 	cout << m_worldHeight << " , " << m_worldWidth << endl;
-	max_rock = 10;
+	max_rock = 4;
 	max_coin = 10;
 	timer = 30.f;
 	for (int i = 0; i < 10; i++)
@@ -157,7 +175,7 @@ void SceneFrog::UpdateRock(double dt)
 		rock->type = FrogObject::GO_ROCK;
 		m_grav.Set(0, -sc * 2, 0);
 		rock->scale.Set(sc, sc, sc);
-		rock->pos.Set(Math::RandFloatMinMax((m_worldWidth / 2) - 50,(m_worldWidth / 2) + 50), m_worldHeight, 0);
+		rock->pos.Set(Math::RandFloatMinMax((m_worldWidth / 2) - 80,(m_worldWidth / 2) + 80), m_worldHeight, 0);
 		m_rockCount++;
 	}
 	if (m_coinCount < max_coin)
@@ -165,7 +183,7 @@ void SceneFrog::UpdateRock(double dt)
 		FrogObject* coin = getRock();
 		coin->type = FrogObject::GO_COIN;
 		coin->scale.Set(3, 3, 1);
-		coin->pos.Set(Math::RandIntMinMax(14 , 23) * 10 , Math::RandIntMinMax(3, 38) * 5, 0);
+		coin->pos.Set(Math::RandIntMinMax(13 , 24) * 10 , Math::RandIntMinMax(3, 38) * 5, 0);
 		m_coinCount++;
 		Frog->plusCoin(Frog);
 	}
@@ -183,7 +201,7 @@ void SceneFrog::UpdateRock(double dt)
 			{
 				rock->Frog_vel.SetZero();
 				rock->pos.y = m_worldHeight;
-				rock->pos.x = Math::RandFloatMinMax((m_worldWidth / 2) - 50, (m_worldWidth / 2) + 50);
+				rock->pos.x = Math::RandFloatMinMax((m_worldWidth / 2) - 80, (m_worldWidth / 2) + 80);
 			}
 		}
 	}
@@ -263,6 +281,23 @@ void SceneFrog::Update(double dt)
 		}
 		if (m_GameOver)
 		{
+			Results::getInstance()->UpdateVars(dt);
+
+			static bool bLButtonState = false;
+			if (!bLButtonState && Application::IsMousePressed(0))
+			{
+				bLButtonState = true;
+				std::cout << "LBUTTON DOWN" << std::endl;
+				if (Results::getInstance()->ButtonMouseCollision())
+				{
+					cout << "hit" << endl;
+				}
+			}
+			else if (bLButtonState && !Application::IsMousePressed(0))
+			{
+				bLButtonState = false;
+				std::cout << "LBUTTON UP" << std::endl;
+			}
 			if (!m_setOriginValues && !m_setStatsToDist)
 			{
 				score = Frog->getScore();
@@ -272,7 +307,15 @@ void SceneFrog::Update(double dt)
 				m_setStatsToDist = true;
 				m_setOriginValues = true;
 				Reset();
+				
 			}
+			//if (!statgained)
+			//{
+			//	GameEndCalculations();
+			//	StatManager::GetInstance()->SetCharsOriginalValues();
+			//	statgained = true;
+			//}
+			
 		}
 		if (timer <= 0)
 		{
@@ -290,12 +333,28 @@ void SceneFrog::Update(double dt)
 		v_mousepos = Vector3(static_cast<float>(x) / (w / m_worldWidth), (h - static_cast<float>(y)) / (h / m_worldHeight), 0.0f);
 		timer -= dt;
 
+		SpriteAnimation *walkRight = dynamic_cast<SpriteAnimation*>(meshList[GEO_FROG_RIGHT]);
+		if (walkRight)
+		{
+			walkRight->Update(dt);
+			walkRight->m_anim->animActive = true;
+
+		}
+		SpriteAnimation *walkLeft = dynamic_cast<SpriteAnimation*>(meshList[GEO_FROG_LEFT]);
+		if (walkLeft)
+		{
+			walkLeft->Update(dt);
+			walkLeft->m_anim->animActive = true;
+
+		}
+
 		static bool bMovingLeft = false;
-		if (Frog->Frog_pos.x >= (m_worldWidth / 2) - 50)
+		if (Frog->Frog_pos.x >= (m_worldWidth / 2) - 80)
 		{
 			if (Application::IsKeyPressed('A') && !bMovingLeft)
 			{
 				Frog->Frog_pos.x -= 10.f;
+				Frog->setSide(true);
 				bMovingLeft = true;
 			}
 
@@ -305,11 +364,12 @@ void SceneFrog::Update(double dt)
 			}
 		}
 		static bool bMovingRight = false;
-		if (Frog->Frog_pos.x <= (m_worldWidth / 2) + 50)
+		if (Frog->Frog_pos.x <= (m_worldWidth / 2) + 80)
 		{
 			if (Application::IsKeyPressed('D') && !bMovingRight)
 			{
 				Frog->Frog_pos.x += 10.f;
+				Frog->setSide(false);
 				bMovingRight = true;
 			}
 			else if (!Application::IsKeyPressed('D') && bMovingRight)
@@ -460,12 +520,24 @@ void SceneFrog::RenderGO(FrogObject* go)
 	{
 	case FrogObject::GO_FROG:
 	{
-		modelStack.PushMatrix();
-		modelStack.Translate(go->Frog_pos);
-		modelStack.Scale(go->scale);
-		RenderMesh(meshList[GEO_FROG], false);
-		modelStack.PopMatrix();
-		break;
+		if (Frog->getSide())
+		{
+			modelStack.PushMatrix();
+			modelStack.Translate(go->Frog_pos);
+			modelStack.Scale(go->scale);
+			RenderMesh(meshList[GEO_FROG_LEFT], false);
+			modelStack.PopMatrix();
+			break;
+		}
+		else
+		{
+			modelStack.PushMatrix();
+			modelStack.Translate(go->Frog_pos);
+			modelStack.Scale(go->scale);
+			RenderMesh(meshList[GEO_FROG_RIGHT], false);
+			modelStack.PopMatrix();
+			break;
+		}
 	}
 	case FrogObject::GO_PLATFORM:
 	{
@@ -507,13 +579,13 @@ void SceneFrog::RenderMap()
 		}
 	}
 	modelStack.PushMatrix();
-	modelStack.Translate((m_worldWidth / 2) - 65, m_worldHeight / 2, 0);
+	modelStack.Translate((m_worldWidth / 2) - 80, m_worldHeight / 2, 0);
 	modelStack.Rotate(Math::RadianToDegree(atan2(camera.position.x - 0, camera.position.z - 0)), 0, 1, 0);
 	modelStack.Scale(5, m_worldHeight, 1);
 	RenderMesh(meshList[GEO_FROG_BORDER], false);
 	modelStack.PopMatrix();
 	modelStack.PushMatrix();
-	modelStack.Translate((m_worldWidth / 2) + 60, m_worldHeight / 2, 0);
+	modelStack.Translate((m_worldWidth / 2) + 80, m_worldHeight / 2, 0);
 	modelStack.Rotate(Math::RadianToDegree(atan2(camera.position.x - 0, camera.position.z - 0)), 0, 1, 0);
 	modelStack.Scale(5, m_worldHeight, 1);
 	RenderMesh(meshList[GEO_FROG_BORDER], false);

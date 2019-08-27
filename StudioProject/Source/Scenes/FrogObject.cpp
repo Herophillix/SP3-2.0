@@ -4,16 +4,18 @@ FrogObject::FrogObject(FROGOBJECT_TYPE typevalue) :
 	Frog_pos(0, 10, 0),
 	Frog_jumpVel(0, 0, 0),
 	hp(3),
-	isMove(false),
+	isLeft(false),
 	isJump(false),
 	isInvincible(false),
 	timerInvincibility(0),
 	score(0),
 	coinLeft(0),
 	Frog_vel(0, 0, 0)
-	
+
 {
 	type = typevalue;
+	SoundSystem.AddSound("Collected_coin", "Sounds//Frog_coin_collect.wav");
+	SoundSystem.AddSound("rock", "Sounds//Frog_rock_impact.wav");
 }
 
 FrogObject::~FrogObject()
@@ -24,11 +26,6 @@ FrogObject::~FrogObject()
 bool FrogObject::getJump()
 {
 	return isJump;
-}
-
-bool FrogObject::getMove()
-{
-	return isMove;
 }
 
 int FrogObject::getHP()
@@ -77,20 +74,15 @@ void FrogObject::setTimerInvicibility(double input, bool additive = false)
 		timerInvincibility = input;
 	}
 }
-
-Vector3 FrogObject::getNormal();
-int FrogObject::getHp();
-double FrogObject::getTimerInvicibility();
+bool FrogObject::getSide()
+{
+	return isLeft;
+}
 // SETS
 
 void FrogObject::setJump(bool jump)
 {
 	isJump = jump;
-}
-
-void FrogObject::setMove(bool move)
-{
-	isMove = move;
 }
 
 void FrogObject::setHP(int health)
@@ -112,6 +104,12 @@ void FrogObject::setScore(int sco)
 {
 	score = sco;
 }
+
+void FrogObject::setSide(bool leftTrue)
+{
+	isLeft = leftTrue;
+}
+
 // FUNCTIONS
 
 void FrogObject::plusCoin(FrogObject* frog)
@@ -155,6 +153,7 @@ void FrogObject::CollisionResponse(FrogObject* go, FrogObject* go2, double dt)
 			go->setInvincible(true);
 			go->pos.y -= 3;
 			timerInvincibility = 0;
+			SoundSystem.PlayASound("rock");
 		//	go->FrogInvincibilityFrame(go, dt);
 		}
 		else if (go->getInvincible())
@@ -170,6 +169,7 @@ void FrogObject::CollisionResponse(FrogObject* go, FrogObject* go2, double dt)
 	{
 		go->score += 100;
 		go->coinLeft -= 1;
+		SoundSystem.PlayASound("Collected_coin");
 		go2->active = false;
 		break;
 	}

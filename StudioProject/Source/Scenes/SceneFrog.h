@@ -4,6 +4,7 @@
 #include "GameObject.h"
 #include "FrogObject.h"
 #include "../Scenes/Results.h"
+#include "..\SoundEngine.h"
 #include <vector>
 #include <sstream>
 
@@ -34,6 +35,7 @@ public:
 	void Reset();
 	void GameEndCalculations();
 	FrogObject* FetchGO();
+	CSoundEngine SoundSystem;
 
 	std::vector<FrogObject* >* m_goList;
 	std::vector<FrogObject* > rock_List;
