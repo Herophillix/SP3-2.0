@@ -80,7 +80,7 @@ void Screen::Update(double dt, Vector3 v_mousepos, Vector3 rel_mousepos, Vector3
 	UseItem->Update(v_mousepos);
 	if (Character->currentItem)
 	{
-		if (UseItem->changed)
+		if (UseItem->getChanged())
 		{
 			switch (Character->currentItem->type)
 			{

@@ -215,7 +215,7 @@ bool SceneFrog::CheckCollision(FrogObject* go, FrogObject* go2)
 	}
 	case FrogObject::GO_PLATFORM:
 	{
-		Vector3 N = go2->normal;
+		Vector3 N = go2->getNormal();
 		Vector3 dist = go2->pos - go->pos;
 		if (dist.Dot(N) < 0)
 		{
@@ -257,7 +257,7 @@ void SceneFrog::Update(double dt)
 	}
 	else if (!m_instructions)
 	{
-		if (Frog->hp == 0)
+		if (Frog->getHP() == 0)
 		{
 			m_GameOver = true;
 		}
@@ -283,7 +283,7 @@ void SceneFrog::Update(double dt)
 		//	Reset();
 		//}
 		double x, y;
-		Frog->timerInvincibility += dt;
+		Frog->setTimerInvicibility(dt, true);
 		Application::GetCursorPos(&x, &y);
 		int w = Application::GetWindowWidth();
 		int h = Application::GetWindowHeight();

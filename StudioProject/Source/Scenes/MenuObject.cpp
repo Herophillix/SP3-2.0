@@ -13,6 +13,16 @@ MenuObject::~MenuObject()
 
 }
 
+bool MenuObject::getChanged()
+{
+	return changed;
+}
+
+void MenuObject::setChanged(bool input)
+{
+	changed = input;
+}
+
 void MenuObject::Update(Vector3 v_mousepos)
 {
 	if (v_mousepos.x >= pos.x - scale.x/2 &&

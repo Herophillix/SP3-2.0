@@ -47,9 +47,13 @@ public:
 	void FrogInvincibilityFrame(FrogObject *go, double dt);
 	void plusCoin(FrogObject* frog);
 
-	Vector3 normal;
-	int hp;
-	double timerInvincibility;
+	void setNormal(Vector3);
+	void setHp(int, bool additive = false);
+	void setTimerInvicibility(double, bool additive = false);
+
+	Vector3 getNormal();
+	int getHp();
+	double getTimerInvicibility();
 
 
 private:
@@ -59,7 +63,9 @@ private:
 	int coinLeft;
 	int score;
 
-
+	Vector3 normal;
+	int hp;
+	double timerInvincibility;
 };
 
 #endif

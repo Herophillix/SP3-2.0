@@ -31,6 +31,11 @@ public:
 	~MenuObject();
 	void Update(Vector3 v_mousepos);
 
+	void setChanged(bool);
+	bool getChanged();
+
+private:
+
 	Vector3 scale_default;
 	bool changed;
 };

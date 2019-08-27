@@ -265,6 +265,8 @@ void StudioProjectScene::Init()
 	Continue = new MenuObject(MenuObject::M_CONTINUE, Vector3(40, 40, 1));
 	Continue->pos = Vector3(m_worldWidth * 0.9f, m_worldHeight * 0.1f, 0);
 	Continue->active = true;
+
+	day = 0;
 }
 void StudioProjectScene::Update(double dt)
 {
@@ -351,6 +353,7 @@ void StudioProjectScene::Update(double dt)
 		case 1:
 		{
 			m_eventTimer = 10.f;
+			day++;
 			break;
 		}
 		case 5:
@@ -368,7 +371,6 @@ void StudioProjectScene::Update(double dt)
 			{
 				currentlevel = Math::RandIntMinMax(1, 5);
 			}
-			//soundSystem.stopAllMusic();
 			Application::setScene(currentlevel);
 			m_eventTimer = Math::RandFloatMinMax(20.0f, 40.f);
 
@@ -647,11 +649,12 @@ void StudioProjectScene::reset()
 void StudioProjectScene::UpdateLevelTransition(double dt)
 {
 	Continue->Update(v_mousepos);
-	if (Continue->changed)
+	if (Continue->getChanged())
 	{
 		m_eventTimer = -0.01;
 		SceneState = S_GAME;
 		phase = 0;
+		Continue->setChanged(false);
 	}
 }
 
@@ -998,6 +1001,10 @@ void StudioProjectScene::RenderLevelTransition()
 		ss << "@";
 	}
 	RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(1, 0, 0), 3, 1 + add, 30);
+
+	ss.str("");
+	ss << "Day " << day << "/5";
+	RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(1, 0, 0), 3, 40 - ss.tellp() / 2, 50);
 }
 
 void StudioProjectScene::RenderCharObj(CharacterObject * go)
@@ -1343,7 +1350,7 @@ void StudioProjectScene::RenderMenu(Screen* ScreenSplit)
 	modelStack.Scale(ScreenSplit->UseItem->scale);
 	if (ScreenSplit->Character->currentItem)
 	{
-		if (ScreenSplit->UseItem->changed)
+		if (ScreenSplit->UseItem->getChanged())
 		{
 			RenderMesh(meshList[GEO_MAIN_STOP], false);
 		}

@@ -21,6 +21,19 @@ public:
 	};
 	MoleObject(MOLEOBJECT_TYPE typeValue = GO_NONE);
 	~MoleObject();
+
+	void setMole_yOffset(float, bool additive = false);
+	void setMole_lifeTime(float, bool additive = false);
+	void setMole_goUp(bool);
+	void setMole_hit(bool);
+
+	float getMole_yOffset();
+	float getMole_lifeTime();
+	bool getMole_goUp();
+	bool getMole_hit();
+
+private:
+
 	float mole_yOffset;
 	float mole_lifeTime;
 	bool mole_goUp;

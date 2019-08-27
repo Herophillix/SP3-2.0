@@ -88,6 +88,7 @@ private:
 	int currentlevel;
 	int SceneState;
 	MenuObject* Continue;
+	int day;
 };
 
 #endif // !STUDIOPROJECT_SCENE_H

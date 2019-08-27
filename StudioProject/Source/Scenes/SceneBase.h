@@ -13,6 +13,7 @@
 #include "../SpriteAnimation.h"
 class SceneBase : public Scene
 {
+private:
 	enum UNIFORM_TYPE
 	{
 		U_MVP = 0,
@@ -180,6 +181,7 @@ public:
 		GEO_TANK_BALL_3,
 		GEO_TANK_BALL_4,
 		GEO_TANK_BALL_5,
+		GEO_TANK_RAIN,
 
 		// SCENEMAZE
 		GEO_MAZE_START,

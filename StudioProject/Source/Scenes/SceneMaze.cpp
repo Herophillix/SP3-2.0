@@ -116,7 +116,9 @@ void SceneMaze::Init()
 	mousepressed = false;
 	endGametime = 0.0;
 
-	soundSystem.AddSound("Hit", "Sounds//Hammer_Whack.wav");
+	soundSystem.AddSound("Maze_Bounce", "Sounds//Tank_Bounce.wav");
+	soundSystem.AddSound("Maze_Victory", "Sounds//Maze_Victory.wav");
+	soundSystem.playWaMoleMusic();
 }
 
 void SceneMaze::Update(double dt)
@@ -245,9 +247,10 @@ void SceneMaze::UpdateGame(double dt)
 			go->Update(dt, m_worldWidth, m_worldHeight);
 			if (go == Ball)
 			{
-				if ((go->pos - Vector3(m_worldWidth * 0.5f, m_worldHeight * 0.5f, 0)).Length() > Maze.getBiggestLength())
+				if ((go->pos - Vector3(m_worldWidth * 0.5f, m_worldHeight * 0.5f, 0)).Length() > Maze.getBiggestLength() && !endGame)
 				{
 					endGame = true;
+					soundSystem.PlayASound("Maze_Victory");
 				}
 			}
 			for (int k = i + 1; k < (int)m_goList->size(); ++k)
@@ -270,7 +273,7 @@ void SceneMaze::UpdateGame(double dt)
 					}
 					if (CheckCollision(go, go2))
 					{
-						soundSystem.PlayASound("Hit");
+						soundSystem.PlayASound("Maze_Bounce");
 						go2->CollisionResponse(go, dt);
 						//CollisionResponse(go, go2, dt);
 					}
@@ -314,17 +317,17 @@ void SceneMaze::UpdateMenu(double dt)
 	for (int i = 0; i < (int)m_menuList.size(); ++i)
 	{
 		m_menuList[i]->Update(v_mousepos);
-		if (m_menuList[i]->changed)
+		if (m_menuList[i]->getChanged())
 		{
-			m_menuList[i]->changed = false;
+			m_menuList[i]->setChanged(false);
 			switch (m_menuList[i]->type)
 			{
 			case MenuObject::M_START:
 			{
-				SceneState = S_GAME; 
+				SceneState = S_GAME;
 				musicPlay = true;
 				Ball->pos = Vector3(m_worldWidth * 0.5f, m_worldHeight * 0.5f, 0);
-				
+
 				StatManager::GetInstance()->SetPrevGame(1);
 				break;
 			}
@@ -444,7 +447,7 @@ void SceneMaze::Render()
 	}
 	case S_GAMEOVER:
 	{
-		RenderGameOver(); 
+		RenderGameOver();
 		break;
 	}
 	}

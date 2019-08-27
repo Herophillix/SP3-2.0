@@ -3,12 +3,6 @@
 class SheepObject : public PhysicsObject
 {
 public:
-	bool isDown;
-	bool onCooldown;
-	float health;
-	float cooldown;
-	float Mana;
-	float spreadAngle;
 	enum sheepGameType
 	{
 		E_NONE,
@@ -24,9 +18,6 @@ public:
 		E_WARNING,
 		E_TOTAL
 	};
-	bool m_dLeftRight;
-	bool isMoving;
-	float mouseAngle;
 	bool getDirection();
 	void setDirection(bool leftTrue);
 	bool getState();
@@ -34,5 +25,36 @@ public:
 	void UpdateMovement(double dt);
 	SheepObject(sheepGameType typeValue = E_NONE);
 	~SheepObject();
+
+	void setIsDown(bool);
+	void setOnCoolDown(bool);
+	void setHealth(int, bool additive = false);
+	void setCooldown(float, bool additive = false);
+	void setMana(float, bool additive = false);
+	void setSpreadAngle(float, bool additive = false);
+	void setM_dLeftRight(bool);
+	void setIsMoving(bool);
+	void setMouseAngle(float, bool additive = false);
+
+	bool getIsDown();
+	bool getOnCooldown();
+	int getHealth();
+	float getCooldown();
+	float getMana();
+	float getSpreadAngle();
+	bool getM_dLeftRight();
+	bool getIsMoving();
+	float getMouseAngle();
+
+private:
+	bool isDown;
+	bool onCooldown;
+	int health;
+	float cooldown;
+	float Mana;
+	float spreadAngle;
+	bool m_dLeftRight;
+	bool isMoving;
+	float mouseAngle;
 };
 

@@ -20,6 +20,17 @@ public:
 	MainMenuObject(MAINMENU_OBJECTTYPE = GO_NONE);
 	~MainMenuObject();
 
+	void setHighlighted(bool);
+	void setxOffset(float, bool additive = false);
+	void setFontColor(Color);
+	void setText(string);
+
+	bool getHighlighted();
+	float getxOffset();
+	Color getFontColor();
+	string getText();
+
+private:
 	bool highlighted;
 	float xOffset;
 	Color fontColor;

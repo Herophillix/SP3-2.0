@@ -24,6 +24,84 @@ TankObject::~TankObject()
 {
 }
 
+void TankObject::setBall(PhysicsObject* input)
+{
+	Ball = input;
+}
+
+void TankObject::setHealth(int input, bool additive)
+{
+	if (additive)
+	{
+		health += input;
+	}
+	else
+	{
+		health = input;
+	}
+}
+
+void TankObject::setIsPlayer(bool input)
+{
+	isPlayer = input;
+}
+void TankObject::setRadius(float input, bool additive)
+{
+	if (additive)
+	{
+		radius += input;
+	}
+	else
+	{
+		radius = input;
+	}
+}
+void TankObject::setFuel(float input, bool additive)
+{
+	if (additive)
+	{
+		fuel += input;
+	}
+	else
+	{
+		fuel = input;
+	}
+}
+
+SubTankObject* TankObject::getHead()
+{
+	return Head;
+}
+SubTankObject* TankObject::getLeftBorder()
+{
+	return LeftBorder;
+}
+SubTankObject* TankObject::getRightBorder()
+{
+	return RightBorder;
+}
+PhysicsObject* TankObject::getBall()
+{
+	return Ball;
+}
+
+int TankObject::getHealth()
+{
+	return health;
+}
+bool TankObject::getIsPlayer()
+{
+	return isPlayer;
+}
+float TankObject::getRadius()
+{
+	return radius;
+}
+float TankObject::getFuel()
+{
+	return fuel;
+}
+
 void TankObject::Update(double dt, float m_worldWidth, float m_worldHeight)
 {
 	if (Ball != nullptr)
