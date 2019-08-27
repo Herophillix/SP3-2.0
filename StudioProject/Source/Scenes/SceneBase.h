@@ -208,6 +208,11 @@ public:
 		// MAIN
 		GEO_MAIN_USE,
 		GEO_MAIN_STOP,
+
+		// MAIN MENU
+		GEO_INS_01,
+		GEO_INS_02,
+		GEO_CRED,
 		// Animations
 		GEO_HAMMER_SPRITE,
 
