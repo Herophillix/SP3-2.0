@@ -116,10 +116,10 @@ void Results::UpdateButtonTexture()
 {
 	for (unsigned int i = 0; i < ButtonList.size(); i++)
 	{
-		if (MousePos.x < ButtonList[i]->pos.x + ButtonList[i]->scale.x / 2
-			&& MousePos.x > ButtonList[i]->pos.x - ButtonList[i]->scale.x / 2 &&
-			MousePos.y < ButtonList[i]->pos.y + ButtonList[i]->scale.y / 2
-			&& MousePos.y > ButtonList[i]->pos.y - ButtonList[i]->scale.y / 2)
+		if (MousePos.x < ButtonList[i]->getPos().x + ButtonList[i]->getScale().x / 2
+			&& MousePos.x > ButtonList[i]->getPos().x - ButtonList[i]->getScale().x / 2 &&
+			MousePos.y < ButtonList[i]->getPos().y + ButtonList[i]->getScale().y / 2
+			&& MousePos.y > ButtonList[i]->getPos().y - ButtonList[i]->getScale().y / 2)
 		{
 
 			switch (ButtonList[i]->objType)
@@ -246,43 +246,43 @@ void Results::RenderGO(ResultObject * go)
 	{
 	case ResultObject::GO_PLUS:
 		modelStack.PushMatrix();
-		modelStack.Translate(go->pos.x, go->pos.y, go->pos.z);
-		modelStack.Scale(go->scale.x, go->scale.y, go->scale.z);
+		modelStack.Translate(go->getPos());
+		modelStack.Scale(go->getScale());
 		RenderMesh(meshList[GEO_RESULT_PLUS], false);
 		modelStack.PopMatrix();
 		break;
 	case ResultObject::GO_MINUS:
 		modelStack.PushMatrix();
-		modelStack.Translate(go->pos.x, go->pos.y, go->pos.z);
-		modelStack.Scale(go->scale.x, go->scale.y, go->scale.z);
+		modelStack.Translate(go->getPos());
+		modelStack.Scale(go->getScale());
 		RenderMesh(meshList[GEO_RESULT_MINUS], false);
 		modelStack.PopMatrix();
 		break;
 	case ResultObject::GO_PLUS_HIGHLIGHT:
 		modelStack.PushMatrix();
-		modelStack.Translate(go->pos.x, go->pos.y, go->pos.z);
-		modelStack.Scale(go->scale.x, go->scale.y, go->scale.z);
+		modelStack.Translate(go->getPos());
+		modelStack.Scale(go->getScale());
 		RenderMesh(meshList[GEO_RESULT_PLUS_HIGHLIGHT], false);
 		modelStack.PopMatrix();
 		break;
 	case ResultObject::GO_MINUS_HIGHLIGHT:
 		modelStack.PushMatrix();
-		modelStack.Translate(go->pos.x, go->pos.y, go->pos.z);
-		modelStack.Scale(go->scale.x, go->scale.y, go->scale.z);
+		modelStack.Translate(go->getPos());
+		modelStack.Scale(go->getScale());
 		RenderMesh(meshList[GEO_RESULT_MINUS_HIGHLIGHT], false);
 		modelStack.PopMatrix();
 		break;
 	case ResultObject::GO_CONTINUE:
 		modelStack.PushMatrix();
-		modelStack.Translate(go->pos.x, go->pos.y, go->pos.z);
-		modelStack.Scale(go->scale.x, go->scale.y, go->scale.z);
+		modelStack.Translate(go->getPos());
+		modelStack.Scale(go->getScale());
 		RenderMesh(meshList[GEO_RESULT_CONTINUE], false);
 		modelStack.PopMatrix();
 		break;
 	case ResultObject::GO_RESET:
 		modelStack.PushMatrix();
-		modelStack.Translate(go->pos.x, go->pos.y, go->pos.z);
-		modelStack.Scale(go->scale.x, go->scale.y, go->scale.z);
+		modelStack.Translate(go->getPos());
+		modelStack.Scale(go->getScale());
 		RenderMesh(meshList[GEO_RESULT_RESET], false);
 		modelStack.PopMatrix();
 		break;
@@ -303,20 +303,20 @@ void Results::InitButtons()
 		temp->objType = ResultObject::GO_PLUS;
 		temp->belong = (ResultObject::WHICH_CHARACTER)(i + 1);
 		temp->stat = ResultObject::S_MOTIVATION;
-		temp->scale.Set(11.25f, 17.f, 1);
+		temp->setScale(Vector3(11.25f, 17.f, 1));
 		switch (i)
 		{
 		case 0:
-			temp->pos.Set((r_quad01Pos.x - 3 * m_thirtytwothWorldWidth), (r_quad01Pos.y + m_twelfthWorldHeight), 0.65f);
+			temp->setPos(Vector3(r_quad01Pos.x - 3 * m_thirtytwothWorldWidth, r_quad01Pos.y + m_twelfthWorldHeight, 0.65f));
 			break;
 		case 1:
-			temp->pos.Set((r_quad02Pos.x - 3 * m_thirtytwothWorldWidth), (r_quad02Pos.y + m_twelfthWorldHeight), 0.65f);
+			temp->setPos(Vector3(r_quad02Pos.x - 3 * m_thirtytwothWorldWidth, r_quad02Pos.y + m_twelfthWorldHeight, 0.65f));
 			break;
 		case 2:
-			temp->pos.Set((r_quad03Pos.x - 3 * m_thirtytwothWorldWidth), (r_quad03Pos.y + m_twelfthWorldHeight), 0.65f);
+			temp->setPos(Vector3(r_quad03Pos.x - 3 * m_thirtytwothWorldWidth, r_quad03Pos.y + m_twelfthWorldHeight, 0.65f));
 			break;
 		case 3:
-			temp->pos.Set((r_quad04Pos.x - 3 * m_thirtytwothWorldWidth), (r_quad04Pos.y + m_twelfthWorldHeight), 0.65f);
+			temp->setPos(Vector3(r_quad04Pos.x - 3 * m_thirtytwothWorldWidth, r_quad04Pos.y + m_twelfthWorldHeight, 0.65f));
 			break;
 		default:
 			break;
@@ -330,20 +330,20 @@ void Results::InitButtons()
 		temp->objType = ResultObject::GO_MINUS;
 		temp->belong = (ResultObject::WHICH_CHARACTER)(i + 1);
 		temp->stat = ResultObject::S_MOTIVATION;
-		temp->scale.Set(11.25f, 17.f, 1);
+		temp->setScale(Vector3(11.25f, 17.f, 1));
 		switch (i)
 		{
 		case 0:
-			temp->pos.Set((r_quad01Pos.x - m_thirtytwothWorldWidth), (r_quad01Pos.y + m_twelfthWorldHeight), 0.65f);
+			temp->setPos(Vector3(r_quad01Pos.x - m_thirtytwothWorldWidth, r_quad01Pos.y + m_twelfthWorldHeight, 0.65f));
 			break;
 		case 1:
-			temp->pos.Set((r_quad02Pos.x - m_thirtytwothWorldWidth), (r_quad02Pos.y + m_twelfthWorldHeight), 0.65f);
+			temp->setPos(Vector3(r_quad02Pos.x - m_thirtytwothWorldWidth, r_quad02Pos.y + m_twelfthWorldHeight, 0.65f));
 			break;
 		case 2:
-			temp->pos.Set((r_quad03Pos.x - m_thirtytwothWorldWidth), (r_quad03Pos.y + m_twelfthWorldHeight), 0.65f);
+			temp->setPos(Vector3(r_quad03Pos.x - m_thirtytwothWorldWidth, r_quad03Pos.y + m_twelfthWorldHeight, 0.65f));
 			break;
 		case 3:
-			temp->pos.Set((r_quad04Pos.x - m_thirtytwothWorldWidth), (r_quad04Pos.y + m_twelfthWorldHeight), 0.65f);
+			temp->setPos(Vector3(r_quad04Pos.x - m_thirtytwothWorldWidth, r_quad04Pos.y + m_twelfthWorldHeight, 0.65f));
 			break;
 		default:
 			break;
@@ -357,20 +357,20 @@ void Results::InitButtons()
 		temp->objType = ResultObject::GO_PLUS;
 		temp->belong = (ResultObject::WHICH_CHARACTER)(i + 1);
 		temp->stat = ResultObject::S_FRUSTRATION;
-		temp->scale.Set(11.25f, 17.f, 1);
+		temp->setScale(Vector3(11.25f, 17.f, 1));
 		switch (i)
 		{
 		case 0:
-			temp->pos.Set((r_quad01Pos.x - 3 * m_thirtytwothWorldWidth), (r_quad01Pos.y - m_twelfthWorldHeight), 0.65f);
+			temp->setPos(Vector3(r_quad01Pos.x - 3 * m_thirtytwothWorldWidth, r_quad01Pos.y - m_twelfthWorldHeight, 0.65f));
 			break;
 		case 1:
-			temp->pos.Set((r_quad02Pos.x - 3 * m_thirtytwothWorldWidth), (r_quad02Pos.y - m_twelfthWorldHeight), 0.65f);
+			temp->setPos(Vector3(r_quad02Pos.x - 3 * m_thirtytwothWorldWidth, r_quad02Pos.y - m_twelfthWorldHeight, 0.65f));
 			break;
 		case 2:
-			temp->pos.Set((r_quad03Pos.x - 3 * m_thirtytwothWorldWidth), (r_quad03Pos.y - m_twelfthWorldHeight), 0.65f);
+			temp->setPos(Vector3(r_quad03Pos.x - 3 * m_thirtytwothWorldWidth, r_quad03Pos.y - m_twelfthWorldHeight, 0.65f));
 			break;
 		case 3:
-			temp->pos.Set((r_quad04Pos.x - 3 * m_thirtytwothWorldWidth), (r_quad04Pos.y - m_twelfthWorldHeight), 0.65f);
+			temp->setPos(Vector3(r_quad04Pos.x - 3 * m_thirtytwothWorldWidth, r_quad04Pos.y - m_twelfthWorldHeight, 0.65f));
 			break;
 		default:
 			break;
@@ -384,20 +384,20 @@ void Results::InitButtons()
 		temp->objType = ResultObject::GO_MINUS;
 		temp->belong = (ResultObject::WHICH_CHARACTER)(i + 1);
 		temp->stat = ResultObject::S_FRUSTRATION;
-		temp->scale.Set(11.25f, 17.f, 1);
+		temp->setScale(Vector3(11.25f, 17.f, 1));
 		switch (i)
 		{
 		case 0:
-			temp->pos.Set((r_quad01Pos.x - m_thirtytwothWorldWidth), (r_quad01Pos.y - m_twelfthWorldHeight), 0.65f);
+			temp->setPos(Vector3(r_quad01Pos.x - m_thirtytwothWorldWidth, r_quad01Pos.y - m_twelfthWorldHeight, 0.65f));
 			break;
 		case 1:
-			temp->pos.Set((r_quad02Pos.x - m_thirtytwothWorldWidth), (r_quad02Pos.y - m_twelfthWorldHeight), 0.65f);
+			temp->setPos(Vector3(r_quad02Pos.x - m_thirtytwothWorldWidth, r_quad02Pos.y - m_twelfthWorldHeight, 0.65f));
 			break;
 		case 2:
-			temp->pos.Set((r_quad03Pos.x - m_thirtytwothWorldWidth), (r_quad03Pos.y - m_twelfthWorldHeight), 0.65f);
+			temp->setPos(Vector3(r_quad03Pos.x - m_thirtytwothWorldWidth, r_quad03Pos.y - m_twelfthWorldHeight, 0.65f));
 			break;
 		case 3:
-			temp->pos.Set((r_quad04Pos.x - m_thirtytwothWorldWidth), (r_quad04Pos.y - m_twelfthWorldHeight), 0.65f);
+			temp->setPos(Vector3(r_quad04Pos.x - m_thirtytwothWorldWidth, r_quad04Pos.y - m_twelfthWorldHeight, 0.65f));
 			break;
 		default:
 			break;
@@ -408,15 +408,15 @@ void Results::InitButtons()
 	// Continue Button
 	continueButton = new ResultObject(ResultObject::GO_NONE);
 	continueButton->objType = ResultObject::GO_CONTINUE;
-	continueButton->pos.Set(m_halfWorldWidth + m_eightWorldWidth, 2 * m_thirdWorldHeight + m_twentyfourthWorldHeight, 0.65f);
-	continueButton->scale.Set(30, 5, 1);
+	continueButton->setPos(Vector3(m_halfWorldWidth + m_eightWorldWidth, 2 * m_thirdWorldHeight + m_twentyfourthWorldHeight, 0.65f));
+	continueButton->setScale(Vector3(30, 5, 1));
 	ButtonList.push_back(continueButton);
 
 	// Reset Button
 	resetButton = new ResultObject(ResultObject::GO_NONE);
 	resetButton->objType = ResultObject::GO_RESET;
-	resetButton->pos.Set(m_halfWorldWidth - m_eightWorldWidth, 2 * m_thirdWorldHeight + m_twentyfourthWorldHeight, 0.65f);
-	resetButton->scale.Set(30, 5, 1);
+	resetButton->setPos(Vector3(m_halfWorldWidth - m_eightWorldWidth, 2 * m_thirdWorldHeight + m_twentyfourthWorldHeight, 0.65f));
+	resetButton->setScale(Vector3(30, 5, 1));
 	ButtonList.push_back(resetButton);
 
 	// Objects C01
@@ -471,11 +471,11 @@ bool Results::ButtonMouseCollision()
 {
 	for (unsigned int i = 0; i < ButtonList.size(); i++)
 	{
-		if (MousePos.x < ButtonList[i]->pos.x + ButtonList[i]->scale.x / 2
-			&& MousePos.x > ButtonList[i]->pos.x - ButtonList[i]->scale.x / 2)
+		if (MousePos.x < ButtonList[i]->getPos().x + ButtonList[i]->getScale().x / 2
+			&& MousePos.x > ButtonList[i]->getPos().x - ButtonList[i]->getScale().x / 2)
 		{
-			if (MousePos.y < ButtonList[i]->pos.y + ButtonList[i]->scale.y / 2
-				&& MousePos.y > ButtonList[i]->pos.y - ButtonList[i]->scale.y / 2)
+			if (MousePos.y < ButtonList[i]->getPos().y + ButtonList[i]->getScale().y / 2
+				&& MousePos.y > ButtonList[i]->getPos().y - ButtonList[i]->getScale().y / 2)
 			{
 				switch (ButtonList[i]->belong)
 				{

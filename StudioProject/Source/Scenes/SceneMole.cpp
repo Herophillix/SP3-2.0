@@ -177,9 +177,9 @@ void SceneMole::Init()
 	for (unsigned int i = 0 ; i < 4 ; i++)
 	{
 		MoleObject* temp = new MoleObject(MoleObject::GO_MOLE);
-		temp->pos.Set(m_eightWorldWidth + (i * m_quarterWorldWidth) , (m_worldHeight - m_sixthWorldHeight) - 35, -4);
-		temp->scale.Set(20, 20, 20);
-		temp->active = false;
+		temp->setPos(Vector3(m_eightWorldWidth + (i * m_quarterWorldWidth) , (m_worldHeight - m_sixthWorldHeight) - 35, -4));
+		temp->setScale(Vector3(20, 20, 20));
+		temp->setActive(false);
 
 		m_moleListTop.push_back(temp);
 	}
@@ -188,9 +188,9 @@ void SceneMole::Init()
 	for (unsigned int i = 0; i < 4; i++)
 	{
 		MoleObject* temp = new MoleObject(MoleObject::GO_MOLE);
-		temp->pos.Set(m_eightWorldWidth + (i * m_quarterWorldWidth),(m_worldHeight - 3 * m_sixthWorldHeight) - 35, -4);
-		temp->scale.Set(20, 20, 20);
-		temp->active = false;
+		temp->setPos(Vector3(m_eightWorldWidth + (i * m_quarterWorldWidth),(m_worldHeight - 3 * m_sixthWorldHeight) - 35, -4));
+		temp->setScale(Vector3(20, 20, 20));
+		temp->setActive(false);
 
 		m_moleListBot.push_back(temp);
 	}
@@ -289,9 +289,9 @@ void SceneMole::Init()
 
 	// ******************************* INIT HAMMER THINGS HERE ******************************* //
 	m_Hammer = FetchGO();
-	m_Hammer->type = MoleObject::GO_HAMMER;
-	m_Hammer->pos.Set(m_halfWorldWidth, m_halfWorldHeight, 5);
-	m_Hammer->scale.Set(20, 20, 20);
+	m_Hammer->setType(MoleObject::GO_HAMMER);
+	m_Hammer->setPos(Vector3(m_halfWorldWidth, m_halfWorldHeight, 5));
+	m_Hammer->setScale(Vector3(20, 20, 20));
 
 	m_hammerMoveBT = 0.1f;
 
@@ -681,54 +681,54 @@ void SceneMole::Render()
 
 void SceneMole::RenderGO(MoleObject * go)
 {
-	switch (go->type)
+	switch (go->getType())
 	{
 	case MoleObject::GO_HAMMER:
 		modelStack.PushMatrix();
-		modelStack.Translate(go->pos.x, go->pos.y, go->pos.z);
-		modelStack.Scale(go->scale.x, go->scale.y, go->scale.z);
+		modelStack.Translate(go->getPos());
+		modelStack.Scale(go->getScale());
 		RenderMesh(meshList[GEO_HAMMER], false);
 		modelStack.PopMatrix();
 		break;
 	case MoleObject::GO_MOLE:
 		modelStack.PushMatrix();
-		modelStack.Translate(go->pos.x, go->pos.y + go->getMole_yOffset(), go->pos.z);
-		modelStack.Scale(go->scale.x, go->scale.y, go->scale.z);
+		modelStack.Translate(go->getPos().x, go->getPos().y + go->getMole_yOffset(), go->getPos().z);
+		modelStack.Scale(go->getScale());
 		RenderMesh(meshList[GEO_MOLE], false);
 		modelStack.PopMatrix();
 		break;
 	case MoleObject::GO_MOLE_BRONZE:
 		modelStack.PushMatrix();
-		modelStack.Translate(go->pos.x, go->pos.y + go->getMole_yOffset(), go->pos.z);
-		modelStack.Scale(go->scale.x, go->scale.y, go->scale.z);
+		modelStack.Translate(go->getPos().x, go->getPos().y + go->getMole_yOffset(), go->getPos().z);
+		modelStack.Scale(go->getScale());
 		RenderMesh(meshList[GEO_MOLE_BRONZE], false);
 		modelStack.PopMatrix();
 		break;
 	case MoleObject::GO_MOLE_SILVER:
 		modelStack.PushMatrix();
-		modelStack.Translate(go->pos.x, go->pos.y + go->getMole_yOffset(), go->pos.z);
-		modelStack.Scale(go->scale.x, go->scale.y, go->scale.z);
+		modelStack.Translate(go->getPos().x, go->getPos().y + go->getMole_yOffset(), go->getPos().z);
+		modelStack.Scale(go->getScale());
 		RenderMesh(meshList[GEO_MOLE_SILVER], false);
 		modelStack.PopMatrix();
 		break;
 	case MoleObject::GO_MOLE_GOLD:
 		modelStack.PushMatrix();
-		modelStack.Translate(go->pos.x, go->pos.y + go->getMole_yOffset(), go->pos.z);
-		modelStack.Scale(go->scale.x, go->scale.y, go->scale.z);
+		modelStack.Translate(go->getPos().x, go->getPos().y + go->getMole_yOffset(), go->getPos().z);
+		modelStack.Scale(go->getScale());
 		RenderMesh(meshList[GEO_MOLE_GOLD], false);
 		modelStack.PopMatrix();
 		break;
 	case MoleObject::GO_MOLE_BOMB:
 		modelStack.PushMatrix();
-		modelStack.Translate(go->pos.x, go->pos.y + go->getMole_yOffset(), go->pos.z);
-		modelStack.Scale(go->scale.x, go->scale.y, go->scale.z);
+		modelStack.Translate(go->getPos().x, go->getPos().y + go->getMole_yOffset(), go->getPos().z);
+		modelStack.Scale(go->getScale());
 		RenderMesh(meshList[GEO_MOLE_BOMB], false);
 		modelStack.PopMatrix();
 		break;
 	case MoleObject::GO_MOLE_FROST:
 		modelStack.PushMatrix();
-		modelStack.Translate(go->pos.x, go->pos.y + go->getMole_yOffset(), go->pos.z);
-		modelStack.Scale(go->scale.x, go->scale.y, go->scale.z);
+		modelStack.Translate(go->getPos().x, go->getPos().y + go->getMole_yOffset(), go->getPos().z);
+		modelStack.Scale(go->getScale());
 		RenderMesh(meshList[GEO_MOLE_FROST], false);
 		modelStack.PopMatrix();
 		break;
@@ -810,7 +810,7 @@ void SceneMole::UpdateHammerPos(char wasd)
 		break;
 	}
 
-	m_Hammer->pos = m_hammerPosList[m_hammerPosIndex];
+	m_Hammer->setPos(m_hammerPosList[m_hammerPosIndex]);
 }
 
 void SceneMole::UpdateMoles(double dt)
@@ -1144,18 +1144,18 @@ void SceneMole::InitHammerPosList()
 	}
 
 
-	m_Hammer->pos = m_hammerPosList[m_hammerPosIndex];
+	m_Hammer->setPos(m_hammerPosList[m_hammerPosIndex]);
 }
 
 bool SceneMole::HammerCollisionCheck()
 {
 	for (unsigned int i = 0; i < m_moleListTotal.size(); i++)
 	{
-		if (m_Hammer->pos.x > m_moleListTotal[i]->pos.x - (m_moleListTotal[i]->scale.x / 2) && 
-			m_Hammer->pos.x < m_moleListTotal[i]->pos.x + (m_moleListTotal[i]->scale.x / 2))
+		if (m_Hammer->getPos().x > m_moleListTotal[i]->pos.x - (m_moleListTotal[i]->scale.x / 2) && 
+			m_Hammer->getPos().x < m_moleListTotal[i]->pos.x + (m_moleListTotal[i]->scale.x / 2))
 		{
-			if (m_Hammer->pos.y < m_moleListTotal[i]->pos.y + (m_moleListTotal[i]->scale.y / 2) + m_moleListTotal[i]->getMole_yOffset() &&
-				m_Hammer->pos.y > m_moleListTotal[i]->pos.y - (m_moleListTotal[i]->scale.y / 2) + m_moleListTotal[i]->getMole_yOffset())
+			if (m_Hammer->getPos().y < m_moleListTotal[i]->pos.y + (m_moleListTotal[i]->scale.y / 2) + m_moleListTotal[i]->getMole_yOffset() &&
+				m_Hammer->getPos().y > m_moleListTotal[i]->pos.y - (m_moleListTotal[i]->scale.y / 2) + m_moleListTotal[i]->getMole_yOffset())
 			{
 				if (m_moleListTotal[i]->active)
 				{
@@ -1211,7 +1211,7 @@ bool SceneMole::HammerCollisionCheck()
 							{
 								Particles* temp = getParticle();
 								temp->type = ParticleObject_TYPE::P_MOLE_SMOKE;
-								temp->pos = m_Hammer->pos;
+								temp->pos = m_Hammer->getPos();
 								temp->pos.y -= 5.f;
 								temp->lifeTime = 1.f;
 								temp->scale.Set(3, 3, 3);

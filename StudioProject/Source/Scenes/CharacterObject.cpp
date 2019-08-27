@@ -39,6 +39,81 @@ void CharacterObject::setState(bool move)
 	isMoving = move;
 }
 
+void CharacterObject::setCurrentItem(ItemObject* input)
+{
+	currentItem = input;
+}
+
+void CharacterObject::setStatistics(CharacterStats input)
+{
+	Statistics = input;
+}
+void CharacterObject::setResting(bool input)
+{
+	resting = input;
+}
+void CharacterObject::setWorkingHard(bool input)
+{
+	WorkingHard = input;
+}
+void CharacterObject::setAsleep(bool input)
+{
+	asleep = input;
+}
+void CharacterObject::setGiveUp(bool input)
+{
+	giveUp = input;
+}
+void CharacterObject::setCounted(bool input)
+{
+	counted = input;
+}
+void CharacterObject::setM_dLeftRight(bool input)
+{
+	m_dLeftRight = input;
+}
+void CharacterObject::setIsMoving(bool input)
+{
+	isMoving = input;
+}
+
+ItemObject* CharacterObject::getCurrentItem()
+{
+	return currentItem;
+}
+CharacterStats CharacterObject::getStatistics()
+{
+	return Statistics;
+}
+bool CharacterObject::getResting()
+{
+	return resting;
+}
+bool CharacterObject::getWorkingHard()
+{
+	return WorkingHard;
+}
+bool CharacterObject::getAsleep()
+{
+	return asleep;
+}
+bool CharacterObject::getGiveUp()
+{
+	return giveUp;
+}
+bool CharacterObject::getCounted()
+{
+	return counted;
+}
+bool CharacterObject::getM_dLeftRight()
+{
+	return m_dLeftRight;
+}
+bool CharacterObject::getIsMoving()
+{
+	return isMoving;
+}
+
 void CharacterObject::Update(double dt)
 {
 	if (!giveUp)

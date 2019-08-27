@@ -30,6 +30,8 @@ void SceneTank::Init()
 	musicplayed = false;
 	musicplay = false;
 
+	cout << "Scene Tank" << endl;
+
 	meshList[GEO_ARROW] = MeshBuilder::GenerateQuad("arrow", Color(1, 1, 1), 1.f);
 	meshList[GEO_ARROW]->textureID = LoadTGA("Image//Arrow.tga");
 	meshList[GEO_TANK_HEAD_1] = MeshBuilder::GenerateQuad("Head 1", Color(1, 1, 1), 2.5f);
@@ -91,41 +93,40 @@ void SceneTank::Init()
 	// James 13/8/2019
 	v_mousepos.SetZero();
 	Ghost = new PhysicsObject(PhysicsObject::GO_BALL);
-	Ghost->active = false;
-	Ghost->pos.SetZero();
-	Ghost->scale.Set(2, 2, 1);
+	Ghost->setActive(false);
+	Ghost->setScale(Vector3(2, 2, 1));
 
 	Ball = nullptr;
 
 	for (int i = 0; i < TraceSize; ++i)
 	{
 		Trace[i] = new PhysicsObject(PhysicsObject::GO_BALL);
-		Trace[i]->scale.Set(1, 1, 1);
+		Trace[i]->setScale(Vector3(1, 1, 1));
 	}
 	// James 14/8/2019
 	tempwall = FetchGO();
-	tempwall->type = PhysicsObject::GO_WALL;
-	tempwall->pos = Vector3(m_worldWidth*0.5, m_worldHeight * 0.25f, 0);
+	tempwall->setType(PhysicsObject::GO_WALL);
+	tempwall->setPos(Vector3(m_worldWidth*0.5, m_worldHeight * 0.25f, 0));
 	tempwall->normal = Vector3(0, 1, 0);
-	tempwall->scale.Set(5, m_worldWidth, 1);
+	tempwall->setScale(Vector3(5, m_worldWidth, 1));
 
 	tempwall2 = FetchGO();
-	tempwall2->type = PhysicsObject::GO_WALL;
-	tempwall2->pos = Vector3(m_worldWidth*0.5, m_worldHeight, 0);
+	tempwall2->setType(PhysicsObject::GO_WALL);
+	tempwall2->setPos(Vector3(m_worldWidth*0.5, m_worldHeight, 0));
 	tempwall2->normal = Vector3(0, 1, 0);
-	tempwall2->scale.Set(5, m_worldWidth, 1);
+	tempwall2->setScale(Vector3(5, m_worldWidth, 1));
 
 	tempwall3 = FetchGO();
-	tempwall3->type = PhysicsObject::GO_WALL;
-	tempwall3->pos = Vector3(0, m_worldHeight * 0.5f, 0);
+	tempwall3->setType(PhysicsObject::GO_WALL);
+	tempwall3->setPos(Vector3(0, m_worldHeight * 0.5f, 0));
 	tempwall3->normal = Vector3(1, 0, 0);
-	tempwall3->scale.Set(5, m_worldHeight, 1);
+	tempwall3->setScale(Vector3(5, m_worldHeight, 1));
 
 	tempwall4 = FetchGO();
-	tempwall4->type = PhysicsObject::GO_WALL;
-	tempwall4->pos = Vector3(m_worldWidth, m_worldHeight * 0.5f, 0);
+	tempwall4->setType(PhysicsObject::GO_WALL);
+	tempwall4->setPos(Vector3(m_worldWidth, m_worldHeight * 0.5f, 0));
 	tempwall4->normal = Vector3(1, 0, 0);
-	tempwall4->scale.Set(5, m_worldHeight, 1);
+	tempwall4->setScale(Vector3(5, m_worldHeight, 1));
 
 	// End James 14/8/2019
 	// End James 13/8/2019
@@ -137,7 +138,7 @@ void SceneTank::Init()
 	// James 16/8/2019
 
 	/*Tank[1] = new TankObject(PhysicsObject::GO_WALL);
-	Tank[1]->pos.Set(m_worldWidth* 0.5f, m_worldHeight * 0.75f, 0);
+	Tank[1]->setPos(Vector3(m_worldWidth* 0.5f, m_worldHeight * 0.75f, 0);
 	Tank[1]->scale.Set(4, 10, 1);
 	Tank[1]->normal.Set(0, 1, 0);
 	Tank[1]->active = true;
@@ -150,37 +151,37 @@ void SceneTank::Init()
 		switch (i)
 		{
 		case 0:
-			Tank[i]->pos.Set(m_worldWidth* 0.375f, m_worldHeight* 0.71875f, 0);
+			Tank[i]->setPos(Vector3(m_worldWidth* 0.375f, m_worldHeight* 0.71875f, 0));
 			break;
 		case 1:
-			Tank[i]->pos.Set(m_worldWidth* 0.875f, m_worldHeight* 0.71875f, 0);
+			Tank[i]->setPos(Vector3(m_worldWidth* 0.875f, m_worldHeight* 0.71875f, 0));
 			break;
 		case 2:
-			Tank[i]->pos.Set(m_worldWidth* 0.375f, m_worldHeight* 0.53125f, 0);
+			Tank[i]->setPos(Vector3(m_worldWidth* 0.375f, m_worldHeight* 0.53125f, 0));
 			break;
 		case 3:
-			Tank[i]->pos.Set(m_worldWidth* 0.875f, m_worldHeight* 0.53125f, 0);
+			Tank[i]->setPos(Vector3(m_worldWidth* 0.875f, m_worldHeight* 0.53125f, 0));
 			break;
 		case 4:
-			Tank[i]->pos.Set(m_worldWidth* 0.125f, m_worldHeight* 0.8125f, 0);
+			Tank[i]->setPos(Vector3(m_worldWidth* 0.125f, m_worldHeight* 0.8125f, 0));
 			break;
 		case 5:
-			Tank[i]->pos.Set(m_worldWidth* 0.625f, m_worldHeight* 0.8125f, 0);
+			Tank[i]->setPos(Vector3(m_worldWidth* 0.625f, m_worldHeight* 0.8125f, 0));
 			break;
 		case 6:
-			Tank[i]->pos.Set(m_worldWidth* 0.125f, m_worldHeight* 0.4375f, 0);
+			Tank[i]->setPos(Vector3(m_worldWidth* 0.125f, m_worldHeight* 0.4375f, 0));
 			break;
 		case 7:
-			Tank[i]->pos.Set(m_worldWidth* 0.625f, m_worldHeight* 0.4375f, 0);
+			Tank[i]->setPos(Vector3(m_worldWidth* 0.625f, m_worldHeight* 0.4375f, 0));
 			break;
 		default:
-			Tank[i]->pos.Set(m_worldWidth* 0.9f, m_worldHeight* 0.9f, 0);
+			Tank[i]->setPos(Vector3(m_worldWidth* 0.9f, m_worldHeight* 0.9f, 0));
 			break;
 		}
-		//Tank[i]->pos.Set(Math::RandFloatMinMax(m_worldWidth * 0.1f, m_worldWidth * 0.9f), Math::RandFloatMinMax(m_worldHeight*0.3, m_worldHeight * 0.9), 0);
-		Tank[i]->scale.Set(4, 10, 1);
+		//Tank[i]->setPos(Vector3(Math::RandFloatMinMax(m_worldWidth * 0.1f, m_worldWidth * 0.9f), Math::RandFloatMinMax(m_worldHeight*0.3, m_worldHeight * 0.9), 0);
+		Tank[i]->setScale(Vector3(4, 10, 1));
 		Tank[i]->normal.Set(0, 1, 0);
-		Tank[i]->active = true;
+		Tank[i]->setActive(true);
 		m_goList->push_back(Tank[i]);
 		Tank[i]->Init(m_goList);
 		if (i % 2  == 0)
@@ -195,9 +196,9 @@ void SceneTank::Init()
 	}
 
 	Ball = FetchGO();
-	Ball->type = PhysicsObject::GO_BALL;
-	Ball->scale.Set(2, 2, 1);
-	Ball->active = false;
+	Ball->setType(PhysicsObject::GO_BALL);
+	Ball->setScale(Vector3(2, 2, 1));
+	Ball->setActive(false);
 
 	endGame = true;
 	elapsedTime = 0;
@@ -213,7 +214,7 @@ void SceneTank::Init()
 	for (int i = 0; i < 7; ++i)
 	{
 		MenuObject* temp = new MenuObject(MenuObject::M_NONE, Vector3(55, 55, 1));
-		temp->active = true;
+		temp->setActive(true);
 		m_menuList.push_back(temp);
 	}
 	m_menuList[0]->pos = Vector3(m_worldWidth * 0.375f, m_worldHeight * 0.75f, 0);
@@ -238,8 +239,8 @@ void SceneTank::Init()
 	m_menuList[6]->type = MenuObject::M_HOW_TO_PLAY;
 
 	back = new MenuObject(MenuObject::M_BACK, Vector3(55, 55, 1));
-	back->active = true;
-	back->pos = Vector3(m_worldWidth* 0.125f, m_worldHeight* 0.25f, 0);
+	back->setActive(true);
+	back->setPos(Vector3(m_worldWidth* 0.125f, m_worldHeight* 0.25f, 0));
 
 	SceneState = S_MENU;
 	turn = 0;
@@ -252,7 +253,6 @@ void SceneTank::Init()
 
 	soundSystem.AddSound("Tank_Shoot", "Sounds//Tank_Shoot.wav");
 	soundSystem.AddSound("Tank_Bounce", "Sounds//Tank_Bounce.wav");
-	soundSystem.playWaMoleMusic();
 
 	m_particleCount = 0;
 	Particlebuffertime = 0.0;
@@ -369,23 +369,23 @@ void SceneTank::UpdateGame(double dt)
 	UpdateParticle(dt);
 
 	// James 14/8/2019
-	tempwall->pos = Vector3(m_worldWidth*0.5, m_worldHeight * 0.25f, 0);
-	tempwall->scale.Set(5, m_worldWidth, 1);
+	tempwall->setPos(Vector3(m_worldWidth*0.5, m_worldHeight * 0.25f, 0));
+	tempwall->setScale(Vector3(5, m_worldWidth, 1));
 
-	tempwall2->pos = Vector3(m_worldWidth*0.5, m_worldHeight, 0);
-	tempwall2->scale.Set(5, m_worldWidth, 1);
+	tempwall2->setPos(Vector3(m_worldWidth*0.5, m_worldHeight, 0));
+	tempwall2->setScale(Vector3(5, m_worldWidth, 1));
 
-	tempwall3->pos = Vector3(0, m_worldHeight * 0.5f, 0);
-	tempwall3->scale.Set(5, m_worldHeight, 1);
+	tempwall3->setPos(Vector3(0, m_worldHeight * 0.5f, 0));
+	tempwall3->setScale(Vector3(5, m_worldHeight, 1));
 
-	tempwall4->pos = Vector3(m_worldWidth, m_worldHeight * 0.5f, 0);
-	tempwall4->scale.Set(5, m_worldHeight, 1);
+	tempwall4->setPos(Vector3(m_worldWidth, m_worldHeight * 0.5f, 0));
+	tempwall4->setScale(Vector3(5, m_worldHeight, 1));
 
 	// End James 14/8/2019
 	// James 13/8/2019
-	if (Ghost->active)
+	if (Ghost->getActive())
 	{
-		Ghost->vel = Ghost->pos - v_mousepos;
+		Ghost->vel = Ghost->getPos() - v_mousepos;
 	}
 	// End James 13/8/2019
 
@@ -413,8 +413,8 @@ void SceneTank::UpdateGame(double dt)
 		bLButtonState = true;
 		std::cout << "LBUTTON DOWN" << std::endl;
 		// James 13/8/2019
-		Ghost->active = true;
-		Ghost->pos = TankObject::currentTank->getHead()->pos;
+		Ghost->setActive(true);
+		Ghost->setPos(TankObject::currentTank->getHead()->getPos());
 		OldPos = v_mousepos;
 		// End James 13/8/2019
 	}
@@ -426,11 +426,11 @@ void SceneTank::UpdateGame(double dt)
 		if ((OldPos - v_mousepos).y > 0)
 		{
 			// James 13/8/2019
-			Ball->active = true;
-			Ball->pos = Ghost->pos;
+			Ball->setActive(true);
+			Ball->setPos(Ghost->getPos());
 			Ball->vel = OldPos - v_mousepos;
 			Ball->vel = Math::Clamp(Ball->vel.Length(), 0.f, 50.f) * Ball->vel.Normalized();
-			Ball->scale.Set(2, 2, 1);
+			Ball->setScale(Vector3(2, 2, 1));
 			TankObject::currentTank->setBall(Ball);
 			ballthrown = true;
 			TankChange = true;
@@ -441,9 +441,9 @@ void SceneTank::UpdateGame(double dt)
 			//	Ball = temp;
 			// End James 15/8/2019
 		}
-		Ghost->active = false;
+		Ghost->setActive(false);
 	}
-	if (!Ball->active)
+	if (!Ball->getActive())
 	{
 		ballthrown = false;
 		if (TankObject::PlayerTankCount > 0 && TankChange)
@@ -458,7 +458,7 @@ void SceneTank::UpdateGame(double dt)
 				TankObject::previousTank = TankObject::currentTank;
 				TankObject::currentTank = Tank[TankObject::TankIndex];
 				// End James 16/8/2019
-				if (TankObject::currentTank->active)
+				if (TankObject::currentTank->getActive())
 				{
 					done = true;
 					TankObject::currentTank->setFuel(100);
@@ -482,7 +482,7 @@ void SceneTank::UpdateGame(double dt)
 		std::cout << "RBUTTON UP" << std::endl;
 	}
 
-	static bool bFState = false;
+	/*static bool bFState = false;
 	if (!bFState && Application::IsKeyPressed('F'))
 	{
 		bFState = true;
@@ -502,7 +502,7 @@ void SceneTank::UpdateGame(double dt)
 		Ball->vel.SetZero();;
 		Ball->scale.Set(2, 2, 1);
 		endGame = false;
-	}
+	}*/
 
 	UpdateRayTracing(dt);
 
@@ -512,7 +512,7 @@ void SceneTank::UpdateGame(double dt)
 		{
 			CheckCollisionTank(TankObject::currentTank, Tank[i]);
 		}
-		if (Tank[i]->active && !Tank[i]->getIsPlayer() && TankObject::currentTank == Tank[i] && !ballthrown)
+		if (Tank[i]->getActive() && !Tank[i]->getIsPlayer() && TankObject::currentTank == Tank[i] && !ballthrown)
 		{
 			UpdateAI(Tank[i], dt);
 		}
@@ -521,9 +521,9 @@ void SceneTank::UpdateGame(double dt)
 	for (int i = 0; i < (int)m_goList->size(); ++i)
 	{
 		PhysicsObject *go = (*m_goList)[i];
-		if (go->active)
+		if (go->getActive())
 		{
-			if (!((Ghost->active || ballthrown) && go == TankObject::currentTank))
+			if (!((Ghost->getActive() || ballthrown) && go == TankObject::currentTank))
 			{
 				go->Update(dt, m_worldWidth, m_worldHeight);
 				Constrain(go);
@@ -531,11 +531,11 @@ void SceneTank::UpdateGame(double dt)
 			for (int k = i + 1; k < (int)m_goList->size(); ++k)
 			{
 				PhysicsObject* go2 = (*m_goList)[k];
-				if (go2->active)
+				if (go2->getActive())
 				{
-					if (go->type != PhysicsObject::GO_BALL)
+					if (go->getType() != PhysicsObject::GO_BALL)
 					{
-						if (go2->type == PhysicsObject::GO_BALL)
+						if (go2->getType() == PhysicsObject::GO_BALL)
 						{
 							PhysicsObject* temp = go;
 							go = go2;
@@ -553,7 +553,7 @@ void SceneTank::UpdateGame(double dt)
 							soundSystem.PlayASound("Tank_Bounce");
 							if (++ballcollisionnum > 4)
 							{
-								go->active = false;
+								go->setActive(false);
 								ballcollisionnum = 0;
 							}
 						}
@@ -598,16 +598,16 @@ void SceneTank::UpdateMenu(double dt)
 					switch (k)
 					{
 					case 0:
-						Tank[k]->pos.Set(m_worldWidth* 0.375f, m_worldHeight* 0.8125f, 0);
+						Tank[k]->setPos(Vector3(m_worldWidth* 0.375f, m_worldHeight* 0.8125f, 0));
 						break;
 					case 2:
-						Tank[k]->pos.Set(m_worldWidth* 0.375f, m_worldHeight* 0.4375f, 0);
+						Tank[k]->setPos(Vector3(m_worldWidth* 0.375f, m_worldHeight* 0.4375f, 0));
 						break;
 					case 4:
-						Tank[k]->pos.Set(m_worldWidth* 0.125f, m_worldHeight* 0.53125f, 0);
+						Tank[k]->setPos(Vector3(m_worldWidth* 0.125f, m_worldHeight* 0.53125f, 0));
 						break;
 					case 6:
-						Tank[k]->pos.Set(m_worldWidth* 0.125f, m_worldHeight* 0.71875f, 0);
+						Tank[k]->setPos(Vector3(m_worldWidth* 0.125f, m_worldHeight* 0.71875f, 0));
 						break;
 					}
 				}
@@ -620,16 +620,16 @@ void SceneTank::UpdateMenu(double dt)
 					switch (k)
 					{
 					case 0:
-						Tank[k]->pos.Set(m_worldWidth* 0.375f, m_worldHeight* 0.71875f, 0);
+						Tank[k]->setPos(Vector3(m_worldWidth* 0.375f, m_worldHeight* 0.71875f, 0));
 						break;
 					case 2:
-						Tank[k]->pos.Set(m_worldWidth* 0.375f, m_worldHeight* 0.53125f, 0);
+						Tank[k]->setPos(Vector3(m_worldWidth* 0.375f, m_worldHeight* 0.53125f, 0));
 						break;
 					case 4:
-						Tank[k]->pos.Set(m_worldWidth* 0.125f, m_worldHeight* 0.4375f, 0);
+						Tank[k]->setPos(Vector3(m_worldWidth* 0.125f, m_worldHeight* 0.4375f, 0));
 						break;
 					case 6:
-						Tank[k]->pos.Set(m_worldWidth* 0.125f, m_worldHeight* 0.8125f, 0);
+						Tank[k]->setPos(Vector3(m_worldWidth* 0.125f, m_worldHeight* 0.8125f, 0));
 						break;
 					}
 				}
@@ -642,16 +642,16 @@ void SceneTank::UpdateMenu(double dt)
 					switch (k)
 					{
 					case 0:
-						Tank[k]->pos.Set(m_worldWidth* 0.1875f, m_worldHeight* 0.71875f, 0);
+						Tank[k]->setPos(Vector3(m_worldWidth* 0.1875f, m_worldHeight* 0.71875f, 0));
 						break;
 					case 2:
-						Tank[k]->pos.Set(m_worldWidth* 0.4375f, m_worldHeight* 0.34375f, 0);
+						Tank[k]->setPos(Vector3(m_worldWidth* 0.4375f, m_worldHeight* 0.34375f, 0));
 						break;
 					case 4:
-						Tank[k]->pos.Set(m_worldWidth* 0.3125f, m_worldHeight* 0.53125f, 0);
+						Tank[k]->setPos(Vector3(m_worldWidth* 0.3125f, m_worldHeight* 0.53125f, 0));
 						break;
 					case 6:
-						Tank[k]->pos.Set(m_worldWidth* 0.0625f, m_worldHeight* 0.90625f, 0);
+						Tank[k]->setPos(Vector3(m_worldWidth* 0.0625f, m_worldHeight* 0.90625f, 0));
 						break;
 					}
 				}
@@ -664,16 +664,16 @@ void SceneTank::UpdateMenu(double dt)
 					switch (k)
 					{
 					case 0:
-						Tank[k]->pos.Set(m_worldWidth* 0.4375f, m_worldHeight* 0.625f, 0);
+						Tank[k]->setPos(Vector3(m_worldWidth* 0.4375f, m_worldHeight* 0.625f, 0));
 						break;
 					case 2:
-						Tank[k]->pos.Set(m_worldWidth* 0.0625f, m_worldHeight* 0.625f, 0);
+						Tank[k]->setPos(Vector3(m_worldWidth* 0.0625f, m_worldHeight* 0.625f, 0));
 						break;
 					case 4:
-						Tank[k]->pos.Set(m_worldWidth* 0.25f, m_worldHeight* 0.34375f, 0);
+						Tank[k]->setPos(Vector3(m_worldWidth* 0.25f, m_worldHeight* 0.34375f, 0));
 						break;
 					case 6:
-						Tank[k]->pos.Set(m_worldWidth* 0.25f, m_worldHeight* 0.90625f, 0);
+						Tank[k]->setPos(Vector3(m_worldWidth* 0.25f, m_worldHeight* 0.90625f, 0));
 						break;
 					}
 				}
@@ -686,16 +686,16 @@ void SceneTank::UpdateMenu(double dt)
 					switch (k)
 					{
 					case 0:
-						Tank[k]->pos.Set(m_worldWidth* 0.25f, m_worldHeight* 0.90625f, 0);
+						Tank[k]->setPos(Vector3(m_worldWidth* 0.25f, m_worldHeight* 0.90625f, 0));
 						break;
 					case 2:
-						Tank[k]->pos.Set(m_worldWidth* 0.25f, m_worldHeight* 0.34375f, 0);
+						Tank[k]->setPos(Vector3(m_worldWidth* 0.25f, m_worldHeight* 0.34375f, 0));
 						break;
 					case 4:
-						Tank[k]->pos.Set(m_worldWidth* 0.25f, m_worldHeight* 0.53125f, 0);
+						Tank[k]->setPos(Vector3(m_worldWidth* 0.25f, m_worldHeight* 0.53125f, 0));
 						break;
 					case 6:
-						Tank[k]->pos.Set(m_worldWidth* 0.25f, m_worldHeight* 0.71875f, 0);
+						Tank[k]->setPos(Vector3(m_worldWidth* 0.25f, m_worldHeight* 0.71875f, 0));
 						break;
 					}
 				}
@@ -708,16 +708,16 @@ void SceneTank::UpdateMenu(double dt)
 					switch (k)
 					{
 					case 0:
-						Tank[k]->pos.Set(m_worldWidth* 0.3125f, m_worldHeight* 0.625f, 0);
+						Tank[k]->setPos(Vector3(m_worldWidth* 0.3125f, m_worldHeight* 0.625f, 0));
 						break;
 					case 2:
-						Tank[k]->pos.Set(m_worldWidth* 0.4375f, m_worldHeight* 0.625f, 0);
+						Tank[k]->setPos(Vector3(m_worldWidth* 0.4375f, m_worldHeight* 0.625f, 0));
 						break;
 					case 4:
-						Tank[k]->pos.Set(m_worldWidth* 0.1875f, m_worldHeight* 0.625f, 0);
+						Tank[k]->setPos(Vector3(m_worldWidth* 0.1875f, m_worldHeight* 0.625f, 0));
 						break;
 					case 6:
-						Tank[k]->pos.Set(m_worldWidth* 0.0625f, m_worldHeight* 0.625f, 0);
+						Tank[k]->setPos(Vector3(m_worldWidth* 0.0625f, m_worldHeight* 0.625f, 0));
 						break;
 					}
 				}
@@ -762,16 +762,16 @@ void SceneTank::ChangeAIPosition()
 			switch (k)
 			{
 			case 1:
-				Tank[k]->pos.Set(m_worldWidth* 0.625f, m_worldHeight* 0.71875f, 0);
+				Tank[k]->setPos(Vector3(m_worldWidth* 0.625f, m_worldHeight* 0.71875f, 0));
 				break;
 			case 3:
-				Tank[k]->pos.Set(m_worldWidth* 0.625f, m_worldHeight* 0.53125f, 0);
+				Tank[k]->setPos(Vector3(m_worldWidth* 0.625f, m_worldHeight* 0.53125f, 0));
 				break;
 			case 5:
-				Tank[k]->pos.Set(m_worldWidth* 0.875f, m_worldHeight* 0.8125f, 0);
+				Tank[k]->setPos(Vector3(m_worldWidth* 0.875f, m_worldHeight* 0.8125f, 0));
 				break;
 			case 7:
-				Tank[k]->pos.Set(m_worldWidth* 0.875f, m_worldHeight* 0.4375f, 0);
+				Tank[k]->setPos(Vector3(m_worldWidth* 0.875f, m_worldHeight* 0.4375f, 0));
 				break;
 			}
 		}
@@ -785,16 +785,16 @@ void SceneTank::ChangeAIPosition()
 			switch (k)
 			{
 			case 1:
-				Tank[k]->pos.Set(m_worldWidth* 0.875f, m_worldHeight* 0.71875f, 0);
+				Tank[k]->setPos(Vector3(m_worldWidth* 0.875f, m_worldHeight* 0.71875f, 0));
 				break;
 			case 3:
-				Tank[k]->pos.Set(m_worldWidth* 0.875f, m_worldHeight* 0.53125f, 0);
+				Tank[k]->setPos(Vector3(m_worldWidth* 0.875f, m_worldHeight* 0.53125f, 0));
 				break;
 			case 5:
-				Tank[k]->pos.Set(m_worldWidth* 0.625f, m_worldHeight* 0.8125f, 0);
+				Tank[k]->setPos(Vector3(m_worldWidth* 0.625f, m_worldHeight* 0.8125f, 0));
 				break;
 			case 7:
-				Tank[k]->pos.Set(m_worldWidth* 0.625f, m_worldHeight* 0.4375f, 0);
+				Tank[k]->setPos(Vector3(m_worldWidth* 0.625f, m_worldHeight* 0.4375f, 0));
 				break;
 			}
 		}
@@ -807,16 +807,16 @@ void SceneTank::ChangeAIPosition()
 			switch (k)
 			{
 			case 1:
-				Tank[k]->pos.Set(m_worldWidth* 0.5625f, m_worldHeight* 0.90625f, 0);
+				Tank[k]->setPos(Vector3(m_worldWidth* 0.5625f, m_worldHeight* 0.90625f, 0));
 				break;
 			case 3:
-				Tank[k]->pos.Set(m_worldWidth* 0.6875f, m_worldHeight* 0.71875f, 0);
+				Tank[k]->setPos(Vector3(m_worldWidth* 0.6875f, m_worldHeight* 0.71875f, 0));
 				break;
 			case 5:
-				Tank[k]->pos.Set(m_worldWidth* 0.8125f, m_worldHeight* 0.53125f, 0);
+				Tank[k]->setPos(Vector3(m_worldWidth* 0.8125f, m_worldHeight* 0.53125f, 0));
 				break;
 			case 7:
-				Tank[k]->pos.Set(m_worldWidth* 0.9375f, m_worldHeight* 0.34375f, 0);
+				Tank[k]->setPos(Vector3(m_worldWidth* 0.9375f, m_worldHeight* 0.34375f, 0));
 				break;
 			}
 		}
@@ -829,16 +829,16 @@ void SceneTank::ChangeAIPosition()
 			switch (k)
 			{
 			case 1:
-				Tank[k]->pos.Set(m_worldWidth* 0.9375f, m_worldHeight* 0.625f, 0);
+				Tank[k]->setPos(Vector3(m_worldWidth* 0.9375f, m_worldHeight* 0.625f, 0));
 				break;
 			case 3:
-				Tank[k]->pos.Set(m_worldWidth* 0.5625f, m_worldHeight* 0.625f, 0);
+				Tank[k]->setPos(Vector3(m_worldWidth* 0.5625f, m_worldHeight* 0.625f, 0));
 				break;
 			case 5:
-				Tank[k]->pos.Set(m_worldWidth* 0.525f, m_worldHeight* 0.34375f, 0);
+				Tank[k]->setPos(Vector3(m_worldWidth* 0.525f, m_worldHeight* 0.34375f, 0));
 				break;
 			case 7:
-				Tank[k]->pos.Set(m_worldWidth* 0.525f, m_worldHeight* 0.90625f, 0);
+				Tank[k]->setPos(Vector3(m_worldWidth* 0.525f, m_worldHeight* 0.90625f, 0));
 				break;
 			}
 		}
@@ -851,16 +851,16 @@ void SceneTank::ChangeAIPosition()
 			switch (k)
 			{
 			case 1:
-				Tank[k]->pos.Set(m_worldWidth* 0.75f, m_worldHeight* 0.90625f, 0);
+				Tank[k]->setPos(Vector3(m_worldWidth* 0.75f, m_worldHeight* 0.90625f, 0));
 				break;
 			case 3:
-				Tank[k]->pos.Set(m_worldWidth* 0.75f, m_worldHeight* 0.34375f, 0);
+				Tank[k]->setPos(Vector3(m_worldWidth* 0.75f, m_worldHeight* 0.34375f, 0));
 				break;
 			case 5:
-				Tank[k]->pos.Set(m_worldWidth* 0.75f, m_worldHeight* 0.53125f, 0);
+				Tank[k]->setPos(Vector3(m_worldWidth* 0.75f, m_worldHeight* 0.53125f, 0));
 				break;
 			case 7:
-				Tank[k]->pos.Set(m_worldWidth* 0.75f, m_worldHeight* 0.71875f, 0);
+				Tank[k]->setPos(Vector3(m_worldWidth* 0.75f, m_worldHeight* 0.71875f, 0));
 				break;
 			}
 		}
@@ -873,16 +873,16 @@ void SceneTank::ChangeAIPosition()
 			switch (k)
 			{
 			case 1:
-				Tank[k]->pos.Set(m_worldWidth* 0.5625f, m_worldHeight* 0.625f, 0);
+				Tank[k]->setPos(Vector3(m_worldWidth* 0.5625f, m_worldHeight* 0.625f, 0));
 				break;
 			case 3:
-				Tank[k]->pos.Set(m_worldWidth* 0.6875f, m_worldHeight* 0.625f, 0);
+				Tank[k]->setPos(Vector3(m_worldWidth* 0.6875f, m_worldHeight* 0.625f, 0));
 				break;
 			case 5:
-				Tank[k]->pos.Set(m_worldWidth* 0.8125f, m_worldHeight* 0.625f, 0);
+				Tank[k]->setPos(Vector3(m_worldWidth* 0.8125f, m_worldHeight* 0.625f, 0));
 				break;
 			case 7:
-				Tank[k]->pos.Set(m_worldWidth* 0.9375f, m_worldHeight* 0.625f, 0);
+				Tank[k]->setPos(Vector3(m_worldWidth* 0.9375f, m_worldHeight* 0.625f, 0));
 				break;
 			}
 		}
@@ -895,9 +895,9 @@ void SceneTank::UpdateRayTracing(double dt)
 {// James 13/8/2019
 	for (int i = 0; i < TraceSize; ++i)
 	{
-		Trace[i]->active = false;
+		Trace[i]->setActive(false);
 	}
-	if (Ghost->active && !(OldPos - v_mousepos).IsZero())
+	if (Ghost->getActive() && !(OldPos - v_mousepos).IsZero())
 	{
 		PhysicsObject temp;
 		temp = *Ghost;
@@ -909,7 +909,7 @@ void SceneTank::UpdateRayTracing(double dt)
 		}
 		temp.vel = Math::Clamp(temp.vel.Length(), 0.f, 50.f) * temp.vel.Normalized();
 		velocity = temp.vel.Length();
-		temp.type = PhysicsObject::GO_TRACE;
+		temp.setType(PhysicsObject::GO_TRACE);
 		TankObject::currentTank->setBall(&temp);
 		float time = 0.f;
 		int index = 0;
@@ -917,17 +917,17 @@ void SceneTank::UpdateRayTracing(double dt)
 		//Vector3 prevpos = Ghost->pos + m_gravity * dt;
 		for (float time = 0; time < 5.f; time += dt)
 		{
-			if (!temp.active)
+			if (!temp.getActive())
 			{
 				break;
 			}
 			temp.vel += Vector3(0, -9.8, 0) * dt;
-			temp.pos += temp.vel * dt;
+			temp.setPos(temp.vel * dt, true);
 			accumulatedtime += temp.vel.Length() * dt;
 			for (int k = 0; k < (int)m_goList->size(); ++k)
 			{
 				PhysicsObject* go2 = (*m_goList)[k];
-				if (go2->active)
+				if (go2->getActive())
 				{
 					if (CheckCollision(&temp, go2))
 					{
@@ -940,8 +940,8 @@ void SceneTank::UpdateRayTracing(double dt)
 			if (accumulatedtime > 10 && index < TraceSize)
 			{
 				accumulatedtime = 0.f;
-				Trace[index]->active = true;
-				Trace[index]->pos = temp.pos;
+				Trace[index]->setActive(true);
+				Trace[index]->setPos(temp.getPos());
 				index++;
 			}
 		}
@@ -950,7 +950,7 @@ void SceneTank::UpdateRayTracing(double dt)
 	{
 		for (int i = 0; i < TraceSize; ++i)
 		{
-			Trace[i]->active = false;
+			Trace[i]->setActive(false);
 		}
 	}
 }
@@ -967,28 +967,28 @@ void SceneTank::UpdateAI(TankObject* com, double dt)
 	Vector3 straightLine;
 	for (int i = 0; i < TankObject::MaxTank; ++i)
 	{
-		if (Tank[i]->active && Tank[i]->getIsPlayer())
+		if (Tank[i]->getActive() && Tank[i]->getIsPlayer())
 		{
 			if (!found)
 			{
-				straightLine = Tank[i]->getHead()->pos - com->getHead()->pos;
+				straightLine = Tank[i]->getHead()->getPos() - com->getHead()->getPos();
 				found = true;
 			}
 			else if (Math::RandIntMinMax(0, 10) > 5)
 			{
-				straightLine = Tank[i]->getHead()->pos - com->getHead()->pos;
+				straightLine = Tank[i]->getHead()->getPos() - com->getHead()->getPos();
 			}
 		}
 	}
 	if (!found)
 	{
 		cout << "Random Ball" << endl;
-		Ball->active = true;
-		Ball->pos = com->getHead()->pos;
+		Ball->setActive(true);
+		Ball->setPos(com->getHead()->getPos());
 		Ball->vel.x = cosf(Math::RandFloatMinMax(0.f, Math::PI));
 		Ball->vel.y = sinf(Math::RandFloatMinMax(0.f, Math::PI));
 		Ball->vel = Ball->vel * Math::RandFloatMinMax(1, 50);
-		Ball->scale.Set(2, 2, 1);
+		Ball->setScale(Vector3(2, 2, 1));
 		TankObject::currentTank->setBall(Ball);
 		ballthrown = true;
 		TankChange = true;
@@ -997,12 +997,12 @@ void SceneTank::UpdateAI(TankObject* com, double dt)
 	}
 	else
 	{
-		Ball->active = true;
-		Ball->pos = com->getHead()->pos;
+		Ball->setActive(true);
+		Ball->setPos(com->getHead()->getPos());
 		float angle = atan2(straightLine.y, straightLine.x);
 		Vector3 direction = Vector3(cosf(angle + Math::DegreeToRadian(Math::RandFloatMinMax(-5, 5))), sinf(angle + Math::DegreeToRadian(Math::RandFloatMinMax(-5, 5))), 0);
 		Ball->vel = Math::Clamp(straightLine.Length(), 1.f, 50.f) * direction;
-		Ball->scale.Set(2, 2, 1);
+		Ball->setScale(Vector3(2, 2, 1));
 		TankObject::currentTank->setBall(Ball);
 		ballthrown = true;
 		TankChange = true;
@@ -1018,7 +1018,7 @@ void SceneTank::UpdateParticle(double dt)
 		Particlebuffertime = 0.0;
 		Particles* go = GetParticle();
 		go->type = ParticleObject_TYPE::P_RAIN;
-		go->pos.Set(Math::RandFloatMinMax(0, m_worldWidth), Math::RandFloatMinMax(m_worldHeight * 0.95f, m_worldHeight * 0.98f), 0);
+		go->pos = Vector3(Math::RandFloatMinMax(0, m_worldWidth), Math::RandFloatMinMax(m_worldHeight * 0.95f, m_worldHeight * 0.98f), 0);
 		go->scale.Set(3, 3, 1);
 		go->vel.SetZero();
 		go->lifeTime = 10.0;
@@ -1052,7 +1052,7 @@ void SceneTank::UpdateParticle(double dt)
 
 bool SceneTank::Constrain(PhysicsObject* go)
 {
-	if (go->pos.y < go->scale.x /2 + tempwall->scale.x / 2 + tempwall->pos.y)
+	if (go->getPos().y < go->getScale().x /2 + tempwall->getScale().x / 2 + tempwall->getPos().y)
 	{
 		go->DownBound = true;
 	}
@@ -1060,7 +1060,7 @@ bool SceneTank::Constrain(PhysicsObject* go)
 	{
 		go->DownBound = false;
 	}
-	if (go->pos.y > tempwall2->pos.y - (go->scale.x + tempwall2->scale.x / 2))
+	if (go->getPos().y > tempwall2->getPos().y - (go->getScale().x + tempwall2->getScale().x / 2))
 	{
 		go->UpBound = true;
 	}
@@ -1068,7 +1068,7 @@ bool SceneTank::Constrain(PhysicsObject* go)
 	{
 		go->UpBound = false;
 	}
-	if (go->pos.x < go->scale.x + tempwall3->scale.x / 2 + tempwall3->pos.x)
+	if (go->getPos().x < go->getScale().x + tempwall3->getScale().x / 2 + tempwall3->getPos().x)
 	{
 		go->LeftBound = true;
 	}
@@ -1076,7 +1076,7 @@ bool SceneTank::Constrain(PhysicsObject* go)
 	{
 		go->LeftBound = false;
 	}
-	if (go->pos.x > tempwall4->pos.x - (go->scale.x + tempwall4->scale.x / 2))
+	if (go->getPos().x > tempwall4->getPos().x - (go->getScale().x + tempwall4->getScale().x / 2))
 	{
 		go->RightBound = true;
 	}
@@ -1101,13 +1101,13 @@ bool SceneTank::CheckCollision(PhysicsObject* go, PhysicsObject* go2)
 	{
 		return false;
 	}
-	switch (go2->type)
+	switch (go2->getType())
 	{
 	case PhysicsObject::GO_BALL:
 	{
-		Vector3 dis = go2->pos - go->pos;
+		Vector3 dis = go2->getPos() - go->getPos();
 		Vector3 u = go->vel - go2->vel;
-		if ((dis).Length() <= go->scale.x + go2->scale.x && u.Dot(dis) > 0)
+		if ((dis).Length() <= go->getScale().x + go2->getScale().x && u.Dot(dis) > 0)
 		{
 			return true;
 		}
@@ -1116,7 +1116,7 @@ bool SceneTank::CheckCollision(PhysicsObject* go, PhysicsObject* go2)
 	case PhysicsObject::GO_WALL:
 	{
 		Vector3 N = go2->normal;
-		Vector3 dist = go2->pos - go->pos;
+		Vector3 dist = go2->getPos() - go->getPos();
 		if (dist.Dot(N) < 0)
 		{
 			N = -N;
@@ -1126,8 +1126,8 @@ bool SceneTank::CheckCollision(PhysicsObject* go, PhysicsObject* go2)
 			return false;
 		}
 		Vector3 NP(N.y, -N.x);
-		if (dist.Dot(N) < (go->scale.x + go2->scale.x * 0.5f) &&
-			abs(dist.Dot(NP)) < (go->scale.y + go2->scale.y * 0.5f))
+		if (dist.Dot(N) < (go->getScale().x + go2->getScale().x * 0.5f) &&
+			abs(dist.Dot(NP)) < (go->getScale().y + go2->getScale().y * 0.5f))
 		{
 			return true;
 		}
@@ -1135,9 +1135,9 @@ bool SceneTank::CheckCollision(PhysicsObject* go, PhysicsObject* go2)
 	}
 	case PhysicsObject::GO_PILLAR:
 	{
-		Vector3 dis = go2->pos - go->pos;
+		Vector3 dis = go2->getPos() - go->getPos();
 		Vector3 u = go->vel - go2->vel;
-		if ((dis).Length() <= go->scale.x + go2->scale.x && u.Dot(dis) > 0)
+		if ((dis).Length() <= go->getScale().x + go2->getScale().x && u.Dot(dis) > 0)
 		{
 			return true;
 		}
@@ -1153,14 +1153,14 @@ bool SceneTank::CheckCollision(PhysicsObject* go, PhysicsObject* go2)
 
 float SceneTank::CheckCollision2(PhysicsObject* go, PhysicsObject* go2)
 {
-	switch (go2->type)
+	switch (go2->getType())
 	{
 	case PhysicsObject::GO_BALL:
 	{
 		float time;
 		Vector3 vMu = go->vel - go2->vel;
-		Vector3 pMu = go->pos - go2->pos;
-		float radius = go->scale.x + go2->scale.x;
+		Vector3 pMu = go->getPos() - go2->getPos();
+		float radius = go->getScale().x + go2->getScale().x;
 		float a = vMu.LengthSquared();
 		float b = 2 * pMu.Dot(vMu);
 		float c = pMu.LengthSquared() - radius * radius;
@@ -1185,7 +1185,7 @@ float SceneTank::CheckCollision2(PhysicsObject* go, PhysicsObject* go2)
 	}
 	case PhysicsObject::GO_WALL:
 	{
-		if (abs((go2->pos - go->pos).Dot(go2->normal)) < 0)
+		if (abs((go2->getPos() - go->getPos()).Dot(go2->normal)) < 0)
 		{
 			go2->normal *= -1.f;
 		}
@@ -1193,11 +1193,11 @@ float SceneTank::CheckCollision2(PhysicsObject* go, PhysicsObject* go2)
 		{
 			return -1;
 		}
-		Vector3 w0 = go2->pos - (go->scale.x + go2->scale.x * 0.5f)*go2->normal;
-		float time = abs((go->pos - w0).Dot(go2->normal)) / go->vel.Dot(go2->normal);
-		Vector3 w1 = w0 + go2->scale.y * 0.5f * go2->normal.Cross(Vector3(0, 0, 1));
-		Vector3 w2 = w0 - go2->scale.y * 0.5f * go2->normal.Cross(Vector3(0, 0, 1));
-		Vector3 bh = go->pos + time * go2->normal;
+		Vector3 w0 = go2->getPos() - (go->getScale().x + go2->getScale().x * 0.5f)*go2->normal;
+		float time = abs((go->getPos() - w0).Dot(go2->normal)) / go->vel.Dot(go2->normal);
+		Vector3 w1 = w0 + go2->getScale().y * 0.5f * go2->normal.Cross(Vector3(0, 0, 1));
+		Vector3 w2 = w0 - go2->getScale().y * 0.5f * go2->normal.Cross(Vector3(0, 0, 1));
+		Vector3 bh = go->getPos() + time * go2->normal;
 		if ((w1 - bh).Dot(w2 - bh) < 0)
 		{
 			return time;
@@ -1221,7 +1221,7 @@ void SceneTank::CheckCollisionTank(TankObject* go, TankObject* go2)
 {
 	float radius1 = go->getRadius();
 	float radius2 = go2->getRadius();
-	if ((go->pos - go2->pos).Length() < radius1 + radius2)
+	if ((go->getPos() - go2->getPos()).Length() < radius1 + radius2)
 	{
 		cout << "Collide" << endl;
 		Constrain(go);
@@ -1229,16 +1229,16 @@ void SceneTank::CheckCollisionTank(TankObject* go, TankObject* go2)
 		{
 			if (go->UpBound || go->DownBound)
 			{
-				go->pos.x += (radius1 + radius2 - (go->pos - go2->pos).Length()) * 1.01 * (go->pos - go2->pos).Normalized().x;
+				go->setPos(Vector3(radius1 + radius2 - (go->getPos() - go2->getPos()).Length() * 1.01 * (go->getPos() - go2->getPos()).Normalized().x, 0,0) , true);
 			}
 			if (go->LeftBound || go->RightBound)
 			{
-				go->pos.y += (radius1 + radius2 - (go->pos - go2->pos).Length()) * 1.01 * (go->pos - go2->pos).Normalized().y;
+				go->setPos(Vector3(0, radius1 + radius2 - (go->getPos() - go2->getPos()).Length() * 1.01 * (go->getPos() - go2->getPos()).Normalized().y, 0), true);
 			}
 		}
 		else
 		{
-			go->pos += (radius1 + radius2 - (go->pos - go2->pos).Length()) * 1.01 * (go->pos - go2->pos).Normalized();
+			go->setPos((radius1 + radius2 - (go->getPos() - go2->getPos()).Length()) * 1.01 * (go->getPos() - go2->getPos()).Normalized(), true);
 		}
 		/*if (go->LeftBound || go->RightBound)
 		{
@@ -1337,11 +1337,11 @@ void SceneTank::RenderGame()
 
 	RenderParticle();
 
-	if (Ghost->active)
+	if (Ghost->getActive())
 	{
 		modelStack.PushMatrix();
-		modelStack.Translate(Ghost->pos);
-		modelStack.Scale(Ghost->scale);
+		modelStack.Translate(Ghost->getPos());
+		modelStack.Scale(Ghost->getScale());
 		RenderMesh(meshList[GEO_BALL], false);
 		modelStack.PopMatrix();
 	}
@@ -1358,7 +1358,7 @@ void SceneTank::RenderGame()
 	for (std::vector<PhysicsObject *>::iterator it = m_goList->begin(); it != m_goList->end(); ++it)
 	{
 		PhysicsObject *go = (PhysicsObject *)*it;
-		if (go->active)
+		if (go->getActive())
 		{
 			RenderGO(go);
 		}
@@ -1372,7 +1372,7 @@ void SceneTank::RenderGame()
 	modelStack.PopMatrix();
 	for (int i = 0; i < TraceSize; ++i)
 	{
-		if (Trace[i]->active)
+		if (Trace[i]->getActive())
 		{
 			RenderGO(Trace[i]);
 		}
@@ -1471,9 +1471,9 @@ void SceneTank::RenderMenu()
 	{
 		MenuObject* go = m_menuList[i];
 		modelStack.PushMatrix();
-		modelStack.Translate(go->pos);
-		modelStack.Scale(go->scale);
-		switch (go->type)
+		modelStack.Translate(go->getPos());
+		modelStack.Scale(go->getScale());
+		switch (go->getType())
 		{
 		case MenuObject::M_FORMATION_1:
 		{
@@ -1534,8 +1534,8 @@ void SceneTank::RenderInstructions()
 	modelStack.PopMatrix();
 
 	modelStack.PushMatrix();
-	modelStack.Translate(back->pos);
-	modelStack.Scale(back->scale);
+	modelStack.Translate(back->getPos());
+	modelStack.Scale(back->getScale());
 	RenderMesh(meshList[GEO_TANK_BACK], false);
 	modelStack.PopMatrix();
 }
@@ -1568,14 +1568,14 @@ void SceneTank::RenderGO(PhysicsObject * go)
 			break;
 		}
 	}
-	switch (go->type)
+	switch (go->getType())
 	{
 		// James 13/8/2019
 	case PhysicsObject::GO_BALL:
 	{
 		modelStack.PushMatrix();
-		modelStack.Translate(go->pos);
-		modelStack.Scale(go->scale);
+		modelStack.Translate(go->getPos());
+		modelStack.Scale(go->getScale());
 		if (go == Ball)
 		{
 			modelStack.Rotate(elapsedTime * 90, 0, 0, 1);
@@ -1591,9 +1591,9 @@ void SceneTank::RenderGO(PhysicsObject * go)
 	case PhysicsObject::GO_WALL:
 	{
 		modelStack.PushMatrix();
-		modelStack.Translate(go->pos);
+		modelStack.Translate(go->getPos());
 		modelStack.Rotate(Math::RadianToDegree(atan2(go->normal.y, go->normal.x)), 0, 0, 1);
-		modelStack.Scale(go->scale);
+		modelStack.Scale(go->getScale());
 		RenderMesh(meshList[GEO_WALL], false);
 		modelStack.PopMatrix();
 		break;
@@ -1601,8 +1601,8 @@ void SceneTank::RenderGO(PhysicsObject * go)
 	case PhysicsObject::GO_TRACE:
 	{
 		modelStack.PushMatrix();
-		modelStack.Translate(go->pos);
-		modelStack.Scale(go->scale);
+		modelStack.Translate(go->getPos());
+		modelStack.Scale(go->getScale());
 		RenderMesh(meshList[GEO_BALL], false);
 		modelStack.PopMatrix();
 		break;
@@ -1610,8 +1610,8 @@ void SceneTank::RenderGO(PhysicsObject * go)
 	case PhysicsObject::GO_PILLAR:
 	{
 		modelStack.PushMatrix();
-		modelStack.Translate(go->pos);
-		modelStack.Scale(go->scale);
+		modelStack.Translate(go->getPos());
+		modelStack.Scale(go->getScale());
 		if (go == Tank[0]->getHead())
 		{
 			RenderMesh(meshList[GEO_TANK_HEAD_1], false);
@@ -1701,8 +1701,8 @@ void SceneTank::ActivateStencil()
 	if (Ball != nullptr)
 	{
 		modelStack.PushMatrix();
-		modelStack.Translate(Ball->pos);
-		modelStack.Scale(Ball->scale * 15);
+		modelStack.Translate(Ball->getPos());
+		modelStack.Scale(Ball->getScale() * 15);
 		RenderMesh(meshList[GEO_LIGHT], false);
 		modelStack.PopMatrix();
 	}
@@ -1736,31 +1736,31 @@ void SceneTank::Reset()
 		switch (i)
 		{
 		case 0:
-			Tank[i]->pos.Set(m_worldWidth* 0.375f, m_worldHeight* 0.71875f, 0);
+			Tank[i]->setPos(Vector3(m_worldWidth* 0.375f, m_worldHeight* 0.71875f, 0));
 			break;
 		case 1:
-			Tank[i]->pos.Set(m_worldWidth* 0.875f, m_worldHeight* 0.71875f, 0);
+			Tank[i]->setPos(Vector3(m_worldWidth* 0.875f, m_worldHeight* 0.71875f, 0));
 			break;
 		case 2:
-			Tank[i]->pos.Set(m_worldWidth* 0.375f, m_worldHeight* 0.53125f, 0);
+			Tank[i]->setPos(Vector3(m_worldWidth* 0.375f, m_worldHeight* 0.53125f, 0));
 			break;
 		case 3:
-			Tank[i]->pos.Set(m_worldWidth* 0.875f, m_worldHeight* 0.53125f, 0);
+			Tank[i]->setPos(Vector3(m_worldWidth* 0.875f, m_worldHeight* 0.53125f, 0));
 			break;
 		case 4:
-			Tank[i]->pos.Set(m_worldWidth* 0.125f, m_worldHeight* 0.8125f, 0);
+			Tank[i]->setPos(Vector3(m_worldWidth* 0.125f, m_worldHeight* 0.8125f, 0));
 			break;
 		case 5:
-			Tank[i]->pos.Set(m_worldWidth* 0.625f, m_worldHeight* 0.8125f, 0);
+			Tank[i]->setPos(Vector3(m_worldWidth* 0.625f, m_worldHeight* 0.8125f, 0));
 			break;
 		case 6:
-			Tank[i]->pos.Set(m_worldWidth* 0.125f, m_worldHeight* 0.4375f, 0);
+			Tank[i]->setPos(Vector3(m_worldWidth* 0.125f, m_worldHeight* 0.4375f, 0));
 			break;
 		case 7:
-			Tank[i]->pos.Set(m_worldWidth* 0.625f, m_worldHeight* 0.4375f, 0);
+			Tank[i]->setPos(Vector3(m_worldWidth* 0.625f, m_worldHeight* 0.4375f, 0));
 			break;
 		default:
-			Tank[i]->pos.Set(m_worldWidth* 0.9f, m_worldHeight* 0.9f, 0);
+			Tank[i]->setPos(Vector3(m_worldWidth* 0.9f, m_worldHeight* 0.9f, 0));
 			break;
 		}
 	}

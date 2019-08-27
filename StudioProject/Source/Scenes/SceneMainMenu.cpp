@@ -22,7 +22,7 @@ void MainMenu::Init()
 	m_halfWorldWidth = m_worldWidth / 2;
 	m_thirdWorldHeight = m_worldHeight / 3;
 	m_sixthWorldHeight = m_worldHeight / 6;
-
+	cout << "Scene Menu" << endl;
 	meshList[GEO_QUAD] = MeshBuilder::GenerateQuad("test", Color(1, 1, 1), 1.f);
 	meshList[GEO_GAMEFONT] = MeshBuilder::GenerateText("kzone", 16, 16);
 	meshList[GEO_GAMEFONT]->textureID = LoadTGA("Image//KidsZone.tga");
@@ -30,29 +30,29 @@ void MainMenu::Init()
 	meshList[GEO_CURSOR]->textureID = LoadTGA("Image//gameCursor.tga");
 
 	m_NewGameButton = new MainMenuObject(MainMenuObject::GO_NONE);
-	m_NewGameButton->type = MainMenuObject::GO_NEWGAME;
-	m_NewGameButton->pos.Set(m_halfWorldWidth / 4, m_thirdWorldHeight * 2, 0);
+	m_NewGameButton->setType(MainMenuObject::GO_NEWGAME);
+	m_NewGameButton->setPos(Vector3(m_halfWorldWidth / 4, m_thirdWorldHeight * 2, 0));
 	m_NewGameButton->setText("New Game");
 	menuObjList.push_back(m_NewGameButton);
 	m_InstructionsButton = new MainMenuObject(MainMenuObject::GO_NONE);
-	m_InstructionsButton->type = MainMenuObject::GO_INSTRUCTIONS;
-	m_InstructionsButton->pos.Set(m_halfWorldWidth / 4, m_sixthWorldHeight * 3, 0);
+	m_InstructionsButton->setType(MainMenuObject::GO_INSTRUCTIONS);
+	m_InstructionsButton->setPos(Vector3(m_halfWorldWidth / 4, m_sixthWorldHeight * 3, 0));
 	m_InstructionsButton->setText("Instructions");
 	menuObjList.push_back(m_InstructionsButton);
 	m_CreditsButton = new MainMenuObject(MainMenuObject::GO_NONE);
-	m_CreditsButton->type = MainMenuObject::GO_CREDITS;
-	m_CreditsButton->pos.Set(m_halfWorldWidth / 4, m_thirdWorldHeight, 0);
+	m_CreditsButton->setType(MainMenuObject::GO_CREDITS);
+	m_CreditsButton->setPos(Vector3(m_halfWorldWidth / 4, m_thirdWorldHeight, 0));
 	m_CreditsButton->setText("Credits");
 	menuObjList.push_back(m_CreditsButton);
 	m_ExitButton = new MainMenuObject(MainMenuObject::GO_NONE);
-	m_ExitButton->type = MainMenuObject::GO_EXIT;
-	m_ExitButton->pos.Set(m_halfWorldWidth / 4, m_sixthWorldHeight, 0);
+	m_ExitButton->setType(MainMenuObject::GO_EXIT);
+	m_ExitButton->setPos(Vector3(m_halfWorldWidth / 4, m_sixthWorldHeight, 0));
 	m_ExitButton->setText("Exit");
 	menuObjList.push_back(m_ExitButton);
 
 	for (unsigned int i = 0; i < menuObjList.size(); i++)
 	{
-		menuObjList[i]->scale.Set(5, 5, 5);
+		menuObjList[i]->setScale(Vector3(5, 5, 5));
 		menuObjList[i]->setxOffset(55.f);
 	}
 
@@ -134,15 +134,15 @@ void MainMenu::Exit()
 
 void MainMenu::RenderGO(MainMenuObject * go)
 {
-	switch (go->type)
+	switch (go->getType())
 	{
 	case MainMenuObject::GO_NEWGAME:
 	case MainMenuObject::GO_INSTRUCTIONS:
 	case MainMenuObject::GO_CREDITS:
 	case MainMenuObject::GO_EXIT:
 		modelStack.PushMatrix();
-		modelStack.Translate(go->pos.x, go->pos.y, go->pos.z);
-		modelStack.Scale(go->scale.x, go->scale.y, go->scale.z);
+		modelStack.Translate(go->getPos());
+		modelStack.Scale(go->getScale());
 		RenderText(meshList[GEO_GAMEFONT], go->getText(), go->getFontColor());
 		modelStack.PopMatrix();
 	default:
@@ -171,10 +171,10 @@ void MainMenu::UpdateMousePos()
 
 	for (unsigned int i = 0; i < menuObjList.size(); i++)
 	{
-		if (m_mousePos.x < menuObjList[i]->pos.x + menuObjList[i]->scale.x + menuObjList[i]->getxOffset()
-			&& m_mousePos.x > menuObjList[i]->pos.x - menuObjList[i]->scale.x
-			&& m_mousePos.y < menuObjList[i]->pos.y + menuObjList[i]->scale.y
-			&& m_mousePos.y > menuObjList[i]->pos.y - menuObjList[i]->scale.y)
+		if (m_mousePos.x < menuObjList[i]->getPos().x + menuObjList[i]->getScale().x + menuObjList[i]->getxOffset()
+			&& m_mousePos.x > menuObjList[i]->getPos().x - menuObjList[i]->getScale().x
+			&& m_mousePos.y < menuObjList[i]->getPos().y + menuObjList[i]->getScale().y
+			&& m_mousePos.y > menuObjList[i]->getPos().y - menuObjList[i]->getScale().y)
 		{
 			menuObjList[i]->setFontColor(Color(0.7f, 0.7f, 0.7f));
 			static bool bLButtonState = false;
@@ -182,7 +182,7 @@ void MainMenu::UpdateMousePos()
 			{
 				bLButtonState = true;
 				std::cout << "LBUTTON DOWN" << std::endl;
-				ButtonCollision((MainMenuObject::MAINMENU_OBJECTTYPE)menuObjList[i]->type);
+				ButtonCollision((MainMenuObject::MAINMENU_OBJECTTYPE)menuObjList[i]->getType());
 			}
 			else if (bLButtonState && !Application::IsMousePressed(0))
 			{

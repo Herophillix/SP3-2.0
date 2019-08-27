@@ -54,52 +54,52 @@ void SceneMaze::Init()
 
 	// James 14/8/2019
 	tempwall = FetchGO();
-	tempwall->type = PhysicsObject::GO_WALL;
-	tempwall->pos = Vector3(m_worldWidth*0.5, 0, 0);
+	tempwall->setType(PhysicsObject::GO_WALL);
+	tempwall->setPos(Vector3(m_worldWidth*0.5, 0, 0));
 	tempwall->normal = Vector3(0, 1, 0);
-	tempwall->scale.Set(5, m_worldWidth, 1);
+	tempwall->setScale(Vector3(5, m_worldWidth, 1));
 
 	tempwall2 = FetchGO();
-	tempwall2->type = PhysicsObject::GO_WALL;
-	tempwall2->pos = Vector3(m_worldWidth*0.5, m_worldHeight, 0);
+	tempwall2->setType(PhysicsObject::GO_WALL);
+	tempwall2->setPos(Vector3(m_worldWidth*0.5, m_worldHeight, 0));
 	tempwall2->normal = Vector3(0, 1, 0);
-	tempwall2->scale.Set(5, m_worldWidth, 1);
+	tempwall2->setScale(Vector3(5, m_worldWidth, 1));
 
 	tempwall3 = FetchGO();
-	tempwall3->type = PhysicsObject::GO_WALL;
-	tempwall3->pos = Vector3(0, m_worldHeight * 0.5f, 0);
+	tempwall3->setType(PhysicsObject::GO_WALL);
+	tempwall3->setPos(Vector3(0, m_worldHeight * 0.5f, 0));
 	tempwall3->normal = Vector3(1, 0, 0);
-	tempwall3->scale.Set(5, m_worldHeight, 1);
+	tempwall3->setScale(Vector3(5, m_worldHeight, 1));
 
 	tempwall4 = FetchGO();
-	tempwall4->type = PhysicsObject::GO_WALL;
-	tempwall4->pos = Vector3(m_worldWidth, m_worldHeight * 0.5f, 0);
+	tempwall4->setType(PhysicsObject::GO_WALL);
+	tempwall4->setPos(Vector3(m_worldWidth, m_worldHeight * 0.5f, 0));
 	tempwall4->normal = Vector3(1, 0, 0);
-	tempwall4->scale.Set(5, m_worldHeight, 1);
+	tempwall4->setScale(Vector3(5, m_worldHeight, 1));
 
 	Maze.SetUp("Source\\Minigames\\Maze\\Map\\Map1.txt",m_goList);
 
 	Ball = FetchGO();
-	Ball->type = PhysicsObject::GO_BALL;
+	Ball->setType(PhysicsObject::GO_BALL);
 	Ball->vel.SetZero();
-	Ball->scale.Set(2, 2, 1);
-	Ball->pos.Set(m_worldWidth * 0.625f, m_worldHeight * 0.75f, 0);
+	Ball->setScale(Vector3(2, 2, 1));
+	Ball->setPos(Vector3(m_worldWidth * 0.625f, m_worldHeight * 0.75f, 0));
 
 	for (int i = 0; i < 3; ++i)
 	{
 		MenuObject* temp = new MenuObject(MenuObject::M_NONE, Vector3(60, 60, 1));
-		temp->active = true;
+		temp->setActive(true);
 		m_menuList.push_back(temp);
 	}
 
-	m_menuList[0]->pos.Set(m_worldWidth * 0.625f, m_worldHeight * 0.25f, 0);
-	m_menuList[0]->type = MenuObject::M_STENCIL_MINUS;
+	m_menuList[0]->setPos(Vector3(m_worldWidth * 0.625f, m_worldHeight * 0.25f, 0));
+	m_menuList[0]->setType(MenuObject::M_STENCIL_MINUS);
 
-	m_menuList[1]->pos.Set(m_worldWidth * 0.875f, m_worldHeight * 0.25f, 0);
-	m_menuList[1]->type = MenuObject::M_STENCIL_PLUS;
+	m_menuList[1]->setPos(Vector3(m_worldWidth * 0.875f, m_worldHeight * 0.25f, 0));
+	m_menuList[1]->setType(MenuObject::M_STENCIL_PLUS);
 
-	m_menuList[2]->pos.Set(m_worldWidth * 0.875f, m_worldHeight * 0.75f, 0);
-	m_menuList[2]->type = MenuObject::M_START;
+	m_menuList[2]->setPos(Vector3(m_worldWidth * 0.875f, m_worldHeight * 0.75f, 0));
+	m_menuList[2]->setType(MenuObject::M_START);
 	// End James 14/8/2019
 	// End James 13/8/2019
 
@@ -118,7 +118,6 @@ void SceneMaze::Init()
 
 	soundSystem.AddSound("Maze_Bounce", "Sounds//Tank_Bounce.wav");
 	soundSystem.AddSound("Maze_Victory", "Sounds//Maze_Victory.wav");
-	soundSystem.playWaMoleMusic();
 }
 
 void SceneMaze::Update(double dt)
@@ -204,17 +203,17 @@ void SceneMaze::UpdateGame(double dt)
 			endGame = true;
 		}
 	}
-	tempwall->pos = Vector3(m_worldWidth*0.5, 0, 0);
-	tempwall->scale.Set(5, m_worldWidth, 1);
+	tempwall->setPos(Vector3(m_worldWidth*0.5, 0, 0));
+	tempwall->setScale(Vector3(5, m_worldWidth, 1));
 
-	tempwall2->pos = Vector3(m_worldWidth*0.5, m_worldHeight, 0);
-	tempwall2->scale.Set(5, m_worldWidth, 1);
+	tempwall2->setPos(Vector3(m_worldWidth*0.5, m_worldHeight, 0));
+	tempwall2->setScale(Vector3(5, m_worldWidth, 1));
 
-	tempwall3->pos = Vector3(0, m_worldHeight * 0.5f, 0);
-	tempwall3->scale.Set(5, m_worldHeight, 1);
+	tempwall3->setPos(Vector3(0, m_worldHeight * 0.5f, 0));
+	tempwall3->setScale(Vector3(5, m_worldHeight, 1));
 
-	tempwall4->pos = Vector3(m_worldWidth, m_worldHeight * 0.5f, 0);
-	tempwall4->scale.Set(5, m_worldHeight, 1);
+	tempwall4->setPos(Vector3(m_worldWidth, m_worldHeight * 0.5f, 0));
+	tempwall4->setScale(Vector3(5, m_worldHeight, 1));
 
 	// End James 14/8/2019
 	/*static bool bFState = false;
@@ -242,12 +241,12 @@ void SceneMaze::UpdateGame(double dt)
 	for (int i = 0; i < (int)m_goList->size(); ++i)
 	{
 		PhysicsObject *go = (*m_goList)[i];
-		if (go->active)
+		if (go->getActive())
 		{
 			go->Update(dt, m_worldWidth, m_worldHeight);
 			if (go == Ball)
 			{
-				if ((go->pos - Vector3(m_worldWidth * 0.5f, m_worldHeight * 0.5f, 0)).Length() > Maze.getBiggestLength() && !endGame)
+				if ((go->getPos() - Vector3(m_worldWidth * 0.5f, m_worldHeight * 0.5f, 0)).Length() > Maze.getBiggestLength() && !endGame)
 				{
 					endGame = true;
 					soundSystem.PlayASound("Maze_Victory");
@@ -256,11 +255,11 @@ void SceneMaze::UpdateGame(double dt)
 			for (int k = i + 1; k < (int)m_goList->size(); ++k)
 			{
 				PhysicsObject* go2 = (*m_goList)[k];
-				if (go2->active)
+				if (go2->getActive())
 				{
-					if (go->type != PhysicsObject::GO_BALL)
+					if (go->getType() != PhysicsObject::GO_BALL)
 					{
-						if (go2->type == PhysicsObject::GO_BALL)
+						if (go2->getType() == PhysicsObject::GO_BALL)
 						{
 							PhysicsObject* temp = go;
 							go = go2;
@@ -320,13 +319,13 @@ void SceneMaze::UpdateMenu(double dt)
 		if (m_menuList[i]->getChanged())
 		{
 			m_menuList[i]->setChanged(false);
-			switch (m_menuList[i]->type)
+			switch (m_menuList[i]->getType())
 			{
 			case MenuObject::M_START:
 			{
 				SceneState = S_GAME;
 				musicPlay = true;
-				Ball->pos = Vector3(m_worldWidth * 0.5f, m_worldHeight * 0.5f, 0);
+				Ball->setPos(Vector3(m_worldWidth * 0.5f, m_worldHeight * 0.5f, 0));
 
 				StatManager::GetInstance()->SetPrevGame(1);
 				break;
@@ -355,13 +354,13 @@ void SceneMaze::UpdateMenu(double dt)
 // James 13/8/2019
 bool SceneMaze::CheckCollision(PhysicsObject* go, PhysicsObject* go2)
 {
-	switch (go2->type)
+	switch (go2->getType())
 	{
 	case PhysicsObject::GO_BALL:
 	{
-		Vector3 dis = go2->pos - go->pos;
+		Vector3 dis = go2->getPos() - go->getPos();
 		Vector3 u = go->vel - go2->vel;
-		if ((dis).Length() <= go->scale.x + go2->scale.x && u.Dot(dis) > 0)
+		if ((dis).Length() <= go->getScale().x + go2->getScale().x && u.Dot(dis) > 0)
 		{
 			return true;
 		}
@@ -370,7 +369,7 @@ bool SceneMaze::CheckCollision(PhysicsObject* go, PhysicsObject* go2)
 	case PhysicsObject::GO_WALL:
 	{
 		Vector3 N = go2->normal;
-		Vector3 dist = go2->pos - go->pos;
+		Vector3 dist = go2->getPos() - go->getPos();
 		if (dist.Dot(N) < 0)
 		{
 			N = -N;
@@ -380,8 +379,8 @@ bool SceneMaze::CheckCollision(PhysicsObject* go, PhysicsObject* go2)
 			return false;
 		}
 		Vector3 NP(N.y, -N.x);
-		if (dist.Dot(N) < (go->scale.x + go2->scale.x * 0.5f) &&
-			abs(dist.Dot(NP)) < (go->scale.y + go2->scale.y * 0.5f))
+		if (dist.Dot(N) < (go->getScale().x + go2->getScale().x * 0.5f) &&
+			abs(dist.Dot(NP)) < (go->getScale().y + go2->getScale().y * 0.5f))
 		{
 			return true;
 		}
@@ -389,9 +388,9 @@ bool SceneMaze::CheckCollision(PhysicsObject* go, PhysicsObject* go2)
 	}
 	case PhysicsObject::GO_PILLAR:
 	{
-		Vector3 dis = go2->pos - go->pos;
+		Vector3 dis = go2->getPos() - go->getPos();
 		Vector3 u = go->vel - go2->vel;
-		if ((dis).Length() <= go->scale.x + go2->scale.x && u.Dot(dis) > 0)
+		if ((dis).Length() <= go->getScale().x + go2->getScale().x && u.Dot(dis) > 0)
 		{
 			return true;
 		}
@@ -473,7 +472,7 @@ void SceneMaze::RenderMenu()
 	ActivateStencil();
 
 	modelStack.PushMatrix();
-	modelStack.Translate(Ball->pos);
+	modelStack.Translate(Ball->getPos());
 	modelStack.Scale(100,100,1);
 	RenderMesh(meshList[GEO_MAZE_SAMPLE], false);
 	modelStack.PopMatrix();
@@ -484,9 +483,9 @@ void SceneMaze::RenderMenu()
 	{
 		MenuObject* go = m_menuList[i];
 		modelStack.PushMatrix();
-		modelStack.Translate(go->pos);
-		modelStack.Scale(go->scale);
-		switch (go->type)
+		modelStack.Translate(go->getPos());
+		modelStack.Scale(go->getScale());
+		switch (go->getType())
 		{
 		case MenuObject::M_START:
 		{
@@ -512,8 +511,8 @@ void SceneMaze::RenderMenu()
 		modelStack.PopMatrix();
 	}
 	modelStack.PushMatrix();
-	modelStack.Translate(Ball->pos);
-	modelStack.Scale(Ball->scale);
+	modelStack.Translate(Ball->getPos());
+	modelStack.Scale(Ball->getScale());
 	RenderMesh(meshList[GEO_BALL], false);
 	modelStack.PopMatrix();
 
@@ -536,7 +535,7 @@ void SceneMaze::RenderGame()
 	for (std::vector<PhysicsObject *>::iterator it = m_goList->begin(); it != m_goList->end(); ++it)
 	{
 		PhysicsObject *go = (PhysicsObject *)*it;
-		if (go->active)
+		if (go->getActive())
 		{
 			RenderGO(go);
 		}
@@ -582,14 +581,14 @@ void SceneMaze::Exit()
 
 void SceneMaze::RenderGO(PhysicsObject * go)
 {
-	switch (go->type)
+	switch (go->getType())
 	{
 		// James 13/8/2019
 	case PhysicsObject::GO_BALL:
 	{
 		modelStack.PushMatrix();
-		modelStack.Translate(go->pos);
-		modelStack.Scale(go->scale);
+		modelStack.Translate(go->getPos());
+		modelStack.Scale(go->getScale());
 		RenderMesh(meshList[GEO_BALL], false);
 		modelStack.PopMatrix();
 		break;
@@ -597,9 +596,9 @@ void SceneMaze::RenderGO(PhysicsObject * go)
 	case PhysicsObject::GO_WALL:
 	{
 		modelStack.PushMatrix();
-		modelStack.Translate(go->pos);
+		modelStack.Translate(go->getPos());
 		modelStack.Rotate(Math::RadianToDegree(atan2(go->normal.y, go->normal.x)), 0, 0, 1);
-		modelStack.Scale(go->scale);
+		modelStack.Scale(go->getScale());
 		RenderMesh(meshList[GEO_WALL], false);
 		modelStack.PopMatrix();
 		break;
@@ -607,8 +606,8 @@ void SceneMaze::RenderGO(PhysicsObject * go)
 	case PhysicsObject::GO_TRACE:
 	{
 		modelStack.PushMatrix();
-		modelStack.Translate(go->pos);
-		modelStack.Scale(go->scale);
+		modelStack.Translate(go->getPos());
+		modelStack.Scale(go->getScale());
 		RenderMesh(meshList[GEO_BALL], false);
 		modelStack.PopMatrix();
 		break;
@@ -616,8 +615,8 @@ void SceneMaze::RenderGO(PhysicsObject * go)
 	case PhysicsObject::GO_PILLAR:
 	{
 		modelStack.PushMatrix();
-		modelStack.Translate(go->pos);
-		modelStack.Scale(go->scale);
+		modelStack.Translate(go->getPos());
+		modelStack.Scale(go->getScale());
 		RenderMesh(meshList[GEO_BALL], false);
 		modelStack.PopMatrix();
 		break;
@@ -632,9 +631,9 @@ PhysicsObject * SceneMaze::FetchGO()
 {
 	for (int i = 0; i < (int)m_goList->size(); i++)
 	{
-		if (!(*m_goList)[i]->active)
+		if (!(*m_goList)[i]->getActive())
 		{
-			(*m_goList)[i]->active = true;
+			(*m_goList)[i]->setActive(true);
 			return (*m_goList)[i];
 		}
 	}
@@ -644,7 +643,7 @@ PhysicsObject * SceneMaze::FetchGO()
 		m_goList->push_back(new PhysicsObject(PhysicsObject::GO_NONE));
 	}
 
-	(*m_goList)[m_goList->size() - 20]->active = true;
+	(*m_goList)[m_goList->size() - 20]->setActive(true);
 	return (*m_goList)[m_goList->size() - 20];
 }
 
@@ -668,7 +667,7 @@ void SceneMaze::ActivateStencil()
 	if (Ball != nullptr)
 	{
 		modelStack.PushMatrix();
-		modelStack.Translate(Ball->pos);
+		modelStack.Translate(Ball->getPos());
 		modelStack.Scale((10 + stencilsize * 2) * 2, (10 + stencilsize * 2) * 2, 1);
 		RenderMesh(meshList[GEO_BALL], false);
 		modelStack.PopMatrix();
@@ -747,7 +746,7 @@ void SceneMaze::Reset()
 	stencilsize = 1;
 	score = 10000;
 	grade = 'S';
-	Ball->pos.Set(m_worldWidth * 0.625f, m_worldHeight * 0.75f, 0);
+	Ball->setPos(Vector3(m_worldWidth * 0.625f, m_worldHeight * 0.75f, 0));
 	elapsedTime = 0.0;
 	endGametime = 0.0;
 	endGame = false;

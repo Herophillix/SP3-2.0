@@ -24,14 +24,6 @@ public:
 	//Main Character Stats
 	static int m_Count;
 
-	CharacterStats Statistics;
-	bool resting;
-	bool WorkingHard;
-	bool asleep;
-	bool giveUp;
-	bool counted;
-	bool m_dLeftRight;
-	bool isMoving;
 
 	bool getDirection();
 	void reset();
@@ -45,5 +37,36 @@ public:
 	void Update(double dt);
 	void UpdateMovement(double dt, float m_worldWidth, float m_worldHeight);
 	bool CheckCollision(ItemObject * go2);
+
+	void setCurrentItem(ItemObject*);
+	void setStatistics(CharacterStats);
+	void setResting(bool);
+	void setWorkingHard(bool);
+	void setAsleep(bool);
+	void setGiveUp(bool);
+	void setCounted(bool);
+	void setM_dLeftRight(bool);
+	void setIsMoving(bool);
+
+	ItemObject* getCurrentItem();
+	CharacterStats getStatistics();
+	bool getResting();
+	bool getWorkingHard();
+	bool getAsleep();
+	bool getGiveUp();
+	bool getCounted();
+	bool getM_dLeftRight();
+	bool getIsMoving();
+
 	ItemObject* currentItem;
+	CharacterStats Statistics;
+	bool resting;
+	bool WorkingHard;
+	bool asleep;
+	bool giveUp;
+	bool counted;
+	bool m_dLeftRight;
+	bool isMoving;
+private:
+	
 };

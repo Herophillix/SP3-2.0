@@ -42,7 +42,8 @@ void SheepGame::Init()
 	//Calculating aspect ratio
 	m_worldHeight = 100.f;
 	m_worldWidth = m_worldHeight * (float)Application::GetWindowWidth() / Application::GetWindowHeight();
-
+	cout <<
+		"Scene Sheep " << endl;
 	//Variables here
 	Math::InitRNG();
 
@@ -128,10 +129,10 @@ void SheepGame::Init()
 
 
 	//Sound
-	SoundSystem.AddSound("Fireball_Cast", "Sounds//Fireball_Cast.wav");
-	SoundSystem.AddSound("Fireball_Explosion", "Sounds//Fireball_Explosion.wav");
-	SoundSystem.AddSound("Lightning_Bolt", "Sounds//Lightning_Bolt.wav");
-	SoundSystem.AddSound("Sheep", "Sounds//Sheep.mp3");
+	//SoundSystem.AddSound("Fireball_Cast", "Sounds//Fireball_Cast.wav");
+	//SoundSystem.AddSound("Fireball_Explosion", "Sounds//Fireball_Explosion.wav");
+	//SoundSystem.AddSound("Lightning_Bolt", "Sounds//Lightning_Bolt.wav");
+	//SoundSystem.AddSound("Sheep", "Sounds//Sheep.mp3");
 	Mtx44 projection;
 	projection.SetToOrtho(0, m_worldWidth, 0, m_worldHeight, -10, 10);
 	projectionStack.LoadMatrix(projection);
@@ -287,7 +288,7 @@ void SheepGame::Update(double dt)
 			{
 				Results::getInstance()->UpdateVars(dt);
 				player->active = false;
-				SoundSystem.stopAllMusic();
+				//SoundSystem.stopAllMusic();
 				if (!statsGain)
 				{
 					GameEndCalculations();
@@ -755,7 +756,7 @@ void SheepGame::Update(double dt)
 	}
 	if (playMusic)
 	{
-		SoundSystem.playSheepMusic();
+		//SoundSystem.playSheepMusic();
 		playMusic = false;
 	}
 

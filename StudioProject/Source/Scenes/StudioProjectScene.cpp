@@ -103,6 +103,7 @@ void StudioProjectScene::Init()
 	//Particles
 	m_particleCount = 0;
 	MAX_PARTICLE = 2000;
+	
 	soundSystem.Init();
 	m_Gravity.Set(0, -9.8, 0);
 

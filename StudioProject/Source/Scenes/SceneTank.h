@@ -119,6 +119,8 @@ private:
 	CSoundEngine soundSystem;
 
 	MenuObject* back;
+
+	bool playmusic;
 };
 
 #endif // !STUDIOPROJECT_SCENE_H

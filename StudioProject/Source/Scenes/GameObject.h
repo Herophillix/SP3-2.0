@@ -8,36 +8,24 @@
 class GameObject
 {
 public:
+	GameObject();
+	~GameObject();
+	void setType(int);
+	void setPos(Vector3, bool additive = false);
+	void setScale(Vector3, bool additive = false);
+	void setActive(bool);
+
+	int getType();
+	Vector3 getPos();
+	Vector3 getScale();
+	bool getActive();
 	int type;
 	Vector3 pos;
 	//Vector3 vel;
 	Vector3 scale;
 	bool active;
-	int health;
-	bool isDown;
-	//double reload;
-	//int hp;
-	////Main Character Stats
-	//float experience;
-	//float frustration;
-	//float motivation;
-	//float rest;
-	//float workDone;
-	//bool giveUp;
-	//bool m_dLeftRight;
-	//bool isMoving;
+private:
 
-	//bool getDirection();
-	//void setDirection(bool leftTrue);
-	//bool getState();
-	//void setState(bool moving);
-
-	//Vector3 dir;
-	//float momentOfInertia;
-	//float angularVelocity;
-
-	GameObject();
-	~GameObject();
 };
 
 #endif
