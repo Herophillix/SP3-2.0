@@ -60,6 +60,11 @@ void Screen::Update(double dt, Vector3 v_mousepos, Vector3 rel_mousepos, Vector3
 				Character->resting = false;
 				break;
 			}
+			case ItemObject::I_COMPUTER:
+			{
+				Character->WorkingHard = true;
+			}
+
 			default:
 				break;
 			}
@@ -76,6 +81,15 @@ void Screen::Update(double dt, Vector3 v_mousepos, Vector3 rel_mousepos, Vector3
 			{
 				Character->resting = true;
 				break;
+			}
+			case ItemObject::I_COMPUTER:
+			{
+				Character->WorkingHard = true;
+				break;
+			}
+			case ItemObject::I_BOX:
+			{
+
 			}
 			default:
 				break;

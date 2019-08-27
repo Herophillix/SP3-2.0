@@ -10,6 +10,7 @@ public:
 		I_NONE,
 		I_TELEVISION,
 		I_COMPUTER,
+		I_BOX,
 		I_TOTAL
 	};
 

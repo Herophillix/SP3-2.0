@@ -39,16 +39,10 @@ void StudioProjectScene::Init()
 	meshList[GEO_PARTICLE_TEST]->textureID = LoadTGA("Image//balloon.tga");
 	meshList[GEO_ARROW] = MeshBuilder::GenerateQuad("arrow", Color(1, 1, 1), 1.f);
 	meshList[GEO_ARROW]->textureID = LoadTGA("Image//Arrow.tga");
-	meshList[GEO_SPRITE_ANIMATION] = MeshBuilder::GenerateSpriteAnimation("test", 1, 4);
-	meshList[GEO_SPRITE_ANIMATION]->textureID = LoadTGA("Image//Idle_anim.tga");
-	meshList[GEO_WALKLEFT] = MeshBuilder::GenerateSpriteAnimation("char1walkleft", 1, 4);
-	meshList[GEO_WALKLEFT]->textureID = LoadTGA("Image//Walk_animLeft2.tga");
-	meshList[GEO_WALKRIGHT] = MeshBuilder::GenerateSpriteAnimation("char1walkright", 1, 4);
-	meshList[GEO_WALKRIGHT]->textureID = LoadTGA("Image//Walk_animRight2.tga");
-	meshList[GEO_SPRITE_TEST2] = MeshBuilder::GenerateSpriteAnimation("test2", 1, 6);
-	meshList[GEO_SPRITE_TEST2]->textureID = LoadTGA("Image//Idle_anim2.tga");
 	meshList[GEO_TELEVISION] = MeshBuilder::GenerateQuad("Television", Color(1, 1, 1), 1.f);
 	meshList[GEO_TELEVISION]->textureID = LoadTGA("Image//Television.tga");
+	meshList[GEO_COMPUTER] = MeshBuilder::GenerateQuad("Computer", Color(1, 1, 1), 1.f);
+	meshList[GEO_COMPUTER]->textureID = LoadTGA("Image//Television.tga");
 	meshList[GEO_BORDER] = MeshBuilder::GenerateQuad("Border", Color(1, 1, 1), 1.f);
 	meshList[GEO_BORDER]->textureID = LoadTGA("Image//Border.tga");
 	meshList[GEO_TANK_CURSOR] = MeshBuilder::GenerateQuad("Cursor", Color(1, 1, 1), 1.f);
@@ -126,33 +120,12 @@ void StudioProjectScene::Init()
 	ScreenSplit[2]->UseItem->pos.Set(m_worldWidth * 0.45f, m_worldHeight * 0.05f, 0);
 	ScreenSplit[3]->UseItem->pos.Set(m_worldWidth * 0.95f, m_worldHeight * 0.05f, 0);
 
+	ScreenSplit[0]->Character->type = CharacterObject::GO_CHAR01;
+	ScreenSplit[1]->Character->type = CharacterObject::GO_CHAR02;
+	ScreenSplit[2]->Character->type = CharacterObject::GO_CHAR03;
+	ScreenSplit[3]->Character->type = CharacterObject::GO_CHAR04;
+
 	currentChar = ScreenSplit[0]->Character;
-
-	SpriteAnimation *sa = dynamic_cast<SpriteAnimation *>(meshList[GEO_SPRITE_ANIMATION]);
-	if (sa)
-	{
-		sa->m_anim = new Animation();
-		sa->m_anim->Set(0, 4, 0, 1.f, true);
-	}
-	SpriteAnimation *sa2 = dynamic_cast<SpriteAnimation *>(meshList[GEO_SPRITE_TEST2]);
-	if (sa2)
-	{
-		sa2->m_anim = new Animation();
-		sa2->m_anim->Set(0, 6, 0, 2.f, true);
-	}
-
-	SpriteAnimation *walkLeft = dynamic_cast<SpriteAnimation *>(meshList[GEO_WALKLEFT]);
-	if (walkLeft)
-	{
-		walkLeft->m_anim = new Animation();
-		walkLeft->m_anim->Set(0, 4, 0, 1.f, true);
-	}
-	SpriteAnimation *walkRight = dynamic_cast<SpriteAnimation *>(meshList[GEO_WALKRIGHT]);
-	if (walkRight)
-	{
-		walkRight->m_anim = new Animation();
-		walkRight->m_anim->Set(0, 4, 0, 1.f, true);
-	}
 
 	// IDLE LEFT
 	SpriteAnimation *C01IL = dynamic_cast<SpriteAnimation *>(meshList[GEO_CHARACTER01_IDLE_LEFT]);
@@ -368,6 +341,7 @@ void StudioProjectScene::Update(double dt)
 		{
 			SceneState = S_LEVELTRANSITION;
 			phase = 0;
+			mTimer = 2.f;
 			break;
 		}
 		default:
@@ -378,9 +352,10 @@ void StudioProjectScene::Update(double dt)
 			{
 				currentlevel = Math::RandIntMinMax(1, 5);
 			}
+			soundSystem.stopSheep();
 			Application::setScene(currentlevel);
 			m_eventTimer = Math::RandFloatMinMax(20.0f, 40.f);
-			mTimer = 2.f;
+			
 			break;
 		}
 		}
@@ -501,38 +476,6 @@ void StudioProjectScene::UpdateGame(double dt)
 	}
 
 	currentChar->UpdateMovement(dt, m_worldWidth, m_worldHeight);
-
-
-	SpriteAnimation *sa = dynamic_cast<SpriteAnimation*>(meshList[GEO_SPRITE_ANIMATION]);
-	if (sa)
-	{
-		sa->Update(dt);
-		sa->m_anim->animActive = true;
-
-	}
-
-	SpriteAnimation *sa2 = dynamic_cast<SpriteAnimation*>(meshList[GEO_SPRITE_TEST2]);
-	if (sa2)
-	{
-		sa2->Update(dt);
-		sa2->m_anim->animActive = true;
-
-	}
-
-	SpriteAnimation *walkRight = dynamic_cast<SpriteAnimation*>(meshList[GEO_WALKRIGHT]);
-	if (walkRight)
-	{
-		walkRight->Update(dt);
-		walkRight->m_anim->animActive = true;
-
-	}
-	SpriteAnimation *walkLeft = dynamic_cast<SpriteAnimation*>(meshList[GEO_WALKLEFT]);
-	if (walkLeft)
-	{
-		walkLeft->Update(dt);
-		walkLeft->m_anim->animActive = true;
-
-	}
 
 	// IDLE LEFT
 	SpriteAnimation *C01IL = dynamic_cast<SpriteAnimation *>(meshList[GEO_CHARACTER01_IDLE_LEFT]);
@@ -998,34 +941,6 @@ void StudioProjectScene::RenderCharObj(CharacterObject * go)
 		RenderMesh(meshList[GEO_QUAD], false);
 		modelStack.PopMatrix();
 		break;
-	case CharacterObject::GO_SPRITE_TEST:
-		if (go->getState() == true)
-		{
-			modelStack.PushMatrix();
-			modelStack.Translate(go->pos.x, go->pos.y, go->pos.z);
-			if (go->getDirection() == true)
-			{
-				modelStack.Scale(go->scale.x, go->scale.y, go->scale.z);
-				RenderMesh(meshList[GEO_WALKLEFT], false);
-				modelStack.PopMatrix();
-			}
-			else
-			{
-				modelStack.Scale(go->scale.x, go->scale.y, go->scale.z);
-				RenderMesh(meshList[GEO_WALKRIGHT], false);
-				modelStack.PopMatrix();
-			}
-			break;
-		}
-		else if (!go->getState())
-		{
-			modelStack.PushMatrix();
-			modelStack.Translate(go->pos.x, go->pos.y, go->pos.z);
-			modelStack.Scale(go->scale.x, go->scale.y, go->scale.z);
-			RenderMesh(meshList[GEO_SPRITE_TEST2], false);
-			modelStack.PopMatrix();
-			break;
-		}
 	case CharacterObject::GO_CHAR01:
 		if (go->getState() == true)
 		{
@@ -1182,6 +1097,14 @@ void StudioProjectScene::RenderCharObj(CharacterObject * go)
 		modelStack.PopMatrix();
 		break;
 
+	case CharacterObject::GO_COMPUTER:
+		modelStack.PushMatrix();
+		modelStack.Translate(go->pos.x, go->pos.y, go->pos.z);
+		modelStack.Scale(go->scale.x, go->scale.y, go->scale.z);
+		RenderMesh(meshList[GEO_TELEVISION], false);
+		modelStack.PopMatrix();
+		break;
+
 	default:
 		break;
 	}
@@ -1192,6 +1115,22 @@ void StudioProjectScene::RenderItemObj(ItemObject * go)
 	switch (go->type)
 	{
 	case ItemObject::I_TELEVISION:
+		modelStack.PushMatrix();
+		modelStack.Translate(go->pos);
+		modelStack.PushMatrix();
+		modelStack.Scale(go->scale);
+		RenderMesh(meshList[GEO_TELEVISION], false);
+		modelStack.PopMatrix();
+		if (go->bounded)
+		{
+			modelStack.PushMatrix();
+			modelStack.Scale(go->scale * 1.1f);
+			RenderMesh(meshList[GEO_BORDER], false);
+			modelStack.PopMatrix();
+		}
+		modelStack.PopMatrix();
+		break;
+	case ItemObject::I_COMPUTER:
 		modelStack.PushMatrix();
 		modelStack.Translate(go->pos);
 		modelStack.PushMatrix();
