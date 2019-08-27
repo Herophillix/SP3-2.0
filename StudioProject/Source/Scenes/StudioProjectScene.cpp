@@ -43,7 +43,7 @@ void StudioProjectScene::Init()
 	meshList[GEO_TELEVISION]->textureID = LoadTGA("Image//Item_TV.tga");
 	meshList[GEO_COMPUTER] = MeshBuilder::GenerateQuad("Computer", Color(1, 1, 1), 1.f);
 	meshList[GEO_COMPUTER]->textureID = LoadTGA("Image//Item_Comp.tga");
-	meshList[GEO_SLEEPBOX] = MeshBuilder::GenerateQuad("SleepingBox", Color(1, 1, 1), 1.f);l
+	meshList[GEO_SLEEPBOX] = MeshBuilder::GenerateQuad("SleepingBox", Color(1, 1, 1), 1.f);
 	meshList[GEO_SLEEPBOX]->textureID = LoadTGA("Image//Item_Box.tga");
 	meshList[GEO_BORDER] = MeshBuilder::GenerateQuad("Border", Color(1, 1, 1), 1.f);
 	meshList[GEO_BORDER]->textureID = LoadTGA("Image//Border.tga");
@@ -58,7 +58,7 @@ void StudioProjectScene::Init()
 	meshList[GEO_MAIN_CONTINUE] = MeshBuilder::GenerateQuad("Continue", Color(1, 1, 1), 1.f);
 	meshList[GEO_MAIN_CONTINUE]->textureID = LoadTGA("Image//Main_Continue.tga");
 	meshList[GEO_LOSESCREEN] = MeshBuilder::GenerateQuad("LoseScreen", Color(1, 1, 1), 1.f);
-	meshList[GEO_LOSESCREEN]->textureID = LoadTGA("Image//Lose_Screen.tga");l
+	meshList[GEO_LOSESCREEN]->textureID = LoadTGA("Image//Lose_Screen.tga");
 
 	// CHARACTER SPRITE ANIMATIONS
 	meshList[GEO_CHARACTER01_IDLE_LEFT] = MeshBuilder::GenerateSpriteAnimation("c01_idle_left", 1, 4);
@@ -326,7 +326,7 @@ void StudioProjectScene::Update(double dt)
 	}
 	case S_GAMEOVER:
 	{
-		UpdateLoseScreen();
+		UpdateLoseScreen(dt);
 		break;
 	}
 	default:
@@ -367,7 +367,7 @@ void StudioProjectScene::Update(double dt)
 			{
 				currentlevel = Math::RandIntMinMax(1, 5);
 			}
-			soundSystem.stopSheep();
+			soundSystem.stopAllMusic();
 			Application::setScene(currentlevel);
 			m_eventTimer = Math::RandFloatMinMax(20.0f, 40.f);
 			
