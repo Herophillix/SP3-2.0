@@ -33,16 +33,18 @@ void StudioProjectScene::Init()
 	b_transitioning = false;
 	playMusic = false;
 	meshList[GEO_QUAD] = MeshBuilder::GenerateQuad("test", Color(1, 1, 1), 1.f);
-	meshList[GEO_BACKGROUND] = MeshBuilder::GenerateQuad("testbg", Color(1, 1, 1), 1);
-	meshList[GEO_BACKGROUND]->textureID = LoadTGA("Image//BGTest.tga");
+	meshList[GEO_BACKGROUND] = MeshBuilder::GenerateQuad("Background", Color(1, 1, 1), 1);
+	meshList[GEO_BACKGROUND]->textureID = LoadTGA("Image//BackGround.tga");
 	meshList[GEO_PARTICLE_TEST] = MeshBuilder::GenerateQuad("testParticle", Color(1, 1, 1), 1.f);
 	meshList[GEO_PARTICLE_TEST]->textureID = LoadTGA("Image//balloon.tga");
 	meshList[GEO_ARROW] = MeshBuilder::GenerateQuad("arrow", Color(1, 1, 1), 1.f);
 	meshList[GEO_ARROW]->textureID = LoadTGA("Image//Arrow.tga");
 	meshList[GEO_TELEVISION] = MeshBuilder::GenerateQuad("Television", Color(1, 1, 1), 1.f);
-	meshList[GEO_TELEVISION]->textureID = LoadTGA("Image//Television.tga");
+	meshList[GEO_TELEVISION]->textureID = LoadTGA("Image//Item_TV.tga");
 	meshList[GEO_COMPUTER] = MeshBuilder::GenerateQuad("Computer", Color(1, 1, 1), 1.f);
-	meshList[GEO_COMPUTER]->textureID = LoadTGA("Image//Television.tga");
+	meshList[GEO_COMPUTER]->textureID = LoadTGA("Image//Item_Comp.tga");
+	meshList[GEO_SLEEPBOX] = MeshBuilder::GenerateQuad("SleepingBox", Color(1, 1, 1), 1.f);
+	meshList[GEO_SLEEPBOX]->textureID = LoadTGA("Image//Item_Box.tga");
 	meshList[GEO_BORDER] = MeshBuilder::GenerateQuad("Border", Color(1, 1, 1), 1.f);
 	meshList[GEO_BORDER]->textureID = LoadTGA("Image//Border.tga");
 	meshList[GEO_TANK_CURSOR] = MeshBuilder::GenerateQuad("Cursor", Color(1, 1, 1), 1.f);
@@ -1101,7 +1103,7 @@ void StudioProjectScene::RenderCharObj(CharacterObject * go)
 		modelStack.PushMatrix();
 		modelStack.Translate(go->pos.x, go->pos.y, go->pos.z);
 		modelStack.Scale(go->scale.x, go->scale.y, go->scale.z);
-		RenderMesh(meshList[GEO_TELEVISION], false);
+		RenderMesh(meshList[GEO_COMPUTER], false);
 		modelStack.PopMatrix();
 		break;
 
@@ -1135,7 +1137,23 @@ void StudioProjectScene::RenderItemObj(ItemObject * go)
 		modelStack.Translate(go->pos);
 		modelStack.PushMatrix();
 		modelStack.Scale(go->scale);
-		RenderMesh(meshList[GEO_TELEVISION], false);
+		RenderMesh(meshList[GEO_COMPUTER], false);
+		modelStack.PopMatrix();
+		if (go->bounded)
+		{
+			modelStack.PushMatrix();
+			modelStack.Scale(go->scale * 1.1f);
+			RenderMesh(meshList[GEO_BORDER], false);
+			modelStack.PopMatrix();
+		}
+		modelStack.PopMatrix();
+		break;
+	case ItemObject::I_BOX:
+		modelStack.PushMatrix();
+		modelStack.Translate(go->pos);
+		modelStack.PushMatrix();
+		modelStack.Scale(go->scale);
+		RenderMesh(meshList[GEO_SLEEPBOX], false);
 		modelStack.PopMatrix();
 		if (go->bounded)
 		{
@@ -1192,7 +1210,7 @@ void StudioProjectScene::RenderBG()
 {
 	modelStack.PushMatrix();
 	modelStack.Translate(m_worldWidth * 0.5f, m_worldHeight * 0.5f, 0);
-	modelStack.Scale(Application::GetWindowWidth() / 5, Application::GetWindowHeight() / 5, 1);
+	modelStack.Scale(Application::GetWindowWidth() / 6, Application::GetWindowHeight() / 6, 1);
 	RenderMesh(meshList[GEO_BACKGROUND], false);
 	modelStack.PopMatrix();
 }
@@ -1278,6 +1296,16 @@ void StudioProjectScene::RenderMenu(Screen* ScreenSplit)
 		case ItemObject::I_TELEVISION:
 		{
 			RenderMesh(meshList[GEO_TELEVISION], false);
+			break;
+		}
+		case ItemObject::I_COMPUTER:
+		{
+			RenderMesh(meshList[GEO_COMPUTER], false);
+			break;
+		}
+		case ItemObject::I_BOX:
+		{
+			RenderMesh(meshList[GEO_SLEEPBOX], false);
 			break;
 		}
 		}

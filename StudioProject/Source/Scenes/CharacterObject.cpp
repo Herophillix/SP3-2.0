@@ -46,7 +46,7 @@ void CharacterObject::Update(double dt)
 	}
 	if (Statistics.m_frustration > 0 && asleep == true)
 	{
-		Statistics.m_frustration -= 10.f / Statistics.m_experience * 1 / m_Count * dt;
+		Statistics.m_frustration -= 7.f / Statistics.m_experience * 1 / m_Count * dt;
 	}
 	if(Statistics.m_frustration > 0 && resting == true)
 	{
@@ -66,7 +66,7 @@ void CharacterObject::Update(double dt)
 	}
 	if (Statistics.m_rest < 100 && resting == true)
 	{
-		Statistics.m_rest += 0.5f  *  Statistics.m_experience * dt / m_Count;
+		Statistics.m_rest += 0.1f  *  Statistics.m_experience * dt / m_Count;
 	}
 	if (Statistics.m_rest < 100 && WorkingHard == true)
 	{
@@ -102,11 +102,11 @@ void CharacterObject::Update(double dt)
 	}
 	if (Statistics.m_workDone < 100 && resting == false && WorkingHard == false)
 	{
-		Statistics.m_workDone += 40.50f / Statistics.m_experience * Statistics.m_motivation / Statistics.m_rest *  dt / m_Count;
+		Statistics.m_workDone += 5.50f / Statistics.m_experience * Statistics.m_motivation / Statistics.m_rest *  dt / m_Count;
 	}
 	if (Statistics.m_workDone < 100 && WorkingHard == true && resting == false)
 	{
-		Statistics.m_workDone += 10.0f / Statistics.m_experience * Statistics.m_motivation / Statistics.m_rest *  dt / m_Count;
+		Statistics.m_workDone += 8.f / Statistics.m_experience * Statistics.m_motivation / Statistics.m_rest *  dt / m_Count;
 	}
 	if (Statistics.m_workDone < 100 && asleep == true)
 	{
@@ -119,24 +119,24 @@ void CharacterObject::UpdateMovement(double dt, float m_worldWidth, float m_worl
 	if (Application::IsKeyPressed('D') || Application::IsKeyPressed('A') || Application::IsKeyPressed('S') || Application::IsKeyPressed('W'))
 	{
 		isMoving = true;
-		if (Application::IsKeyPressed('D') && pos.x < m_worldWidth - scale.x/2)
+		if (Application::IsKeyPressed('D') && pos.x < m_worldWidth - scale.x/2 - 17)
 		{
 			pos.x += 1;
 			m_dLeftRight = false;
 		}
-		if (Application::IsKeyPressed('A') && pos.x > 0 + scale.x/2)
+		if (Application::IsKeyPressed('A') && pos.x > 0 + scale.x/2 + 16 )
 		{
 			pos.x -= 1;
 			m_dLeftRight = true;
 		}
-		if (Application::IsKeyPressed('W') && pos.y < m_worldHeight - scale.y / 2)
+		if (Application::IsKeyPressed('W') && pos.y < m_worldHeight - scale.y / 2 - 15)
 		{
 			cout << m_worldHeight << endl;
 			cout << pos.y << endl;
 			pos.y += 1;
 			m_dLeftRight = false;
 		}
-		if (Application::IsKeyPressed('S') && pos.y > 0 + scale.y / 2)
+		if (Application::IsKeyPressed('S') && pos.y > 0 + scale.y / 2 + 10)
 		{
 			pos.y -= 1;
 			m_dLeftRight = true;
