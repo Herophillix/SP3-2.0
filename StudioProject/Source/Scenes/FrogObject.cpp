@@ -52,7 +52,7 @@ void FrogObject::setNormal(Vector3 input)
 {
 	normal = input;
 }
-void FrogObject::setHp(int input, bool additive = false)
+void FrogObject::setHp(int input, bool additive)
 {
 	if (additive)
 	{
@@ -63,7 +63,7 @@ void FrogObject::setHp(int input, bool additive = false)
 		hp = input;
 	}
 }
-void FrogObject::setTimerInvicibility(double input, bool additive = false)
+void FrogObject::setTimerInvicibility(double input, bool additive)
 {
 	if (additive)
 	{
@@ -111,6 +111,10 @@ void FrogObject::setSide(bool leftTrue)
 }
 
 // FUNCTIONS
+Vector3 FrogObject::getNormal()
+{
+	return normal;
+}
 
 void FrogObject::plusCoin(FrogObject* frog)
 {
