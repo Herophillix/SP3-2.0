@@ -129,7 +129,7 @@ void SheepGame::Init()
 
 	//Sound
 	SoundSystem.AddSound("Fireball_Cast", "Sounds//Fireball_Cast.wav");
-	SoundSystem.AddSound("FIreball_Explosion", "Sounds//Fireball_Explosion.wav");
+	SoundSystem.AddSound("Fireball_Explosion", "Sounds//Fireball_Explosion.wav");
 	SoundSystem.AddSound("Lightning_Bolt", "Sounds//Lightning_Bolt.wav");
 	SoundSystem.AddSound("Sheep", "Sounds//Sheep.mp3");
 	Mtx44 projection;
@@ -672,7 +672,7 @@ void SheepGame::Update(double dt)
 
 					}
 				}
-				if (EvilKingSheep->health == 0 || player->health == 0)
+				if (EvilKingSheep->health <= 0 || player->health == 0)
 				{
 					gameOver = true;
 				}
@@ -999,6 +999,7 @@ void SheepGame::Pattern2(double dt)
 						Linux->pos.Set(m_worldWidth / 2 + 45, m_worldHeight, 0);
 						Linux->active = true;
 						Linux->isDown = false;
+						patternDone = true;
 						Warning3->active = false;
 						Timer3Check = false;
 						stop3 = true;
@@ -1015,6 +1016,7 @@ void SheepGame::Pattern2(double dt)
 					Linux->isDown = false;
 					Warning->active = false;
 					Timer1Check = false;
+
 					stop1 = true;
 				}
 			}
@@ -1029,7 +1031,6 @@ void SheepGame::Pattern2(double dt)
 				Linux->isDown = false;
 				Warning2->active = false;
 				Timer2Check = false;
-				patternDone = true;
 				stop2 = true;
 			}
 		}
@@ -1377,7 +1378,7 @@ void SheepGame::renderCrossHair()
 }
 void SheepGame::GameEndCalculations() // Setting the stats and other stuff
 {
-	if (points >= 2000)
+	if (points >= 2800)
 	{
 		m_Grade = 'S';
 		StatManager::GetInstance()->UpdateChar01F(StatManager::GetInstance()->GetChar01().m_frustration -20);
@@ -1390,23 +1391,23 @@ void SheepGame::GameEndCalculations() // Setting the stats and other stuff
 		StatManager::GetInstance()->UpdateChar04M(StatManager::GetInstance()->GetChar04().m_motivation + 20);
 		Results::getInstance()->InitStatsToDist(35);
 	}
-	else if (points >= 1500 && points < 2000)
+	else if (points >= 2500 && points < 2800)
 	{
 		m_Grade = 'A';
 		Results::getInstance()->InitStatsToDist(25);
 
 	}
-	else if (points >= 1200 && points < 1500)
+	else if (points >= 2200 && points < 2500)
 	{
 		m_Grade = 'B';
 		Results::getInstance()->InitStatsToDist(20);
 	}
-	else if (points >= 850 && points < 1200)
+	else if (points >= 1900 && points < 2200)
 	{
 		m_Grade = 'C';
 		Results::getInstance()->InitStatsToDist(15);
 	}
-	else if (points >= 600 && points < 850)
+	else if (points >=  1750 && points < 1900)
 	{
 		m_Grade = 'D';
 		Results::getInstance()->InitStatsToDist(10);

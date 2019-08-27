@@ -105,7 +105,7 @@ void StudioProjectScene::Init()
 	MAX_PARTICLE = 2000;
 	soundSystem.Init();
 	m_Gravity.Set(0, -9.8, 0);
-	soundSystem.playMainMusic();
+
 	m_Count = 4;
 	for (unsigned i = 0; i < 10;++i)
 	{
@@ -321,7 +321,7 @@ void StudioProjectScene::Update(double dt)
 	}
 	case S_LEVELTRANSITION:
 	{
-		//soundSystem.stopAllMusic();
+		soundSystem.stopAllMusic();
 		UpdateLevelTransition(dt);
 		break;
 	}
@@ -368,7 +368,6 @@ void StudioProjectScene::Update(double dt)
 			{
 				currentlevel = Math::RandIntMinMax(1, 5);
 			}
-			//soundSystem.stopAllMusic();
 			Application::setScene(currentlevel);
 			m_eventTimer = Math::RandFloatMinMax(20.0f, 40.f);
 			
@@ -611,6 +610,7 @@ void StudioProjectScene::UpdateGame(double dt)
 	mTimer -= dt;
 	if (mTimer < 0 && playMusic == false)
 	{
+		soundSystem.playMainMusic();
 		playMusic = true;
 	}
 }
