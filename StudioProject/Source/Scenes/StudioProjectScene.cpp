@@ -899,8 +899,6 @@ void StudioProjectScene::RenderGame()
 		{
 			RenderMenu(ScreenSplit[i]);
 		}
-		// Model matrix : an identity matrix (model will be at the origin)
-		modelStack.LoadIdentity();
 	}
 	else
 	{
@@ -962,15 +960,31 @@ void StudioProjectScene::RenderLevelTransition()
 	RenderMesh(meshList[GEO_MAIN_CONTINUE], false);
 	modelStack.PopMatrix();
 
-	/*std::ostringstream ss;
+	std::ostringstream ss;
 	ss.precision(3);
 	ss << "Work Done:";
-	for (int i = 0; i < )
-	RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(0, 1, 0), 3, 1, 1);
+	RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(0, 1, 0), 3, 1, 33);
 
 	ss.str("");
-	ss << v_mousepos;
-	RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(0, 1, 0), 3, 1, 4);*/
+	int value = (ScreenSplit[0]->Character->Statistics.m_workDone
+		+ ScreenSplit[1]->Character->Statistics.m_workDone
+		+ ScreenSplit[2]->Character->Statistics.m_workDone
+		+ ScreenSplit[3]->Character->Statistics.m_workDone) / 4;
+	/*value = value + 10 / 2;
+	value -= value % 10;*/
+	int add = 0;
+	for (int i = 0; i < value; i += 5)
+	{
+		ss << "@";
+		add += 3;
+	}
+	RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(0, 1, 0), 3, 1, 30);
+	ss.str("");
+	for (int i = 0; i < 100 - value; i += 5)
+	{
+		ss << "@";
+	}
+	RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(1, 0, 0), 3, 1 + add, 30);
 }
 
 void StudioProjectScene::RenderCharObj(CharacterObject * go)
@@ -1273,26 +1287,26 @@ void StudioProjectScene::RenderStats(CharacterObject* Character)
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 	modelStack.PushMatrix();
-	modelStack.Translate(m_worldWidthDiv8 + 10 + Character->Statistics.m_frustration / 2, m_worldHeight / 2, 0);
-	modelStack.Scale(Character->Statistics.m_frustration, 10, 1);
+	modelStack.Translate(m_worldWidthDiv8 + 10 + Character->Statistics.m_frustration / 2, m_worldHeight / 2 + 15, 0);
+	modelStack.Scale(Character->Statistics.m_frustration, 25, 1);
 	RenderMesh(meshList[GEO_CHARONEFRUST], false);
 	modelStack.PopMatrix();
 
 	modelStack.PushMatrix();
-	modelStack.Translate(m_worldWidthDiv8 + 15 + Character->Statistics.m_motivation / 2, m_worldHeight / 2 + 15, 0);
-	modelStack.Scale(Character->Statistics.m_motivation, 10, 1);
+	modelStack.Translate(m_worldWidthDiv8 + 15 + Character->Statistics.m_motivation / 2, m_worldHeight / 2 + 60, 0);
+	modelStack.Scale(Character->Statistics.m_motivation, 25, 1);
 	RenderMesh(meshList[GEO_CHARONEMOTIVE], false);
 	modelStack.PopMatrix();
 
 	modelStack.PushMatrix();
-	modelStack.Translate(m_worldWidthDiv8 + 5 + Character->Statistics.m_rest / 2, m_worldHeight / 2 - 15, 0);
-	modelStack.Scale(Character->Statistics.m_rest, 10, 1);
+	modelStack.Translate(m_worldWidthDiv8 + 5 + Character->Statistics.m_rest / 2, m_worldHeight / 2 - 30, 0);
+	modelStack.Scale(Character->Statistics.m_rest, 25, 1);
 	RenderMesh(meshList[GEO_CHARONEREST], false);
 	modelStack.PopMatrix();
 
 	modelStack.PushMatrix();
-	modelStack.Translate(m_worldWidthDiv8 + Character->Statistics.m_workDone / 2, m_worldHeight / 2 - 30, 0);
-	modelStack.Scale(Character->Statistics.m_workDone, 10, 1);
+	modelStack.Translate(m_worldWidthDiv8 + Character->Statistics.m_workDone / 2, m_worldHeight / 2 - 75, 0);
+	modelStack.Scale(Character->Statistics.m_workDone, 25, 1);
 	RenderMesh(meshList[GEO_CHARONEWD], false);
 	modelStack.PopMatrix();
 }
@@ -1313,5 +1327,26 @@ void StudioProjectScene::RenderMenu(Screen* ScreenSplit)
 			RenderMesh(meshList[GEO_MAIN_USE], false);
 		}
 	}
+	modelStack.PopMatrix();
+	modelStack.PushMatrix();
+	modelStack.Translate(ScreenSplit->UseItem->pos.x - m_worldWidth * 0.05, ScreenSplit->UseItem->pos.y, ScreenSplit->UseItem->pos.z);
+	modelStack.PushMatrix();
+	modelStack.Scale(13, 13, 1);
+	if (ScreenSplit->Character->currentItem)
+	{
+		switch (ScreenSplit->Character->currentItem->type)
+		{
+		case ItemObject::I_TELEVISION:
+		{
+			RenderMesh(meshList[GEO_TELEVISION], false);
+			break;
+		}
+		}
+	}
+	modelStack.PopMatrix();
+	modelStack.PushMatrix();
+	modelStack.Scale(15, 15, 1);
+	RenderMesh(meshList[GEO_BORDER], false);
+	modelStack.PopMatrix();
 	modelStack.PopMatrix();
 }

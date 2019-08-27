@@ -7,6 +7,7 @@
 #include "MenuObject.h"
 #include "Results.h"
 #include "StatManager.h"
+#include "../SoundEngine.h"
 #include <vector>
 
 using namespace std;
@@ -36,7 +37,7 @@ public:
 	void RenderMenu();
 	void RenderGame();
 	void RenderInstructions();
-	void RenderGameOver(double dt);
+	void RenderGameOver();
 	void Reset();
 	virtual void Exit();
 
@@ -104,6 +105,7 @@ private:
 	bool statgained;
 	bool mousepressed;
 
+	CSoundEngine soundSystem;
 
 	MenuObject* back;
 };

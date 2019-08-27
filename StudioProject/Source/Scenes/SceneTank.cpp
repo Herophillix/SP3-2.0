@@ -244,6 +244,9 @@ void SceneTank::Init()
 	grade = 'F';
 
 	mousepressed = false;
+
+	soundSystem.AddSound("Hit", "Sounds//Hammer_Whack.wav");
+	soundSystem.playWaMoleMusic();
 }
 
 void SceneTank::Update(double dt)
@@ -310,28 +313,7 @@ void SceneTank::Update(double dt)
 	}
 	case S_GAMEOVER:
 	{
-		Results::getInstance()->UpdateVars(dt);
-		if (!statgained)
-		{
-			GameEndCalculations();
-			StatManager::GetInstance()->SetCharsOriginalValues();
-			statgained = true;
-		}
-		static bool bLButtonState = false;
-		if (!bLButtonState && Application::IsMousePressed(0))
-		{
-			bLButtonState = true;
-			std::cout << "LBUTTON DOWN" << std::endl;
-			if (Results::getInstance()->ButtonMouseCollision())
-			{
-				cout << "hit" << endl;
-			}
-		}
-		else if (bLButtonState && !Application::IsMousePressed(0))
-		{
-			bLButtonState = false;
-			std::cout << "LBUTTON UP" << std::endl;
-		}
+		UpdateGameOver(dt);
 		break;
 	}
 	default:
@@ -339,6 +321,32 @@ void SceneTank::Update(double dt)
 		cout << "No Scene State" << endl;
 		break;
 	}
+	}
+}
+
+void SceneTank::UpdateGameOver(double dt)
+{
+	Results::getInstance()->UpdateVars(dt);
+	if (!statgained)
+	{
+		GameEndCalculations();
+		StatManager::GetInstance()->SetCharsOriginalValues();
+		statgained = true;
+	}
+	static bool bLButtonState = false;
+	if (!bLButtonState && Application::IsMousePressed(0))
+	{
+		bLButtonState = true;
+		std::cout << "LBUTTON DOWN" << std::endl;
+		if (Results::getInstance()->ButtonMouseCollision())
+		{
+			cout << "hit" << endl;
+		}
+	}
+	else if (bLButtonState && !Application::IsMousePressed(0))
+	{
+		bLButtonState = false;
+		std::cout << "LBUTTON UP" << std::endl;
 	}
 }
 
@@ -529,6 +537,7 @@ void SceneTank::UpdateGame(double dt)
 					{
 						if (go == Ball)
 						{
+							soundSystem.PlayASound("Hit");
 							if (++ballcollisionnum > 4)
 							{
 								go->active = false;
@@ -1330,7 +1339,7 @@ void SceneTank::Render()
 	}
 	case S_GAMEOVER:
 	{
-		Results::getInstance()->RenderResults(score, grade);
+		RenderGameOver();
 		break;
 	}
 	default:
@@ -1357,6 +1366,11 @@ void SceneTank::Render()
 		}
 		modelStack.PopMatrix();
 	}
+}
+
+void SceneTank::RenderGameOver()
+{
+	Results::getInstance()->RenderResults(score, grade);
 }
 
 void SceneTank::RenderGame()

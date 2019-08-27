@@ -114,6 +114,9 @@ void SceneMaze::Init()
 	score = 10000;
 	mousepressed = false;
 	endGametime = 0.0;
+
+	soundSystem.AddSound("Hit", "Sounds//Hammer_Whack.wav");
+	soundSystem.playWaMoleMusic();
 }
 
 void SceneMaze::Update(double dt)
@@ -262,6 +265,7 @@ void SceneMaze::UpdateGame(double dt)
 					}
 					if (CheckCollision(go, go2))
 					{
+						soundSystem.PlayASound("Hit");
 						go2->CollisionResponse(go, dt);
 						//CollisionResponse(go, go2, dt);
 					}
@@ -290,6 +294,7 @@ void SceneMaze::UpdateGameOver(double dt)
 		if (Results::getInstance()->ButtonMouseCollision())
 		{
 			cout << "hit" << endl;
+			Reset();
 		}
 	}
 	else if (bLButtonState && !Application::IsMousePressed(0))
@@ -725,4 +730,16 @@ void SceneMaze::GameEndCalculations() // Setting the stats and other stuff
 		StatManager::GetInstance()->UpdateChar04M(StatManager::GetInstance()->GetChar04().m_motivation -10);
 	}
 
+}
+
+void SceneMaze::Reset()
+{
+	stencilsize = 1;
+	score = 10000;
+	grade = 'S';
+	Ball->pos.Set(m_worldWidth * 0.625f, m_worldHeight * 0.75f, 0);
+	elapsedTime = 0.0;
+	endGametime = 0.0;
+	endGame = false;
+	mousepressed = false;
 }

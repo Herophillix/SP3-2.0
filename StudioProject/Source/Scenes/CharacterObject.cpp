@@ -78,7 +78,7 @@ void CharacterObject::Update(double dt)
 	}
 	if (Statistics.m_workDone < 100 && resting == false)
 	{
-		Statistics.m_workDone += 0.50f / Statistics.m_experience * Statistics.m_motivation / Statistics.m_rest *  dt / m_Count;
+		Statistics.m_workDone += 40.50f / Statistics.m_experience * Statistics.m_motivation / Statistics.m_rest *  dt / m_Count;
 	}
 }
 
