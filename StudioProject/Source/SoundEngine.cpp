@@ -127,7 +127,7 @@ void CSoundEngine::playMainMusic()
 	soundGame3->setVolume(0.80f);
 	soundGame3->drop();
 }
-void CSoundEngine::stopSheep()
+void CSoundEngine::stopAllMusic()
 {
 	theSoundEngine->stopAllSounds();
 }

@@ -16,7 +16,8 @@ public:
 	enum SCENESTATE
 	{
 		S_GAME,
-		S_LEVELTRANSITION
+		S_LEVELTRANSITION,
+		S_GAMEOVER,
 	};
 
 

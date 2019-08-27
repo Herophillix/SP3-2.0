@@ -30,7 +30,7 @@ public:
 	void playSheepMusic();
 	void playWaMoleMusic();
 	void playMainMusic();
-	void stopSheep();
+	void stopAllMusic();
 	void stopMoleMusic();
 	void stopMainMusic();
 

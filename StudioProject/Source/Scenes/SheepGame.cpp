@@ -287,7 +287,7 @@ void SheepGame::Update(double dt)
 			{
 				Results::getInstance()->UpdateVars(dt);
 				player->active = false;
-				SoundSystem.stopSheep();
+				SoundSystem.stopAllMusic();
 				if (!statsGain)
 				{
 					GameEndCalculations();

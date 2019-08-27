@@ -319,8 +319,13 @@ void StudioProjectScene::Update(double dt)
 	}
 	case S_LEVELTRANSITION:
 	{
-		soundSystem.stopSheep();
+		soundSystem.stopAllMusic();
 		UpdateLevelTransition(dt);
+		break;
+	}
+	case S_GAMEOVER:
+	{
+
 		break;
 	}
 	default:

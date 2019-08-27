@@ -349,12 +349,9 @@ void SceneMole::Update(double dt)
 	if (m_gameTimer <= 0)
 	{
 		m_gameTimer = 0.f;
+		
 		m_gameOver = true;
 	}
-	if (m_gameTimer < 0)
-	{
-		m_gameOver = true;
-	} 
 	// FROST DEBUFF
 	if (m_frostOn)
 	{
@@ -676,6 +673,7 @@ void SceneMole::Render()
 	if (m_gameOver)
 	{
 		Results::getInstance()->RenderResults(m_score, m_grade);
+		soundSystem.stopAllMusic();
 		//RenderResults();
 	}
 
