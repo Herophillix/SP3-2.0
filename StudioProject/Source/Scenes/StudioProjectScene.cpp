@@ -43,7 +43,7 @@ void StudioProjectScene::Init()
 	meshList[GEO_TELEVISION]->textureID = LoadTGA("Image//Item_TV.tga");
 	meshList[GEO_COMPUTER] = MeshBuilder::GenerateQuad("Computer", Color(1, 1, 1), 1.f);
 	meshList[GEO_COMPUTER]->textureID = LoadTGA("Image//Item_Comp.tga");
-	meshList[GEO_SLEEPBOX] = MeshBuilder::GenerateQuad("SleepingBox", Color(1, 1, 1), 1.f);l
+	meshList[GEO_SLEEPBOX] = MeshBuilder::GenerateQuad("SleepingBox", Color(1, 1, 1), 1.f);
 	meshList[GEO_SLEEPBOX]->textureID = LoadTGA("Image//Item_Box.tga");
 	meshList[GEO_BORDER] = MeshBuilder::GenerateQuad("Border", Color(1, 1, 1), 1.f);
 	meshList[GEO_BORDER]->textureID = LoadTGA("Image//Border.tga");
@@ -58,7 +58,7 @@ void StudioProjectScene::Init()
 	meshList[GEO_MAIN_CONTINUE] = MeshBuilder::GenerateQuad("Continue", Color(1, 1, 1), 1.f);
 	meshList[GEO_MAIN_CONTINUE]->textureID = LoadTGA("Image//Main_Continue.tga");
 	meshList[GEO_LOSESCREEN] = MeshBuilder::GenerateQuad("LoseScreen", Color(1, 1, 1), 1.f);
-	meshList[GEO_LOSESCREEN]->textureID = LoadTGA("Image//Lose_Screen.tga");l
+	meshList[GEO_LOSESCREEN]->textureID = LoadTGA("Image//Lose_Screen.tga");
 
 	// CHARACTER SPRITE ANIMATIONS
 	meshList[GEO_CHARACTER01_IDLE_LEFT] = MeshBuilder::GenerateSpriteAnimation("c01_idle_left", 1, 4);
@@ -100,11 +100,12 @@ void StudioProjectScene::Init()
 	Mtx44 projection;
 	projection.SetToOrtho(0, m_worldWidth, 0, m_worldHeight, -10, 10);
 	projectionStack.LoadMatrix(projection);
-	soundSystem.AddSound("mainMusic", "Sounds//MainTheme.mp3");
 	//Particles
 	m_particleCount = 0;
 	MAX_PARTICLE = 2000;
+	soundSystem.Init();
 	m_Gravity.Set(0, -9.8, 0);
+	soundSystem.playMainMusic();
 	m_Count = 4;
 	for (unsigned i = 0; i < 10;++i)
 	{
@@ -320,13 +321,13 @@ void StudioProjectScene::Update(double dt)
 	}
 	case S_LEVELTRANSITION:
 	{
-		soundSystem.stopAllMusic();
+		//soundSystem.stopAllMusic();
 		UpdateLevelTransition(dt);
 		break;
 	}
 	case S_GAMEOVER:
 	{
-		UpdateLoseScreen();
+		UpdateLoseScreen(dt);
 		break;
 	}
 	default:
@@ -367,7 +368,7 @@ void StudioProjectScene::Update(double dt)
 			{
 				currentlevel = Math::RandIntMinMax(1, 5);
 			}
-			soundSystem.stopSheep();
+			//soundSystem.stopAllMusic();
 			Application::setScene(currentlevel);
 			m_eventTimer = Math::RandFloatMinMax(20.0f, 40.f);
 			
@@ -611,12 +612,6 @@ void StudioProjectScene::UpdateGame(double dt)
 	if (mTimer < 0 && playMusic == false)
 	{
 		playMusic = true;
-	}
-	if (playMusic == true)
-	{
-		soundSystem.playMainMusic();
-		playMusic = false;
-		mTimer = 99999999999.f;
 	}
 }
 

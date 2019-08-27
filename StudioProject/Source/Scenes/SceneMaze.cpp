@@ -29,7 +29,8 @@ void SceneMaze::Init()
 	m_speed = 1.f;
 
 	Math::InitRNG();
-
+	musicPlay = false;
+	musicPlayed = false;
 	m_goList = new std::vector<PhysicsObject*>;
 
 	meshList[GEO_MAZE_INSTRUCTIONS] = MeshBuilder::GenerateQuad("Maze_Instructions", Color(1, 1, 1), 1.f);
@@ -116,7 +117,6 @@ void SceneMaze::Init()
 	endGametime = 0.0;
 
 	soundSystem.AddSound("Hit", "Sounds//Hammer_Whack.wav");
-	soundSystem.playWaMoleMusic();
 }
 
 void SceneMaze::Update(double dt)
@@ -173,6 +173,11 @@ void SceneMaze::Update(double dt)
 
 void SceneMaze::UpdateGame(double dt)
 {
+	if (musicPlay && !musicPlayed)
+	{
+		soundSystem.playSheepMusic();
+		musicPlayed = true;
+	}
 	// James 14/8/2019
 	if (endGame)
 	{
@@ -317,7 +322,9 @@ void SceneMaze::UpdateMenu(double dt)
 			case MenuObject::M_START:
 			{
 				SceneState = S_GAME; 
+				musicPlay = true;
 				Ball->pos = Vector3(m_worldWidth * 0.5f, m_worldHeight * 0.5f, 0);
+				
 				StatManager::GetInstance()->SetPrevGame(1);
 				break;
 			}
@@ -742,4 +749,7 @@ void SceneMaze::Reset()
 	endGametime = 0.0;
 	endGame = false;
 	mousepressed = false;
+	soundSystem.stopAllMusic();
+	musicPlay = false;
+	musicPlayed = false;
 }

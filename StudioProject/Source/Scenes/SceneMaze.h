@@ -26,7 +26,7 @@ public:
 	void RenderGameOver();
 	void Reset();
 	virtual void Exit();
-
+	
 
 
 	void RenderGO(PhysicsObject *go);
@@ -56,6 +56,8 @@ private:
 	float m_speed;
 	float m_worldWidth;
 	float m_worldHeight;
+	bool musicPlay;
+	bool musicPlayed;
 	MazeGenerator Maze;
 	// James 13/8/2019
 	//Mesh* meshList[NUM_GEOMETRY];
