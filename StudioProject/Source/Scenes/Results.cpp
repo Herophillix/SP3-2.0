@@ -760,8 +760,13 @@ bool Results::ButtonMouseCollision()
 					switch (ButtonList[i]->objType)
 					{
 					case ResultObject::GO_CONTINUE:
-						if (m_statsToDistribute == 0)
+						if (m_statsToDistribute == 0 || 
+							(StatManager::GetInstance()->GetChar01().m_frustration == 0 && StatManager::GetInstance()->GetChar01().m_motivation == 100 &&
+							StatManager::GetInstance()->GetChar02().m_frustration == 0 && StatManager::GetInstance()->GetChar02().m_motivation == 100 && 
+							StatManager::GetInstance()->GetChar03().m_frustration == 0 && StatManager::GetInstance()->GetChar03().m_motivation == 100 && 
+							StatManager::GetInstance()->GetChar04().m_frustration == 0 && StatManager::GetInstance()->GetChar04().m_motivation == 100))
 						{
+							m_statsToDistribute = 0;
 							//switch scene
 							Application::setScene(0);
 							cout << "next scene" << endl;
@@ -797,7 +802,7 @@ void Results::RenderStats()
 
 	// CHAR 01
 	std::ostringstream s2;
-	s2.precision(2);
+	s2.precision(3);
 	s2 << "Motivation";
 	modelStack.PushMatrix();
 	modelStack.Translate((r_quad01Pos.x + m_thirtytwothWorldWidth), (r_quad01Pos.y + m_twelfthWorldHeight + m_twentyfourthWorldHeight), 0.65f);
@@ -808,7 +813,7 @@ void Results::RenderStats()
 
 	s2.clear();
 	s2.str("");
-	s2 << "%" << StatManager::GetInstance()->GetChar01().m_motivation;
+	s2 << "%" << (int)StatManager::GetInstance()->GetChar01().m_motivation;
 
 	modelStack.PushMatrix();
 	modelStack.Translate((r_quad01Pos.x + 3 * m_thirtytwothWorldWidth), (r_quad01Pos.y + m_twentyfourthWorldHeight), 0.65f);
@@ -827,7 +832,7 @@ void Results::RenderStats()
 
 	s2.clear();
 	s2.str("");
-	s2 << "%" << StatManager::GetInstance()->GetChar01().m_frustration;
+	s2 << "%" << (int)StatManager::GetInstance()->GetChar01().m_frustration;
 
 	modelStack.PushMatrix();
 	modelStack.Translate((r_quad01Pos.x + 3 * m_thirtytwothWorldWidth), (r_quad01Pos.y - m_twelfthWorldHeight - m_twentyfourthWorldHeight), 0.65f);
@@ -848,7 +853,7 @@ void Results::RenderStats()
 
 	s2.clear();
 	s2.str("");
-	s2 << "%" << StatManager::GetInstance()->GetChar02().m_motivation;
+	s2 << "%" << (int)StatManager::GetInstance()->GetChar02().m_motivation;
 
 	modelStack.PushMatrix();
 	modelStack.Translate((r_quad02Pos.x + 3 * m_thirtytwothWorldWidth), (r_quad02Pos.y + m_twentyfourthWorldHeight), 0.65f);
@@ -867,7 +872,7 @@ void Results::RenderStats()
 
 	s2.clear();
 	s2.str("");
-	s2 << "%" << StatManager::GetInstance()->GetChar02().m_frustration;
+	s2 << "%" << (int)StatManager::GetInstance()->GetChar02().m_frustration;
 
 	modelStack.PushMatrix();
 	modelStack.Translate((r_quad02Pos.x + 3 * m_thirtytwothWorldWidth), (r_quad02Pos.y - m_twelfthWorldHeight - m_twentyfourthWorldHeight), 0.65f);
@@ -888,7 +893,7 @@ void Results::RenderStats()
 
 	s2.clear();
 	s2.str("");
-	s2 << "%" << StatManager::GetInstance()->GetChar03().m_motivation;
+	s2 << "%" << (int)StatManager::GetInstance()->GetChar03().m_motivation;
 
 	modelStack.PushMatrix();
 	modelStack.Translate((r_quad03Pos.x + 3 * m_thirtytwothWorldWidth), (r_quad03Pos.y + m_twentyfourthWorldHeight), 0.65f);
@@ -907,7 +912,7 @@ void Results::RenderStats()
 
 	s2.clear();
 	s2.str("");
-	s2 << "%" << StatManager::GetInstance()->GetChar03().m_frustration;
+	s2 << "%" << (int)StatManager::GetInstance()->GetChar03().m_frustration;
 
 	modelStack.PushMatrix();
 	modelStack.Translate((r_quad03Pos.x + 3 * m_thirtytwothWorldWidth), (r_quad03Pos.y - m_twelfthWorldHeight - m_twentyfourthWorldHeight), 0.65f);
@@ -928,7 +933,7 @@ void Results::RenderStats()
 
 	s2.clear();
 	s2.str("");
-	s2 << "%" << StatManager::GetInstance()->GetChar04().m_motivation;
+	s2 << "%" << (int)StatManager::GetInstance()->GetChar04().m_motivation;
 
 	modelStack.PushMatrix();
 	modelStack.Translate((r_quad04Pos.x + 3 * m_thirtytwothWorldWidth), (r_quad04Pos.y + m_twentyfourthWorldHeight), 0.65f);
@@ -947,7 +952,7 @@ void Results::RenderStats()
 
 	s2.clear();
 	s2.str("");
-	s2 << "%" << StatManager::GetInstance()->GetChar04().m_frustration;
+	s2 << "%" << (int)StatManager::GetInstance()->GetChar04().m_frustration;
 
 	modelStack.PushMatrix();
 	modelStack.Translate((r_quad04Pos.x + 3 * m_thirtytwothWorldWidth), (r_quad04Pos.y - m_twelfthWorldHeight - m_twentyfourthWorldHeight), 0.65f);

@@ -128,15 +128,15 @@ void StudioProjectScene::Init()
 		ScreenSplit[i]->Init(m_worldWidth, m_worldHeight);
 	}
 
-	ScreenSplit[0]->UseItem->pos.Set(m_worldWidth * 0.45f, m_worldHeight * 0.55f, 0);
-	ScreenSplit[1]->UseItem->pos.Set(m_worldWidth * 0.95f, m_worldHeight * 0.55f, 0);
-	ScreenSplit[2]->UseItem->pos.Set(m_worldWidth * 0.45f, m_worldHeight * 0.05f, 0);
-	ScreenSplit[3]->UseItem->pos.Set(m_worldWidth * 0.95f, m_worldHeight * 0.05f, 0);
+	ScreenSplit[0]->UseItem->setPos(Vector3(m_worldWidth * 0.45f, m_worldHeight * 0.55f, 0));
+	ScreenSplit[1]->UseItem->setPos(Vector3(m_worldWidth * 0.95f, m_worldHeight * 0.55f, 0));
+	ScreenSplit[2]->UseItem->setPos(Vector3(m_worldWidth * 0.45f, m_worldHeight * 0.05f, 0));
+	ScreenSplit[3]->UseItem->setPos(Vector3(m_worldWidth * 0.95f, m_worldHeight * 0.05f, 0));
 
-	ScreenSplit[0]->Character->type = CharacterObject::GO_CHAR01;
-	ScreenSplit[1]->Character->type = CharacterObject::GO_CHAR02;
-	ScreenSplit[2]->Character->type = CharacterObject::GO_CHAR03;
-	ScreenSplit[3]->Character->type = CharacterObject::GO_CHAR04;
+	ScreenSplit[0]->Character->setType(CharacterObject::GO_CHAR01);
+	ScreenSplit[1]->Character->setType(CharacterObject::GO_CHAR02);
+	ScreenSplit[2]->Character->setType(CharacterObject::GO_CHAR03);
+	ScreenSplit[3]->Character->setType(CharacterObject::GO_CHAR04);
 
 	currentChar = ScreenSplit[0]->Character;
 
@@ -266,14 +266,14 @@ void StudioProjectScene::Init()
 	meshList[GEO_CHARFOURREST] = MeshBuilder::GenerateQuad("CharThreeRest", Color(1, 0, 1), 1.f);
 	meshList[GEO_CHARFOURWD] = MeshBuilder::GenerateQuad("CharFourWorkDone", Color(0, 1, 1),1.f);
 
-	phase = 4;
+	phase = 1;
 	prevlevel = 0;
 	currentlevel = 0;
 	SceneState = S_GAME;
 
 	Continue = new MenuObject(MenuObject::M_CONTINUE, Vector3(40, 40, 1));
-	Continue->pos = Vector3(m_worldWidth * 0.9f, m_worldHeight * 0.1f, 0);
-	Continue->active = true;
+	Continue->setPos(Vector3(m_worldWidth * 0.9f, m_worldHeight * 0.1f, 0));
+	Continue->setActive(true);
 
 	day = 0;
 	for (int i = 0; i < 4; i++)
@@ -405,15 +405,11 @@ void StudioProjectScene::Update(double dt)
 
 void StudioProjectScene::UpdateGame(double dt)
 {
-	ScreenSplit[0]->UseItem->pos.Set(m_worldWidth * 0.45f, m_worldHeight * 0.55f, 0);
-	ScreenSplit[1]->UseItem->pos.Set(m_worldWidth * 0.95f, m_worldHeight * 0.55f, 0);
-	ScreenSplit[2]->UseItem->pos.Set(m_worldWidth * 0.45f, m_worldHeight * 0.05f, 0);
-	ScreenSplit[3]->UseItem->pos.Set(m_worldWidth * 0.95f, m_worldHeight * 0.05f, 0);
-	if (day >= 5)
-	{
-		SceneState = S_GAMEWIN;
-	}
-	cout << day << endl;
+	ScreenSplit[0]->UseItem->setPos(Vector3(m_worldWidth * 0.45f, m_worldHeight * 0.55f, 0));
+	ScreenSplit[1]->UseItem->setPos(Vector3(m_worldWidth * 0.95f, m_worldHeight * 0.55f, 0));
+	ScreenSplit[2]->UseItem->setPos(Vector3(m_worldWidth * 0.45f, m_worldHeight * 0.05f, 0));
+	ScreenSplit[3]->UseItem->setPos(Vector3(m_worldWidth * 0.95f, m_worldHeight * 0.05f, 0));
+
 	int w = Application::GetWindowWidth();
 	int h = Application::GetWindowHeight();
 	//cout << v_mousepos << endl;
@@ -657,15 +653,6 @@ void StudioProjectScene::UpdateGame(double dt)
 		C04MR->Update(dt);
 		C04MR->m_anim->animActive = true;
 	}
-
-	for (std::vector<GameObject *>::iterator it = m_goList.begin(); it != m_goList.end(); ++it)
-	{
-		GameObject *go = (GameObject *)*it;
-		if (go->active)
-		{
-
-		}
-	}
 	mTimer -= dt;
 	if (mTimer < 0 && playMusic == false)
 	{
@@ -686,7 +673,6 @@ void StudioProjectScene::UpdateLoseScreen(double dt)
 void StudioProjectScene::reset()
 {
 	m_speed = 1.f;
-	m_speed = 1.f;
 	m_eventTimer = Math::RandFloatMinMax(20.0f, 40.f);
 	b_transitioning = false;
 	playMusic = false;
@@ -695,13 +681,13 @@ void StudioProjectScene::reset()
 	ScreenSplit[2]->Character->reset();
 	ScreenSplit[3]->Character->reset();
 	currentChar = ScreenSplit[0]->Character;
-	phase = 4;
+	phase = 1;
 	prevlevel = 0;
 	currentlevel = 0;
 	SceneState = S_GAME;
 
-	Continue->pos = Vector3(m_worldWidth * 0.9f, m_worldHeight * 0.1f, 0);
-	Continue->active = true;
+	Continue->setPos(Vector3(m_worldWidth * 0.9f, m_worldHeight * 0.1f, 0));
+	Continue->setActive(true);
 }
 void StudioProjectScene::UpdateLevelTransition(double dt)
 {
@@ -818,9 +804,9 @@ void StudioProjectScene::RenderAnimation()
 void StudioProjectScene::RenderArrow()
 {
 	modelStack.PushMatrix();
-	modelStack.Translate(currentChar->pos.x, currentChar->pos.y + 20, currentChar->pos.z);
+	modelStack.Translate(currentChar->getPos() + Vector3(0,20,0));
 	modelStack.Rotate(Math::RadianToDegree(atan2(camera.position.x - 0, camera.position.z - 0)), 0, 1, 0);
-	modelStack.Scale(10, 10, 10);
+	modelStack.Scale(15, 15, 1);
 	RenderMesh(meshList[GEO_ARROW], false);
 	modelStack.PopMatrix();
 }
@@ -1117,8 +1103,8 @@ void StudioProjectScene::RenderLevelTransition()
 	modelStack.LoadIdentity();
 
 	modelStack.PushMatrix();
-	modelStack.Translate(Continue->pos);
-	modelStack.Scale(Continue->scale);
+	modelStack.Translate(Continue->getPos());
+	modelStack.Scale(Continue->getScale());
 	RenderMesh(meshList[GEO_MAIN_CONTINUE], false);
 	modelStack.PopMatrix();
 
@@ -1155,12 +1141,12 @@ void StudioProjectScene::RenderLevelTransition()
 
 void StudioProjectScene::RenderCharObj(CharacterObject * go)
 {
-	switch (go->type)
+	switch (go->getType())
 	{
 	case CharacterObject::GO_CUBE:
 		modelStack.PushMatrix();
-		modelStack.Translate(go->pos.x, go->pos.y, go->pos.z);
-		modelStack.Scale(go->scale.x, go->scale.y, go->scale.z);
+		modelStack.Translate(go->getPos());
+		modelStack.Scale(go->getScale());
 		RenderMesh(meshList[GEO_QUAD], false);
 		modelStack.PopMatrix();
 		break;
@@ -1168,16 +1154,16 @@ void StudioProjectScene::RenderCharObj(CharacterObject * go)
 		if (go->getState() == true)
 		{
 			modelStack.PushMatrix();
-			modelStack.Translate(go->pos.x, go->pos.y, go->pos.z);
+			modelStack.Translate(go->getPos());
 			if (go->getDirection() == true)
 			{
-				modelStack.Scale(go->scale.x, go->scale.y, go->scale.z);
+				modelStack.Scale(go->getScale());
 				RenderMesh(meshList[GEO_CHARACTER01_MOVE_LEFT], false);
 				modelStack.PopMatrix();
 			}
 			else
 			{
-				modelStack.Scale(go->scale.x, go->scale.y, go->scale.z);
+				modelStack.Scale(go->getScale());
 				RenderMesh(meshList[GEO_CHARACTER01_MOVE_RIGHT], false);
 				modelStack.PopMatrix();
 			}
@@ -1186,16 +1172,16 @@ void StudioProjectScene::RenderCharObj(CharacterObject * go)
 		else if (!go->getState())
 		{
 			modelStack.PushMatrix();
-			modelStack.Translate(go->pos.x, go->pos.y, go->pos.z);
+			modelStack.Translate(go->getPos());
 			if (go->getDirection() == true)
 			{
-				modelStack.Scale(go->scale.x, go->scale.y, go->scale.z);
+				modelStack.Scale(go->getScale());
 				RenderMesh(meshList[GEO_CHARACTER01_IDLE_LEFT], false);
 				modelStack.PopMatrix();
 			}
 			else
 			{
-				modelStack.Scale(go->scale.x, go->scale.y, go->scale.z);
+				modelStack.Scale(go->getScale());
 				RenderMesh(meshList[GEO_CHARACTER01_IDLE_RIGHT], false);
 				modelStack.PopMatrix();
 			}
@@ -1205,16 +1191,16 @@ void StudioProjectScene::RenderCharObj(CharacterObject * go)
 		if (go->getState() == true)
 		{
 			modelStack.PushMatrix();
-			modelStack.Translate(go->pos.x, go->pos.y, go->pos.z);
+			modelStack.Translate(go->getPos());
 			if (go->getDirection() == true)
 			{
-				modelStack.Scale(go->scale.x, go->scale.y, go->scale.z);
+				modelStack.Scale(go->getScale());
 				RenderMesh(meshList[GEO_CHARACTER02_MOVE_LEFT], false);
 				modelStack.PopMatrix();
 			}
 			else
 			{
-				modelStack.Scale(go->scale.x, go->scale.y, go->scale.z);
+				modelStack.Scale(go->getScale());
 				RenderMesh(meshList[GEO_CHARACTER02_MOVE_RIGHT], false);
 				modelStack.PopMatrix();
 			}
@@ -1223,16 +1209,16 @@ void StudioProjectScene::RenderCharObj(CharacterObject * go)
 		else if (!go->getState())
 		{
 			modelStack.PushMatrix();
-			modelStack.Translate(go->pos.x, go->pos.y, go->pos.z);
+			modelStack.Translate(go->getPos());
 			if (go->getDirection() == true)
 			{
-				modelStack.Scale(go->scale.x, go->scale.y, go->scale.z);
+				modelStack.Scale(go->getScale());
 				RenderMesh(meshList[GEO_CHARACTER02_IDLE_LEFT], false);
 				modelStack.PopMatrix();
 			}
 			else
 			{
-				modelStack.Scale(go->scale.x, go->scale.y, go->scale.z);
+				modelStack.Scale(go->getScale());
 				RenderMesh(meshList[GEO_CHARACTER02_IDLE_RIGHT], false);
 				modelStack.PopMatrix();
 			}
@@ -1242,16 +1228,16 @@ void StudioProjectScene::RenderCharObj(CharacterObject * go)
 		if (go->getState() == true)
 		{
 			modelStack.PushMatrix();
-			modelStack.Translate(go->pos.x, go->pos.y, go->pos.z);
+			modelStack.Translate(go->getPos());
 			if (go->getDirection() == true)
 			{
-				modelStack.Scale(go->scale.x, go->scale.y, go->scale.z);
+				modelStack.Scale(go->getScale());
 				RenderMesh(meshList[GEO_CHARACTER03_MOVE_LEFT], false);
 				modelStack.PopMatrix();
 			}
 			else
 			{
-				modelStack.Scale(go->scale.x, go->scale.y, go->scale.z);
+				modelStack.Scale(go->getScale());
 				RenderMesh(meshList[GEO_CHARACTER03_MOVE_RIGHT], false);
 				modelStack.PopMatrix();
 			}
@@ -1260,16 +1246,16 @@ void StudioProjectScene::RenderCharObj(CharacterObject * go)
 		else if (!go->getState())
 		{
 			modelStack.PushMatrix();
-			modelStack.Translate(go->pos.x, go->pos.y, go->pos.z);
+			modelStack.Translate(go->getPos());
 			if (go->getDirection() == true)
 			{
-				modelStack.Scale(go->scale.x, go->scale.y, go->scale.z);
+				modelStack.Scale(go->getScale());
 				RenderMesh(meshList[GEO_CHARACTER03_IDLE_LEFT], false);
 				modelStack.PopMatrix();
 			}
 			else
 			{
-				modelStack.Scale(go->scale.x, go->scale.y, go->scale.z);
+				modelStack.Scale(go->getScale());
 				RenderMesh(meshList[GEO_CHARACTER03_IDLE_RIGHT], false);
 				modelStack.PopMatrix();
 			}
@@ -1279,16 +1265,16 @@ void StudioProjectScene::RenderCharObj(CharacterObject * go)
 		if (go->getState() == true)
 		{
 			modelStack.PushMatrix();
-			modelStack.Translate(go->pos.x, go->pos.y, go->pos.z);
+			modelStack.Translate(go->getPos());
 			if (go->getDirection() == true)
 			{
-				modelStack.Scale(go->scale.x, go->scale.y, go->scale.z);
+				modelStack.Scale(go->getScale());
 				RenderMesh(meshList[GEO_CHARACTER04_MOVE_LEFT], false);
 				modelStack.PopMatrix();
 			}
 			else
 			{
-				modelStack.Scale(go->scale.x, go->scale.y, go->scale.z);
+				modelStack.Scale(go->getScale());
 				RenderMesh(meshList[GEO_CHARACTER04_MOVE_RIGHT], false);
 				modelStack.PopMatrix();
 			}
@@ -1297,16 +1283,16 @@ void StudioProjectScene::RenderCharObj(CharacterObject * go)
 		else if (!go->getState())
 		{
 			modelStack.PushMatrix();
-			modelStack.Translate(go->pos.x, go->pos.y, go->pos.z);
+			modelStack.Translate(go->getPos());
 			if (go->getDirection() == true)
 			{
-				modelStack.Scale(go->scale.x, go->scale.y, go->scale.z);
+				modelStack.Scale(go->getScale());
 				RenderMesh(meshList[GEO_CHARACTER04_IDLE_LEFT], false);
 				modelStack.PopMatrix();
 			}
 			else
 			{
-				modelStack.Scale(go->scale.x, go->scale.y, go->scale.z);
+				modelStack.Scale(go->getScale());
 				RenderMesh(meshList[GEO_CHARACTER04_IDLE_RIGHT], false);
 				modelStack.PopMatrix();
 			}
@@ -1314,16 +1300,16 @@ void StudioProjectScene::RenderCharObj(CharacterObject * go)
 		}
 	case CharacterObject::GO_TELEVISION:
 		modelStack.PushMatrix();
-		modelStack.Translate(go->pos.x, go->pos.y, go->pos.z);
-		modelStack.Scale(go->scale.x, go->scale.y, go->scale.z);
+		modelStack.Translate(go->getPos());
+		modelStack.Scale(go->getScale());
 		RenderMesh(meshList[GEO_TELEVISION], false);
 		modelStack.PopMatrix();
 		break;
 
 	case CharacterObject::GO_COMPUTER:
 		modelStack.PushMatrix();
-		modelStack.Translate(go->pos.x, go->pos.y, go->pos.z);
-		modelStack.Scale(go->scale.x, go->scale.y, go->scale.z);
+		modelStack.Translate(go->getPos());
+		modelStack.Scale(go->getScale());
 		RenderMesh(meshList[GEO_COMPUTER], false);
 		modelStack.PopMatrix();
 		break;
@@ -1335,19 +1321,19 @@ void StudioProjectScene::RenderCharObj(CharacterObject * go)
 
 void StudioProjectScene::RenderItemObj(ItemObject * go)
 {
-	switch (go->type)
+	switch (go->getType())
 	{
 	case ItemObject::I_TELEVISION:
 		modelStack.PushMatrix();
-		modelStack.Translate(go->pos);
+		modelStack.Translate(go->getPos());
 		modelStack.PushMatrix();
-		modelStack.Scale(go->scale);
+		modelStack.Scale(go->getScale());
 		RenderMesh(meshList[GEO_TELEVISION], false);
 		modelStack.PopMatrix();
 		if (go->bounded)
 		{
 			modelStack.PushMatrix();
-			modelStack.Scale(go->scale * 1.1f);
+			modelStack.Scale(go->getScale() * 1.1f);
 			RenderMesh(meshList[GEO_BORDER], false);
 			modelStack.PopMatrix();
 		}
@@ -1355,15 +1341,15 @@ void StudioProjectScene::RenderItemObj(ItemObject * go)
 		break;
 	case ItemObject::I_COMPUTER:
 		modelStack.PushMatrix();
-		modelStack.Translate(go->pos);
+		modelStack.Translate(go->getPos());
 		modelStack.PushMatrix();
-		modelStack.Scale(go->scale);
+		modelStack.Scale(go->getScale());
 		RenderMesh(meshList[GEO_COMPUTER], false);
 		modelStack.PopMatrix();
 		if (go->bounded)
 		{
 			modelStack.PushMatrix();
-			modelStack.Scale(go->scale * 1.1f);
+			modelStack.Scale(go->getScale() * 1.1f);
 			RenderMesh(meshList[GEO_BORDER], false);
 			modelStack.PopMatrix();
 		}
@@ -1371,15 +1357,15 @@ void StudioProjectScene::RenderItemObj(ItemObject * go)
 		break;
 	case ItemObject::I_BOX:
 		modelStack.PushMatrix();
-		modelStack.Translate(go->pos);
+		modelStack.Translate(go->getPos());
 		modelStack.PushMatrix();
-		modelStack.Scale(go->scale);
+		modelStack.Scale(go->getScale());
 		RenderMesh(meshList[GEO_SLEEPBOX], false);
 		modelStack.PopMatrix();
 		if (go->bounded)
 		{
 			modelStack.PushMatrix();
-			modelStack.Scale(go->scale * 1.1f);
+			modelStack.Scale(go->getScale() * 1.1f);
 			RenderMesh(meshList[GEO_BORDER], false);
 			modelStack.PopMatrix();
 		}
@@ -1394,9 +1380,9 @@ GameObject * StudioProjectScene::FetchGO()
 {
 	for (int i = 0; i < m_goList.size(); i++)
 	{
-		if (!m_goList[i]->active)
+		if (!m_goList[i]->getActive())
 		{
-			m_goList[i]->active = true;
+			m_goList[i]->setActive(true);
 			return m_goList[i];
 		}
 	}
@@ -1405,7 +1391,7 @@ GameObject * StudioProjectScene::FetchGO()
 	{
 		m_goList.push_back(new GameObject);
 	}
-	m_goList[m_goList.size() - 1]->active = true;
+	m_goList[m_goList.size() - 1]->setActive(true);
 	return m_goList[m_goList.size() - 1];
 }
 
@@ -1451,13 +1437,13 @@ void StudioProjectScene::RenderScreen(Screen* ScreenSplit)
 
 	for (int i = 0; i < ScreenSplit->m_itemList.size(); ++i)
 	{
-		if (ScreenSplit->m_itemList[i]->active)
+		if (ScreenSplit->m_itemList[i]->getActive())
 		{
 			RenderItemObj(ScreenSplit->m_itemList[i]);
 		}
 	}
 	// Character
-	if (ScreenSplit->Character->active)
+	if (ScreenSplit->Character->getActive())
 		RenderCharObj(ScreenSplit->Character);
 	if (ScreenSplit->Character->getGiveUp())
 	{
@@ -1499,8 +1485,8 @@ void StudioProjectScene::RenderStats(CharacterObject* Character)
 void StudioProjectScene::RenderMenu(Screen* ScreenSplit)
 {
 	modelStack.PushMatrix();
-	modelStack.Translate(ScreenSplit->UseItem->pos);
-	modelStack.Scale(ScreenSplit->UseItem->scale);
+	modelStack.Translate(ScreenSplit->UseItem->getPos());
+	modelStack.Scale(ScreenSplit->UseItem->getScale());
 	if (ScreenSplit->Character->currentItem)
 	{
 		if (ScreenSplit->UseItem->getChanged())
@@ -1514,12 +1500,12 @@ void StudioProjectScene::RenderMenu(Screen* ScreenSplit)
 	}
 	modelStack.PopMatrix();
 	modelStack.PushMatrix();
-	modelStack.Translate(ScreenSplit->UseItem->pos.x - m_worldWidth * 0.05, ScreenSplit->UseItem->pos.y, ScreenSplit->UseItem->pos.z);
+	modelStack.Translate(ScreenSplit->UseItem->getPos().x - m_worldWidth * 0.05, ScreenSplit->UseItem->getPos().y, ScreenSplit->UseItem->getPos().z);
 	modelStack.PushMatrix();
 	modelStack.Scale(13, 13, 1);
 	if (ScreenSplit->Character->currentItem)
 	{
-		switch (ScreenSplit->Character->currentItem->type)
+		switch (ScreenSplit->Character->currentItem->getType())
 		{
 		case ItemObject::I_TELEVISION:
 		{

@@ -70,12 +70,13 @@ void Screen::Update(double dt, Vector3 v_mousepos, Vector3 rel_mousepos, Vector3
 			case ItemObject::I_COMPUTER:
 			{
 				Character->WorkingHard = false;
+				break;
 			}
 			case ItemObject::I_BOX:
 			{
 				Character->asleep = false;
+				break;
 			}
-
 			default:
 				Character->resting = false;
 				Character->WorkingHard = false;

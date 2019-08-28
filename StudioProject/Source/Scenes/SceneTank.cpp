@@ -260,11 +260,6 @@ void SceneTank::Init()
 
 void SceneTank::Update(double dt)
 {
-	if (StatManager::GetInstance()->GetBool_Game(3))
-	{
-		Reset();
-		StatManager::GetInstance()->SetBool_Tank(false);
-	}
 	SceneBase::Update(dt);
 	elapsedTime += dt;
 	//Calculating aspect ratio
@@ -361,6 +356,11 @@ void SceneTank::UpdateGameOver(double dt)
 
 void SceneTank::UpdateGame(double dt)
 {
+	if (StatManager::GetInstance()->GetBool_Game(3))
+	{
+		Reset();
+		StatManager::GetInstance()->SetBool_Tank(false);
+	}
 	if (turn == 16 || TankObject::PlayerTankCount == 0 || TankObject::EnemyTankCount == 0)
 	{
 		SceneState = S_GAMEOVER;
