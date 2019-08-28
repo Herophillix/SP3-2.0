@@ -114,6 +114,7 @@ void SceneMaze::Init()
 	grade = 'S';
 	score = 10000;
 	mousepressed = false;
+	statgained = false;
 	endGametime = 0.0;
 
 	soundSystem.AddSound("Maze_Bounce", "Sounds//Tank_Bounce.wav");
@@ -804,4 +805,5 @@ void SceneMaze::Reset()
 	soundSystem.stopAllMusic();
 	musicPlay = false;
 	musicPlayed = false;
+	statgained = false;
 }
