@@ -205,7 +205,7 @@ void MainMenu::Render()
 		{
 			ss << "Use Arrow Keys/ A or D to switch between pages";
 			modelStack.PushMatrix();
-			modelStack.Translate(m_halfWorldWidth - 90, 5, 0);
+			modelStack.Translate(m_halfWorldWidth - 70, 5, 0);
 			modelStack.Scale(3, 3, 3);
 			RenderText(meshList[GEO_GAMEFONT], ss.str(), Color(1, 1, 1));
 			modelStack.PopMatrix();
@@ -213,9 +213,9 @@ void MainMenu::Render()
 
 		ss.clear();
 		ss.str("");
-		ss << "Pres ESC to return to main menu";
+		ss << "Pres Tab to return to main menu";
 		modelStack.PushMatrix();
-		modelStack.Translate(m_halfWorldWidth - 90, 2, 0);
+		modelStack.Translate(m_halfWorldWidth - 70, 2, 0);
 		modelStack.Scale(3, 3, 3);
 		RenderText(meshList[GEO_GAMEFONT], ss.str(), Color(1, 1, 1));
 		modelStack.PopMatrix();

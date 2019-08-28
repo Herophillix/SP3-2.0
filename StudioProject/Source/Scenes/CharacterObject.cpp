@@ -14,6 +14,9 @@ CharacterObject::CharacterObject(CHARACTEROBJECT_TYPE typeValue)
 	m_Count++;
 	currentItem = nullptr;
 	giveUp = false;
+	WorkingHard = false;
+	asleep = false;
+	resting = false;
 }
 
 CharacterObject::~CharacterObject()
@@ -135,19 +138,19 @@ void CharacterObject::Update(double dt)
 {
 	if (!giveUp)
 	{
-		if (Statistics.m_frustration < 100 && resting == false)
+		if (Statistics.m_frustration < 100 && !resting && !WorkingHard  && !asleep )
 		{
 			Statistics.m_frustration += 2.f / Statistics.m_experience * 1 / m_Count * dt;
 		}
-		if (Statistics.m_frustration > 0 && asleep == true)
+		if (Statistics.m_frustration > 0 && asleep && !WorkingHard && !resting )
 		{
 			Statistics.m_frustration -= 3.f / Statistics.m_experience * 1 / m_Count * dt;
 		}
-		if (Statistics.m_frustration > 0 && resting == true)
+		if (Statistics.m_frustration > 0 && resting && !WorkingHard  && !asleep)
 		{
 			Statistics.m_frustration -=  2.2f / Statistics.m_experience * 1 / m_Count * dt;
 		}
-		if (Statistics.m_frustration < 100 && WorkingHard == true && resting == false)
+		if (Statistics.m_frustration < 100 && WorkingHard && !resting && !asleep)
 		{
 			Statistics.m_frustration += 5.5f / Statistics.m_experience * 1 / m_Count * dt;
 		}
@@ -155,37 +158,37 @@ void CharacterObject::Update(double dt)
 		{
 			Statistics.m_frustration = 0.005f;
 		}
-		if (Statistics.m_rest > 0 && resting == false && WorkingHard == false)
+		if (Statistics.m_rest > 0 && !resting && !WorkingHard  && !asleep)
 		{
-			Statistics.m_rest -= 0.5f  *  Statistics.m_experience * dt / m_Count;
+			Statistics.m_rest -= 0.8f  *  Statistics.m_experience * dt / m_Count;
 		}
-		if (Statistics.m_rest < 100 && resting == true)
+		if (Statistics.m_rest < 100 && resting && !WorkingHard && !asleep)
 		{
-			Statistics.m_rest += 0.1f  *  Statistics.m_experience * dt / m_Count;
+			Statistics.m_rest += 1.2f  *  Statistics.m_experience * dt / m_Count;
 		}
-		if (Statistics.m_rest < 100 && WorkingHard == true)
+		if (Statistics.m_rest < 100 && WorkingHard && !asleep && !resting)
 		{
-			Statistics.m_rest -= 1.f  *  Statistics.m_experience * dt / m_Count;
+			Statistics.m_rest -= 1.3f  *  Statistics.m_experience * dt / m_Count;
 		}
-		if (Statistics.m_rest < 100 && asleep == true)
+		if (Statistics.m_rest < 100 && asleep && !WorkingHard && !resting)
 		{
-			Statistics.m_rest += 1.f  *  Statistics.m_experience * dt / m_Count;
+			Statistics.m_rest += 1.5f  *  Statistics.m_experience * dt / m_Count;
 		}
 		if (Statistics.m_rest < 0.0f)
 		{
 			Statistics.m_rest = 0.005f;
 		}
-		if (Statistics.m_motivation > 0 && resting == false)
+		if (Statistics.m_motivation > 0 && !resting  && !WorkingHard  && !asleep)
 		{
-			Statistics.m_motivation -= 0.5f * Statistics.m_experience * dt / m_Count;
+			Statistics.m_motivation -= 0.8f * Statistics.m_experience * dt / m_Count;
 		}
-		if (Statistics.m_motivation < 100 && resting == true)
+		if (Statistics.m_motivation < 100 && resting && !WorkingHard  && !asleep )
 		{
-			Statistics.m_motivation += 0.5f * Statistics.m_experience * dt / m_Count;
+			Statistics.m_motivation += 0.8f * Statistics.m_experience * dt / m_Count;
 		}
-		if (Statistics.m_motivation < 100 && resting == false && WorkingHard == true)
+		if (Statistics.m_motivation < 100 && !resting && WorkingHard && !asleep)
 		{
-			Statistics.m_motivation += 1.f * Statistics.m_experience * dt / m_Count;
+			Statistics.m_motivation += 1.2f * Statistics.m_experience * dt / m_Count;
 		}
 		if (Statistics.m_motivation < 0.00f)
 		{
@@ -195,17 +198,16 @@ void CharacterObject::Update(double dt)
 		{
 			Statistics.m_rest = 0.005f;
 		}
-		if (Statistics.m_workDone < 100 && resting == false && WorkingHard == false)
+		if (Statistics.m_workDone < 100 && !resting && !WorkingHard && !asleep)
 		{
 			Statistics.m_workDone += 2.f / Statistics.m_experience * Statistics.m_motivation / Statistics.m_rest *  dt / m_Count;
 		}
-		if (Statistics.m_workDone < 100 && WorkingHard == true && resting == false)
+		if (Statistics.m_workDone < 100 && WorkingHard && !resting && !asleep)
 		{
 			Statistics.m_workDone += 4.0f / Statistics.m_experience * Statistics.m_motivation / Statistics.m_rest *  dt / m_Count;
 		}
-		if (Statistics.m_workDone < 100 && asleep == true)
+		if (Statistics.m_workDone < 100 && asleep && !WorkingHard && !resting)
 		{
-			Statistics.m_workDone += 0.0f;
 		}
 		if (Statistics.m_frustration >= 100 || Statistics.m_rest <= 0 || Statistics.m_motivation <= 0)
 		{

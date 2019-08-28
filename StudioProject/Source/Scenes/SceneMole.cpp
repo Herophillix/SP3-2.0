@@ -843,7 +843,7 @@ void SceneMole::UpdateMoles(double dt)
 				m_moleListTotal[randMole]->setMole_lifeTime(10.5f);
 				// do rng stuff here for mole type
 				int randMoleType = Math::RandIntMinMax(0, 99);
-				m_moleListTotal[randMole]->setType(MoleObject::GO_MOLE_BOMB);//(MoleObject::MOLEOBJECT_TYPE)(moleTypeRNG[randMoleType]);
+				m_moleListTotal[randMole]->setType((MoleObject::MOLEOBJECT_TYPE)(moleTypeRNG[randMoleType]));
 				break;
 			}
 		}

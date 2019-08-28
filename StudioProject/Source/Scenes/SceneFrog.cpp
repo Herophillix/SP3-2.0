@@ -20,10 +20,6 @@ void SceneFrog::Init()
 	SceneBase::Init();
 	Results::getInstance()->InitVars();
 
-	//m_worldHeight = 200.f;
-	//// End James 13/8/2019
-	//m_worldWidth = m_worldHeight * (float)Application::GetWindowWidth() / Application::GetWindowHeight();
-
 	m_halfWorldHeight = m_worldHeight / 2;
 	m_halfWorldWidth = m_worldWidth / 2;
 	m_goList = new std::vector<FrogObject*>;
@@ -94,7 +90,7 @@ void SceneFrog::Init()
 	Frog = FetchGO();
 	Frog->setActive(true);
 	Frog->setType(FrogObject::GO_FROG);
-	Frog->setScale(Vector3(3, 3, 1));
+	Frog->setScale(Vector3(20, 20, 1));
 	Frog->Frog_pos.Set(200, 10, 0);
 	Frog->Frog_vel.Set(0, 0, 0);
 	Frog->Frog_jumpVel.Set(0, 20, 0);

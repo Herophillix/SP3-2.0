@@ -69,10 +69,17 @@ void Screen::Update(double dt, Vector3 v_mousepos, Vector3 rel_mousepos, Vector3
 			}
 			case ItemObject::I_COMPUTER:
 			{
-				Character->WorkingHard = true;
+				Character->WorkingHard = false;
+			}
+			case ItemObject::I_BOX:
+			{
+				Character->asleep = false;
 			}
 
 			default:
+				Character->resting = false;
+				Character->WorkingHard = false;
+				Character->asleep = false;
 				break;
 			}
 		}
@@ -96,7 +103,8 @@ void Screen::Update(double dt, Vector3 v_mousepos, Vector3 rel_mousepos, Vector3
 			}
 			case ItemObject::I_BOX:
 			{
-
+				Character->asleep = true;
+				break;
 			}
 			default:
 				break;

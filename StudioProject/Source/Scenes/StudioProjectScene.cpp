@@ -49,9 +49,9 @@ void StudioProjectScene::Init()
 	meshList[GEO_BORDER] = MeshBuilder::GenerateQuad("Border", Color(1, 1, 1), 1.f);
 	meshList[GEO_BORDER]->textureID = LoadTGA("Image//Border.tga");
 	meshList[GEO_TANK_CURSOR] = MeshBuilder::GenerateQuad("Cursor", Color(1, 1, 1), 1.f);
-	meshList[GEO_TANK_CURSOR]->textureID = LoadTGA("Image//Tank_Cursor.tga");
+	meshList[GEO_TANK_CURSOR]->textureID = LoadTGA("Image//gameCursor.tga");
 	meshList[GEO_TANK_CURSOR_ALTERNATE] = MeshBuilder::GenerateQuad("Cursor	Alternate", Color(1, 1, 1), 1.f);
-	meshList[GEO_TANK_CURSOR_ALTERNATE]->textureID = LoadTGA("Image//Tank_Cursor_Alternate.tga");
+	meshList[GEO_TANK_CURSOR_ALTERNATE]->textureID = LoadTGA("Image//gameCursor.tga");
 	meshList[GEO_MAIN_USE] = MeshBuilder::GenerateQuad("Use", Color(1, 1, 1), 1.f);
 	meshList[GEO_MAIN_USE]->textureID = LoadTGA("Image//Main_Use.tga");
 	meshList[GEO_MAIN_STOP] = MeshBuilder::GenerateQuad("Stop", Color(1, 1, 1), 1.f);
@@ -62,6 +62,12 @@ void StudioProjectScene::Init()
 	meshList[GEO_LOSESCREEN]->textureID = LoadTGA("Image//Lose_Screen.tga");
 	meshList[GEO_WINSCREEN] = MeshBuilder::GenerateQuad("WinScreen", Color(1, 1, 1), 1.f);
 	meshList[GEO_WINSCREEN]->textureID = LoadTGA("Image//WinScreen.tga");
+	meshList[GEO_WINSCREENB] = MeshBuilder::GenerateQuad("WinScreenB", Color(1, 1, 1), 1.f);
+	meshList[GEO_WINSCREENB]->textureID = LoadTGA("Image//WinscreenB.tga");
+	meshList[GEO_WINSCREENC] = MeshBuilder::GenerateQuad("WinScreenC", Color(1, 1, 1), 1.f);
+	meshList[GEO_WINSCREENC]->textureID = LoadTGA("Image//WinscreenC.tga");
+	meshList[GEO_WINSCREEND] = MeshBuilder::GenerateQuad("WinScreenD", Color(1, 1, 1), 1.f);
+	meshList[GEO_WINSCREEND]->textureID = LoadTGA("Image//WinScreenD.tga");
 	meshList[GEO_GIVEUP] = MeshBuilder::GenerateQuad("Giveup", Color(1, 1, 1), 1.f);
 	meshList[GEO_GIVEUP]->textureID = LoadTGA("Image//Gave_Up.tga");
 
@@ -463,7 +469,33 @@ void StudioProjectScene::UpdateGame(double dt)
 		bLButtonState = false;
 		mousepressed = false;
 	}
-
+	//CHEAT CODES BY SEAN
+	//Transition to maze
+	if (Application::IsKeyPressed(VK_NUMPAD1))
+	{
+		Application::setScene(1);
+	}
+	//Transition to Mole
+	if (Application::IsKeyPressed(VK_NUMPAD2))
+	{
+		Application::setScene(2);
+	}
+	//Transition to Tank Scene
+	if (Application::IsKeyPressed(VK_NUMPAD3))
+	{
+		Application::setScene(3);
+	}
+	//Transition to Frog Scene
+	if (Application::IsKeyPressed(VK_NUMPAD4))
+	{
+		Application::setScene(4);
+	}
+	//Transition to Sheep Game
+	if (Application::IsKeyPressed(VK_NUMPAD5))
+	{
+		Application::setScene(5);
+	}
+	//CHEAT CODES BY SEAN
 
 	if (Application::IsKeyPressed(VK_F1))
 	{
@@ -820,12 +852,46 @@ void StudioProjectScene::RenderWinScreen()
 	);
 	// Model matrix : an identity matrix (model will be at the origin)
 	modelStack.LoadIdentity();
-
-	modelStack.PushMatrix();
-	modelStack.Translate(m_worldWidth / 2, m_worldHeight / 2, 0);
-	modelStack.Scale(m_worldWidth/2, m_worldWidth/2, 0);
-	RenderMesh(meshList[GEO_WINSCREEN], false);
-	modelStack.PopMatrix();
+	if (totalWD >= 90)
+	{
+		modelStack.PushMatrix();
+		modelStack.Translate(m_worldWidth / 2, m_worldHeight / 2, 0);
+		modelStack.Scale(m_worldWidth / 2, m_worldWidth / 2, 0);
+		RenderMesh(meshList[GEO_WINSCREEN], false);
+		modelStack.PopMatrix();
+	}
+	if (totalWD >= 75 && totalWD < 90)
+	{
+		modelStack.PushMatrix();
+		modelStack.Translate(m_worldWidth / 2, m_worldHeight / 2, 0);
+		modelStack.Scale(m_worldWidth / 2, m_worldWidth / 2, 0);
+		RenderMesh(meshList[GEO_WINSCREENB], false);
+		modelStack.PopMatrix();
+	}
+	if (totalWD >= 60 && totalWD < 75)
+	{
+		modelStack.PushMatrix();
+		modelStack.Translate(m_worldWidth / 2, m_worldHeight / 2, 0);
+		modelStack.Scale(m_worldWidth / 2, m_worldWidth / 2, 0);
+		RenderMesh(meshList[GEO_WINSCREENC], false);
+		modelStack.PopMatrix();
+	}
+	if (totalWD >= 50 && totalWD < 75)
+	{
+		modelStack.PushMatrix();
+		modelStack.Translate(m_worldWidth / 2, m_worldHeight / 2, 0);
+		modelStack.Scale(m_worldWidth / 2, m_worldWidth / 2, 0);
+		RenderMesh(meshList[GEO_WINSCREEND], false);
+		modelStack.PopMatrix();
+	}
+	if (totalWD < 50)
+	{
+		modelStack.PushMatrix();
+		modelStack.Translate(m_worldWidth / 2, m_worldHeight / 2, 0);
+		modelStack.Scale(m_worldWidth / 2, m_worldWidth / 2, 0);
+		RenderMesh(meshList[GEO_LOSESCREEN], false);
+		modelStack.PopMatrix();
+	}
 	std::ostringstream ss;
 	ss.precision(3);
 	ss << totalWD;
