@@ -123,6 +123,11 @@ void SceneMaze::Init()
 void SceneMaze::Update(double dt)
 {
 	SceneBase::Update(dt);
+	if (StatManager::GetInstance()->GetBool_Game(1))
+	{
+		Reset();
+		StatManager::GetInstance()->SetBool_Maze(false);
+	}
 	
 	//Calculating aspect ratio
 	// James 13/8/2019
