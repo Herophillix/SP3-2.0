@@ -1481,6 +1481,7 @@ void SceneTank::RenderGame()
 	RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(1, 1, 0), 3, 1, 4);
 
 	ss.str("");
+	ss.precision(4);
 	ss << "Score:" << score;
 	RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(0, 0, 1), 3, 1, 7);
 	// End James 14/8/2019

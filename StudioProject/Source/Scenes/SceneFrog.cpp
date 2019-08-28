@@ -98,7 +98,7 @@ void SceneFrog::Init()
 
 	score = 0;
 	m_instructions = true;
-	instructionTimer = 600.f;
+	instructionTimer = 5.f;
 
 
 
