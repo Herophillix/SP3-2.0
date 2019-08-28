@@ -524,7 +524,7 @@ void SceneFrog::RenderGO(FrogObject* go)
 		{
 			modelStack.PushMatrix();
 			modelStack.Translate(go->Frog_pos);
-			modelStack.Scale(go->getScale());
+			modelStack.Scale(go->getScale() * 2);
 			RenderMesh(meshList[GEO_FROG_LEFT], false);
 			modelStack.PopMatrix();
 			break;
@@ -533,7 +533,7 @@ void SceneFrog::RenderGO(FrogObject* go)
 		{
 			modelStack.PushMatrix();
 			modelStack.Translate(go->Frog_pos);
-			modelStack.Scale(go->getScale());
+			modelStack.Scale(go->getScale() * 2);
 			RenderMesh(meshList[GEO_FROG_RIGHT], false);
 			modelStack.PopMatrix();
 			break;

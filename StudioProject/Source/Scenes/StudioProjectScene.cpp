@@ -764,9 +764,9 @@ void StudioProjectScene::RenderAnimation()
 void StudioProjectScene::RenderArrow()
 {
 	modelStack.PushMatrix();
-	modelStack.Translate(currentChar->getPos());
+	modelStack.Translate(currentChar->getPos() + Vector3(0,20,0));
 	modelStack.Rotate(Math::RadianToDegree(atan2(camera.position.x - 0, camera.position.z - 0)), 0, 1, 0);
-	modelStack.Scale(10, 10, 10);
+	modelStack.Scale(15, 15, 1);
 	RenderMesh(meshList[GEO_ARROW], false);
 	modelStack.PopMatrix();
 }

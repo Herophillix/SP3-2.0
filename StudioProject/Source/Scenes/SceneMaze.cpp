@@ -122,11 +122,6 @@ void SceneMaze::Init()
 
 void SceneMaze::Update(double dt)
 {
-	if (StatManager::GetInstance()->GetBool_Game(1))
-	{
-		// Reset Function
-		StatManager::GetInstance()->SetBool_Maze(false);
-	}
 	SceneBase::Update(dt);
 	//Calculating aspect ratio
 	// James 13/8/2019
@@ -151,6 +146,10 @@ void SceneMaze::Update(double dt)
 		bLButtonState = false;
 		mousepressed = false;
 	}
+	if (Application::IsMousePressed(1))
+	{
+		endGame = true;
+	}
 	switch (SceneState)
 	{
 	case S_MENU:
@@ -174,6 +173,11 @@ void SceneMaze::Update(double dt)
 
 void SceneMaze::UpdateGame(double dt)
 {
+	if (StatManager::GetInstance()->GetBool_Game(1))
+	{
+		Reset();
+		StatManager::GetInstance()->SetBool_Maze(false);
+	}
 	if (musicPlay && !musicPlayed)
 	{
 		soundSystem.playSheepMusic();
@@ -301,7 +305,6 @@ void SceneMaze::UpdateGameOver(double dt)
 		if (Results::getInstance()->ButtonMouseCollision())
 		{
 			cout << "hit" << endl;
-			Reset();
 		}
 	}
 	else if (bLButtonState && !Application::IsMousePressed(0))
