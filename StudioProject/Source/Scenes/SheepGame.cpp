@@ -299,7 +299,7 @@ void SheepGame::Update(double dt)
 	{
 		Application::setScene(2);
 		SoundSystem.stopAllMusic();
-		reset(); 
+		reset();
 		bounceTime = 0.5f;
 	}
 	//Transition to Tank Scene
@@ -790,7 +790,7 @@ void SheepGame::Update(double dt)
 		}
 	else
 	{
-		
+
 		if (!blKeyboardState && Application::IsKeyPressed(VK_SPACE))
 		{
 			isInstructions = false;
