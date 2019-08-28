@@ -828,7 +828,7 @@ void StudioProjectScene::Render()
 	}
 	case S_GAMEWIN:
 	{
-
+		RenderWinScreen();
 		break;
 	}
 	default:
