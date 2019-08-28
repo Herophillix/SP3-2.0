@@ -63,7 +63,7 @@ public:
 	void UpdateAI(TankObject* com, double dt);
 	void ChangeAIPosition();
 	void GameEndCalculations();
-	static int score;
+	static float score;
 
 	Particles* GetParticle();
 	void RenderParticle();

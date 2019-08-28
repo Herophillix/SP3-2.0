@@ -5,7 +5,7 @@
 #include "../Rendering/LoadTGA.h"
 #include "../Rendering/MeshBuilder.h"
 
-int SceneTank::score = 0;
+float SceneTank::score = 0;
 
 SceneTank::SceneTank()
 {
@@ -79,7 +79,7 @@ void SceneTank::Init()
 	meshList[GEO_TANK_BACK] = MeshBuilder::GenerateQuad("Back", Color(1, 1, 1), 1.f);
 	meshList[GEO_TANK_BACK]->textureID = LoadTGA("Image//Tank_Back.tga");
 	meshList[GEO_TANK_RAIN] = MeshBuilder::GenerateQuad("Back", Color(1, 1, 1), 1.f);
-	meshList[GEO_TANK_RAIN]->textureID = LoadTGA("Image//Tank_Back.tga");
+	meshList[GEO_TANK_RAIN]->textureID = LoadTGA("Image//Smoke.tga");
 
 	//Physics code here
 	m_speed = 1.f;
@@ -106,13 +106,13 @@ void SceneTank::Init()
 	// James 14/8/2019
 	tempwall = FetchGO();
 	tempwall->setType(PhysicsObject::GO_WALL);
-	tempwall->setPos(Vector3(m_worldWidth*0.5, m_worldHeight * 0.25f, 0));
+	tempwall->setPos(Vector3(m_worldWidth*0.5f, m_worldHeight * 0.25f, 0));
 	tempwall->normal = Vector3(0, 1, 0);
 	tempwall->setScale(Vector3(5, m_worldWidth, 1));
 
 	tempwall2 = FetchGO();
 	tempwall2->setType(PhysicsObject::GO_WALL);
-	tempwall2->setPos(Vector3(m_worldWidth*0.5, m_worldHeight, 0));
+	tempwall2->setPos(Vector3(m_worldWidth*0.5f, m_worldHeight, 0));
 	tempwall2->normal = Vector3(0, 1, 0);
 	tempwall2->setScale(Vector3(5, m_worldWidth, 1));
 
@@ -205,7 +205,7 @@ void SceneTank::Init()
 	ballthrown = false;
 	ballcollisionnum = 0;
 
-	PhysicsObject::WindDirection = Vector3(Math::RandFloatMinMax(-9.8, 9.8), Math::RandFloatMinMax(-9.8, 9.8), 0);
+	PhysicsObject::WindDirection = Vector3(Math::RandFloatMinMax(-9.8f, 9.8f), Math::RandFloatMinMax(-9.8f, 9.8f), 0);
 	PhysicsObject::WindDirection = Math::Clamp(PhysicsObject::WindDirection.Length(), 0.f, 9.8f) * PhysicsObject::WindDirection.Normalized();
 
 	TankChange = false;
@@ -260,7 +260,7 @@ void SceneTank::Init()
 
 void SceneTank::Update(double dt)
 {
-	bounceTime -= dt;
+	bounceTime -= (float)dt;
 	//CHEAT CODES BY SEAN
 //Transition to maze
 	if (Application::IsKeyPressed(VK_NUMPAD1) && bounceTime < 0)
@@ -336,11 +336,6 @@ void SceneTank::Update(double dt)
 		std::cout << "LBUTTON DOWN" << std::endl;
 		mousepressed = true;
 	}
-	else if (bRButtonState && !Application::IsMousePressed(1))
-	{
-		bRButtonState = false;
-		SceneState = S_GAMEOVER;
-	}
 	switch (SceneState)
 	{
 	case S_MENU:
@@ -412,10 +407,10 @@ void SceneTank::UpdateGame(double dt)
 	UpdateParticle(dt);
 
 	// James 14/8/2019
-	tempwall->setPos(Vector3(m_worldWidth*0.5, m_worldHeight * 0.25f, 0));
+	tempwall->setPos(Vector3(m_worldWidth*0.5f,m_worldHeight * 0.25f, 0));
 	tempwall->setScale(Vector3(5, m_worldWidth, 1));
 
-	tempwall2->setPos(Vector3(m_worldWidth*0.5, m_worldHeight, 0));
+	tempwall2->setPos(Vector3(m_worldWidth*0.5f, m_worldHeight, 0));
 	tempwall2->setScale(Vector3(5, m_worldWidth, 1));
 
 	tempwall3->setPos(Vector3(0, m_worldHeight * 0.5f, 0));
@@ -509,7 +504,7 @@ void SceneTank::UpdateGame(double dt)
 					velocity = 0.f;
 				}
 			}
-			PhysicsObject::WindDirection = Vector3(Math::RandFloatMinMax(-9.8, 9.8), Math::RandFloatMinMax(-9.8, 9.8), 0);
+			PhysicsObject::WindDirection = Vector3(Math::RandFloatMinMax(-9.8f, 9.8f), Math::RandFloatMinMax(-9.8f, 9.8f), 0);
 			PhysicsObject::WindDirection = Math::Clamp(PhysicsObject::WindDirection.Length(), 0.f, 9.8f) * PhysicsObject::WindDirection.Normalized();
 		}
 	}
@@ -958,15 +953,15 @@ void SceneTank::UpdateRayTracing(double dt)
 		int index = 0;
 		float accumulatedtime = 0.f;
 		//Vector3 prevpos = Ghost->pos + m_gravity * dt;
-		for (float time = 0; time < 5.f; time += dt)
+		for (float time = 0; time < 5.f; time += (float)dt)
 		{
 			if (!temp.getActive())
 			{
 				break;
 			}
-			temp.vel += Vector3(0, -9.8, 0) * dt;
-			temp.setPos(temp.vel * dt, true);
-			accumulatedtime += temp.vel.Length() * dt;
+			temp.vel += Vector3(0, -9.8f, 0) * (float)dt;
+			temp.setPos(temp.vel * (float)dt, true);
+			accumulatedtime += temp.vel.Length() * (float)dt;
 			for (int k = 0; k < (int)m_goList->size(); ++k)
 			{
 				PhysicsObject* go2 = (*m_goList)[k];
@@ -974,7 +969,7 @@ void SceneTank::UpdateRayTracing(double dt)
 				{
 					if (CheckCollision(&temp, go2))
 					{
-						go2->CollisionResponse(&temp, dt);
+						go2->CollisionResponse(&temp, (float)dt);
 						break;
 						//CollisionResponse(&temp, go2, dt);
 					}
@@ -1068,7 +1063,7 @@ void SceneTank::UpdateParticle(double dt)
 	}
 	else
 	{
-		Particlebuffertime += dt;
+		Particlebuffertime += (float)dt;
 	}
 	for (int i = 0; i < (int)m_ParticleList.size(); ++i)
 	{
@@ -1076,10 +1071,10 @@ void SceneTank::UpdateParticle(double dt)
 		if (go->active)
 		{
 			Vector3 m_gravity(0, -9.8f, 0);
-			go->vel += m_gravity * dt;
-			go->vel += TankObject::WindDirection * dt;
-			go->pos += go->vel * dt;
-			go->lifeTime -= dt;
+			go->vel += m_gravity * (float)dt;
+			go->vel += TankObject::WindDirection * (float)dt;
+			go->pos += go->vel * (float)dt;
+			go->lifeTime -= (float)dt;
 			if (go->lifeTime < 0 ||
 				go->pos.x > m_worldWidth ||
 				go->pos.x < 0 ||
@@ -1272,16 +1267,16 @@ void SceneTank::CheckCollisionTank(TankObject* go, TankObject* go2)
 		{
 			if (go->UpBound || go->DownBound)
 			{
-				go->setPos(Vector3(radius1 + radius2 - (go->getPos() - go2->getPos()).Length() * 1.01 * (go->getPos() - go2->getPos()).Normalized().x, 0,0) , true);
+				go->setPos(Vector3(radius1 + radius2 - (go->getPos() - go2->getPos()).Length() * 1.01f * (go->getPos() - go2->getPos()).Normalized().x, 0,0) , true);
 			}
 			if (go->LeftBound || go->RightBound)
 			{
-				go->setPos(Vector3(0, radius1 + radius2 - (go->getPos() - go2->getPos()).Length() * 1.01 * (go->getPos() - go2->getPos()).Normalized().y, 0), true);
+				go->setPos(Vector3(0, radius1 + radius2 - (go->getPos() - go2->getPos()).Length() * 1.01f * (go->getPos() - go2->getPos()).Normalized().y, 0), true);
 			}
 		}
 		else
 		{
-			go->setPos((radius1 + radius2 - (go->getPos() - go2->getPos()).Length()) * 1.01 * (go->getPos() - go2->getPos()).Normalized(), true);
+			go->setPos((radius1 + radius2 - (go->getPos() - go2->getPos()).Length()) * 1.01f * (go->getPos() - go2->getPos()).Normalized(), true);
 		}
 		/*if (go->LeftBound || go->RightBound)
 		{
@@ -1607,7 +1602,7 @@ void SceneTank::RenderGO(PhysicsObject * go)
 			{
 				ss << "@";
 			}
-			RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(1, 0, 0), 1, go->getPos().x / m_worldWidth * 80 - 0.75, (go->getPos().y + (go->getScale().x + Tank[i]->getHead()->getScale().x) * 1.5f) / m_worldHeight * 60);
+			RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(1, 0, 0), 1, go->getPos().x / m_worldWidth * 80 - 0.75f, (go->getPos().y + (go->getScale().x + Tank[i]->getHead()->getScale().x) * 1.5f) / m_worldHeight * 60);
 			break;
 		}
 	}
@@ -1621,7 +1616,7 @@ void SceneTank::RenderGO(PhysicsObject * go)
 		modelStack.Scale(go->getScale());
 		if (go == Ball)
 		{
-			modelStack.Rotate(elapsedTime * 90, 0, 0, 1);
+			modelStack.Rotate((float)elapsedTime * 90.f, 0, 0, 1);
 			RenderMesh(meshList[GEO_TANK_BALL_1 + ballcollisionnum], false);
 		}
 		else

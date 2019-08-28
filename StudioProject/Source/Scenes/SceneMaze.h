@@ -74,9 +74,9 @@ private:
 	bool endGame;
 	double elapsedTime;
 	bool statgained = false;
-	int score;
+	float score;
 	char grade;
-	int stencilsize;
+	float stencilsize;
 	bool mousepressed;
 	double endGametime;
 

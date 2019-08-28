@@ -55,13 +55,13 @@ void SceneMaze::Init()
 	// James 14/8/2019
 	tempwall = FetchGO();
 	tempwall->setType(PhysicsObject::GO_WALL);
-	tempwall->setPos(Vector3(m_worldWidth*0.5, 0, 0));
+	tempwall->setPos(Vector3(m_worldWidth*0.5f, 0, 0));
 	tempwall->normal = Vector3(0, 1, 0);
 	tempwall->setScale(Vector3(5, m_worldWidth, 1));
 
 	tempwall2 = FetchGO();
 	tempwall2->setType(PhysicsObject::GO_WALL);
-	tempwall2->setPos(Vector3(m_worldWidth*0.5, m_worldHeight, 0));
+	tempwall2->setPos(Vector3(m_worldWidth*0.5f, m_worldHeight, 0));
 	tempwall2->normal = Vector3(0, 1, 0);
 	tempwall2->setScale(Vector3(5, m_worldWidth, 1));
 
@@ -147,10 +147,6 @@ void SceneMaze::Update(double dt)
 		bLButtonState = false;
 		mousepressed = false;
 	}
-	if (Application::IsMousePressed(1))
-	{
-		endGame = true;
-	}
 	switch (SceneState)
 	{
 	case S_MENU:
@@ -174,7 +170,7 @@ void SceneMaze::Update(double dt)
 
 void SceneMaze::UpdateGame(double dt)
 {
-	bounceTime -= dt;
+	bounceTime -= (float)dt;
 	//CHEAT CODES BY SEAN
 //Transition to Main Scene
 	if (Application::IsKeyPressed(VK_NUMPAD1) && bounceTime < 0)
@@ -244,17 +240,17 @@ void SceneMaze::UpdateGame(double dt)
 		elapsedTime += dt;
 		if (score > 0)
 		{
-			score -= dt * 100 / 3.f * (1 + (stencilsize - 1) * 0.125f);
+			score -= (float)dt * 100 / 3.f * (1 + (stencilsize - 1) * 0.125f);
 		}
 		else
 		{
 			endGame = true;
 		}
 	}
-	tempwall->setPos(Vector3(m_worldWidth*0.5, 0, 0));
+	tempwall->setPos(Vector3(m_worldWidth*0.5f, 0, 0));
 	tempwall->setScale(Vector3(5, m_worldWidth, 1));
 
-	tempwall2->setPos(Vector3(m_worldWidth*0.5, m_worldHeight, 0));
+	tempwall2->setPos(Vector3(m_worldWidth*0.5f, m_worldHeight, 0));
 	tempwall2->setScale(Vector3(5, m_worldWidth, 1));
 
 	tempwall3->setPos(Vector3(0, m_worldHeight * 0.5f, 0));
@@ -715,7 +711,7 @@ void SceneMaze::ActivateStencil()
 	{
 		modelStack.PushMatrix();
 		modelStack.Translate(Ball->getPos());
-		modelStack.Scale((10 + stencilsize * 2) * 2, (10 + stencilsize * 2) * 2, 1);
+		modelStack.Scale((10.f + stencilsize * 2.f) * 2.f, (10.f + stencilsize * 2.f) * 2.f, 1.f);
 		RenderMesh(meshList[GEO_BALL], false);
 		modelStack.PopMatrix();
 	}

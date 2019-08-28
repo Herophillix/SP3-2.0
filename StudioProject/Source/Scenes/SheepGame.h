@@ -25,7 +25,7 @@ private:
 	SheepObject* Warning3;
 	CSoundEngine SoundSystem;
 	std::vector<Particles* > m_particleList;
-	int points;
+	float points;
 	bool isFiring;
 	float fireRate;
 	bool pointGain;

@@ -116,7 +116,8 @@ void StudioProjectScene::Init()
 	m_particleCount = 0;
 	MAX_PARTICLE = 2000;
 	soundSystem.Init();
-	m_Gravity.Set(0, -9.8, 0);
+	changedScene = false;
+	m_Gravity.Set(0, -9.8f, 0);
 	for (unsigned i = 0; i < 10;++i)
 	{
 		Particles *particle = new Particles(ParticleObject_TYPE::P_ParticleTest);
@@ -320,7 +321,7 @@ void StudioProjectScene::Update(double dt)
 	int h = Application::GetWindowHeight();
 	v_mousepos = Vector3(static_cast<float>(x) / (w / m_worldWidth), (h - static_cast<float>(y)) / (h / m_worldHeight), 0.0f);
 
-	m_eventTimer -= dt;
+	m_eventTimer -= (float)dt;
 
 	//Losing Condition
 
@@ -362,7 +363,7 @@ void StudioProjectScene::Update(double dt)
 	{
 		if (color >= 0)
 		{
-			color -= dt;
+			color -= (float)dt;
 		}
 	}
 	if (m_eventTimer < -2)
@@ -373,7 +374,6 @@ void StudioProjectScene::Update(double dt)
 		case 1:
 		{
 			m_eventTimer = Math::RandFloatMinMax(20.f, 40.f);
-			day++;
 			break;
 		}
 		case 5:
@@ -381,6 +381,7 @@ void StudioProjectScene::Update(double dt)
 			SceneState = S_LEVELTRANSITION;
 			phase = 0;
 			mTimer = 2.f;
+			day++;
 			break;
 		}
 		default:
@@ -393,7 +394,7 @@ void StudioProjectScene::Update(double dt)
 			}
 			Application::setScene(currentlevel);
 			m_eventTimer = Math::RandFloatMinMax(20.0f, 40.f);
-
+			changedScene = true;
 			break;
 		}
 		}
@@ -410,6 +411,13 @@ void StudioProjectScene::UpdateGame(double dt)
 	ScreenSplit[1]->UseItem->setPos(Vector3(m_worldWidth * 0.95f, m_worldHeight * 0.55f, 0));
 	ScreenSplit[2]->UseItem->setPos(Vector3(m_worldWidth * 0.45f, m_worldHeight * 0.05f, 0));
 	ScreenSplit[3]->UseItem->setPos(Vector3(m_worldWidth * 0.95f, m_worldHeight * 0.05f, 0));
+	if (changedScene)
+	{
+		ScreenSplit[0]->Character->setStatistics(StatManager::GetInstance()->GetChar01());
+		ScreenSplit[1]->Character->setStatistics(StatManager::GetInstance()->GetChar02());
+		ScreenSplit[2]->Character->setStatistics(StatManager::GetInstance()->GetChar03());
+		ScreenSplit[3]->Character->setStatistics(StatManager::GetInstance()->GetChar04());
+	}
 
 	int w = Application::GetWindowWidth();
 	int h = Application::GetWindowHeight();
@@ -466,7 +474,7 @@ void StudioProjectScene::UpdateGame(double dt)
 		bLButtonState = false;
 		mousepressed = false;
 	}
-	bounceTime -= dt;
+	bounceTime -= (float)dt;
 	//CHEAT CODES BY SEAN
 	//Transition to maze
 	if (Application::IsKeyPressed(VK_NUMPAD1) && bounceTime < 0)
@@ -669,11 +677,15 @@ void StudioProjectScene::UpdateGame(double dt)
 		C04MR->Update(dt);
 		C04MR->m_anim->animActive = true;
 	}
-	mTimer -= dt;
+	mTimer -= (float)dt;
 	if (mTimer < 0 && playMusic == false)
 	{
 		soundSystem.playMainMusic();
 		playMusic = true;
+	}
+	if (day == 5)
+	{
+		SceneState = S_GAMEWIN;
 	}
 }
 
@@ -702,6 +714,7 @@ void StudioProjectScene::reset()
 	prevlevel = 0;
 	currentlevel = 0;
 	SceneState = S_GAME;
+	day = 0;
 
 	Continue->setPos(Vector3(m_worldWidth * 0.9f, m_worldHeight * 0.1f, 0));
 	Continue->setActive(true);
@@ -711,7 +724,7 @@ void StudioProjectScene::UpdateLevelTransition(double dt)
 	Continue->Update(v_mousepos);
 	if (Continue->getChanged())
 	{
-		m_eventTimer = -0.01;
+		m_eventTimer = -0.01f;
 		SceneState = S_GAME;
 		phase = 0;
 		Continue->setChanged(false);
@@ -763,7 +776,7 @@ void StudioProjectScene::UpdateParticles(double dt)
 				particle->vel += Vector3(0, -m_Gravity.y, 0)* (float)dt;
 				particle->pos += particle->vel * (float)dt;
 				particle->rotation += particle->rotationSpeed * (float)dt;
-				particle->lifeTime -= dt;
+				particle->lifeTime -= (float)dt;
 			}
 			if (particle->lifeTime < 0)
 			{
@@ -962,51 +975,51 @@ void StudioProjectScene::RenderGame()
 	if (m_eventTimer > 0)
 	{
 		glEnable(GL_SCISSOR_TEST);
-		glViewport(0, StatsArea.y + GameArea.y + StatsArea.y, GameArea.x, GameArea.y);
-		glScissor(0, StatsArea.y + GameArea.y + StatsArea.y, GameArea.x, GameArea.y);
+		glViewport(0, (GLint)StatsArea.y + (GLint)GameArea.y + (GLint)StatsArea.y, (GLsizei)GameArea.x, (GLsizei)GameArea.y);
+		glScissor(0, (GLint)StatsArea.y + (GLint)GameArea.y + (GLint)StatsArea.y, (GLsizei)GameArea.x, (GLsizei)GameArea.y);
 
 		RenderScreen(ScreenSplit[0]);
 		//RenderCharacter1(); // TOP LEFT
 
-		glViewport(GameArea.x, StatsArea.y + GameArea.y + StatsArea.y, GameArea.x, GameArea.y);
-		glScissor(GameArea.x, StatsArea.y + GameArea.y + StatsArea.y, GameArea.x, GameArea.y);
+		glViewport((GLint)GameArea.x, (GLint)StatsArea.y + (GLint)GameArea.y + (GLint)StatsArea.y, (GLsizei)GameArea.x, (GLsizei)GameArea.y);
+		glScissor((GLint)GameArea.x, (GLint)StatsArea.y + (GLint)GameArea.y + (GLint)StatsArea.y, (GLsizei)GameArea.x, (GLsizei)GameArea.y);
 
 		RenderScreen(ScreenSplit[1]);
 		//RenderCharacter2(); // TOP RIGHT
 
-		glViewport(0, StatsArea.y, GameArea.x, GameArea.y);
-		glScissor(0, StatsArea.y, GameArea.x, GameArea.y);
+		glViewport(0, (GLint)StatsArea.y, (GLsizei)GameArea.x, (GLsizei)GameArea.y);
+		glScissor(0, (GLint)StatsArea.y, (GLsizei)GameArea.x, (GLsizei)GameArea.y);
 
 		RenderScreen(ScreenSplit[2]);
 		//RenderCharacter3();
 
-		glViewport(GameArea.x, StatsArea.y, GameArea.x, GameArea.y);
-		glScissor(GameArea.x, StatsArea.y, GameArea.x, GameArea.y);
+		glViewport((GLint)GameArea.x, (GLint)StatsArea.y, (GLsizei)GameArea.x, (GLsizei)GameArea.y);
+		glScissor((GLint)GameArea.x, (GLint)StatsArea.y, (GLsizei)GameArea.x, (GLsizei)GameArea.y);
 
 		RenderScreen(ScreenSplit[3]);
 		//RenderCharacter4();
 
 		// Statistics
-		glViewport(0, StatsArea.y + GameArea.y, StatsArea.x, StatsArea.y);
-		glScissor(0, StatsArea.y + GameArea.y, StatsArea.x, StatsArea.y);
+		glViewport(0, (GLint)StatsArea.y + (GLint)GameArea.y, (GLsizei)StatsArea.x, (GLsizei)StatsArea.y);
+		glScissor(0, (GLint)StatsArea.y + (GLint)GameArea.y, (GLsizei)StatsArea.x, (GLsizei)StatsArea.y);
 
 		RenderStats(ScreenSplit[0]->Character);
 		//RenderStats1();
 
-		glViewport(StatsArea.x, StatsArea.y + GameArea.y, StatsArea.x, StatsArea.y);
-		glScissor(StatsArea.x, StatsArea.y + GameArea.y, StatsArea.x, StatsArea.y);
+		glViewport((GLint)StatsArea.x, (GLint)StatsArea.y + (GLint)GameArea.y, (GLsizei)StatsArea.x, (GLsizei)StatsArea.y);
+		glScissor((GLint)StatsArea.x, (GLint)StatsArea.y + (GLint)GameArea.y, (GLsizei)StatsArea.x, (GLsizei)StatsArea.y);
 
 		RenderStats(ScreenSplit[1]->Character);
 		//RenderStats2();
 
-		glViewport(0, 0, StatsArea.x, StatsArea.y);
-		glScissor(0, 0, StatsArea.x, StatsArea.y);
+		glViewport(0, 0, (GLsizei)StatsArea.x, (GLsizei)StatsArea.y);
+		glScissor(0, 0, (GLsizei)StatsArea.x, (GLsizei)StatsArea.y);
 
 		RenderStats(ScreenSplit[2]->Character);
 		//RenderStats3();
 
-		glViewport(StatsArea.x, 0, StatsArea.x, StatsArea.y);
-		glScissor(StatsArea.x, 0, StatsArea.x, StatsArea.y);
+		glViewport((GLint)StatsArea.x, 0, (GLsizei)StatsArea.x, (GLsizei)StatsArea.y);
+		glScissor((GLint)StatsArea.x, 0, (GLsizei)StatsArea.x, (GLsizei)StatsArea.y);
 
 		RenderStats(ScreenSplit[3]->Character);
 		//RenderStats4();
@@ -1131,13 +1144,13 @@ void StudioProjectScene::RenderLevelTransition()
 	RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(0, 1, 0), 3, 1, 33);
 
 	ss.str("");
-	int value = (ScreenSplit[0]->Character->Statistics.m_workDone
+	float value = (ScreenSplit[0]->Character->Statistics.m_workDone
 		+ ScreenSplit[1]->Character->Statistics.m_workDone
 		+ ScreenSplit[2]->Character->Statistics.m_workDone
 		+ ScreenSplit[3]->Character->Statistics.m_workDone) / 4;
 	/*value = value + 10 / 2;
 	value -= value % 10;*/
-	int add = 0;
+	float add = 0;
 	for (int i = 0; i < value; i += 5)
 	{
 		ss << "@";
@@ -1395,7 +1408,7 @@ void StudioProjectScene::RenderItemObj(ItemObject * go)
 
 GameObject * StudioProjectScene::FetchGO()
 {
-	for (int i = 0; i < m_goList.size(); i++)
+	for (unsigned int i = 0; i < m_goList.size(); i++)
 	{
 		if (!m_goList[i]->getActive())
 		{
@@ -1434,7 +1447,7 @@ void StudioProjectScene::RenderBG()
 {
 	modelStack.PushMatrix();
 	modelStack.Translate(m_worldWidth * 0.5f, m_worldHeight * 0.5f, 0);
-	modelStack.Scale(Application::GetWindowWidth() / 6, Application::GetWindowHeight() / 6, 1);
+	modelStack.Scale((float)Application::GetWindowWidth() / 6, (float)Application::GetWindowHeight() / 6, 1);
 	RenderMesh(meshList[GEO_BACKGROUND], false);
 	modelStack.PopMatrix();
 }
@@ -1452,7 +1465,7 @@ void StudioProjectScene::RenderScreen(Screen* ScreenSplit)
 		RenderArrow();
 	}
 
-	for (int i = 0; i < ScreenSplit->m_itemList.size(); ++i)
+	for (unsigned int i = 0; i < ScreenSplit->m_itemList.size(); ++i)
 	{
 		if (ScreenSplit->m_itemList[i]->getActive())
 		{
@@ -1517,7 +1530,7 @@ void StudioProjectScene::RenderMenu(Screen* ScreenSplit)
 	}
 	modelStack.PopMatrix();
 	modelStack.PushMatrix();
-	modelStack.Translate(ScreenSplit->UseItem->getPos().x - m_worldWidth * 0.05, ScreenSplit->UseItem->getPos().y, ScreenSplit->UseItem->getPos().z);
+	modelStack.Translate(ScreenSplit->UseItem->getPos().x - m_worldWidth * 0.05f, ScreenSplit->UseItem->getPos().y, ScreenSplit->UseItem->getPos().z);
 	modelStack.PushMatrix();
 	modelStack.Scale(13, 13, 1);
 	if (ScreenSplit->Character->currentItem)

@@ -35,7 +35,7 @@ public:
 	void UpdateButtonTexture();
 	void RenderStats();
 	void RenderButtons();
-	void RenderResults(int score, char grade);
+	void RenderResults(float score, char grade);
 	void RenderGO(ResultObject* go);
 	bool ButtonMouseCollision();
 

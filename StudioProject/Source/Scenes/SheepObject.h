@@ -28,7 +28,7 @@ public:
 
 	void setIsDown(bool);
 	void setOnCoolDown(bool);
-	void setHealth(int, bool additive = false);
+	void setHealth(float, bool additive = false);
 	void setCooldown(float, bool additive = false);
 	void setMana(float, bool additive = false);
 	void setSpreadAngle(float, bool additive = false);
@@ -38,7 +38,7 @@ public:
 
 	bool getIsDown();
 	bool getOnCooldown();
-	int getHealth();
+	float getHealth();
 	float getCooldown();
 	float getMana();
 	float getSpreadAngle();
@@ -49,7 +49,7 @@ public:
 private:
 	bool isDown;
 	bool onCooldown;
-	int health;
+	float health;
 	float cooldown;
 	float Mana;
 	float spreadAngle;

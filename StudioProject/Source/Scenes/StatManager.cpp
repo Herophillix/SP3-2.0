@@ -302,6 +302,7 @@ bool StatManager::GetBool_Game(int gameID)
 		return m_resetSheep;
 		break;
 	default:
+		return false;
 		break;
 	}
 }

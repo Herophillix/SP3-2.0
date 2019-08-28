@@ -530,9 +530,9 @@ SpriteAnimation* MeshBuilder::GenerateSpriteAnimation(const std::string &meshNam
 	float height = 1.f / numRow;
 	float length = 1;
 	int offset = 0;
-	for (int i = 0; i < numRow; ++i)
+	for (unsigned int i = 0; i < numRow; ++i)
 	{
-		for (int j = 0; j < numCol; ++j)
+		for (unsigned int j = 0; j < numCol; ++j)
 		{
 			float u1 = j * width;
 			float v1 = 1.f - height - i * height;
