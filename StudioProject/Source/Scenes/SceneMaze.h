@@ -69,7 +69,7 @@ private:
 	PhysicsObject* Ball;
 	bool enableStencil;
 	// End James 15/8/2019	
-
+	float bounceTime;
 	int SceneState;
 	bool endGame;
 	double elapsedTime;

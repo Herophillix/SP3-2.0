@@ -248,7 +248,7 @@ void SceneTank::Init()
 
 	statgained = false;
 	grade = 'F';
-
+	bounceTime = 0.5f;
 	mousepressed = false;
 
 	soundSystem.AddSound("Tank_Shoot", "Sounds//Tank_Shoot.wav");
@@ -260,36 +260,47 @@ void SceneTank::Init()
 
 void SceneTank::Update(double dt)
 {
+	bounceTime -= dt;
 	//CHEAT CODES BY SEAN
 //Transition to maze
-	if (Application::IsKeyPressed(VK_NUMPAD1))
+	if (Application::IsKeyPressed(VK_NUMPAD1) && bounceTime < 0)
 	{
 		Application::setScene(1);
+		soundSystem.stopAllMusic();
 		Reset();
+		bounceTime = 0.5f;
 	}
 	//Transition to Mole
-	if (Application::IsKeyPressed(VK_NUMPAD2))
+	if (Application::IsKeyPressed(VK_NUMPAD2) && bounceTime < 0)
 	{
 		Application::setScene(2);
+		soundSystem.stopAllMusic();
 		Reset();
+		bounceTime = 0.5f;
 	}
 	//Transition to Main Scene
-	if (Application::IsKeyPressed(VK_NUMPAD3))
+	if (Application::IsKeyPressed(VK_NUMPAD3) && bounceTime < 0)
 	{
 		Application::setScene(0);
+		soundSystem.stopAllMusic();
 		Reset();
+		bounceTime = 0.5f;
 	}
 	//Transition to Frog Scene
-	if (Application::IsKeyPressed(VK_NUMPAD4))
+	if (Application::IsKeyPressed(VK_NUMPAD4) && bounceTime < 0)
 	{
 		Application::setScene(4);
+		soundSystem.stopAllMusic();
 		Reset();
+		bounceTime = 0.5f;
 	}
 	//Transition to Sheep Game
-	if (Application::IsKeyPressed(VK_NUMPAD5))
+	if (Application::IsKeyPressed(VK_NUMPAD5) && bounceTime < 0)
 	{
 		Application::setScene(5);
+		soundSystem.stopAllMusic();
 		Reset();
+		bounceTime = 0.5f;
 	}
 	//CHEAT CODES BY SEAN
 	SceneBase::Update(dt);

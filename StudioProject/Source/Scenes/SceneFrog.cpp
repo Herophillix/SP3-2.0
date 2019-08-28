@@ -82,7 +82,7 @@ void SceneFrog::Init()
 	projection.SetToOrtho(0, m_worldWidth, 0, m_worldHeight, -10, 10);
 	projectionStack.LoadMatrix(projection);
 	cout << "Scene Frog " << endl;
-
+	bounceTime = 0.5f;
 
 	m_rockCount = 0;
 	m_coinCount = 0;
@@ -254,31 +254,42 @@ bool SceneFrog::CheckCollision(FrogObject* go, FrogObject* go2)
 
 void SceneFrog::Update(double dt)
 {
+	bounceTime -= dt;
 	//CHEAT CODES BY SEAN
 //Transition to maze
-	if (Application::IsKeyPressed(VK_NUMPAD1))
+	if (Application::IsKeyPressed(VK_NUMPAD1) && bounceTime < 0)
 	{
+		bounceTime = 0.5f;
 		Application::setScene(1);
+		Reset();
 	}
 	//Transition to Mole
-	if (Application::IsKeyPressed(VK_NUMPAD2))
+	if (Application::IsKeyPressed(VK_NUMPAD2) && bounceTime < 0)
 	{
+		bounceTime = 0.5f;
 		Application::setScene(2);
+		Reset();
 	}
 	//Transition to Tank Scene
-	if (Application::IsKeyPressed(VK_NUMPAD3))
+	if (Application::IsKeyPressed(VK_NUMPAD3) && bounceTime < 0)
 	{
+		bounceTime = 0.5f;
 		Application::setScene(3);
+		Reset();
 	}
 	//Transition to Main Scene
-	if (Application::IsKeyPressed(VK_NUMPAD4))
+	if (Application::IsKeyPressed(VK_NUMPAD4) && bounceTime < 0)
 	{
+		bounceTime = 0.5f;
 		Application::setScene(0);
+		Reset();
 	}
 	//Transition to Sheep Game
-	if (Application::IsKeyPressed(VK_NUMPAD5))
+	if (Application::IsKeyPressed(VK_NUMPAD5) && bounceTime < 0)
 	{
+		bounceTime = 0.5f;
 		Application::setScene(5);
+		Reset();
 	}
 	//CHEAT CODES BY SEAN
 	if (StatManager::GetInstance()->GetBool_Game(4))

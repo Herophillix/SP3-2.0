@@ -100,7 +100,7 @@ void Application::Init()
 	m_width = 1920;
 	m_height = 1080;
 
-	m_window = glfwCreateWindow(m_width, m_height, "Studio Project 3", glfwGetPrimaryMonitor(), NULL);
+	m_window = glfwCreateWindow(m_width, m_height, "Studio Project 3", NULL, NULL);
 	//If the window couldn't be created
 	if (!m_window)
 	{

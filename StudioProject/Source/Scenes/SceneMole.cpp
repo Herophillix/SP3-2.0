@@ -29,7 +29,7 @@ void SceneMole::Init()
 	m_eightWorldWidth = m_worldWidth / 8;
 
 	m_sixthWorldHeight = m_worldHeight / 6;
-
+	bounceTime = 0.5f;
 	//Physics code here
 	m_speed = 1.f;
 
@@ -307,36 +307,47 @@ void SceneMole::Init()
 
 void SceneMole::Update(double dt)
 {
+	bounceTime -= dt;
 	//CHEAT CODES BY SEAN
 //Transition to maze
-	if (Application::IsKeyPressed(VK_NUMPAD1))
+	if (Application::IsKeyPressed(VK_NUMPAD1) && bounceTime < 0)
 	{
 		Application::setScene(1);
+		soundSystem.stopAllMusic();
 		Reset();
+		bounceTime = 0.5f;
 	}
 	//Transition to Main Scene
-	if (Application::IsKeyPressed(VK_NUMPAD2))
+	if (Application::IsKeyPressed(VK_NUMPAD2) && bounceTime < 0)
 	{
 		Application::setScene(0);
+		soundSystem.stopAllMusic();
 		Reset();
+		bounceTime = 0.5f;
 	}
 	//Transition to Tank Scene
-	if (Application::IsKeyPressed(VK_NUMPAD3))
+	if (Application::IsKeyPressed(VK_NUMPAD3) && bounceTime < 0)
 	{
 		Application::setScene(3);
+		soundSystem.stopAllMusic();
 		Reset();
+		bounceTime = 0.5f;
 	}
 	//Transition to Frog Scene
-	if (Application::IsKeyPressed(VK_NUMPAD4))
+	if (Application::IsKeyPressed(VK_NUMPAD4) && bounceTime < 0)
 	{
 		Application::setScene(4);
+		soundSystem.stopAllMusic();
 		Reset();
+		bounceTime = 0.5f;
 	}
 	//Transition to Sheep Game
-	if (Application::IsKeyPressed(VK_NUMPAD5))
+	if (Application::IsKeyPressed(VK_NUMPAD5) && bounceTime < 0)
 	{
 		Application::setScene(5);
+		soundSystem.stopAllMusic();
 		Reset();
+		bounceTime = 0.5f;
 	}
 	//CHEAT CODES BY SEAN
 	if (StatManager::GetInstance()->GetBool_Game(2))
@@ -1062,7 +1073,7 @@ void SceneMole::ResetVars()
 	m_score = 0;
 	m_hitCounter = 0;
 	m_frostTimer = 10.f;
-	m_gameTimer = 90.f;
+	m_gameTimer = 30.f;
 	m_gameOver = false;
 	m_frostOn = false;
 	m_instructions = true;

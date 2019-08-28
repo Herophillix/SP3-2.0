@@ -22,10 +22,11 @@ SheepGame::SheepGame() :
 	m_Grade('F'),
 	fireRate(0.5f),
 	SheepkingHit(false),
-	Modifier(0),
 	timer(0.3f),
+	Modifier(0),
 	isInstructions(true),
-	playMusic(false)
+	playMusic(false),
+	bounceTime(0.5f)
 {
 
 }
@@ -46,7 +47,7 @@ void SheepGame::Init()
 		"Scene Sheep " << endl;
 	//Variables here
 	Math::InitRNG();
-
+	blKeyboardState = false;
 	meshList[GEO_SHEEPBG] = MeshBuilder::GenerateQuad("SheepBG", Color(1, 1, 1), 1.f);
 	meshList[GEO_SHEEPBG]->textureID = LoadTGA("Image//sheepBG.tga");
 
@@ -129,10 +130,10 @@ void SheepGame::Init()
 
 
 	//Sound
-	//SoundSystem.AddSound("Fireball_Cast", "Sounds//Fireball_Cast.wav");
-	//SoundSystem.AddSound("Fireball_Explosion", "Sounds//Fireball_Explosion.wav");
-	//SoundSystem.AddSound("Lightning_Bolt", "Sounds//Lightning_Bolt.wav");
-	//SoundSystem.AddSound("Sheep", "Sounds//Sheep.mp3");
+	SoundSystem.AddSound("Fireball_Cast", "Sounds//Fireball_Cast.wav");
+	SoundSystem.AddSound("Fireball_Explosion", "Sounds//Fireball_Explosion.wav");
+	SoundSystem.AddSound("Lightning_Bolt", "Sounds//Lightning_Bolt.wav");
+	SoundSystem.AddSound("Sheep", "Sounds//Sheep.mp3");
 	Mtx44 projection;
 	projection.SetToOrtho(0, m_worldWidth, 0, m_worldHeight, -10, 10);
 	projectionStack.LoadMatrix(projection);
@@ -172,7 +173,6 @@ void SheepGame::Init()
 	Warning3->setActive(false);
 
 	rndNum = 0;
-
 	//Warning3 = FetchGO();
 	//Warning3->type = SheepObject::E_WARNING;
 	//Warning3->RightBound(m_worldWidth/2)
@@ -235,7 +235,8 @@ void SheepGame::reset()
 	Transition = false;
 	EvilKing = false;
 	gameOver = false;
-
+	isInstructions = true;
+	blKeyboardState = false;
 	pointGain = false;
 	rndNum = 0;
 	player->setActive(true);
@@ -283,37 +284,47 @@ void SheepGame::Update(double dt)
 		reset();
 		StatManager::GetInstance()->SetBool_Sheep(false);
 	}
-
+	bounceTime -= dt;
 	//CHEAT CODES BY SEAN
 //Transition to maze
-	if (Application::IsKeyPressed(VK_NUMPAD1))
+	if (Application::IsKeyPressed(VK_NUMPAD1) && bounceTime < 0)
 	{
 		Application::setScene(1);
+		SoundSystem.stopAllMusic();
 		reset();
+		bounceTime = 0.5f;
 	}
 	//Transition to Mole
-	if (Application::IsKeyPressed(VK_NUMPAD2))
+	if (Application::IsKeyPressed(VK_NUMPAD2) && bounceTime < 0)
 	{
 		Application::setScene(2);
-		reset();
+		SoundSystem.stopAllMusic();
+		reset(); 
+		bounceTime = 0.5f;
 	}
 	//Transition to Tank Scene
-	if (Application::IsKeyPressed(VK_NUMPAD3))
+	if (Application::IsKeyPressed(VK_NUMPAD3) && bounceTime < 0)
 	{
 		Application::setScene(3);
+		SoundSystem.stopAllMusic();
 		reset();
+		bounceTime = 0.5f;
 	}
 	//Transition to Frog Scene
-	if (Application::IsKeyPressed(VK_NUMPAD4))
+	if (Application::IsKeyPressed(VK_NUMPAD4) && bounceTime < 0)
 	{
 		Application::setScene(4);
+		SoundSystem.stopAllMusic();
 		reset();
+		bounceTime = 0.5f;
 	}
 	//Transition to Main Scene
-	if (Application::IsKeyPressed(VK_NUMPAD5))
+	if (Application::IsKeyPressed(VK_NUMPAD5) && bounceTime < 0)
 	{
 		Application::setScene(0);
+		SoundSystem.stopAllMusic();
 		reset();
+		bounceTime = 0.5f;
 	}
 	//CHEAT CODES BY SEAN
 	SceneBase::Update(dt);
@@ -364,8 +375,8 @@ void SheepGame::Update(double dt)
 			if (!isInstructions)
 			{
 
-			if (!gameOver)
-			{
+				if (!gameOver)
+				{
 				if (!bLButtonState && Application::IsMousePressed(0))
 				{
 					bLButtonState = true;
@@ -779,7 +790,7 @@ void SheepGame::Update(double dt)
 		}
 	else
 	{
-		static bool blKeyboardState = false;
+		
 		if (!blKeyboardState && Application::IsKeyPressed(VK_SPACE))
 		{
 			isInstructions = false;
@@ -790,7 +801,7 @@ void SheepGame::Update(double dt)
 	}
 	if (playMusic)
 	{
-		//SoundSystem.playSheepMusic();
+		SoundSystem.playSheepMusic();
 		playMusic = false;
 	}
 

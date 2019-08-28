@@ -7,6 +7,7 @@
 //#include "..\SoundEngine.h"
 #include <vector>
 #include <sstream>
+#include "../SoundEngine.h"
 
 
 class SceneFrog :public SceneBase
@@ -35,6 +36,7 @@ public:
 	void Reset();
 	void GameEndCalculations();
 	FrogObject* FetchGO();
+	CSoundEngine soundSystem;
 	//CSoundEngine SoundSystem;
 
 	std::vector<FrogObject* >* m_goList;
@@ -69,7 +71,7 @@ private:
 	int instructionTimer;
 	FrogObject* Frog;
 	FrogObject* Platform;
-
+	float bounceTime;
 	Vector3 m_grav;
 
 	Vector3 v_mousepos;

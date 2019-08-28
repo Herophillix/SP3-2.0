@@ -27,7 +27,7 @@ void SceneMaze::Init()
 
 	//Physics code here
 	m_speed = 1.f;
-
+	bounceTime = 0.5f;
 	Math::InitRNG();
 	musicPlay = false;
 	musicPlayed = false;
@@ -123,6 +123,7 @@ void SceneMaze::Init()
 void SceneMaze::Update(double dt)
 {
 	SceneBase::Update(dt);
+	
 	//Calculating aspect ratio
 	// James 13/8/2019
 	m_worldHeight = 200.f;
@@ -173,36 +174,47 @@ void SceneMaze::Update(double dt)
 
 void SceneMaze::UpdateGame(double dt)
 {
+	bounceTime -= dt;
 	//CHEAT CODES BY SEAN
 //Transition to Main Scene
-	if (Application::IsKeyPressed(VK_NUMPAD1))
+	if (Application::IsKeyPressed(VK_NUMPAD1) && bounceTime < 0)
 	{
 		Application::setScene(0);
+		soundSystem.stopAllMusic();
 		Reset();
+		bounceTime = 0.5f;
 	}
 	//Transition to Mole
-	if (Application::IsKeyPressed(VK_NUMPAD2))
+	if (Application::IsKeyPressed(VK_NUMPAD2) && bounceTime < 0)
 	{
 		Application::setScene(2);
+		soundSystem.stopAllMusic();
 		Reset();
+		bounceTime = 0.5f;
 	}
 	//Transition to Tank Scene
-	if (Application::IsKeyPressed(VK_NUMPAD3))
+	if (Application::IsKeyPressed(VK_NUMPAD3) && bounceTime < 0)
 	{
 		Application::setScene(3);
+		soundSystem.stopAllMusic();
 		Reset();
+		bounceTime = 0.5f;
 	}
 	//Transition to Frog Scene
-	if (Application::IsKeyPressed(VK_NUMPAD4))
+	if (Application::IsKeyPressed(VK_NUMPAD4) && bounceTime < 0)
 	{
 		Application::setScene(4);
+		soundSystem.stopAllMusic();
 		Reset();
+		bounceTime = 0.5f;
 	}
 	//Transition to Sheep Game
-	if (Application::IsKeyPressed(VK_NUMPAD5))
+	if (Application::IsKeyPressed(VK_NUMPAD5) && bounceTime < 0)
 	{
 		Application::setScene(5);
+		soundSystem.stopAllMusic();
 		Reset();
+		bounceTime = 0.5f;
 	}
 	//CHEAT CODES BY SEAN
 	if (StatManager::GetInstance()->GetBool_Game(1))
@@ -782,6 +794,7 @@ void SceneMaze::Reset()
 	score = 10000;
 	grade = 'S';
 	Ball->setPos(Vector3(m_worldWidth * 0.625f, m_worldHeight * 0.75f, 0));
+	SceneState = S_MENU;
 	elapsedTime = 0.0;
 	endGametime = 0.0;
 	endGame = false;

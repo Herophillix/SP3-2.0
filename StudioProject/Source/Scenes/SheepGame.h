@@ -36,7 +36,8 @@ private:
 	int MAX_PARTICLES;
 	int m_particleCount;
 	bool playMusic;
-
+	float bounceTime;
+	bool blKeyboardState;
 	float Modifier;
 	bool isLeft;
 	float timer;

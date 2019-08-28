@@ -33,6 +33,7 @@ void StudioProjectScene::Init()
 	m_eventTimer = Math::RandFloatMinMax(20.0f, 40.f);
 	b_transitioning = false;
 	playMusic = false;
+	bounceTime = 0.5f;
 	meshList[GEO_QUAD] = MeshBuilder::GenerateQuad("test", Color(1, 1, 1), 1.f);
 	meshList[GEO_BACKGROUND] = MeshBuilder::GenerateQuad("Background", Color(1, 1, 1), 1);
 	meshList[GEO_BACKGROUND]->textureID = LoadTGA("Image//BackGround.tga");
@@ -465,36 +466,46 @@ void StudioProjectScene::UpdateGame(double dt)
 		bLButtonState = false;
 		mousepressed = false;
 	}
+	bounceTime -= dt;
 	//CHEAT CODES BY SEAN
 	//Transition to maze
-	if (Application::IsKeyPressed(VK_NUMPAD1))
+	if (Application::IsKeyPressed(VK_NUMPAD1) && bounceTime < 0)
 	{
+		soundSystem.stopAllMusic();
 		Application::setScene(1);
 		reset();
 	}
 	//Transition to Mole
-	if (Application::IsKeyPressed(VK_NUMPAD2))
+	if (Application::IsKeyPressed(VK_NUMPAD2) && bounceTime < 0)
 	{
+		soundSystem.stopAllMusic();
 		Application::setScene(2);
 		reset();
+		bounceTime = 0.5f;
 	}
 	//Transition to Tank Scene
-	if (Application::IsKeyPressed(VK_NUMPAD3))
+	if (Application::IsKeyPressed(VK_NUMPAD3) && bounceTime < 0)
 	{
+		soundSystem.stopAllMusic();
 		Application::setScene(3);
 		reset();
+		bounceTime = 0.5f;
 	}
 	//Transition to Frog Scene
-	if (Application::IsKeyPressed(VK_NUMPAD4))
+	if (Application::IsKeyPressed(VK_NUMPAD4) && bounceTime < 0)
 	{
+		soundSystem.stopAllMusic();
 		Application::setScene(4);
 		reset();
+		bounceTime = 0.5f;
 	}
 	//Transition to Sheep Game
-	if (Application::IsKeyPressed(VK_NUMPAD5))
+	if (Application::IsKeyPressed(VK_NUMPAD5) && bounceTime < 0)
 	{
+		soundSystem.stopAllMusic();
 		Application::setScene(5);
 		reset();
+		bounceTime = 0.5f;
 	}
 	//CHEAT CODES BY SEAN
 
@@ -680,6 +691,7 @@ void StudioProjectScene::reset()
 	m_speed = 1.f;
 	m_eventTimer = Math::RandFloatMinMax(20.0f, 40.f);
 	b_transitioning = false;
+	mTimer = 2.f;
 	playMusic = false;
 	ScreenSplit[0]->Character->reset();
 	ScreenSplit[1]->Character->reset();

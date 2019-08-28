@@ -90,7 +90,7 @@ private:
 	int ballcollisionnum;
 	bool enableStencil;
 	// End James 15/8/2019	
-
+	float bounceTime;
 	bool endGame;
 	bool musicplay;
 	bool musicplayed;

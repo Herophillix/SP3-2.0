@@ -80,7 +80,7 @@ private:
 	Vector3 v_mousepos;
 	Vector3 rel_mousepos;
 	bool mousepressed = false;
-
+	float bounceTime;
 	Vector3 GameArea;
 	Vector3 StatsArea;
 

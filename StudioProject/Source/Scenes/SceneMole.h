@@ -72,7 +72,7 @@ private:
 	bool m_gameOver;
 	bool m_instructions;
 	char m_grade;
-
+	float bounceTime;
 	// Hammer stuff
 	MoleObject* m_Hammer;
 
