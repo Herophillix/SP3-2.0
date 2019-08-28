@@ -260,6 +260,38 @@ void SceneTank::Init()
 
 void SceneTank::Update(double dt)
 {
+	//CHEAT CODES BY SEAN
+//Transition to maze
+	if (Application::IsKeyPressed(VK_NUMPAD1))
+	{
+		Application::setScene(1);
+		Reset();
+	}
+	//Transition to Mole
+	if (Application::IsKeyPressed(VK_NUMPAD2))
+	{
+		Application::setScene(2);
+		Reset();
+	}
+	//Transition to Main Scene
+	if (Application::IsKeyPressed(VK_NUMPAD3))
+	{
+		Application::setScene(0);
+		Reset();
+	}
+	//Transition to Frog Scene
+	if (Application::IsKeyPressed(VK_NUMPAD4))
+	{
+		Application::setScene(4);
+		Reset();
+	}
+	//Transition to Sheep Game
+	if (Application::IsKeyPressed(VK_NUMPAD5))
+	{
+		Application::setScene(5);
+		Reset();
+	}
+	//CHEAT CODES BY SEAN
 	SceneBase::Update(dt);
 	elapsedTime += dt;
 	//Calculating aspect ratio

@@ -254,6 +254,33 @@ bool SceneFrog::CheckCollision(FrogObject* go, FrogObject* go2)
 
 void SceneFrog::Update(double dt)
 {
+	//CHEAT CODES BY SEAN
+//Transition to maze
+	if (Application::IsKeyPressed(VK_NUMPAD1))
+	{
+		Application::setScene(1);
+	}
+	//Transition to Mole
+	if (Application::IsKeyPressed(VK_NUMPAD2))
+	{
+		Application::setScene(2);
+	}
+	//Transition to Tank Scene
+	if (Application::IsKeyPressed(VK_NUMPAD3))
+	{
+		Application::setScene(3);
+	}
+	//Transition to Main Scene
+	if (Application::IsKeyPressed(VK_NUMPAD4))
+	{
+		Application::setScene(0);
+	}
+	//Transition to Sheep Game
+	if (Application::IsKeyPressed(VK_NUMPAD5))
+	{
+		Application::setScene(5);
+	}
+	//CHEAT CODES BY SEAN
 	if (StatManager::GetInstance()->GetBool_Game(4))
 	{
 		Reset();

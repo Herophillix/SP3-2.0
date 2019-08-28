@@ -470,26 +470,31 @@ void StudioProjectScene::UpdateGame(double dt)
 	if (Application::IsKeyPressed(VK_NUMPAD1))
 	{
 		Application::setScene(1);
+		reset();
 	}
 	//Transition to Mole
 	if (Application::IsKeyPressed(VK_NUMPAD2))
 	{
 		Application::setScene(2);
+		reset();
 	}
 	//Transition to Tank Scene
 	if (Application::IsKeyPressed(VK_NUMPAD3))
 	{
 		Application::setScene(3);
+		reset();
 	}
 	//Transition to Frog Scene
 	if (Application::IsKeyPressed(VK_NUMPAD4))
 	{
 		Application::setScene(4);
+		reset();
 	}
 	//Transition to Sheep Game
 	if (Application::IsKeyPressed(VK_NUMPAD5))
 	{
 		Application::setScene(5);
+		reset();
 	}
 	//CHEAT CODES BY SEAN
 
