@@ -20,12 +20,12 @@ public:
 	Vector3 getScale();
 	bool getActive();
 
+protected:
 	int type;
 	Vector3 pos;
 	//Vector3 vel;
 	Vector3 scale;
 	bool active;
-protected:
 };
 
 #endif
