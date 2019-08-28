@@ -73,7 +73,7 @@ private:
 	int SceneState;
 	bool endGame;
 	double elapsedTime;
-	bool statgained = false;
+	bool statgained;
 	float score;
 	char grade;
 	float stencilsize;

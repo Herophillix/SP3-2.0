@@ -739,6 +739,8 @@ void SceneFrog::Reset()
 	m_rockCount = 0;
 	m_coinCount = 0;
 	m_GameOver = false;
+	m_setStatsToDist = false;
+	m_setOriginValues = false;
 	Frog->Frog_pos.Set(200, 10, 0);
 	Frog->setScore(0);
 	Frog->setCoin(m_coinCount);

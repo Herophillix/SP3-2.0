@@ -1776,6 +1776,7 @@ void SceneTank::Reset()
 		soundSystem.stopAllMusic();
 		musicplayed = false;
 		musicplay = false;
+		statgained = false;
 		Tank[i]->setBall(nullptr);
 		switch (i)
 		{
