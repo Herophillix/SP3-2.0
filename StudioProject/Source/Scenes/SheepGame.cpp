@@ -248,7 +248,7 @@ void SheepGame::reset()
 	player->vel.Set(0, 0, 0);
 	player->setHealth(3);
 	points = 0;
-
+	statsGain = false;
 
 	Warning3->setType(SheepObject::E_WARNING);
 	Warning3->setPos(Vector3(m_worldWidth / 2 + 50, m_worldHeight / 2, 0));

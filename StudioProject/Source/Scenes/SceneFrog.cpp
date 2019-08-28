@@ -90,7 +90,7 @@ void SceneFrog::Init()
 	Frog = FetchGO();
 	Frog->setActive(true);
 	Frog->setType(FrogObject::GO_FROG);
-	Frog->setScale(Vector3(20, 20, 1));
+	Frog->setScale(Vector3(10, 10, 1));
 	Frog->Frog_pos.Set(200, 10, 0);
 	Frog->Frog_vel.Set(0, 0, 0);
 	Frog->Frog_jumpVel.Set(0, 20, 0);

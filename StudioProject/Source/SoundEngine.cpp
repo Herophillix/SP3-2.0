@@ -112,7 +112,7 @@ bool CSoundEngine::RemoveSound(const std::string& _soundIndex)
 void CSoundEngine::playSheepMusic()
 {
 	soundGame = theSoundEngine->play2D("Sounds//Dreams.mp3", true, false, false, ESM_AUTO_DETECT, true);
-	soundGame->setVolume(0.60f);
+	soundGame->setVolume(0.50f);
 	soundGame->drop();
 }
 void CSoundEngine::playWaMoleMusic()
