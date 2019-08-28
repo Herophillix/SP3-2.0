@@ -1,7 +1,7 @@
 #pragma once
 
 #include "SingletonTemplate.h"
-#include "../../irrklang/include/irrKlang.h"
+#include <irrKlang.h>
 
 using namespace irrklang;
 #include <map>
