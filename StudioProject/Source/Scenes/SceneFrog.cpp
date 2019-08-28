@@ -254,6 +254,11 @@ bool SceneFrog::CheckCollision(FrogObject* go, FrogObject* go2)
 
 void SceneFrog::Update(double dt)
 {
+	if (StatManager::GetInstance()->GetBool_Game(4))
+	{
+		Reset();
+		StatManager::GetInstance()->SetBool_Mole(false);
+	}
 	bounceTime -= (float)dt;
 	//CHEAT CODES BY SEAN
 //Transition to maze
