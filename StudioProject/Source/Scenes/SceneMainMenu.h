@@ -68,6 +68,12 @@ private:
 	float m_sixthWorldHeight;
 	
 
+	bool m_Instructions01;
+	bool m_Instructions02;
+	bool m_Credits;
+
+	float m_instructionBT;
+
 	Vector3 m_mousePos;
 
 	MainMenuObject* m_NewGameButton;

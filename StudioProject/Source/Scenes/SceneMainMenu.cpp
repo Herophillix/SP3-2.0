@@ -29,6 +29,13 @@ void MainMenu::Init()
 	meshList[GEO_CURSOR] = MeshBuilder::GenerateQuad("cursor", Color(1, 1, 1), 10.f);
 	meshList[GEO_CURSOR]->textureID = LoadTGA("Image//gameCursor.tga");
 
+	meshList[GEO_INS_01] = MeshBuilder::GenerateQuad("ins01", Color(1, 1, 1), 1.f);
+	meshList[GEO_INS_01]->textureID = LoadTGA("Image//MainMenu_Instructions_01.tga");
+	meshList[GEO_INS_02] = MeshBuilder::GenerateQuad("ins02", Color(1, 1, 1), 1.f);
+	meshList[GEO_INS_02]->textureID = LoadTGA("Image//MainMenu_Instructions_02.tga");
+	meshList[GEO_CRED] = MeshBuilder::GenerateQuad("cred", Color(1, 1, 1), 1.f);
+	meshList[GEO_CRED]->textureID = LoadTGA("Image//MainMenu_Credits.tga");
+
 	m_NewGameButton = new MainMenuObject(MainMenuObject::GO_NONE);
 	m_NewGameButton->setType(MainMenuObject::GO_NEWGAME);
 	m_NewGameButton->setPos(Vector3(m_halfWorldWidth / 4, m_thirdWorldHeight * 2, 0));
@@ -56,6 +63,10 @@ void MainMenu::Init()
 		menuObjList[i]->setxOffset(55.f);
 	}
 
+	m_Instructions01 = false;
+	m_Instructions02 = false;
+	m_Credits = false;
+	m_instructionBT = 1.0f;
 }
 
 void MainMenu::Update(double dt)
@@ -70,6 +81,48 @@ void MainMenu::Update(double dt)
 
 
 	UpdateMousePos();
+
+	m_instructionBT -= dt;
+	if (m_instructionBT <= 0.f)
+	{
+		m_instructionBT = 0.f;
+	}
+
+	if (m_Instructions01 && !m_Instructions02)
+	{
+		if (Application::IsKeyPressed(VK_ESCAPE) || Application::IsKeyPressed(VK_TAB))
+		{
+			m_Instructions01 = false;
+			m_Instructions02 = false;
+		}
+		if (m_instructionBT <= 0.f && (Application::IsKeyPressed(VK_RIGHT) || Application::IsKeyPressed('D') || Application::IsKeyPressed(VK_LEFT) || Application::IsKeyPressed('A')))
+		{
+			m_Instructions01 = false;
+			m_Instructions02 = true;
+			m_instructionBT = 1.f;
+		}
+	}
+	else if (!m_Instructions01 && m_Instructions02)
+	{
+		if (Application::IsKeyPressed(VK_ESCAPE) || Application::IsKeyPressed(VK_TAB))
+		{
+			m_Instructions01 = false;
+			m_Instructions02 = false;
+		}
+		if (m_instructionBT <= 0.f && (Application::IsKeyPressed(VK_RIGHT) || Application::IsKeyPressed('D') || Application::IsKeyPressed(VK_LEFT) || Application::IsKeyPressed('A')))
+		{
+			m_Instructions01 = true;
+			m_Instructions02 = false;
+			m_instructionBT = 1.f;
+		}
+	}
+	else if (m_Credits)
+	{
+		if (Application::IsKeyPressed(VK_ESCAPE) || Application::IsKeyPressed(VK_TAB))
+		{
+			m_Credits = false;
+		}
+	}
 
 }
 
@@ -98,26 +151,81 @@ void MainMenu::Render()
 	// Model matrix : an identity matrix (model will be at the origin)
 	modelStack.LoadIdentity();
 
-	modelStack.PushMatrix();
-	modelStack.Translate(m_halfWorldWidth, m_halfWorldHeight, 0);
-	modelStack.Scale(192, 108, 1);
-	RenderMesh(meshList[GEO_QUAD], false);
-	modelStack.PopMatrix();
+	if (m_Instructions01 && !m_Instructions02)
+	{
+		modelStack.PushMatrix();
+		modelStack.Translate(m_halfWorldWidth, m_halfWorldHeight + 5, 0);
+		modelStack.Scale(140, 90, 1);
+		RenderMesh(meshList[GEO_INS_01], false);
+		modelStack.PopMatrix();
+	}
+	else if (!m_Instructions01 && m_Instructions02)
+	{
+		modelStack.PushMatrix();
+		modelStack.Translate(m_halfWorldWidth, m_halfWorldHeight + 5, 0);
+		modelStack.Scale(140, 90, 1);
+		RenderMesh(meshList[GEO_INS_02], false);
+		modelStack.PopMatrix();
+	}
+	else if (m_Credits)
+	{
+		modelStack.PushMatrix();
+		modelStack.Translate(m_halfWorldWidth, m_halfWorldHeight, 0);
+		modelStack.Scale(140, 90, 1);
+		RenderMesh(meshList[GEO_CRED], false);
+		modelStack.PopMatrix();
+	}
+	else
+	{
+		modelStack.PushMatrix();
+		modelStack.Translate(m_halfWorldWidth, m_halfWorldHeight, 0);
+		modelStack.Scale(192, 108, 1);
+		RenderMesh(meshList[GEO_QUAD], false);
+		modelStack.PopMatrix();
 
-	std::ostringstream ss;
-	ss << "Placeholder Title";
-	modelStack.PushMatrix();
-	modelStack.Translate(m_worldWidth / 4, m_worldHeight - m_sixthWorldHeight, 0);
-	modelStack.Scale(5, 5, 5);
-	RenderText(meshList[GEO_GAMEFONT], ss.str(), Color(0, 0, 0));
-	modelStack.PopMatrix();
+		std::ostringstream ss;
+		ss << "Survive: SP3";
+		modelStack.PushMatrix();
+		modelStack.Translate(m_worldWidth / 4, m_worldHeight - m_sixthWorldHeight, 0);
+		modelStack.Scale(5, 5, 5);
+		RenderText(meshList[GEO_GAMEFONT], ss.str(), Color(0, 0, 0));
+		modelStack.PopMatrix();
 
-	RenderOptions();
-	// Render cursor
-	modelStack.PushMatrix();
-	modelStack.Translate(m_mousePos);
-	RenderMesh(meshList[GEO_CURSOR], false);
-	modelStack.PopMatrix();
+		RenderOptions();
+		// Render cursor
+		modelStack.PushMatrix();
+		modelStack.Translate(m_mousePos);
+		RenderMesh(meshList[GEO_CURSOR], false);
+		modelStack.PopMatrix();
+	}
+	if (m_Instructions01 || m_Instructions02 || m_Credits)
+	{
+		std::ostringstream ss;
+		if (m_Instructions01 || m_Instructions02)
+		{
+			ss << "Use Arrow Keys/ A or D to switch between pages";
+			modelStack.PushMatrix();
+			modelStack.Translate(m_halfWorldWidth - 90, 5, 0);
+			modelStack.Scale(3, 3, 3);
+			RenderText(meshList[GEO_GAMEFONT], ss.str(), Color(1, 1, 1));
+			modelStack.PopMatrix();
+		}
+
+		ss.clear();
+		ss.str("");
+		ss << "Pres ESC to return to main menu";
+		modelStack.PushMatrix();
+		modelStack.Translate(m_halfWorldWidth - 90, 2, 0);
+		modelStack.Scale(3, 3, 3);
+		RenderText(meshList[GEO_GAMEFONT], ss.str(), Color(1, 1, 1));
+		modelStack.PopMatrix();
+
+		// Render cursor
+		modelStack.PushMatrix();
+		modelStack.Translate(m_mousePos);
+		RenderMesh(meshList[GEO_CURSOR], false);
+		modelStack.PopMatrix();
+	}
 }
 
 void MainMenu::Exit()
@@ -199,23 +307,28 @@ void MainMenu::UpdateMousePos()
 
 void MainMenu::ButtonCollision(MainMenuObject::MAINMENU_OBJECTTYPE type)
 {
-	switch (type)
+	if (!m_Instructions01 && !m_Instructions02 && !m_Credits)
 	{
-	case MainMenuObject::GO_NEWGAME:
-		Application::setScene(0);
-		// scene change
-		break;
-	case MainMenuObject::GO_INSTRUCTIONS:
-		// scene change
-		break;
-	case MainMenuObject::GO_CREDITS:
-		// scene change
-		break;
-	case MainMenuObject::GO_EXIT:
-		Application::Quit = true;
-		break;
-	default:
-		break;
+		switch (type)
+		{
+		case MainMenuObject::GO_NEWGAME:
+			Application::setScene(0);
+			// scene change
+			break;
+		case MainMenuObject::GO_INSTRUCTIONS:
+			m_Instructions01 = true;
+			// scene change
+			break;
+		case MainMenuObject::GO_CREDITS:
+			m_Credits = true;
+			// scene change
+			break;
+		case MainMenuObject::GO_EXIT:
+			Application::Quit = true;
+			break;
+		default:
+			break;
+		}
 	}
 }
 
