@@ -1062,7 +1062,7 @@ void SceneMole::ResetVars()
 	m_score = 0;
 	m_hitCounter = 0;
 	m_frostTimer = 10.f;
-	m_gameTimer = 30.f;
+	m_gameTimer = 90.f;
 	m_gameOver = false;
 	m_frostOn = false;
 	m_instructions = true;

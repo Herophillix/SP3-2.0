@@ -761,10 +761,10 @@ bool Results::ButtonMouseCollision()
 					{
 					case ResultObject::GO_CONTINUE:
 						if (m_statsToDistribute == 0 || 
-							(StatManager::GetInstance()->GetChar01().m_frustration == 0 && StatManager::GetInstance()->GetChar01().m_motivation >= 99 &&
-							StatManager::GetInstance()->GetChar02().m_frustration == 0 && StatManager::GetInstance()->GetChar02().m_motivation >= 99 &&
-							StatManager::GetInstance()->GetChar03().m_frustration == 0 && StatManager::GetInstance()->GetChar03().m_motivation >= 99 &&
-							StatManager::GetInstance()->GetChar04().m_frustration == 0 && StatManager::GetInstance()->GetChar04().m_motivation >= 99))
+							(StatManager::GetInstance()->GetChar01().m_frustration == 0 && StatManager::GetInstance()->GetChar01().m_motivation == 100 &&
+							StatManager::GetInstance()->GetChar02().m_frustration == 0 && StatManager::GetInstance()->GetChar02().m_motivation == 100 && 
+							StatManager::GetInstance()->GetChar03().m_frustration == 0 && StatManager::GetInstance()->GetChar03().m_motivation == 100 && 
+							StatManager::GetInstance()->GetChar04().m_frustration == 0 && StatManager::GetInstance()->GetChar04().m_motivation == 100))
 						{
 							m_statsToDistribute = 0;
 							//switch scene
