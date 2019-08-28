@@ -599,7 +599,7 @@ void SceneMaze::RenderGame()
 	RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(0, 1, 0), 3, 0, 1);
 
 	ss.str("");
-	ss.precision(3);
+	ss.precision(5);
 	ss << "S:" << score;
 	RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(0, 1, 0), 3, 0, 4);
 	// End James 14/8/2019

@@ -200,11 +200,11 @@ void CharacterObject::Update(double dt)
 		}
 		if (Statistics.m_workDone < 100 && !resting && !WorkingHard && !asleep)
 		{
-			Statistics.m_workDone += 2.f / Statistics.m_experience * Statistics.m_motivation / Statistics.m_rest * (float)dt / m_Count;
+			Statistics.m_workDone += 0.4f / Statistics.m_experience * Statistics.m_motivation / Statistics.m_rest * (float)dt / m_Count;
 		}
 		if (Statistics.m_workDone < 100 && WorkingHard && !resting && !asleep)
 		{
-			Statistics.m_workDone += 4.0f / Statistics.m_experience * Statistics.m_motivation / Statistics.m_rest * (float)dt / m_Count;
+			Statistics.m_workDone += 1.f / Statistics.m_experience * Statistics.m_motivation / Statistics.m_rest * (float)dt / m_Count;
 		}
 		if (Statistics.m_workDone < 100 && asleep && !WorkingHard && !resting)
 		{
