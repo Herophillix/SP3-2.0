@@ -235,6 +235,7 @@ void SheepGame::reset()
 	Transition = false;
 	EvilKing = false;
 	gameOver = false;
+	isInstructions = true;
 
 	pointGain = false;
 	rndNum = 0;
