@@ -741,7 +741,7 @@ MoleObject * SceneMole::FetchGO()
 {
 	for (int i = 0; i < m_goList.size(); i++)
 	{
-		if (!m_goList[i]->active)
+		if (!m_goList[i]->getActive())
 		{
 			return m_goList[i];
 		}
@@ -823,7 +823,7 @@ void SceneMole::UpdateMoles(double dt)
 		int activeCounter = 0;
 		for (unsigned int i = 0; i < m_moleListTotal.size(); i++)
 		{
-			if (m_moleListTotal[i]->active)
+			if (m_moleListTotal[i]->getActive())
 			{
 				activeCounter++;
 			}
@@ -836,14 +836,14 @@ void SceneMole::UpdateMoles(double dt)
 		while (!allActive)
 		{
 			int randMole = Math::RandIntMinMax(0, 7);
-			if (!m_moleListTotal[randMole]->active)
+			if (!m_moleListTotal[randMole]->getActive())
 			{
-				m_moleListTotal[randMole]->active = true;
+				m_moleListTotal[randMole]->setActive(true);
 				m_moleListTotal[randMole]->setMole_goUp(true);
 				m_moleListTotal[randMole]->setMole_lifeTime(10.5f);
 				// do rng stuff here for mole type
 				int randMoleType = Math::RandIntMinMax(0, 99);
-				m_moleListTotal[randMole]->type = MoleObject::GO_MOLE_BOMB;//(MoleObject::MOLEOBJECT_TYPE)(moleTypeRNG[randMoleType]);
+				m_moleListTotal[randMole]->setType(MoleObject::GO_MOLE_BOMB);//(MoleObject::MOLEOBJECT_TYPE)(moleTypeRNG[randMoleType]);
 				break;
 			}
 		}
@@ -856,17 +856,17 @@ void SceneMole::UpdateMoles(double dt)
 	// Check their lifetime
 	for (unsigned int i = 0; i < m_moleListTotal.size(); i++)
 	{
-		if (m_moleListTotal[i]->active)
+		if (m_moleListTotal[i]->getActive())
 		{
 			m_moleListTotal[i]->setMole_lifeTime(-dt, true);
 			if (m_moleListTotal[i]->getMole_lifeTime() <= 0.f) // When fail to hit in time
 			{
-				m_moleListTotal[i]->active = false;
+				m_moleListTotal[i]->setActive(false);
 				m_moleListTotal[i]->setMole_hit(true);
-				if (m_moleListTotal[i]->type == MoleObject::GO_MOLE ||
-					m_moleListTotal[i]->type == MoleObject::GO_MOLE_BRONZE || 
-					m_moleListTotal[i]->type == MoleObject::GO_MOLE_SILVER || 
-					m_moleListTotal[i]->type == MoleObject::GO_MOLE_GOLD)
+				if (m_moleListTotal[i]->getType() == MoleObject::GO_MOLE ||
+					m_moleListTotal[i]->getType() == MoleObject::GO_MOLE_BRONZE ||
+					m_moleListTotal[i]->getType() == MoleObject::GO_MOLE_SILVER ||
+					m_moleListTotal[i]->getType() == MoleObject::GO_MOLE_GOLD)
 				{
 					m_hitCounter = 0;
 				}
@@ -1131,14 +1131,14 @@ void SceneMole::InitHammerPosList()
 	for (unsigned int i = 0; i < m_moleListTop.size(); i++)
 	{
 		Vector3 temp;
-		temp = m_moleListTop[i]->pos;
+		temp = m_moleListTop[i]->getPos();
 		temp.y += 30.f;
 		m_hammerPosList.push_back(temp);
 	}
 	for (unsigned int i = 0; i < m_moleListBot.size(); i++)
 	{
 		Vector3 temp;
-		temp = m_moleListBot[i]->pos;
+		temp = m_moleListBot[i]->getPos();
 		temp.y += 30.f;
 		m_hammerPosList.push_back(temp);
 	}
@@ -1151,19 +1151,19 @@ bool SceneMole::HammerCollisionCheck()
 {
 	for (unsigned int i = 0; i < m_moleListTotal.size(); i++)
 	{
-		if (m_Hammer->getPos().x > m_moleListTotal[i]->pos.x - (m_moleListTotal[i]->scale.x / 2) && 
-			m_Hammer->getPos().x < m_moleListTotal[i]->pos.x + (m_moleListTotal[i]->scale.x / 2))
+		if (m_Hammer->getPos().x > m_moleListTotal[i]->getPos().x - (m_moleListTotal[i]->getScale().x / 2) && 
+			m_Hammer->getPos().x < m_moleListTotal[i]->getPos().x + (m_moleListTotal[i]->getScale().x / 2))
 		{
-			if (m_Hammer->getPos().y < m_moleListTotal[i]->pos.y + (m_moleListTotal[i]->scale.y / 2) + m_moleListTotal[i]->getMole_yOffset() &&
-				m_Hammer->getPos().y > m_moleListTotal[i]->pos.y - (m_moleListTotal[i]->scale.y / 2) + m_moleListTotal[i]->getMole_yOffset())
+			if (m_Hammer->getPos().y < m_moleListTotal[i]->getPos().y + (m_moleListTotal[i]->getScale().y / 2) + m_moleListTotal[i]->getMole_yOffset() &&
+				m_Hammer->getPos().y > m_moleListTotal[i]->getPos().y - (m_moleListTotal[i]->getScale().y / 2) + m_moleListTotal[i]->getMole_yOffset())
 			{
-				if (m_moleListTotal[i]->active)
+				if (m_moleListTotal[i]->getActive())
 				{
 					std::cout << "Hit Mole No: " << i << std::endl;
 					m_moleListTotal[i]->setMole_hit(true);
-					m_moleListTotal[i]->active = false;
+					m_moleListTotal[i]->setActive(false);
 					int addToScore = 0;
-					switch (m_moleListTotal[i]->type)
+					switch (m_moleListTotal[i]->getType())
 					{
 					case MoleObject::GO_MOLE:
 						addToScore = m_moleListTotal[i]->getMole_lifeTime() * 100 * m_multiplier;
@@ -1203,7 +1203,7 @@ bool SceneMole::HammerCollisionCheck()
 						m_score += addToScore;
 					}
 					cout << addToScore << endl;
-					if (m_moleListTotal[i]->type != MoleObject::GO_MOLE_BOMB && m_moleListTotal[i]->type != MoleObject::GO_MOLE_FROST)
+					if (m_moleListTotal[i]->getType() != MoleObject::GO_MOLE_BOMB && m_moleListTotal[i]->getType() != MoleObject::GO_MOLE_FROST)
 					{
 						for (int i = 0; i < 50; i++)
 						{

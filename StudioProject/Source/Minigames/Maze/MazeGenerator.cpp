@@ -54,15 +54,15 @@ void MazeGenerator::SetUp(string FileDirectory, vector<PhysicsObject*>* m_goList
 		switch (info[0][0])
 		{
 		case 'P':
-			maze->type = PhysicsObject::GO_PILLAR;
+			maze->setType(PhysicsObject::GO_PILLAR);
 			cout << "PILLAR, ";
 			break;
 		case 'W':
-			maze->type = PhysicsObject::GO_WALL;
+			maze->setType(PhysicsObject::GO_WALL);
 			cout << "WALL,   ";
 			break;
 		default:
-			maze->type = PhysicsObject::GO_NONE;
+			maze->setType(PhysicsObject::GO_NONE);
 			cout << "NONE,   ";
 			break;
 		}
@@ -80,18 +80,17 @@ void MazeGenerator::SetUp(string FileDirectory, vector<PhysicsObject*>* m_goList
 		//maze->normal_position = maze->offset.Normalized();
 		//maze->angle_offset = atan2(maze->normal_position.y, maze->normal_position.x);
 
-		maze->scale.Set(stof(info[5]), stof(info[6]), stof(info[7]));
+		maze->setScale(Vector3(stof(info[5]), stof(info[6]), stof(info[7])));
 
 		maze->setLevel(stoi(info[8]));
 		//maze->level = stoi(info[8]);
 
-		maze->pos.x = m_worldWidth * 0.5f;
-		maze->pos.y = m_worldHeight * 0.5f;
-		maze->pos += maze->getOffset().Length() * maze->getNormal_Position();
+		maze->setPos(Vector3(m_worldWidth * 0.5f, m_worldHeight * 0.5f, 0));
+		maze->setPos(maze->getOffset().Length() * maze->getNormal_Position(), true);
 		//maze->pos += maze->offset.Length() * maze->normal_position;
 
-		maze->active = true;
-		cout << "P: " << maze->pos << ", S: " << maze->scale << ", A: " << Math::RadianToDegree(maze->getAngle_Normal()) << ", O: " << Math::RadianToDegree(maze->getAngle_Offset()) << endl;
+		maze->setActive(true);
+		cout << "P: " << maze->getPos() << ", S: " << maze->getScale() << ", A: " << Math::RadianToDegree(maze->getAngle_Normal()) << ", O: " << Math::RadianToDegree(maze->getAngle_Offset()) << endl;
 		m_goList->push_back(maze);
 	}
 }

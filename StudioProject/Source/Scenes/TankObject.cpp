@@ -106,7 +106,7 @@ void TankObject::Update(double dt, float m_worldWidth, float m_worldHeight)
 {
 	if (Ball != nullptr)
 	{
-		if (!Ball->active)
+		if (!Ball->getActive())
 		{
 			Ball = nullptr;
 		}
@@ -144,17 +144,17 @@ void TankObject::Update(double dt, float m_worldWidth, float m_worldHeight)
 			pos.y += tempvel;
 		}
 	}
-	LeftBorder->pos.Set(pos.x - scale.y / 2, pos.y, 0);
-	RightBorder->pos.Set(pos.x + scale.y / 2, pos.y, 0);
-	Head->pos.Set(pos.x, pos.y + scale.x * 1.5f, 0);
+	LeftBorder->setPos(Vector3(pos.x - scale.y / 2, pos.y, 0));
+	RightBorder->setPos(Vector3(pos.x + scale.y / 2, pos.y, 0));
+	Head->setPos(Vector3(pos.x, pos.y + scale.x * 1.5f, 0));
 }
 
 void TankObject::DeactivateTank()
 {
 	active = false;
-	LeftBorder->active = false;
-	RightBorder->active = false;
-	Head->active = false;
+	LeftBorder->setActive(false);
+	RightBorder->setActive(false);
+	Head->setActive(false);
 	Ball = nullptr; 
 	if (isPlayer)
 	{
@@ -180,9 +180,9 @@ void TankObject::ActivateTank()
 	if (!active)
 	{
 		active = true;
-		LeftBorder->active = true;
-		RightBorder->active = true;
-		Head->active = true;
+		LeftBorder->setActive(true);
+		RightBorder->setActive(true);
+		Head->setActive(true);
 		if (isPlayer)
 		{
 			++PlayerTankCount;
@@ -207,22 +207,22 @@ void TankObject::CollisionResponse(PhysicsObject* go, double dt)
 void TankObject::Init(vector<PhysicsObject*>* m_goList)
 {
 	LeftBorder = new SubTankObject(PhysicsObject::GO_PILLAR, SubTankObject::T_BARRIER, this);
-	LeftBorder->scale.Set(scale.x / 2, scale.x / 2, 1);
-	LeftBorder->pos.Set(pos.x - scale.y / 2, pos.y, 0);
-	LeftBorder->active = true;
+	LeftBorder->setScale(Vector3(scale.x / 2, scale.x / 2, 1));
+	LeftBorder->setPos(Vector3(pos.x - scale.y / 2, pos.y, 0));
+	LeftBorder->setActive(true);
 	m_goList->push_back(LeftBorder);
 
 	RightBorder = new SubTankObject(PhysicsObject::GO_PILLAR, SubTankObject::T_BARRIER, this);
-	RightBorder->scale.Set(scale.x / 2, scale.x / 2, 1);
-	RightBorder->pos.Set(pos.x + scale.y / 2, pos.y, 0);
-	RightBorder->active = true;
+	RightBorder->setScale(Vector3(scale.x / 2, scale.x / 2, 1));
+	RightBorder->setPos(Vector3(pos.x + scale.y / 2, pos.y, 0));
+	RightBorder->setActive(true);
 	m_goList->push_back(RightBorder);
 
 	Head = new SubTankObject(PhysicsObject::GO_PILLAR, SubTankObject::T_HEAD, this);
-	Head->scale.Set(scale.x, scale.x, 1);
-	Head->pos.Set(pos.x, pos.y + scale.x * 1.5f, 0);
-	Head->active = true;
+	Head->setScale(Vector3(scale.x, scale.x, 1));
+	Head->setPos(Vector3(pos.x, pos.y + scale.x * 1.5f, 0));
+	Head->setActive(true);
 	m_goList->push_back(Head);
 
-	radius = Head->scale.x / 2 + scale.x;
+	radius = Head->getScale().x / 2 + scale.x;
 }
