@@ -1083,6 +1083,11 @@ void SceneMole::ResetVars()
 
 	m_setOriginValues = false;
 	m_setStatsToDist = false;
+
+	for (unsigned int i = 0; i < m_moleListTotal.size(); i++)
+	{
+		m_moleListTotal[i]->setActive(false);
+	}
 }
 
 //void SceneMole::RenderResults()

@@ -305,6 +305,11 @@ void SceneTank::Update(double dt)
 	//CHEAT CODES BY SEAN
 	SceneBase::Update(dt);
 	elapsedTime += dt;
+	if (StatManager::GetInstance()->GetBool_Game(3))
+	{
+		Reset();
+		StatManager::GetInstance()->SetBool_Tank(false);
+	}
 	//Calculating aspect ratio
 	// James 13/8/2019
 	m_worldHeight = 200.f;
