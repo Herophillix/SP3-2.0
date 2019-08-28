@@ -19,13 +19,13 @@ public:
 	Vector3 getPos();
 	Vector3 getScale();
 	bool getActive();
+
 	int type;
 	Vector3 pos;
 	//Vector3 vel;
 	Vector3 scale;
 	bool active;
-private:
-
+protected:
 };
 
 #endif

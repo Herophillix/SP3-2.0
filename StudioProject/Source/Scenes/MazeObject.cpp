@@ -182,10 +182,10 @@ void MazeObject::CollisionResponse(PhysicsObject* go, double dt)
 
 		//initialkineticenergy = 0.5f * m1 * u1.LengthSquared() + 0.5f * m2 * u2.LengthSquared();
 
-		go->vel = u1 - (2 * m2 / (m1 + m2)) * ((u1 - u2).Dot(go->pos - go2->pos) / (go->pos - go2->pos).LengthSquared() * (go->pos - go2->pos));
-		if (go->type != PhysicsObject::GO_TRACE)
+		go->vel = u1 - (2 * m2 / (m1 + m2)) * ((u1 - u2).Dot(go->getPos() - go2->pos) / (go->getPos() - go2->pos).LengthSquared() * (go->getPos() - go2->pos));
+		if (go->getType() != PhysicsObject::GO_TRACE)
 		{
-			go2->vel = u2 - (2 * m2 / (m1 + m2)) * ((u2 - u1).Dot(go2->pos - go->pos) / (go2->pos - go->pos).LengthSquared() * (go2->pos - go->pos));
+			go2->vel = u2 - (2 * m2 / (m1 + m2)) * ((u2 - u1).Dot(go2->pos - go->getPos()) / (go2->pos - go->getPos()).LengthSquared() * (go2->pos - go->getPos()));
 		}
 
 		v1 = go->vel;
@@ -195,13 +195,13 @@ void MazeObject::CollisionResponse(PhysicsObject* go, double dt)
 	case PhysicsObject::GO_WALL:
 	{
 		go->vel = go->vel - 1.98 * go->vel.Dot(go2->normal) * go2->normal;
-		Vector3 temp = go2->pos - go->pos;
+		Vector3 temp = go2->pos - go->getPos();
 		Vector3 N = go2->normal;
 		if (temp.Dot(go2->normal) < 0)
 		{
 			N = -N;
 		}
-		Vector3 collisionloc = (go->pos - Vector3(m_worldWidth * 0.5f, m_worldHeight * 0.5f, 0)) * 0.5f + (go->scale.x / 2 + go2->scale.x) * N;
+		Vector3 collisionloc = (go->getPos() - Vector3(m_worldWidth * 0.5f, m_worldHeight * 0.5f, 0)) * 0.5f + (go->getScale().x / 2 + go2->scale.x) * N;
 		float distance = (collisionloc - go2->offset).Length();
 		go->vel += fabs(go2->angle_normal - go2->angle_normal_prev) * (1 / static_cast<float>(dt)) * -N * distance;
 		if (go->vel.Length() > 0)
@@ -212,7 +212,7 @@ void MazeObject::CollisionResponse(PhysicsObject* go, double dt)
 	}
 	case PhysicsObject::GO_PILLAR:
 	{
-		Vector3 N = (go2->pos - go->pos).Normalized();
+		Vector3 N = (go2->pos - go->getPos()).Normalized();
 		go->vel = go->vel - 2 * go->vel.Dot(N) * N;
 		break;
 	}

@@ -47,8 +47,8 @@ void SubTankObject::CollisionResponse(PhysicsObject* go, double dt)
 		{
 		case T_HEAD:
 		{
-			go->active = false;
-			if (go->type != PhysicsObject::GO_TRACE)
+			go->setActive(false);
+			if (go->getType() != PhysicsObject::GO_TRACE)
 			{
 				parent->setHealth(-1, true);
 				if (!parent->getIsPlayer())
@@ -76,7 +76,7 @@ void SubTankObject::CollisionResponse(PhysicsObject* go, double dt)
 			case PhysicsObject::GO_PILLAR:
 			{
 				// BALL-PILLAR COLLISION
-				Vector3 N = (go2->pos - go->pos).Normalized();
+				Vector3 N = (go2->pos - go->getPos()).Normalized();
 				go->vel = go->vel - 2 * go->vel.Dot(N) * N;
 				break;
 			}

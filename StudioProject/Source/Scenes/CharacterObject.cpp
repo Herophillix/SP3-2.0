@@ -247,8 +247,8 @@ void CharacterObject::UpdateMovement(double dt, float m_worldWidth, float m_worl
 bool CharacterObject::CheckCollision(ItemObject* go2)
 {
 	CharacterObject* go = this;
-	if (fabs(go->pos.x - go2->pos.x) <= go->scale.x / 2 + go2->scale.x / 2
-		&& fabs(go->pos.y - go2->pos.y) <= go->scale.y / 2 + go2->scale.y / 2)
+	if (fabs(go->pos.x - go2->getPos().x) <= go->scale.x / 2 + go2->getScale().x / 2
+		&& fabs(go->pos.y - go2->getPos().y) <= go->scale.y / 2 + go2->getScale().y / 2)
 	{
 		currentItem = go2;
 		return true;

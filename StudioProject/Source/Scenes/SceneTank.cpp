@@ -217,26 +217,26 @@ void SceneTank::Init()
 		temp->setActive(true);
 		m_menuList.push_back(temp);
 	}
-	m_menuList[0]->pos = Vector3(m_worldWidth * 0.375f, m_worldHeight * 0.75f, 0);
-	m_menuList[0]->type = MenuObject::M_FORMATION_1;
+	m_menuList[0]->setPos(Vector3(m_worldWidth * 0.375f, m_worldHeight * 0.75f, 0));
+	m_menuList[0]->setType(MenuObject::M_FORMATION_1);
 
-	m_menuList[1]->pos = Vector3(m_worldWidth * 0.625f, m_worldHeight * 0.75f, 0);
-	m_menuList[1]->type = MenuObject::M_FORMATION_2;
+	m_menuList[1]->setPos(Vector3(m_worldWidth * 0.625f, m_worldHeight * 0.75f, 0));
+	m_menuList[1]->setType(MenuObject::M_FORMATION_2);
 
-	m_menuList[2]->pos = Vector3(m_worldWidth * 0.875f, m_worldHeight * 0.75f, 0);
-	m_menuList[2]->type = MenuObject::M_FORMATION_3;
+	m_menuList[2]->setPos(Vector3(m_worldWidth * 0.875f, m_worldHeight * 0.75f, 0));
+	m_menuList[2]->setType(MenuObject::M_FORMATION_3);
 
-	m_menuList[3]->pos = Vector3(m_worldWidth * 0.375f, m_worldHeight * 0.25f, 0);
-	m_menuList[3]->type = MenuObject::M_FORMATION_4;
+	m_menuList[3]->setPos(Vector3(m_worldWidth * 0.375f, m_worldHeight * 0.25f, 0));
+	m_menuList[3]->setType(MenuObject::M_FORMATION_4);
 
-	m_menuList[4]->pos = Vector3(m_worldWidth * 0.625f, m_worldHeight * 0.25f, 0);
-	m_menuList[4]->type = MenuObject::M_FORMATION_5;
+	m_menuList[4]->setPos(Vector3(m_worldWidth * 0.625f, m_worldHeight * 0.25f, 0));
+	m_menuList[4]->setType(MenuObject::M_FORMATION_5);
 
-	m_menuList[5]->pos = Vector3(m_worldWidth * 0.875f, m_worldHeight * 0.25f, 0);
-	m_menuList[5]->type = MenuObject::M_FORMATION_6;
+	m_menuList[5]->setPos(Vector3(m_worldWidth * 0.875f, m_worldHeight * 0.25f, 0));
+	m_menuList[5]->setType(MenuObject::M_FORMATION_6);
 
-	m_menuList[6]->pos = Vector3(m_worldWidth* 0.125f, m_worldHeight* 0.25f, 0);
-	m_menuList[6]->type = MenuObject::M_HOW_TO_PLAY;
+	m_menuList[6]->setPos(Vector3(m_worldWidth* 0.125f, m_worldHeight* 0.25f, 0));
+	m_menuList[6]->setType(MenuObject::M_HOW_TO_PLAY);
 
 	back = new MenuObject(MenuObject::M_BACK, Vector3(55, 55, 1));
 	back->setActive(true);
@@ -589,7 +589,7 @@ void SceneTank::UpdateMenu(double dt)
 				musicplayed = true;
 			}
 			StatManager::GetInstance()->SetPrevGame(3);
-			switch (m_menuList[i]->type)
+			switch (m_menuList[i]->getType())
 			{
 			case MenuObject::M_FORMATION_1:
 			{
@@ -1564,7 +1564,7 @@ void SceneTank::RenderGO(PhysicsObject * go)
 			{
 				ss << "@";
 			}
-			RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(1, 0, 0), 1, go->pos.x / m_worldWidth * 80 - 0.75, (go->pos.y + (go->scale.x + Tank[i]->getHead()->scale.x) * 1.5f) / m_worldHeight * 60);
+			RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(1, 0, 0), 1, go->getPos().x / m_worldWidth * 80 - 0.75, (go->getPos().y + (go->getScale().x + Tank[i]->getHead()->getScale().x) * 1.5f) / m_worldHeight * 60);
 			break;
 		}
 	}
@@ -1645,9 +1645,9 @@ PhysicsObject * SceneTank::FetchGO()
 {
 	for (int i = 0; i < (int)m_goList->size(); i++)
 	{
-		if (!(*m_goList)[i]->active)
+		if (!(*m_goList)[i]->getActive())
 		{
-			(*m_goList)[i]->active = true;
+			(*m_goList)[i]->setActive(true);
 			return (*m_goList)[i];
 		}
 	}
@@ -1657,7 +1657,7 @@ PhysicsObject * SceneTank::FetchGO()
 		m_goList->push_back(new PhysicsObject(PhysicsObject::GO_NONE));
 	}
 
-	(*m_goList)[m_goList->size() - 20]->active = true;
+	(*m_goList)[m_goList->size() - 20]->setActive(true);
 	return (*m_goList)[m_goList->size() - 20];
 }
 

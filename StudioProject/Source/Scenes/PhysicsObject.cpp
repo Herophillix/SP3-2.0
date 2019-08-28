@@ -1,6 +1,6 @@
 #include "PhysicsObject.h"
 
-Vector3 PhysicsObject::WindDirection;
+Vector3 PhysicsObject::WindDirection = Vector3(0,0,0);
 
 PhysicsObject::PhysicsObject(PHYSICSOBJECT_TYPE typeValue)
 	:

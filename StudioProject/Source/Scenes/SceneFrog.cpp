@@ -160,7 +160,7 @@ FrogObject* SceneFrog::getRock()
 		FrogObject *coin = new FrogObject(FrogObject::GO_COIN);
 		rock_List.push_back(coin);
 	}
-	rock_List[rock_List.size() - 1]->active = true;
+	rock_List[rock_List.size() - 1]->setActive(true);
 	return rock_List[rock_List.size() - 1];
 }
 
@@ -467,9 +467,9 @@ FrogObject * SceneFrog::FetchGO()
 {
 	for (int i = 0; i < (int)m_goList->size(); i++)
 	{
-		if (!(*m_goList)[i]->active)
+		if (!(*m_goList)[i]->getActive())
 		{
-			(*m_goList)[i]->active = true;
+			(*m_goList)[i]->setActive(true);
 			return (*m_goList)[i];
 		}
 	}
@@ -479,7 +479,7 @@ FrogObject * SceneFrog::FetchGO()
 		m_goList->push_back(new	FrogObject(FrogObject::GO_NONE));
 	}
 
-	(*m_goList)[m_goList->size() - 20]->active = true;
+	(*m_goList)[m_goList->size() - 20]->setActive(true);
 	return (*m_goList)[m_goList->size() - 20];
 }
 
