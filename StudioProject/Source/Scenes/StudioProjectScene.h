@@ -61,6 +61,7 @@ private:
 	std::vector<Particles* > m_particleList;
 	float m_speed;
 	float totalWD;
+	bool changedScene;
 	float m_worldWidth;
 	bool playMusic;
 	float mTimer;

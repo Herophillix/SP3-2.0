@@ -25,20 +25,20 @@ void Screen::Init(float m_worldWidth, float m_worldHeight)
 	Character->setActive(true);
 
 	ItemObject* Television = new ItemObject(ItemObject::I_TELEVISION, static_cast<ItemObject::SCREEN_AREA>(ScreenArea));
-	Television->setPos(Vector3(m_worldWidth * 0.8, m_worldHeight / 2 - 30, 5));
+	Television->setPos(Vector3(m_worldWidth * 0.8f, m_worldHeight / 2 - 30, 5));
 	Television->setScale(Vector3(30, 25, 30));
 	Television->setActive(true);
 	m_itemList.push_back(Television);
 
 	ItemObject* Computer = new ItemObject(ItemObject::I_COMPUTER, static_cast<ItemObject::SCREEN_AREA>(ScreenArea));
-	Computer->setPos(Vector3(m_worldWidth * 0.25, m_worldHeight / 2 - 50, 5));
+	Computer->setPos(Vector3(m_worldWidth * 0.25f, m_worldHeight / 2 - 50, 5));
 	Computer->setScale(Vector3(30, 25, 30));
 	Computer->setActive(true);
 	m_itemList.push_back(Computer);
 
 
 	ItemObject* SleepBox = new ItemObject(ItemObject::I_BOX, static_cast<ItemObject::SCREEN_AREA>(ScreenArea));
-	SleepBox->setPos(Vector3(m_worldWidth * 0.4, m_worldHeight / 2 + 35, 5));
+	SleepBox->setPos(Vector3(m_worldWidth * 0.4f, m_worldHeight / 2 + 35, 5));
 	SleepBox->setScale(Vector3(30, 25, 30));
 	SleepBox->setActive(true);
 	m_itemList.push_back(SleepBox);

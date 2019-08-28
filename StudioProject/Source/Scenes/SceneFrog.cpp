@@ -179,7 +179,7 @@ void SceneFrog::UpdateRock(double dt)
 		FrogObject* coin = getRock();
 		coin->setType(FrogObject::GO_COIN);
 		coin->setScale(Vector3(3, 3, 1));
-		coin->setPos(Vector3(Math::RandIntMinMax(13 , 24) * 10 , Math::RandIntMinMax(3, 38) * 5, 0));
+		coin->setPos(Vector3(Math::RandFloatMinMax(13.f , 24.f) * 10 , Math::RandFloatMinMax(3.f, 38.f) * 5, 0));
 		m_coinCount++;
 		Frog->plusCoin(Frog);
 	}
@@ -254,7 +254,7 @@ bool SceneFrog::CheckCollision(FrogObject* go, FrogObject* go2)
 
 void SceneFrog::Update(double dt)
 {
-	bounceTime -= dt;
+	bounceTime -= (float)dt;
 	//CHEAT CODES BY SEAN
 //Transition to maze
 	if (Application::IsKeyPressed(VK_NUMPAD1) && bounceTime < 0)
@@ -300,7 +300,7 @@ void SceneFrog::Update(double dt)
 	SceneBase::Update(dt);
 	if (m_instructions)
 	{
-		instructionTimer -= dt;
+		instructionTimer -= (float)dt;
 		if (instructionTimer <= 0)
 		{
 			StatManager::GetInstance()->SetPrevGame(4);
@@ -365,7 +365,7 @@ void SceneFrog::Update(double dt)
 		int w = Application::GetWindowWidth();
 		int h = Application::GetWindowHeight();
 		v_mousepos = Vector3(static_cast<float>(x) / (w / m_worldWidth), (h - static_cast<float>(y)) / (h / m_worldHeight), 0.0f);
-		timer -= dt;
+		timer -= (float)dt;
 
 		SpriteAnimation *walkRight = dynamic_cast<SpriteAnimation*>(meshList[GEO_FROG_RIGHT]);
 		if (walkRight)
@@ -605,7 +605,7 @@ void SceneFrog::RenderMap()
 		for (int k = 0; k < 10; k++)
 		{
 			modelStack.PushMatrix();
-			modelStack.Translate(20 * i, 20 * k, 0);
+			modelStack.Translate(20.f * i, 20.f * k, 0);
 			modelStack.Rotate(Math::RadianToDegree(atan2(camera.position.x - 0, camera.position.z - 0)), 0, 1, 0);
 			modelStack.Scale(50, 50, 50);
 			RenderMesh(meshList[GEO_FROG_MAP], false);

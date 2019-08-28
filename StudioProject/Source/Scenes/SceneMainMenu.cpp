@@ -82,7 +82,7 @@ void MainMenu::Update(double dt)
 
 	UpdateMousePos();
 
-	m_instructionBT -= dt;
+	m_instructionBT -= (float)dt;
 	if (m_instructionBT <= 0.f)
 	{
 		m_instructionBT = 0.f;

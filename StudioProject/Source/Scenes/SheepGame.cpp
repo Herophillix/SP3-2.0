@@ -6,7 +6,7 @@
 #include "..\Rendering\MeshBuilder.h"
 
 SheepGame::SheepGame() :
-	m_Gravity(0, -9.8, 0),
+	m_Gravity(0, -9.8f, 0),
 	m_Timer(1.f),
 	BossTimer(10.f),
 	Timer1(10.f),
@@ -23,7 +23,7 @@ SheepGame::SheepGame() :
 	fireRate(0.5f),
 	SheepkingHit(false),
 	timer(0.3f),
-	Modifier(0),
+	Modifier(0.f),
 	isInstructions(true),
 	playMusic(false),
 	bounceTime(0.5f)
@@ -284,7 +284,7 @@ void SheepGame::Update(double dt)
 		reset();
 		StatManager::GetInstance()->SetBool_Sheep(false);
 	}
-	bounceTime -= dt;
+	bounceTime -= (float)dt;
 	//CHEAT CODES BY SEAN
 //Transition to maze
 	if (Application::IsKeyPressed(VK_NUMPAD1) && bounceTime < 0)
@@ -396,7 +396,7 @@ void SheepGame::Update(double dt)
 						SheepObject *Fireball = FetchGO();
 						Fireball->setType(SheepObject::E_FIREBALL);
 						Fireball->setPos(player->getPos());
-						Fireball->vel.Set(((x / w * m_worldWidth) - player->getPos().x), ((m_worldHeight - y / h * m_worldHeight) - player->getPos().y), 0);
+						Fireball->vel.Set((((float)x / w * m_worldWidth) - player->getPos().x), ((m_worldHeight - (float)y / h * m_worldHeight) - player->getPos().y), 0);
 						Fireball->vel = 85 * Fireball->vel.Normalized();
 						Fireball->setScale(Vector3(8, 8, 8));
 						player->setOnCoolDown(true);
@@ -446,7 +446,7 @@ void SheepGame::Update(double dt)
 					SheepObject *LightningBolt = FetchGO();
 					LightningBolt->setType(SheepObject::E_LIGHTNING);
 					LightningBolt->setPos(player->getPos());
-					LightningBolt->vel.Set(((x / w * m_worldWidth) - player->getPos().x), ((m_worldHeight - y / h * m_worldHeight) - player->getPos().y), 0);
+					LightningBolt->vel.Set((((float)x / w * m_worldWidth) - player->getPos().x), ((m_worldHeight - (float)y / h * m_worldHeight) - player->getPos().y), 0);
 					LightningBolt->vel = 100 * LightningBolt->vel.Normalized();
 					LightningBolt->setScale(Vector3(8, 8, 8));
 					player->setMana(-20, true);
@@ -728,7 +728,7 @@ void SheepGame::Update(double dt)
 				}
 				if (player->getOnCooldown())
 				{
-					player->setCooldown(-dt, true);
+					player->setCooldown((float)-dt, true);
 				}
 				if (player->getCooldown() < 0)
 				{
@@ -742,10 +742,10 @@ void SheepGame::Update(double dt)
 				}
 				UpdateRayTracing(dt);
 				player->UpdateMovement(dt);
-				m_Timer -= dt;
+				m_Timer -= (float)dt;
 				if (Transition == true)
 				{
-					BossTimer -= dt;
+					BossTimer -= (float)dt;
 				}
 			}
 			if (ManaRegen < 0)
@@ -775,7 +775,7 @@ void SheepGame::Update(double dt)
 				{
 					Modifier++;
 				}
-				timer -= dt;
+				timer -= (float)dt;
 			}
 			if (timer < 0)
 			{
@@ -784,9 +784,9 @@ void SheepGame::Update(double dt)
 			}
 
 			UpdateParticles(dt);
-			fireRate -= dt;
+			fireRate -= (float)dt;
 
-			ManaRegen -= dt;
+			ManaRegen -= (float)dt;
 		}
 	else
 	{
@@ -841,7 +841,7 @@ void SheepGame::UpdateParticles(double dt)
 				particle->pos.x += particle->vel.x * (float)dt * 10;
 				particle->scale.x += particle->vel.y * (float)dt * 3;
 				particle->scale.y += particle->vel.y * (float)dt * 3;
-				particle->lifeTime -= dt;
+				particle->lifeTime -= (float)dt;
 			}
 			if (particle->type == ParticleObject_TYPE::P_HAM)
 			{
@@ -849,7 +849,7 @@ void SheepGame::UpdateParticles(double dt)
 				{
 					particle->pos.y -= particle->vel.y  * (float)dt * 10;
 				}
-				particle->lifeTime -= dt;
+				particle->lifeTime -= (float)dt;
 			}
 			if (particle->type == ParticleObject_TYPE::P_ELECTROCUTE || particle->type == ParticleObject_TYPE::P_ELECTROCUTER)
 			{
@@ -857,7 +857,7 @@ void SheepGame::UpdateParticles(double dt)
 				{
 					particle->pos.y -= particle->vel.y  * (float)dt * 10;
 				}
-				particle->lifeTime -= dt;
+				particle->lifeTime -= (float)dt;
 			}
 			if (particle->lifeTime < 0)
 			{
@@ -922,7 +922,7 @@ void SheepGame::Pattern1(double dt)
 {
 	cout << "Pattern 1" << endl;
 
-	Timer1 -= dt;
+	Timer1 -= (float)dt;
 	if (Timer1 < 10)
 	{
 		if (!stop1)
@@ -931,7 +931,7 @@ void SheepGame::Pattern1(double dt)
 		}
 		if (Timer1 < 8)
 		{
-			Timer2 -= dt;
+			Timer2 -= (float)dt;
 			if (Timer2 < 10)
 			{
 				if (!stop2)
@@ -941,7 +941,7 @@ void SheepGame::Pattern1(double dt)
 			}
 			if (Timer2 < 8)
 			{
-				Timer3 -= dt;
+				Timer3 -= (float)dt;
 				if (Timer3 < 10)
 				{
 					if (!stop3)
@@ -1009,7 +1009,7 @@ void SheepGame::Pattern2(double dt)
 {
 	cout << "Pattern 2" << endl;
 
-	Timer2 -= dt;
+	Timer2 -= (float)dt;
 	if (Timer2 < 10)
 	{
 		if (!stop2)
@@ -1018,7 +1018,7 @@ void SheepGame::Pattern2(double dt)
 		}
 		if (Timer2 < 8)
 		{
-			Timer1 -= dt;
+			Timer1 -= (float)dt;
 			if (Timer1 < 10)
 			{
 				if (!stop1)
@@ -1028,7 +1028,7 @@ void SheepGame::Pattern2(double dt)
 			}
 			if (Timer1 < 8)
 			{
-				Timer3 -= dt;
+				Timer3 -= (float)dt;
 				if (Timer3 < 10)
 				{
 					if (!stop3)
@@ -1085,7 +1085,7 @@ void SheepGame::Pattern3(double dt)
 {
 	cout << "Pattern 3" << endl;
 
-	Timer3 -= dt;
+	Timer3 -= (float)dt;
 	if (Timer3 < 10)
 	{
 		if (!stop3)
@@ -1094,7 +1094,7 @@ void SheepGame::Pattern3(double dt)
 		}
 		if (Timer3 < 8)
 		{
-			Timer2 -= dt;
+			Timer2 -= (float)dt;
 			if (Timer2 < 10)
 			{
 				if (!stop2)
@@ -1104,7 +1104,7 @@ void SheepGame::Pattern3(double dt)
 			}
 			if (Timer2 < 8)
 			{
-				Timer1 -= dt;
+				Timer1 -= (float)dt;
 				if (Timer1 < 10)
 				{
 					if (!stop1)
@@ -1177,7 +1177,7 @@ void SheepGame::UpdateRayTracing(double dt)
 	float accumulatedtime = 0.f;
 	float totaldist = 0.f;
 	//Vector3 prevpos = Ghost->pos + m_gravity * dt;
-	for (float time = 0; time < 5.f; time += dt)
+	for (float time = 0; time < 5.f; time += (float)dt)
 	{
 		if (totaldist > (mousePos - player->getPos()).Length())
 		{
@@ -1187,9 +1187,9 @@ void SheepGame::UpdateRayTracing(double dt)
 		{
 			break;
 		}
-		temp.setPos(temp.vel * dt, true);
-		accumulatedtime += temp.vel.Length() * dt;
-		totaldist += temp.vel.Length() * dt;
+		temp.setPos(temp.vel * (float)dt, true);
+		accumulatedtime += temp.vel.Length() *(float)dt;
+		totaldist += temp.vel.Length() *(float)dt;
 		//for (int k = 0; k < (int)m_goList.size(); ++k)
 		//{
 		//	SheepObject* go2 = (m_goList)[k];
@@ -1664,7 +1664,7 @@ void SheepGame::RenderGO(SheepObject * go)
 
 SheepObject* SheepGame::FetchGO()
 {
-	for (int i = 0; i < m_goList.size(); i++)
+	for (unsigned int i = 0; i < m_goList.size(); i++)
 	{
 		if (m_goList[i] == Warning || m_goList[i] == Warning2 || m_goList[i] == Warning3)
 		{

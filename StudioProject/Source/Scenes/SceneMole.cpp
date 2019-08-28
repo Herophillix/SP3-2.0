@@ -307,7 +307,7 @@ void SceneMole::Init()
 
 void SceneMole::Update(double dt)
 {
-	bounceTime -= dt;
+	bounceTime -= (float)dt;
 	//CHEAT CODES BY SEAN
 //Transition to maze
 	if (Application::IsKeyPressed(VK_NUMPAD1) && bounceTime < 0)
@@ -388,7 +388,7 @@ void SceneMole::Update(double dt)
 
 	// GAME TIMER
 	if (!m_gameOver && !m_instructions)
-		m_gameTimer -= dt;
+		m_gameTimer -= (float)dt;
 	if (m_gameTimer <= 0)
 	{
 		m_gameTimer = 0.f;
@@ -398,7 +398,7 @@ void SceneMole::Update(double dt)
 	// FROST DEBUFF
 	if (m_frostOn)
 	{
-		m_frostTimer -= dt;
+		m_frostTimer -= (float)dt;
 	}
 	if (m_frostTimer <= 0.f)
 	{
@@ -409,7 +409,7 @@ void SceneMole::Update(double dt)
 	// ****************************** MOVEMENT CONTROLS ****************************** //
 	if (!m_instructions & !m_gameOver)
 	{
-		m_hammerMoveBT -= dt;
+		m_hammerMoveBT -= (float)dt;
 		if (Application::IsKeyPressed('W') && m_hammerMoveBT <= 0.f)
 		{
 			UpdateHammerPos('W');
@@ -579,7 +579,7 @@ void SceneMole::UpdateParticles(double dt)
 				particle->vel += Vector3(0, -m_Gravity.y, 0)* (float)dt;
 				particle->pos += particle->vel * (float)dt;
 				particle->rotation += particle->rotationSpeed * (float)dt;
-				particle->lifeTime -= dt;
+				particle->lifeTime -= (float)dt;
 			}
 			if (particle->type == ParticleObject_TYPE::P_MOLE_SMOKE)
 			{
@@ -587,7 +587,7 @@ void SceneMole::UpdateParticles(double dt)
 				particle->scale *= 0.99f;
 				particle->pos += particle->vel * (float)dt;
 				particle->rotation += particle->rotationSpeed * (float)dt;
-				particle->lifeTime -= dt;
+				particle->lifeTime -= (float)dt;
 			}
 			if (particle->lifeTime < 0)
 			{
@@ -782,7 +782,7 @@ void SceneMole::RenderGO(MoleObject * go)
 
 MoleObject * SceneMole::FetchGO()
 {
-	for (int i = 0; i < m_goList.size(); i++)
+	for (unsigned int i = 0; i < m_goList.size(); i++)
 	{
 		if (!m_goList[i]->getActive())
 		{
@@ -858,7 +858,7 @@ void SceneMole::UpdateHammerPos(char wasd)
 
 void SceneMole::UpdateMoles(double dt)
 {
-	m_popUpTimer -= dt;
+	m_popUpTimer -= (float)dt;
 
 	if (m_popUpTimer <= 0)
 	{
@@ -901,7 +901,7 @@ void SceneMole::UpdateMoles(double dt)
 	{
 		if (m_moleListTotal[i]->getActive())
 		{
-			m_moleListTotal[i]->setMole_lifeTime(-dt, true);
+			m_moleListTotal[i]->setMole_lifeTime((float)-dt, true);
 			if (m_moleListTotal[i]->getMole_lifeTime() <= 0.f) // When fail to hit in time
 			{
 				m_moleListTotal[i]->setActive(false);
@@ -1210,14 +1210,14 @@ bool SceneMole::HammerCollisionCheck()
 					std::cout << "Hit Mole No: " << i << std::endl;
 					m_moleListTotal[i]->setMole_hit(true);
 					m_moleListTotal[i]->setActive(false);
-					int addToScore = 0;
+					float addToScore = 0;
 					switch (m_moleListTotal[i]->getType())
 					{
 					case MoleObject::GO_MOLE:
 						addToScore = m_moleListTotal[i]->getMole_lifeTime() * 100 * m_multiplier;
 						break;
 					case MoleObject::GO_MOLE_BRONZE:
-						addToScore += m_moleListTotal[i]->getMole_lifeTime() * 100 * m_multiplier * 1.5;
+						addToScore += m_moleListTotal[i]->getMole_lifeTime() * 100 * m_multiplier * 1.5f;
 						break;
 					case MoleObject::GO_MOLE_SILVER:
 						addToScore += m_moleListTotal[i]->getMole_lifeTime() * 100 * m_multiplier * 2.f;

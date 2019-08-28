@@ -194,7 +194,7 @@ void MazeObject::CollisionResponse(PhysicsObject* go, double dt)
 	}
 	case PhysicsObject::GO_WALL:
 	{
-		go->vel = go->vel - 1.98 * go->vel.Dot(go2->normal) * go2->normal;
+		go->vel = go->vel - 1.98f * go->vel.Dot(go2->normal) * go2->normal;
 		Vector3 temp = go2->pos - go->getPos();
 		Vector3 N = go2->normal;
 		if (temp.Dot(go2->normal) < 0)

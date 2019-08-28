@@ -24,9 +24,9 @@ void Results::InitVars()
 	meshList[GEO_RESULTSCREEN_QUAD] = MeshBuilder::GenerateQuad("results", Color(0, 0, 0), 1.f);
 	meshList[GEO_C01_RESULT_QUAD] = MeshBuilder::GenerateQuad("c01result", Color(1, 1, 1), 1.f);
 	//meshList[GEO_C01_RESULT_QUAD]->textureID = LoadTGA("Image//resultTest.tga");
-	meshList[GEO_C02_RESULT_QUAD] = MeshBuilder::GenerateQuad("c01result", Color(0.8, 0.8, 0.8), 1.f);
-	meshList[GEO_C03_RESULT_QUAD] = MeshBuilder::GenerateQuad("c01result", Color(0.6, 0.6, 0.6), 1.f);
-	meshList[GEO_C04_RESULT_QUAD] = MeshBuilder::GenerateQuad("c01result", Color(0.4, 0.4, 0.4), 1.f);
+	meshList[GEO_C02_RESULT_QUAD] = MeshBuilder::GenerateQuad("c01result", Color(0.8f, 0.8f, 0.8f), 1.f);
+	meshList[GEO_C03_RESULT_QUAD] = MeshBuilder::GenerateQuad("c01result", Color(0.6f, 0.6f, 0.6f), 1.f);
+	meshList[GEO_C04_RESULT_QUAD] = MeshBuilder::GenerateQuad("c01result", Color(0.4f, 0.4f, 0.4f), 1.f);
 
 	meshList[GEO_RESULT_PLUS] = MeshBuilder::GenerateQuad("plusButton", Color(0, 0, 1), 1.f);
 	meshList[GEO_RESULT_PLUS]->textureID = LoadTGA("Image//plusButton.tga");
@@ -153,7 +153,7 @@ void Results::UpdateButtonTexture()
 }
 
 // MAIN RENDERING FUNCTION
-void Results::RenderResults(int score, char grade)
+void Results::RenderResults(float score, char grade)
 {
 	// Projection matrix : Orthographic Projection
   	Mtx44 projection;
@@ -761,10 +761,10 @@ bool Results::ButtonMouseCollision()
 					{
 					case ResultObject::GO_CONTINUE:
 						if (m_statsToDistribute == 0 || 
-							(StatManager::GetInstance()->GetChar01().m_frustration == 0 && StatManager::GetInstance()->GetChar01().m_motivation == 100 &&
-							StatManager::GetInstance()->GetChar02().m_frustration == 0 && StatManager::GetInstance()->GetChar02().m_motivation == 100 && 
-							StatManager::GetInstance()->GetChar03().m_frustration == 0 && StatManager::GetInstance()->GetChar03().m_motivation == 100 && 
-							StatManager::GetInstance()->GetChar04().m_frustration == 0 && StatManager::GetInstance()->GetChar04().m_motivation == 100) || true)
+							(StatManager::GetInstance()->GetChar01().m_frustration < 1 && StatManager::GetInstance()->GetChar01().m_motivation > 99 &&
+							StatManager::GetInstance()->GetChar02().m_frustration < 1 && StatManager::GetInstance()->GetChar02().m_motivation > 99 && 
+							StatManager::GetInstance()->GetChar03().m_frustration < 1 && StatManager::GetInstance()->GetChar03().m_motivation > 99 && 
+							StatManager::GetInstance()->GetChar04().m_frustration < 1 && StatManager::GetInstance()->GetChar04().m_motivation > 99))
 						{
 							m_statsToDistribute = 0;
 							//switch scene

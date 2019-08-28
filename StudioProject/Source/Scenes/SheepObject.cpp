@@ -40,7 +40,7 @@ void SheepObject::setOnCoolDown(bool input)
 {
 	onCooldown = input;
 }
-void SheepObject::setHealth(int input, bool additive)
+void SheepObject::setHealth(float input, bool additive)
 {
 	if (additive)
 	{
@@ -113,7 +113,7 @@ bool SheepObject::getOnCooldown()
 {
 	return onCooldown;
 }
-int SheepObject::getHealth()
+float SheepObject::getHealth()
 {
 	return health;
 }

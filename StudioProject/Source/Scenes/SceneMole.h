@@ -62,7 +62,7 @@ private:
 	int MAX_PARTICLE;
 
 	// Minigame stuff
-	int m_score;
+	float m_score;
 	int m_multiplier;
 	int m_hitCounter;
 	int m_stats;

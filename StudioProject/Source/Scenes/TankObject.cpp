@@ -121,7 +121,7 @@ void TankObject::Update(double dt, float m_worldWidth, float m_worldHeight)
 	}
 	if (isPlayer && fuel > 0)
 	{
-		float tempvel = 50 * dt;
+		float tempvel = 50 *(float) dt;
 		if (Application::IsKeyPressed('A') || Application::IsKeyPressed('D')
 			|| Application::IsKeyPressed('S') || Application::IsKeyPressed('W'))
 		{

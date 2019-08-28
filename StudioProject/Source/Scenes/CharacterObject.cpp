@@ -140,19 +140,19 @@ void CharacterObject::Update(double dt)
 	{
 		if (Statistics.m_frustration < 100 && !resting && !WorkingHard  && !asleep )
 		{
-			Statistics.m_frustration += 2.f / Statistics.m_experience * 1 / m_Count * dt;
+			Statistics.m_frustration += 2.f / Statistics.m_experience * 1 / m_Count * (float)dt;
 		}
 		if (Statistics.m_frustration > 0 && asleep && !WorkingHard && !resting )
 		{
-			Statistics.m_frustration -= 3.f / Statistics.m_experience * 1 / m_Count * dt;
+			Statistics.m_frustration -= 3.f / Statistics.m_experience * 1 / m_Count * (float)dt;
 		}
 		if (Statistics.m_frustration > 0 && resting && !WorkingHard  && !asleep)
 		{
-			Statistics.m_frustration -=  2.2f / Statistics.m_experience * 1 / m_Count * dt;
+			Statistics.m_frustration -=  2.2f / Statistics.m_experience * 1 / m_Count * (float)dt;
 		}
 		if (Statistics.m_frustration < 100 && WorkingHard && !resting && !asleep)
 		{
-			Statistics.m_frustration += 5.5f / Statistics.m_experience * 1 / m_Count * dt;
+			Statistics.m_frustration += 5.5f / Statistics.m_experience * 1 / m_Count * (float)dt;
 		}
 		if (Statistics.m_frustration < 0.005f)
 		{
@@ -160,19 +160,19 @@ void CharacterObject::Update(double dt)
 		}
 		if (Statistics.m_rest > 0 && !resting && !WorkingHard  && !asleep)
 		{
-			Statistics.m_rest -= 0.8f  *  Statistics.m_experience * dt / m_Count;
+			Statistics.m_rest -= 0.8f  *  Statistics.m_experience * (float)dt / m_Count;
 		}
 		if (Statistics.m_rest < 100 && resting && !WorkingHard && !asleep)
 		{
-			Statistics.m_rest += 1.2f  *  Statistics.m_experience * dt / m_Count;
+			Statistics.m_rest += 1.2f  *  Statistics.m_experience * (float)dt / m_Count;
 		}
 		if (Statistics.m_rest < 100 && WorkingHard && !asleep && !resting)
 		{
-			Statistics.m_rest -= 1.3f  *  Statistics.m_experience * dt / m_Count;
+			Statistics.m_rest -= 1.3f  *  Statistics.m_experience *(float)dt / m_Count;
 		}
 		if (Statistics.m_rest < 100 && asleep && !WorkingHard && !resting)
 		{
-			Statistics.m_rest += 1.5f  *  Statistics.m_experience * dt / m_Count;
+			Statistics.m_rest += 1.5f  *  Statistics.m_experience * (float)dt / m_Count;
 		}
 		if (Statistics.m_rest < 0.0f)
 		{
@@ -180,15 +180,15 @@ void CharacterObject::Update(double dt)
 		}
 		if (Statistics.m_motivation > 0 && !resting  && !WorkingHard  && !asleep)
 		{
-			Statistics.m_motivation -= 0.8f * Statistics.m_experience * dt / m_Count;
+			Statistics.m_motivation -= 0.8f * Statistics.m_experience * (float)dt / m_Count;
 		}
 		if (Statistics.m_motivation < 100 && resting && !WorkingHard  && !asleep )
 		{
-			Statistics.m_motivation += 0.8f * Statistics.m_experience * dt / m_Count;
+			Statistics.m_motivation += 0.8f * Statistics.m_experience *(float)dt / m_Count;
 		}
 		if (Statistics.m_motivation < 100 && !resting && WorkingHard && !asleep)
 		{
-			Statistics.m_motivation += 1.2f * Statistics.m_experience * dt / m_Count;
+			Statistics.m_motivation += 1.2f * Statistics.m_experience *(float)dt / m_Count;
 		}
 		if (Statistics.m_motivation < 0.00f)
 		{
@@ -200,11 +200,11 @@ void CharacterObject::Update(double dt)
 		}
 		if (Statistics.m_workDone < 100 && !resting && !WorkingHard && !asleep)
 		{
-			Statistics.m_workDone += 2.f / Statistics.m_experience * Statistics.m_motivation / Statistics.m_rest *  dt / m_Count;
+			Statistics.m_workDone += 2.f / Statistics.m_experience * Statistics.m_motivation / Statistics.m_rest * (float)dt / m_Count;
 		}
 		if (Statistics.m_workDone < 100 && WorkingHard && !resting && !asleep)
 		{
-			Statistics.m_workDone += 4.0f / Statistics.m_experience * Statistics.m_motivation / Statistics.m_rest *  dt / m_Count;
+			Statistics.m_workDone += 4.0f / Statistics.m_experience * Statistics.m_motivation / Statistics.m_rest * (float)dt / m_Count;
 		}
 		if (Statistics.m_workDone < 100 && asleep && !WorkingHard && !resting)
 		{
