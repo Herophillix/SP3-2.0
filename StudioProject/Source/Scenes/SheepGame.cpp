@@ -237,6 +237,7 @@ void SheepGame::reset()
 	gameOver = false;
 	isInstructions = true;
 	blKeyboardState = false;
+	statsGain = false;
 	pointGain = false;
 	rndNum = 0;
 	player->setActive(true);

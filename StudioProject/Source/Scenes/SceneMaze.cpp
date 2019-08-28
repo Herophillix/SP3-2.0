@@ -219,11 +219,6 @@ void SceneMaze::UpdateGame(double dt)
 		bounceTime = 0.5f;
 	}
 	//CHEAT CODES BY SEAN
-	if (StatManager::GetInstance()->GetBool_Game(1))
-	{
-		Reset();
-		StatManager::GetInstance()->SetBool_Maze(false);
-	}
 	if (musicPlay && !musicPlayed)
 	{
 		soundSystem.playSheepMusic();

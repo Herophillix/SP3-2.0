@@ -345,7 +345,6 @@ void SceneFrog::Update(double dt)
 				StatManager::GetInstance()->SetCharsOriginalValues();
 				m_setStatsToDist = true;
 				m_setOriginValues = true;
-				Reset();
 				
 			}
 			//if (!statgained)
@@ -784,14 +783,14 @@ void SceneFrog::GameEndCalculations()
 	else
 	{
 		m_grade = 'F';
-		StatManager::GetInstance()->UpdateChar01F(10);
-		StatManager::GetInstance()->UpdateChar01M(-10);
-		StatManager::GetInstance()->UpdateChar02F(10);
-		StatManager::GetInstance()->UpdateChar02M(-10);
-		StatManager::GetInstance()->UpdateChar03F(10);
-		StatManager::GetInstance()->UpdateChar03M(-10);
-		StatManager::GetInstance()->UpdateChar04F(10);
-		StatManager::GetInstance()->UpdateChar04M(-10);
+		StatManager::GetInstance()->UpdateChar01F(StatManager::GetInstance()->GetChar01().m_frustration + 10);
+		StatManager::GetInstance()->UpdateChar01M(StatManager::GetInstance()->GetChar01().m_motivation - 10);
+		StatManager::GetInstance()->UpdateChar02F(StatManager::GetInstance()->GetChar02().m_frustration + 10);
+		StatManager::GetInstance()->UpdateChar02M(StatManager::GetInstance()->GetChar02().m_motivation - 10);
+		StatManager::GetInstance()->UpdateChar03F(StatManager::GetInstance()->GetChar03().m_frustration + 10);
+		StatManager::GetInstance()->UpdateChar03M(StatManager::GetInstance()->GetChar03().m_motivation - 10);
+		StatManager::GetInstance()->UpdateChar04F(StatManager::GetInstance()->GetChar04().m_frustration + 10);
+		StatManager::GetInstance()->UpdateChar04M(StatManager::GetInstance()->GetChar04().m_motivation - 10);
 	}
 
 }
