@@ -35,6 +35,7 @@ public:
 	void RenderLevelTransition();
 	void RenderLoseScreen();
 	void RenderWinScreen();
+	void RenderGiveUp();
 	void reset();
 	virtual void Exit();
 
@@ -59,11 +60,11 @@ private:
 	std::vector<GameObject *> m_goList;
 	std::vector<Particles* > m_particleList;
 	float m_speed;
+	float totalWD;
 	float m_worldWidth;
 	bool playMusic;
 	float mTimer;
 	float m_worldHeight;
-	int m_Count;
 	float m_eventTimer;
 	float color;
 	bool b_transitioning;
@@ -73,7 +74,7 @@ private:
 	int m_particleCount;
 	int MAX_PARTICLE;
 	Vector3 m_Gravity;
-
+	bool gaveup;
 	float m_worldWidthDiv8;
 
 	Vector3 v_mousepos;

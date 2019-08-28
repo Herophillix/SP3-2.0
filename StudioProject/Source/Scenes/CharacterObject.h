@@ -57,6 +57,10 @@ public:
 	bool getCounted();
 	bool getM_dLeftRight();
 	bool getIsMoving();
+	float getFrustration();
+	float getRest();
+	float getMotiv();
+	float getWorkDone();
 
 	ItemObject* currentItem;
 	CharacterStats Statistics;

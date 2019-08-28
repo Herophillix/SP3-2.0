@@ -652,6 +652,7 @@ void SheepGame::Update(double dt)
 									{
 										cout << "zap" << endl;
 										go2->setActive(false);
+										SheepkingHit = true;
 										points += 50;
 										EvilKingSheep->setHealth(-5, true);
 									}

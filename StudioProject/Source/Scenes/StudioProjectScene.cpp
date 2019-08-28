@@ -28,6 +28,7 @@ void StudioProjectScene::Init()
 	mTimer = 2.f;
 	//Variables here
 	m_speed = 1.f;
+	gaveup = false;
 	Math::InitRNG();
 	m_eventTimer = Math::RandFloatMinMax(20.0f, 40.f);
 	b_transitioning = false;
@@ -61,6 +62,8 @@ void StudioProjectScene::Init()
 	meshList[GEO_LOSESCREEN]->textureID = LoadTGA("Image//Lose_Screen.tga");
 	meshList[GEO_WINSCREEN] = MeshBuilder::GenerateQuad("WinScreen", Color(1, 1, 1), 1.f);
 	meshList[GEO_WINSCREEN]->textureID = LoadTGA("Image//WinScreen.tga");
+	meshList[GEO_GIVEUP] = MeshBuilder::GenerateQuad("Giveup", Color(1, 1, 1), 1.f);
+	meshList[GEO_GIVEUP]->textureID = LoadTGA("Image//Gave_Up.tga");
 
 	// CHARACTER SPRITE ANIMATIONS
 	meshList[GEO_CHARACTER01_IDLE_LEFT] = MeshBuilder::GenerateSpriteAnimation("c01_idle_left", 1, 4);
@@ -105,11 +108,8 @@ void StudioProjectScene::Init()
 	//Particles
 	m_particleCount = 0;
 	MAX_PARTICLE = 2000;
-	
 	soundSystem.Init();
 	m_Gravity.Set(0, -9.8, 0);
-
-	m_Count = 4;
 	for (unsigned i = 0; i < 10;++i)
 	{
 		Particles *particle = new Particles(ParticleObject_TYPE::P_ParticleTest);
@@ -270,9 +270,14 @@ void StudioProjectScene::Init()
 	Continue->active = true;
 
 	day = 0;
+	for (int i = 0; i < 4; i++)
+	{
+		ScreenSplit[i]->Character->giveUp = false;
+	}
 }
 void StudioProjectScene::Update(double dt)
 {
+
 	if (!StatManager::GetInstance()->GetBool_Game(StatManager::GetInstance()->GetPrevGame()))
 	{
 		switch (StatManager::GetInstance()->GetPrevGame())
@@ -360,7 +365,7 @@ void StudioProjectScene::Update(double dt)
 		{
 		case 1:
 		{
-			m_eventTimer = 10.f;
+			m_eventTimer = Math::RandFloatMinMax(20.f, 40.f);
 			day++;
 			break;
 		}
@@ -387,10 +392,7 @@ void StudioProjectScene::Update(double dt)
 		}
 
 	}
-	if (day == 5)
-	{
-		SceneState == S_GAMEWIN;
-	}
+
 	UpdateParticles(dt);
 	//cout << "Event Timer : " << m_eventTimer << endl;
 }
@@ -401,11 +403,16 @@ void StudioProjectScene::UpdateGame(double dt)
 	ScreenSplit[1]->UseItem->pos.Set(m_worldWidth * 0.95f, m_worldHeight * 0.55f, 0);
 	ScreenSplit[2]->UseItem->pos.Set(m_worldWidth * 0.45f, m_worldHeight * 0.05f, 0);
 	ScreenSplit[3]->UseItem->pos.Set(m_worldWidth * 0.95f, m_worldHeight * 0.05f, 0);
-
+	if (day >= 5)
+	{
+		SceneState = S_GAMEWIN;
+	}
+	cout << day << endl;
 	int w = Application::GetWindowWidth();
 	int h = Application::GetWindowHeight();
 	//cout << v_mousepos << endl;
 	rel_mousepos = v_mousepos;
+
 	if (v_mousepos.x <= m_worldWidth * 0.5f)
 	{
 		rel_mousepos.x = v_mousepos.x * 2;
@@ -434,9 +441,14 @@ void StudioProjectScene::UpdateGame(double dt)
 			ItemObject::CurrentScreenID = ItemObject::UpR;
 		}
 	}
-	if (m_Count == 0)
-	{
+	totalWD = (ScreenSplit[0]->Character->Statistics.m_workDone
+		+ ScreenSplit[1]->Character->Statistics.m_workDone
+		+ ScreenSplit[2]->Character->Statistics.m_workDone
+		+ ScreenSplit[3]->Character->Statistics.m_workDone) / 4;
 
+	if (CharacterObject::m_Count < 1)
+	{
+		SceneState = S_GAMEOVER;
 	}
 
 	static bool bLButtonState = false;
@@ -780,6 +792,14 @@ void StudioProjectScene::RenderArrow()
 	RenderMesh(meshList[GEO_ARROW], false);
 	modelStack.PopMatrix();
 }
+void StudioProjectScene::RenderGiveUp()
+{
+	modelStack.PushMatrix();
+	modelStack.Translate(m_worldWidth/2, m_worldHeight/2, 1);
+	modelStack.Scale(m_worldWidth, m_worldHeight, 1);
+	RenderMesh(meshList[GEO_GIVEUP], false);
+	modelStack.PopMatrix();
+}
 void StudioProjectScene::RenderWinScreen()
 {
 	glViewport(0, 0, 1920, 1080);
@@ -803,10 +823,13 @@ void StudioProjectScene::RenderWinScreen()
 
 	modelStack.PushMatrix();
 	modelStack.Translate(m_worldWidth / 2, m_worldHeight / 2, 0);
-	modelStack.Scale(m_worldWidth, m_worldWidth, 0);
+	modelStack.Scale(m_worldWidth/2, m_worldWidth/2, 0);
 	RenderMesh(meshList[GEO_WINSCREEN], false);
 	modelStack.PopMatrix();
-
+	std::ostringstream ss;
+	ss.precision(3);
+	ss << totalWD;
+	RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(1, 0, 0), 3, 38, 20.5f);
 
 }
 
@@ -831,6 +854,11 @@ void StudioProjectScene::Render()
 		RenderWinScreen();
 		break;
 	}
+	case S_GAMEOVER:
+	{
+		RenderLoseScreen();
+		break;
+	}
 	default:
 	{
 		RenderLoseScreen();
@@ -849,14 +877,14 @@ void StudioProjectScene::Render()
 		RenderMesh(meshList[GEO_TANK_CURSOR_ALTERNATE], false);
 	}
 	modelStack.PopMatrix();
-	std::ostringstream ss;
-	ss.precision(3);
-	ss << rel_mousepos;
-	RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(0, 1, 0), 3, 1, 1);
+	//std::ostringstream ss;
+	//ss.precision(3);
+	//ss << rel_mousepos;
+	//RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(0, 1, 0), 3, 1, 1);
 
-	ss.str("");
-	ss << v_mousepos;
-	RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(0, 1, 0), 3, 1, 4);
+	//ss.str("");
+	//ss << v_mousepos;
+	//RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(0, 1, 0), 3, 1, 4);
 	// End of Multiple viewports
 }
 
@@ -992,9 +1020,14 @@ void StudioProjectScene::RenderLoseScreen()
 
 	modelStack.PushMatrix();
 	modelStack.Translate(m_worldWidth / 2, m_worldHeight / 2, 0);
-	modelStack.Scale(m_worldWidth, m_worldWidth, 0);
+	modelStack.Scale(m_worldWidth/2, m_worldWidth/2, 0);
 	RenderMesh(meshList[GEO_LOSESCREEN], false);
 	modelStack.PopMatrix();
+
+	std::ostringstream ss;
+	ss.precision(3);
+	ss << totalWD;
+	RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(1, 0, 0), 3,38, 20.5f);
 }
 void StudioProjectScene::RenderLevelTransition()
 {
@@ -1349,6 +1382,7 @@ void StudioProjectScene::RenderScreen(Screen* ScreenSplit)
 	{
 		RenderArrow();
 	}
+
 	for (int i = 0; i < ScreenSplit->m_itemList.size(); ++i)
 	{
 		if (ScreenSplit->m_itemList[i]->active)
@@ -1359,6 +1393,12 @@ void StudioProjectScene::RenderScreen(Screen* ScreenSplit)
 	// Character
 	if (ScreenSplit->Character->active)
 		RenderCharObj(ScreenSplit->Character);
+	if (ScreenSplit->Character->getGiveUp())
+	{
+		RenderGiveUp();
+
+	}
+
 }
 
 void StudioProjectScene::RenderStats(CharacterObject* Character)
